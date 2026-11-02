@@ -10,7 +10,7 @@ Data analysts and business users often know what they want to ask but do not kno
 
 **Current executable path:** BIRD question → B0 Deep Agent → schema/SQL tools → SQLite → final SQL → **independent EX scoring**. This existing command-line benchmark pipeline is not yet the final live interactive app.
 
-## 2. Progress and what is next (1 November 2026)
+## 2. Progress and what is next (3 November 2026 · v4.4)
 
 | Workstream | Status | Evidence / next step |
 | --- | --- | --- |
@@ -22,7 +22,9 @@ Data analysts and business users often know what they want to ask but do not kno
 | KORA-14–17 · Working agent application | **Planned, P0** | Backend/controller, interactive UI, reliability tests and independent fictional demo data |
 | KORA-11–12 · Submission and demo | **Planned** | Final report, runnable source ZIP, pitch and live demo |
 
-**Important:** 25% EX is only **1 of 4 development questions**, not a representative model accuracy estimate. Successful SQL execution is not the same as a correct answer. The earlier submitted proposal included fixed S0/S1 metrics; the current **B0-only baseline working plan** requires team agreement on changes and honest final-report disclosure.
+**Important:** 25% EX is only **1 of 4 development questions**, not a representative model accuracy estimate; this was a user-reported local smoke run. Successful SQL execution is not the same as a correct answer. The earlier submitted proposal included fixed S0/S1 metrics; the **B0-only baseline working plan** does not modify the submitted proposal and requires team agreement and honest final-report disclosure. A latest full Windows regression and larger frozen dev run remain pending.
+
+**3 November tracking update:** Eight active P0 KORA tasks (05, 10, 11, 12, 14–17) now have private Notion execution records. KORA-02/03 completion remains documented in the shared roadmap. The prior BENCH-03 BIRD research ticket is Done; broader BENCH-04 three-dataset planning is still Backlog. The public repo already contains B0 code/tests/docs; private-only proposals, RAG work and raw benchmarks remain excluded.
 
 ## 3. Quick Start — Windows PowerShell
 
@@ -126,7 +128,7 @@ uv run python -m scr.cli.run_bird_b0_eval visualize `
 | [B0 step-by-step tutorial](docs/bird-b0.md) | Beginners: `prepare`, `infer`, `score`, `visualize`, key parameters and expected files |
 | [BIRD Evaluation / EX](docs/bird-evaluation.md) | All team members: official-style strict EX, gold SQL, diagnostic limitations and fair comparisons |
 | [Agent development](docs/agent-development.md) | Contributors: extend B0 toward B1 KG, B2 planner and B3 router; reuse the shared evaluator |
-| [Progress planning v4.3](progress-planning.md) | Team: current statuses, dependencies, proposed tickets, milestones and acceptance criteria |
+| [Progress planning v4.4](progress-planning.md) | Team: current statuses, dependencies, proposed tickets, milestones and acceptance criteria |
 
 ## 5. Source code map
 
