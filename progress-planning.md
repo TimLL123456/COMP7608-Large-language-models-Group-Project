@@ -1,12 +1,20 @@
 # KORA — Progress Planning & Development Tickets
 
 **COMP7608B Large Language Models | Group 9 | 2026–2027 Semester 1**  
-**Version:** v4.3 — B0 Initial Evaluation & Delivery Roadmap (shared group edition) | **Updated:** 1 November 2026  
-**Status:** **KORA-02 Done** (BIRD dataset), **KORA-03 Done** (EX evaluator with 16/16 selected-case upstream parity), **KORA-05 In Progress** (B0 implemented; 1 Nov four-dev-question smoke scored **EX 1/4 = 25%**), and **KORA-10 Stage A In Progress** (initial failure diagnosis). This small sample is **not** a representative/full-split benchmark. Interactive app, B0–B4 controlled comparisons and eight TC-I/TC-R application scenarios remain pending. Tickets are planning labels, not confirmed issue records.
+**Version:** v4.4 — Progress Reconciliation (shared group edition) | **Updated:** 3 November 2026  
+**Status:** **KORA-02 Done** (BIRD dataset), **KORA-03 Done** (EX evaluator with 16/16 selected-case upstream parity), **KORA-05 In Progress** (B0 implemented; 1 Nov four-dev-question smoke scored **EX 1/4 = 25%**), and **KORA-10 Stage A In Progress** (initial failure diagnosis). This small sample is **not** a representative/full-split benchmark. Interactive app, B0–B4 controlled comparisons and eight TC-I/TC-R application scenarios remain pending. Active KORA-05/10/11/12/14–17 are now private Notion Task Tracker records, not GitHub Issues; KORA-02/03 remain documented completed foundation tickets.
 
 > **Working group plan:** **B0 is the sole active baseline**. B1/B2/B3 are optional evidence-selected improvements; B4 is conditional integration. The earlier submitted proposal includes fixed S0/S1 metrics; posting this roadmap does **not** revise it. Confirm scope changes with the team and disclose them in the final report.
 
-> **Public repository scope:** This repo contains B0, original BIRD loader and evaluator, tracing, focused tests and tutorials. Submitted proposal materials, separate learning/RAG experiments, downloaded BIRD reference data and raw traces have **not** been migrated.
+> **Public repository scope:** This repo contains B0, original BIRD loader and EX evaluator, tracing, focused tests, tutorials and the v4.4 shared roadmap. Private submitted proposal materials, learning/RAG experiments, downloaded BIRD reference data and raw traces are deliberately **not** included.
+
+## v4.4 Reconciliation — 3 November 2026
+
+**Current implementation:** KORA-02 original BIRD Mini-Dev loader and KORA-03 EX evaluator are **Done** based on recorded local checks (16/16 **selected-case scorer parity**, not full parity or model accuracy). KORA-05 B0 and KORA-10 Stage A failure diagnosis are **In Progress**. The 1 November four-dev-question smoke produced 4/4 final SQL and strict EX 1/4 (25%); neither a representative scored benchmark nor a verified current Windows regression run is available.
+
+**P0 delivery to do:** KORA-17 deterministic fictional SQLite fixtures; KORA-14 session-aware backend/controller; KORA-15 interactive SQL UI; KORA-16 actual changed-condition/follow-up and two failure investigations; KORA-11 PDF plus runnable source ZIP; KORA-12 live demo. The eight active P0 tasks are tracked in a **private Notion Task Tracker** (not GitHub Issues). B1–B4 are evidence-gated P1 enhancements; document RAG remains optional P2. The originally submitted S0/S1 proposal remains historical and unchanged.
+
+**Repository boundary:** This public repository already includes B0 source, strict EX evaluation, tests, Trace Explorer and beginner tutorials; additional HKU research/proposal files and private-only experiments have not been copied. There is no claim of a working end-to-end application or completed TC-I/TC-R tests.
 
 ## How to use this document
 
@@ -598,7 +606,7 @@ flowchart LR
 | Team ownership | Assign members and backups across B0, app, evaluation, report, packaging and demo; record each contribution |
 | Research enhancements | Keep B1–B4 P1 and report only tested integrations; optional RAG is P2 |
 | Privacy and data | No credentials, personal data, raw sensitive traces, BIRD gold SQL or large DB archives in public packages |
-| Group repository | Private HKU source/docs are not automatically in public repo; separate code migration and reproduction verification |
+| Group repository | B0 implementation/tests/tutorials are **already shared**; keep private HKU-only files excluded, and review any future additions plus fresh-clone reproducibility separately |
 | Rubric | Obtain and check published final report/code rubric in addition to two-page Student Guideline |
 
 **Confirmed submission:** **25 November 2026, 23:59 HKT**. Submit **both** final report PDF and **ZIP with complete runnable source snapshot** (a GitHub URL alone is insufficient). Group number, title and all member names in the PDF and README.
@@ -630,6 +638,6 @@ flowchart LR
 
 ---
 
-**Document state (1 November 2026):** Shared group edition of HKU v4.3 B0-first delivery roadmap. KORA-02/03 foundation complete; KORA-05 and KORA-10 Stage A have a **four-dev-question scored smoke (EX 1/4)** and early error diagnosis. Current Windows suite, representative benchmark, P1 comparisons, working interactive app and all TC-I/TC-R scenario executions remain pending. See canonical tutorials for commands.
+**Document state (3 November 2026):** Shared public v4.4 progress reconciliation. KORA-02/03 foundation complete; KORA-05 and KORA-10 Stage A have a **four-dev-question scored smoke (EX 1/4)** and early error diagnosis. Current Windows suite, representative benchmark, P1 comparisons, working interactive app and all TC-I/TC-R scenario executions remain pending. See canonical tutorials for commands.
 
-**Maintenance:** Keep only essential earlier validation and proposal differences as provenance. Prioritize frozen B0 diagnostics, interactive SQL app, reliability scenarios and submission; public group repo migration is reflected in this edition.
+**Maintenance:** Preserve proposal differences as provenance. Prioritize frozen B0 diagnostics, interactive app, recovery tests and submission; public B0 code migration is already complete, whereas private-only files require separate review.
