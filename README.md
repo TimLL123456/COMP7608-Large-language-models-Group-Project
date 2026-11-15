@@ -18,17 +18,20 @@ These are the most recent **completed local BIRD Mini-Dev 2026** evaluations for
 
 **Interpretation:** Experimental budgets, description availability, retry policies and model execution conditions differ. Raw EX differences do **not** demonstrate isolated causal improvements. See each experiment report for reproducibility, resources, failures and limitations.
 
-## Current architecture and implementation
+## Current agents overview
 
-The implementations reuse shared BIRD data handling, a **read-only SQLite execution layer**, a baseline SQL agent and independent EX scoring.
+KORA currently has **six implemented agent variants**. They share the BIRD dataset utilities, read-only SQLite execution and independent execution-accuracy (EX) scoring. The workflows below are simplified; their full configurations and limitations are documented in the linked guides.
 
-- **B0:** Schema investigation, SQL generation and bounded repair.
-- **MetadataDiscoveryV2:** A1 metadata discovery → B1 evidence-sufficiency check → C1 SQL generation.
-- **Self Reflection:** Independent SQL review with evidence-backed feedback and bounded B0 retries.
-- **Rubric Self Reflection:** Atomic requirement checking and guarded final SQL refinement.
-- **Role-Specialized Self Reflection:** Separate generation/review model roles, including two-terminal sharded inference and merging. Full benchmark evidence is not yet available.
+| Agent | What it is | Simplified workflow | Problem it aims to address |
+| --- | --- | --- | --- |
+| **[B0 — Baseline Agent](docs/bird-b0.md)** | The foundational Text-to-SQL agent: investigates database schemas and values, then generates SQL. | Question → Inspect schema/data → Generate and check SQL → Final SQL | Establish a reproducible starting point for SQL generation and evaluating later approaches. |
+| **[Metadata Agent V1](docs/metadata-agent.md)** | Extends B0 with scoped, reusable table/column knowledge notes. | Question → Search notes → Investigate missing context → Create/update notes → Generate SQL | Repeated schema exploration and missing reusable business meanings; no completed full V1 benchmark is claimed. |
+| **[MetadataDiscoveryV2](docs/metadata-discovery-v2.md)** | A staged metadata-first workflow with explicit evidence sufficiency evaluation. | **A1** Discover/reuse metadata → **B1** Check sufficiency → Return to A1 if needed → **C1** Generate SQL (or stop when exhausted) | Generating SQL before enough evidence is available about tables, columns, values, filters or granularity. |
+| **[Self Reflection Agent](docs/self-reflection-agent.md)** | Adds an independent reviewer and bounded retries to B0 while prioritizing safe SQL output. | B0 generates SQL → Reviewer checks evidence and execution → Retry B0 on actionable FAIL → Select eligible final SQL | Unchecked mistakes in candidate SQL and unnecessarily losing executable output when review remains uncertain. |
+| **[Rubric Self Reflection](docs/rubric-self-reflection-agent.md)** | Breaks the question into atomic requirements and checks each against SQL evidence. | B0 SQL → Extract requirements → Criterion-by-criterion review → Retry/refine when justified → Checked final SQL | Missed output fields, filters, metric logic, grain, joins and temporal requirements that broad reviews may overlook. |
+| **[Role-Specialized Self Reflection](docs/role-specialized-self-reflection-agent.md)** | Assigns SQL investigation/generation to a lightweight model and rubric review to a stronger model. | Lightweight generator → Strong reviewer → Feedback to generator within budget → Safe SQL + review report | Investigating whether specialized model roles can improve the quality–cost trade-off. **Full EX evaluation remains pending.** |
 
-The experimental agent implementations do **not** establish that a complete interactive, multi-turn KORA application has been delivered.
+**Research boundary:** These are distinct implementations, not six stages of one finished application. They aim to address the problems above, but their existence alone does not prove improvement. Compare documented local EX results and compute/retry differences in the [latest research results](#latest-research-results). The complete interactive multi-turn application has not been verified.
 
 ## Current quick start
 
