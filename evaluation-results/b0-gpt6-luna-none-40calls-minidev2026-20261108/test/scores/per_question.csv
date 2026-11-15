@@ -1,0 +1,1426 @@
+question_id,db_id,difficulty,variant,predicted_sql,ex,status,sql_execution_ms,gold_sql_execution_ms,provider,model,reasoning_effort,thinking_level,reasoning_mode,tool_calls,model_calls,sql_calls,sql_success_calls,sql_error_calls,sql_truncated_calls,agent_sql_execution_ms,input_tokens,output_tokens,total_tokens,cached_input_tokens,reasoning_tokens,input_tokens_observed_calls,output_tokens_observed_calls,total_tokens_observed_calls,cached_input_tokens_observed_calls,reasoning_tokens_observed_calls,latency_ms,cost_usd
+0,california_schools,moderate,B0,"SELECT MAX(f.`Percent (%) Eligible Free (Ages 5-17)`) AS highest_free_meal_eligibility_rate
+FROM satscores s
+JOIN frpm f ON s.cds = f.CDSCode
+WHERE 1.0 * s.NumGE1500 / NULLIF(s.NumTstTakr, 0) > 0.3;",0,incorrect_result,2.342,2.421,chatgpt-siwc,gpt-6-luna,none,,standard,5,4,1,1,0,0,81.628,15248,264,15512,7808,0,4,4,4,4,4,12666.0,
+15,california_schools,challenging,B0,"SELECT s.School, s.Phone
+FROM schools AS s
+JOIN satscores AS sat ON sat.cds = s.CDSCode
+WHERE s.DOCType = 'Statewide Benefit Charter'
+  AND s.School IS NOT NULL
+  AND sat.NumGE1500 = (
+      SELECT MAX(sat2.NumGE1500)
+      FROM schools AS s2
+      JOIN satscores AS sat2 ON sat2.cds = s2.CDSCode
+      WHERE s2.DOCType = 'Statewide Benefit Charter'
+        AND s2.School IS NOT NULL
+  );",1,correct,6.695,8.121,chatgpt-siwc,gpt-6-luna,none,,standard,10,9,6,6,0,1,270.185,48340,548,48888,18560,0,9,9,9,9,9,30381.0,
+22,california_schools,challenging,B0,"SELECT School, EILName
+FROM schools
+WHERE CDSCode = '01612590136051';",1,correct,0.473,2.179,chatgpt-siwc,gpt-6-luna,none,,standard,4,5,2,2,0,0,11.146,16255,150,16405,9600,0,5,5,5,5,5,16349.0,
+30,california_schools,challenging,B0,"WITH eligible AS (
+  SELECT sc.School, sc.District, sc.County, sat.AvgScrWrite
+  FROM schools AS sc
+  JOIN satscores AS sat ON sat.cds = sc.CDSCode
+  WHERE sc.StatusType = 'Closed'
+    AND sat.AvgScrWrite IS NOT NULL
+),
+ranked AS (
+  SELECT *,
+         DENSE_RANK() OVER (ORDER BY AvgScrWrite DESC) AS score_rank
+  FROM eligible
+)
+SELECT School, District, County, AvgScrWrite
+FROM ranked
+WHERE score_rank = 2
+ORDER BY School;",0,incorrect_result,6.369,17.022,chatgpt-siwc,gpt-6-luna,none,,standard,4,4,1,1,0,0,15.121,13399,343,13742,6016,0,4,4,4,4,4,17244.0,
+32,california_schools,challenging,B0,"WITH target_county AS (
+    SELECT `County Name` AS county_name
+    FROM frpm
+    WHERE CDSCode = '01612590125716'
+),
+eligible_schools AS (
+    SELECT
+        f.CDSCode,
+        f.`County Name` AS county_name,
+        ROUND(f.`Free Meal Count (K-12)` * 100.0 / f.`Enrollment (K-12)`, 2) AS free_meal_pct,
+        ROUND(f.`FRPM Count (K-12)` * 100.0 / f.`Enrollment (K-12)`, 2) AS frpm_pct,
+        f.`Charter School (Y/N)` AS charter
+    FROM frpm AS f
+    WHERE f.`County Name` = (SELECT county_name FROM target_county)
+      AND f.`Low Grade` <> 'P'
+      AND f.`High Grade` <> 'P'
+      AND f.`Free Meal Count (K-12)` > 500
+      AND f.`FRPM Count (K-12)` < 700
+      AND f.`Enrollment (K-12)` > 0
+),
+school_sat AS (
+    SELECT
+        cds,
+        AvgScrRead + AvgScrMath + AvgScrWrite AS sat_score
+    FROM satscores
+    WHERE AvgScrRead IS NOT NULL
+      AND AvgScrMath IS NOT NULL
+      AND AvgScrWrite IS NOT NULL
+)
+SELECT
+    e.county_name,
+    COUNT(*) AS school_count,
+    ROUND(AVG(e.free_meal_pct), 2) AS avg_free_meal_percentage,
+    ROUND(AVG(e.frpm_pct), 2) AS avg_frpm_percentage,
+    SUM(CASE WHEN e.charter = 1 THEN 1 ELSE 0 END) AS charter_school_count,
+    SUM(CASE WHEN e.charter = 0 THEN 1 ELSE 0 END) AS non_charter_school_count,
+    ROUND(AVG(ss.sat_score), 2) AS avg_sat_score
+FROM eligible_schools AS e
+LEFT JOIN school_sat AS ss ON ss.cds = e.CDSCode
+GROUP BY e.county_name;",0,incorrect_result,2.755,5.197,chatgpt-siwc,gpt-6-luna,none,,standard,10,9,6,6,0,0,57.86000000000001,49585,1570,51155,17792,0,9,9,9,9,9,50530.0,
+35,california_schools,challenging,B0,"SELECT
+    s.School AS school_name,
+    s.County AS county,
+    s.District AS district,
+    s.City AS city,
+    f.""Enrollment (K-12)"" AS k12_enrollment,
+    f.""FRPM Count (K-12)"" AS k12_frpm_eligible_count,
+    printf('%!.17g', f.""Percent (%) Eligible FRPM (K-12)"") AS k12_frpm_eligible_percentage,
+    t.NumTstTakr AS sat_test_takers,
+    t.AvgScrRead AS sat_average_reading_score,
+    t.AvgScrMath AS sat_average_math_score,
+    t.AvgScrWrite AS sat_average_writing_score,
+    t.NumGE1500 AS sat_test_takers_total_score_at_least_1500
+FROM schools AS s
+LEFT JOIN frpm AS f ON f.CDSCode = s.CDSCode
+LEFT JOIN satscores AS t ON t.cds = s.CDSCode
+WHERE s.CDSCode = '01612590137943';",0,incorrect_result,0.466,6.217,chatgpt-siwc,gpt-6-luna,none,,standard,8,7,4,4,0,0,10.08,33978,747,34725,15872,0,7,7,7,7,7,28569.0,
+40,california_schools,challenging,B0,"WITH eligible AS (
+    SELECT
+        s.*,
+        f.""Enrollment (K-12)"" AS enrollment,
+        f.""FRPM Count (K-12)"" AS frpm_count,
+        f.""FRPM Count (K-12)"" / NULLIF(f.""Enrollment (K-12)"", 0) AS frpm_share,
+        ss.NumTstTakr,
+        ss.AvgScrRead,
+        ss.AvgScrMath,
+        ss.AvgScrWrite,
+        ss.NumGE1500
+    FROM schools AS s
+    JOIN frpm AS f ON f.CDSCode = s.CDSCode
+    LEFT JOIN satscores AS ss ON ss.cds = s.CDSCode
+    WHERE f.""Enrollment (K-12)"" > 100
+      AND s.StatusType = 'Active'
+      AND COALESCE(s.Charter, 0) = 0
+),
+max_count AS (
+    SELECT MAX(frpm_count) AS value
+    FROM eligible
+),
+min_share AS (
+    SELECT MIN(frpm_share) AS value
+    FROM eligible
+    WHERE frpm_share IS NOT NULL
+),
+picks AS (
+    SELECT 'largest FRPM-eligible count' AS part, *
+    FROM eligible
+    WHERE frpm_count = (SELECT value FROM max_count)
+
+    UNION ALL
+
+    SELECT 'smallest FRPM share' AS part, *
+    FROM eligible
+    WHERE frpm_share = (SELECT value FROM min_share)
+
+    UNION ALL
+
+    SELECT 'the CDS code from my notes' AS part, *
+    FROM eligible
+    WHERE CDSCode = '04615150435602'
+)
+SELECT
+    part,
+    School AS school_name,
+    County AS county,
+    City AS city,
+    MailStreet AS mailing_street,
+    MailCity AS mailing_city,
+    MailState AS mailing_state,
+    MailZip AS mailing_ZIP,
+    Website AS website,
+    enrollment AS ""K-12 enrollment"",
+    frpm_count AS ""FRPM-eligible student count"",
+    frpm_share AS ""FRPM share"",
+    AvgScrRead + AvgScrMath + AvgScrWrite AS ""average total SAT score"",
+    100.0 * NumGE1500 / NULLIF(NumTstTakr, 0) AS ""percentage scoring 1500 or more"",
+    OpenDate AS opening_date,
+    CASE WHEN ClosedDate IS NOT NULL THEN 'closed' ELSE 'open' END AS status
+FROM picks;",1,correct,40.242,16584.455,chatgpt-siwc,gpt-6-luna,none,,standard,11,10,7,7,0,0,103.42,61775,1717,63492,25216,0,10,10,10,10,10,52936.0,
+43,california_schools,challenging,B0,"SELECT f.""County Name"", COUNT(DISTINCT f.CDSCode) AS qualifying_schools
+FROM frpm AS f
+JOIN satscores AS s
+  ON s.cds = f.CDSCode
+WHERE f.""Academic Year"" = '2014-2015'
+  AND f.""Enrollment (K-12)"" > 0
+  AND f.""Free Meal Count (K-12)"" / f.""Enrollment (K-12)"" > 0.1
+  AND s.rtype = 'S'
+  AND s.NumGE1500 > 0
+GROUP BY f.""County Name""
+ORDER BY qualifying_schools DESC, f.""County Name"" ASC;",1,correct,2.704,2.223,chatgpt-siwc,gpt-6-luna,none,,standard,8,7,4,4,0,2,16.211,33467,624,34091,11648,0,7,7,7,7,7,25532.0,
+46,california_schools,challenging,B0,"SELECT s.City, COUNT(*) AS magnet_schools_provision2
+FROM schools AS s
+JOIN frpm AS f ON f.CDSCode = s.CDSCode
+WHERE s.Magnet = 1
+  AND s.City IS NOT NULL
+  AND f.`NSLP Provision Status` = 'Provision 2'
+GROUP BY s.City
+ORDER BY s.City;",0,incorrect_result,4.006,4.199,chatgpt-siwc,gpt-6-luna,none,,standard,5,5,2,2,0,1,22.137,20019,266,20285,9728,0,5,5,5,5,5,16535.0,
+49,card_games,simple,B0,"SELECT id
+FROM cards
+WHERE frameEffects LIKE '%extendedart%'
+  AND (cardKingdomId IS NULL OR cardKingdomFoilId IS NULL);",0,incorrect_result,34.278,34.054,chatgpt-siwc,gpt-6-luna,none,,standard,13,14,11,11,0,2,2583.4080000000004,67921,550,68471,33920,0,14,14,14,14,14,42173.0,
+58,card_games,challenging,B0,"SELECT COUNT(*) AS qualifying_printings,
+       SUM(CASE WHEN f.uuid IS NOT NULL THEN 1 ELSE 0 END) AS french_printings,
+       ROUND(100.0 * SUM(CASE WHEN f.uuid IS NOT NULL THEN 1 ELSE 0 END) / COUNT(*), 2) AS percentage
+FROM cards c
+LEFT JOIN (
+    SELECT DISTINCT uuid
+    FROM foreign_data
+    WHERE language = 'French'
+) f ON f.uuid = c.uuid
+WHERE c.power IS NULL OR c.power = '' OR c.power LIKE '%*%';",0,incorrect_result,171.84,193.575,chatgpt-siwc,gpt-6-luna,none,,standard,5,6,2,1,1,0,300177.071,23757,433,24190,11648,0,6,6,6,6,6,320586.0,
+59,card_games,moderate,B0,"SELECT COUNT(DISTINCT s.code) AS count
+FROM sets AS s
+JOIN set_translations AS st ON st.setCode = s.code
+WHERE s.block = 'Ice Age'
+  AND st.language = 'Italian';",0,incorrect_result,0.932,0.997,chatgpt-siwc,gpt-6-luna,none,,standard,4,5,1,1,0,0,6.538,13898,172,14070,9856,0,5,5,5,5,5,13486.0,
+60,card_games,challenging,B0,"SELECT 100.0 * SUM(CASE WHEN cardKingdomId IS NOT NULL AND cardKingdomId <> '' AND cardKingdomFoilId IS NOT NULL AND cardKingdomFoilId <> '' THEN 1 ELSE 0 END) / COUNT(*) AS percentage
+FROM cards
+WHERE setCode = 'CSP';",1,correct,40.109,59.984,chatgpt-siwc,gpt-6-luna,none,,standard,4,5,1,1,0,0,42.485,19323,211,19534,7936,0,5,5,5,5,5,16996.0,
+63,card_games,challenging,B0,"SELECT MAX(CAST(frameVersion AS INTEGER)) - MIN(CAST(frameVersion AS INTEGER)) AS years_between
+FROM cards
+WHERE name = 'Tarmogoyf'
+  AND frameVersion GLOB '[0-9][0-9][0-9][0-9]';",1,correct,35.348,46.412,chatgpt-siwc,gpt-6-luna,none,,standard,5,6,3,3,0,0,86.98299999999999,23937,279,24216,12160,0,6,6,6,6,6,19814.0,
+73,card_games,challenging,B0,"WITH chosen AS (
+    SELECT s.code, s.name
+    FROM sets AS s
+    WHERE s.code = (
+        SELECT c.setCode
+        FROM cards AS c
+        JOIN sets AS printed_set ON printed_set.code = c.setCode
+        WHERE c.name = 'Abyssal Horror'
+        ORDER BY printed_set.releaseDate ASC, printed_set.code ASC
+        LIMIT 1
+    )
+
+    UNION
+
+    SELECT code, name
+    FROM sets
+    ORDER BY releaseDate DESC, code ASC
+    LIMIT 1
+)
+SELECT
+    chosen.name AS set_name,
+    ROUND(
+        100.0 * SUM(
+            CASE
+                WHEN cards.manaCost IS NOT NULL
+                     AND cards.convertedManaCost <= 3
+                THEN 1
+                ELSE 0
+            END
+        ) / COUNT(cards.id),
+        2
+    ) AS percentage
+FROM chosen
+JOIN cards ON cards.setCode = chosen.code
+GROUP BY chosen.code, chosen.name;",0,sql_error,0.719,138.57,chatgpt-siwc,gpt-6-luna,none,,standard,10,9,6,5,1,0,209.584,46910,1008,47918,21248,0,9,9,9,9,9,41624.0,
+76,card_games,challenging,B0,"SELECT COUNT(*) AS count
+FROM cards
+WHERE borderColor = 'white'
+  AND power IS NOT NULL
+  AND power != '*'
+  AND CAST(power AS REAL) < 3;",0,incorrect_result,30.31,38.067,chatgpt-siwc,gpt-6-luna,none,,standard,3,4,1,1,0,0,39.326,13684,133,13817,7808,0,4,4,4,4,4,12602.0,
+87,card_games,challenging,B0,"SELECT COUNT(r.id) AS ruling_count
+FROM cards AS c
+JOIN rulings AS r ON r.uuid = c.uuid
+WHERE c.name = 'Fireball';",0,incorrect_result,113.228,120.207,chatgpt-siwc,gpt-6-luna,none,,standard,4,5,1,1,0,0,1142.353,16572,157,16729,5888,0,5,5,5,5,5,16389.0,
+91,card_games,challenging,B0,"SELECT COUNT(*) AS printing_count
+FROM cards c
+JOIN legalities l ON l.uuid = c.uuid
+WHERE c.artist = 'Erica Yang'
+  AND l.format = 'pauper'
+  AND l.status = 'Legal'
+  AND c.availability LIKE '%paper%';",1,correct,111.933,96.681,chatgpt-siwc,gpt-6-luna,none,,standard,5,5,1,1,0,0,1002.436,20172,232,20404,7808,0,5,5,5,5,5,14885.0,
+97,card_games,challenging,B0,"SELECT DISTINCT name
+FROM cards
+WHERE isPromo = 1
+  AND frameVersion = (
+    SELECT frameVersion
+    FROM cards
+    WHERE frameVersion GLOB '[0-9]*'
+    ORDER BY CAST(frameVersion AS INTEGER) DESC
+    LIMIT 1
+  )
+  AND otherFaceIds IS NOT NULL
+  AND otherFaceIds <> ''
+ORDER BY name;",1,correct,70.291,67.836,chatgpt-siwc,gpt-6-luna,none,,standard,14,13,10,10,0,2,376.80299999999994,74627,608,75235,30592,0,13,13,13,13,13,45511.0,
+107,card_games,challenging,B0,"WITH jp_cards AS (
+    SELECT DISTINCT c.uuid, f.name AS japanese_name, c.type AS english_type
+    FROM cards c
+    JOIN foreign_data f ON f.uuid = c.uuid
+    WHERE lower(c.watermark) = 'boros'
+      AND f.language = 'Japanese'
+),
+card_printings AS (
+    SELECT DISTINCT
+        j.japanese_name,
+        j.english_type,
+        c.uuid
+    FROM jp_cards j
+    JOIN foreign_data f
+      ON f.name = j.japanese_name
+     AND f.language = 'Japanese'
+    JOIN cards c
+      ON c.uuid = f.uuid
+     AND c.type = j.english_type
+),
+ruling_totals AS (
+    SELECT
+        p.japanese_name,
+        p.english_type,
+        COUNT(r.id) AS ruling_total
+    FROM card_printings p
+    LEFT JOIN rulings r ON r.uuid = p.uuid
+    GROUP BY p.japanese_name, p.english_type
+)
+SELECT japanese_name, english_type, ruling_total
+FROM ruling_totals
+ORDER BY japanese_name, english_type;",0,incorrect_result,389.99,2470.59,chatgpt-siwc,gpt-6-luna,none,,standard,11,10,7,6,1,2,301603.237,52239,1161,53400,11136,0,10,10,10,10,10,347251.0,
+111,card_games,challenging,B0,"SELECT COUNT(*) AS total_printings
+FROM cards
+WHERE CAST(power AS REAL) > 3
+  AND CAST(power AS REAL) <= 10;",1,correct,41.437,41.117,chatgpt-siwc,gpt-6-luna,none,,standard,3,4,1,1,0,0,45.309,13805,124,13929,6016,0,4,4,4,4,4,15242.0,
+113,card_games,challenging,B0,"SELECT language, COUNT(*) AS printings
+FROM foreign_data
+WHERE language NOT IN ('Ancient Greek', 'Arabic', 'Hebrew', 'Latin', 'Sanskrit', 'Phyrexian')
+GROUP BY language
+ORDER BY printings ASC
+LIMIT 1;",1,correct,139.463,143.927,chatgpt-siwc,gpt-6-luna,none,,standard,6,5,2,2,0,0,247.72199999999998,15762,247,16009,7808,0,5,5,5,5,5,17117.0,
+117,card_games,challenging,B0,"SELECT COUNT(DISTINCT c.name)
+FROM cards c
+JOIN foreign_data f ON f.uuid = c.uuid
+WHERE c.colors = 'B'
+  AND instr(',' || c.types || ',', ',Artifact,') > 0
+  AND f.language IS NOT NULL
+  AND lower(f.language) NOT IN ('english', 'unknown')
+  AND f.flavorText IS NOT NULL
+  AND trim(f.flavorText) <> '';",1,correct,200.446,546.312,chatgpt-siwc,gpt-6-luna,none,,standard,10,11,7,7,0,3,1175.614,56579,697,57276,23168,0,11,11,11,11,11,39342.0,
+119,codebase_community,moderate,B0,"SELECT DISTINCT ph.UserId
+FROM postHistory AS ph
+JOIN posts AS p ON p.Id = ph.PostId
+WHERE p.ViewCount >= 1000
+  AND ph.UserId IS NOT NULL
+GROUP BY ph.UserId, ph.PostId
+HAVING COUNT(*) = 1;",1,correct,283.231,277.931,chatgpt-siwc,gpt-6-luna,none,,standard,4,4,1,1,0,1,12781.66,11733,214,11947,6016,0,4,4,4,4,4,26298.0,
+132,codebase_community,challenging,B0,"WITH posts_2012 AS (
+    SELECT Id, Score, LastEditorUserId
+    FROM posts
+    WHERE CreaionDate >= '2012-01-01'
+      AND CreaionDate < '2013-01-01'
+),
+germany_editors AS (
+    SELECT DISTINCT u.Id, u.Reputation
+    FROM posts_2012 AS p
+    JOIN users AS u
+      ON u.Id = p.LastEditorUserId
+    WHERE u.Location LIKE '%Germany%'
+)
+SELECT
+    COALESCE(SUM(
+        CASE WHEN u.Location LIKE '%Germany%' THEN p.Score ELSE 0 END
+    ), 0) AS germany_last_editor_post_score,
+    COALESCE(SUM(
+        CASE WHEN u.Id IS NULL OR u.Location IS NULL OR u.Location NOT LIKE '%Germany%'
+             THEN p.Score ELSE 0 END
+    ), 0) AS other_post_score,
+    (SELECT COUNT(*) FROM germany_editors) AS germany_editor_user_count,
+    (SELECT COALESCE(SUM(Reputation), 0) FROM germany_editors)
+        AS germany_editor_combined_reputation
+FROM posts_2012 AS p
+LEFT JOIN users AS u
+  ON u.Id = p.LastEditorUserId;",1,correct,173.275,248.842,chatgpt-siwc,gpt-6-luna,none,,standard,5,4,1,1,0,0,353.939,13176,615,13791,3840,0,4,4,4,4,4,20510.0,
+135,codebase_community,challenging,B0,"SELECT SUM(p.Score) AS total_score
+FROM postLinks AS pl
+JOIN posts AS p ON p.Id = pl.PostId
+WHERE pl.RelatedPostId = (
+    SELECT Id
+    FROM posts
+    WHERE Title = 'A Probability distribution value exceeding 1 is OK?'
+)
+  AND p.PostTypeId = 1
+  AND ('<' || p.Tags || '>') LIKE '%<r>%';",0,incorrect_result,4.238,25.327,chatgpt-siwc,gpt-6-luna,none,,standard,7,6,3,3,0,0,203.96800000000002,20652,358,21010,11648,0,6,6,6,6,6,20283.0,
+137,codebase_community,challenging,B0,"SELECT Id, DisplayName, Views, Reputation
+FROM users
+WHERE Location LIKE '%CA%'
+  AND (Location LIKE '%CA,%' OR Location LIKE '%, CA' OR Location LIKE '%, CA,%')
+  AND Views = (
+    SELECT MAX(Views)
+    FROM users
+    WHERE Location LIKE '%CA%'
+      AND (Location LIKE '%CA,%' OR Location LIKE '%, CA' OR Location LIKE '%, CA,%')
+  );",1,correct,13.703,35.528,chatgpt-siwc,gpt-6-luna,none,,standard,5,6,3,3,0,1,211.664,18140,337,18477,11520,0,6,6,6,6,6,24409.0,
+141,codebase_community,challenging,B0,"WITH counts AS (
+    SELECT p.Id, p.Title, COUNT(pl.Id) AS related_count
+    FROM posts AS p
+    LEFT JOIN postLinks AS pl ON pl.PostId = p.Id
+    WHERE p.Title LIKE '%principal component scores%'
+    GROUP BY p.Id, p.Title
+)
+SELECT Title, related_count
+FROM counts
+WHERE related_count = (SELECT MAX(related_count) FROM counts);",0,incorrect_result,75.08,23.551,chatgpt-siwc,gpt-6-luna,none,,standard,4,4,1,1,0,0,75.421,11735,271,12006,7936,0,4,4,4,4,4,15116.0,
+144,codebase_community,challenging,B0,"SELECT ROUND(AVG(u.Reputation), 2)
+FROM users AS u
+WHERE u.Location = 'India'
+  AND EXISTS (
+    SELECT 1
+    FROM posts AS p
+    WHERE p.OwnerUserId = u.Id
+      AND p.CreaionDate >= '2010-01-01'
+      AND p.CreaionDate < '2011-01-01'
+  );",0,incorrect_result,84.242,79.157,chatgpt-siwc,gpt-6-luna,none,,standard,4,4,1,1,0,0,88.618,12080,266,12346,6016,0,4,4,4,4,4,14897.0,
+149,debit_card_specializing,challenging,B0,"WITH customer_totals AS (
+    SELECT
+        c.Segment,
+        c.CustomerID,
+        SUM(y.Consumption) AS total_2013
+    FROM customers AS c
+    JOIN yearmonth AS y
+        ON y.CustomerID = c.CustomerID
+    WHERE c.Currency = 'CZK'
+      AND c.Segment IN ('SME', 'LAM', 'KAM')
+      AND y.Date >= '201301'
+      AND y.Date < '201401'
+    GROUP BY c.Segment, c.CustomerID
+),
+ranked AS (
+    SELECT
+        Segment,
+        CustomerID,
+        total_2013,
+        ROW_NUMBER() OVER (
+            PARTITION BY Segment
+            ORDER BY total_2013, CustomerID
+        ) AS rn
+    FROM customer_totals
+),
+minima AS (
+    SELECT Segment, total_2013
+    FROM ranked
+    WHERE rn = 1
+)
+SELECT
+    ROUND(
+        MAX(CASE WHEN Segment = 'SME' THEN total_2013 END)
+        - MAX(CASE WHEN Segment = 'LAM' THEN total_2013 END),
+        2
+    ) AS SME_minus_LAM,
+    ROUND(
+        MAX(CASE WHEN Segment = 'LAM' THEN total_2013 END)
+        - MAX(CASE WHEN Segment = 'KAM' THEN total_2013 END),
+        2
+    ) AS LAM_minus_KAM,
+    ROUND(
+        MAX(CASE WHEN Segment = 'KAM' THEN total_2013 END)
+        - MAX(CASE WHEN Segment = 'SME' THEN total_2013 END),
+        2
+    ) AS KAM_minus_SME
+FROM minima;",1,correct,316.291,404.356,chatgpt-siwc,gpt-6-luna,none,,standard,9,6,5,5,0,0,1081.339,18697,965,19662,9728,0,6,6,6,6,6,33719.0,
+159,debit_card_specializing,challenging,B0,"SELECT ROUND(AVG(Consumption), 2) AS average_monthly_fuel_consumption
+FROM yearmonth
+WHERE CustomerID = 15621
+  AND Date LIKE '2013%'
+  AND Consumption > 0;",1,correct,19.352,19.124,chatgpt-siwc,gpt-6-luna,none,,standard,11,8,5,5,0,0,178.908,24696,378,25074,15872,0,8,8,8,8,8,25722.0,
+160,debit_card_specializing,challenging,B0,"WITH customer_year AS (
+    SELECT CustomerID, SUM(Consumption) AS total_consumption
+    FROM yearmonth
+    WHERE Date >= '201201' AND Date <= '201212'
+    GROUP BY CustomerID
+),
+currency_averages AS (
+    SELECT c.Currency, AVG(cy.total_consumption) AS avg_consumption
+    FROM customer_year cy
+    JOIN customers c ON c.CustomerID = cy.CustomerID
+    WHERE c.Currency IN ('CZK', 'EUR')
+    GROUP BY c.Currency
+)
+SELECT ROUND(
+    MAX(CASE WHEN Currency = 'CZK' THEN avg_consumption END) -
+    MAX(CASE WHEN Currency = 'EUR' THEN avg_consumption END)
+) AS difference
+FROM currency_averages;",1,correct,148.694,84.505,chatgpt-siwc,gpt-6-luna,none,,standard,7,6,3,3,0,0,338.556,17925,529,18454,9856,0,6,6,6,6,6,29973.0,
+167,european_football_2,challenging,B0,"WITH extremes AS (
+    SELECT player_api_id
+    FROM Player
+    WHERE height = (SELECT MAX(height) FROM Player)
+    UNION
+    SELECT player_api_id
+    FROM Player
+    WHERE height = (SELECT MIN(height) FROM Player)
+),
+average_finishing AS (
+    SELECT p.player_api_id, p.player_name, AVG(pa.finishing) AS avg_finishing
+    FROM Player p
+    JOIN extremes e ON e.player_api_id = p.player_api_id
+    JOIN Player_Attributes pa ON pa.player_api_id = p.player_api_id
+    GROUP BY p.player_api_id, p.player_name
+)
+SELECT player_name
+FROM average_finishing
+ORDER BY avg_finishing DESC
+LIMIT 1;",1,correct,185.307,106.274,chatgpt-siwc,gpt-6-luna,none,,standard,4,5,1,1,0,0,920.858,15191,368,15559,7680,0,5,5,5,5,5,18777.0,
+168,european_football_2,challenging,B0,"SELECT
+    (SELECT AVG(pa.ball_control)
+     FROM Player p
+     JOIN Player_Attributes pa ON pa.player_api_id = p.player_api_id
+     WHERE p.player_name = 'Abdou Diallo')
+    -
+    (SELECT AVG(pa.ball_control)
+     FROM Player p
+     JOIN Player_Attributes pa ON pa.player_api_id = p.player_api_id
+     WHERE p.player_name = 'Aaron Appindangoye')
+    AS mean_ball_control_difference;",1,correct,185.679,122.085,chatgpt-siwc,gpt-6-luna,none,,standard,5,5,2,2,0,0,233.96499999999997,16842,354,17196,7680,0,5,5,5,5,5,20245.0,
+170,european_football_2,moderate,B0,"SELECT MIN(pa.date)
+FROM Player_Attributes AS pa
+JOIN Player AS p ON p.player_api_id = pa.player_api_id
+WHERE p.player_name = 'Kevin Constant'
+  AND pa.crossing = (
+    SELECT MAX(pa2.crossing)
+    FROM Player_Attributes AS pa2
+    JOIN Player AS p2 ON p2.player_api_id = pa2.player_api_id
+    WHERE p2.player_name = 'Kevin Constant'
+  );",1,correct,226.524,106.168,chatgpt-siwc,gpt-6-luna,none,,standard,3,4,1,1,0,1,84.591,12458,202,12660,7808,0,4,4,4,4,4,13306.0,
+185,european_football_2,challenging,B0,"WITH ranked AS (
+  SELECT
+    player_api_id,
+    volleys,
+    ROW_NUMBER() OVER (
+      PARTITION BY player_api_id
+      ORDER BY date DESC, id DESC
+    ) AS rn
+  FROM Player_Attributes
+)
+SELECT COUNT(*) AS player_count
+FROM ranked r
+JOIN Player p ON p.player_api_id = r.player_api_id
+WHERE r.rn = 1
+  AND p.height > 180
+  AND r.volleys > 70;",1,correct,245.243,246.613,chatgpt-siwc,gpt-6-luna,none,,standard,4,4,1,1,0,0,238.137,12957,301,13258,7808,0,4,4,4,4,4,15829.0,
+187,european_football_2,challenging,B0,"WITH appearances AS (
+    SELECT country_id, home_player_1 AS player_api_id FROM ""Match""
+    UNION ALL SELECT country_id, home_player_2 FROM ""Match""
+    UNION ALL SELECT country_id, home_player_3 FROM ""Match""
+    UNION ALL SELECT country_id, home_player_4 FROM ""Match""
+    UNION ALL SELECT country_id, home_player_5 FROM ""Match""
+    UNION ALL SELECT country_id, home_player_6 FROM ""Match""
+    UNION ALL SELECT country_id, home_player_7 FROM ""Match""
+    UNION ALL SELECT country_id, home_player_8 FROM ""Match""
+    UNION ALL SELECT country_id, home_player_9 FROM ""Match""
+    UNION ALL SELECT country_id, home_player_10 FROM ""Match""
+    UNION ALL SELECT country_id, home_player_11 FROM ""Match""
+    UNION ALL SELECT country_id, away_player_1 FROM ""Match""
+    UNION ALL SELECT country_id, away_player_2 FROM ""Match""
+    UNION ALL SELECT country_id, away_player_3 FROM ""Match""
+    UNION ALL SELECT country_id, away_player_4 FROM ""Match""
+    UNION ALL SELECT country_id, away_player_5 FROM ""Match""
+    UNION ALL SELECT country_id, away_player_6 FROM ""Match""
+    UNION ALL SELECT country_id, away_player_7 FROM ""Match""
+    UNION ALL SELECT country_id, away_player_8 FROM ""Match""
+    UNION ALL SELECT country_id, away_player_9 FROM ""Match""
+    UNION ALL SELECT country_id, away_player_10 FROM ""Match""
+    UNION ALL SELECT country_id, away_player_11 FROM ""Match""
+),
+counts AS (
+    SELECT c.name AS country, COUNT(*) AS qualifying_player_appearances
+    FROM appearances a
+    JOIN Player p ON p.player_api_id = a.player_api_id
+    JOIN Country c ON c.id = a.country_id
+    WHERE p.weight <= 160
+    GROUP BY c.id, c.name
+)
+SELECT country, qualifying_player_appearances
+FROM counts
+WHERE qualifying_player_appearances = (
+    SELECT MIN(qualifying_player_appearances) FROM counts
+)
+ORDER BY country;",0,incorrect_result,1863.677,1309.373,chatgpt-siwc,gpt-6-luna,none,,standard,7,4,1,1,0,0,3638.893,21916,1124,23040,7936,0,4,4,4,4,4,33838.0,
+193,european_football_2,challenging,B0,"WITH ranked AS (
+    SELECT
+        pa.player_api_id,
+        pa.overall_rating,
+        pa.defensive_work_rate,
+        ROW_NUMBER() OVER (
+            PARTITION BY pa.player_api_id
+            ORDER BY pa.date DESC, pa.id DESC
+        ) AS rn
+    FROM Player_Attributes AS pa
+    WHERE pa.date <= '2013-07-12 00:00:00'
+),
+ratings AS (
+    SELECT player_api_id, overall_rating
+    FROM ranked
+    WHERE rn = 1
+      AND defensive_work_rate IN ('low', 'medium', 'high')
+),
+average_rating AS (
+    SELECT AVG(overall_rating) AS avg_rating
+    FROM ratings
+),
+donovan AS (
+    SELECT r.overall_rating
+    FROM ratings AS r
+    JOIN Player AS p ON p.player_api_id = r.player_api_id
+    WHERE p.player_name = 'Landon Donovan'
+)
+SELECT ROUND(
+    100.0 * (donovan.overall_rating - average_rating.avg_rating)
+    / average_rating.avg_rating,
+    2
+) AS percentage_higher
+FROM donovan
+CROSS JOIN average_rating;",1,correct,188.412,228.199,chatgpt-siwc,gpt-6-luna,none,,standard,7,7,4,3,1,0,300339.791,26698,858,27556,9856,0,7,7,7,7,7,333071.0,
+204,financial,challenging,B0,"SELECT COUNT(DISTINCT t.trans_id)
+FROM trans AS t
+JOIN disp AS dp ON dp.account_id = t.account_id
+JOIN client AS c ON c.client_id = dp.client_id
+WHERE c.gender = 'M'
+  AND CAST(strftime('%Y', c.birth_date) AS INTEGER) BETWEEN 1974 AND 1976
+  AND t.k_symbol IS NULL;",0,incorrect_result,289.062,124.283,chatgpt-siwc,gpt-6-luna,none,,standard,6,5,1,1,0,0,1955.101,14216,291,14507,9856,0,5,5,5,5,5,24886.0,
+207,financial,challenging,B0,"SELECT COUNT(DISTINCT a.account_id)
+FROM account AS a
+JOIN district AS d ON d.district_id = a.district_id
+WHERE d.A3 = 'north Bohemia'
+  AND a.date <= '1995-12-31'
+  AND EXISTS (
+      SELECT 1
+      FROM trans AS t
+      WHERE t.account_id = a.account_id
+        AND t.bank = 'AB'
+  );",1,correct,89.618,82.257,chatgpt-siwc,gpt-6-luna,none,,standard,10,6,5,5,0,0,165.441,20393,413,20806,11648,0,6,6,6,6,6,23870.0,
+208,financial,challenging,B0,"SELECT
+  ROUND(AVG(d.A11), 2) AS average_salary,
+  COUNT(*) AS district_count
+FROM district AS d
+WHERE d.A3 = 'east Bohemia'
+  AND EXISTS (
+    SELECT 1
+    FROM account AS a
+    JOIN disp AS dp ON dp.account_id = a.account_id
+    JOIN client AS c ON c.client_id = dp.client_id
+    WHERE a.district_id = d.district_id
+      AND CAST(SUBSTR(c.birth_date, 1, 4) AS INTEGER) BETWEEN 1980 AND 1989
+  );",1,correct,3.704,2.211,chatgpt-siwc,gpt-6-luna,none,,standard,8,6,3,3,0,0,3.631,19872,467,20339,9600,0,6,6,6,6,6,27058.0,
+209,financial,challenging,B0,"WITH qualifying_districts AS (
+  SELECT DISTINCT c.district_id
+  FROM client AS c
+  JOIN district AS home_d
+    ON home_d.district_id = c.district_id
+  JOIN disp AS owner_disp
+    ON owner_disp.client_id = c.client_id
+   AND owner_disp.type = 'OWNER'
+  WHERE home_d.A3 = 'central Bohemia'
+    AND NOT EXISTS (
+      SELECT 1
+      FROM disp AS any_disp
+      JOIN card AS ca
+        ON ca.disp_id = any_disp.disp_id
+      WHERE any_disp.account_id = owner_disp.account_id
+    )
+)
+SELECT ROUND(AVG(d.A11), 2) AS average_district_salary
+FROM qualifying_districts AS qd
+JOIN district AS d
+  ON d.district_id = qd.district_id;",1,correct,924.832,923.879,chatgpt-siwc,gpt-6-luna,none,,standard,8,5,2,2,0,0,853.984,16609,514,17123,7936,0,5,5,5,5,5,22461.0,
+211,financial,challenging,B0,"SELECT
+    SUM(CASE WHEN t.k_symbol = 'SIPO' THEN 1 ELSE 0 END) AS household_payments,
+    SUM(CASE WHEN t.k_symbol IS NOT NULL AND t.k_symbol <> 'SIPO' THEN 1 ELSE 0 END) AS other_purpose_payments
+FROM client c
+JOIN disp d ON d.client_id = c.client_id
+JOIN trans t ON t.account_id = d.account_id
+WHERE c.gender = 'M'
+  AND CAST(strftime('%Y', c.birth_date) AS INTEGER) BETWEEN 1974 AND 1976
+  AND t.type = 'VYDAJ'
+  AND t.amount > 4000;",0,incorrect_result,201.577,253.835,chatgpt-siwc,gpt-6-luna,none,,standard,8,5,3,3,0,0,309.587,15627,479,16106,9600,0,5,5,5,5,5,22365.0,
+218,financial,challenging,B0,"WITH card_districts AS (
+  SELECT DISTINCT ca.type AS card_type, cl.district_id, di.A4 AS inhabitants
+  FROM card ca
+  JOIN disp dp ON ca.disp_id = dp.disp_id
+  JOIN client cl ON dp.client_id = cl.client_id
+  JOIN district di ON cl.district_id = di.district_id
+  WHERE ca.type IN ('gold', 'classic', 'junior')
+),
+ranked AS (
+  SELECT card_type, district_id, inhabitants,
+         MIN(inhabitants) OVER (PARTITION BY card_type) AS min_inhabitants
+  FROM card_districts
+)
+SELECT card_type, district_id, inhabitants
+FROM ranked
+WHERE inhabitants = min_inhabitants
+ORDER BY card_type, district_id;",0,incorrect_result,1.854,1.724,chatgpt-siwc,gpt-6-luna,none,,standard,6,4,1,1,0,0,2.14,12021,452,12473,5760,0,4,4,4,4,4,20149.0,
+221,financial,challenging,B0,"WITH withdrawal_totals AS (
+    SELECT
+        a.district_id,
+        SUM(t.amount) AS total_withdrawn
+    FROM trans AS t
+    JOIN account AS a ON a.account_id = t.account_id
+    WHERE t.type = 'VYDAJ'
+    GROUP BY a.district_id
+),
+district_metrics AS (
+    SELECT
+        d.district_id,
+        d.A2 AS district_name,
+        d.A3 AS region,
+        CAST(d.A4 AS INTEGER) AS population,
+        wt.total_withdrawn,
+        1.0 * wt.total_withdrawn / CAST(d.A4 AS INTEGER) AS withdrawals_per_inhabitant,
+        COALESCE(SUM(o.amount), 0.0) / COUNT(DISTINCT a.account_id) AS avg_standing_order_debit_per_account
+    FROM district AS d
+    JOIN withdrawal_totals AS wt ON wt.district_id = d.district_id
+    JOIN account AS a ON a.district_id = d.district_id
+    LEFT JOIN ""order"" AS o ON o.account_id = a.account_id
+    WHERE CAST(d.A4 AS INTEGER) >= 100000
+    GROUP BY d.district_id, d.A2, d.A3, d.A4, wt.total_withdrawn
+)
+SELECT
+    district_name,
+    region,
+    population,
+    total_withdrawn,
+    ROUND(withdrawals_per_inhabitant, 2) AS withdrawals_per_inhabitant,
+    RANK() OVER (ORDER BY withdrawals_per_inhabitant DESC) AS withdrawals_per_inhabitant_rank,
+    ROUND(avg_standing_order_debit_per_account, 2) AS avg_standing_order_debit_per_account
+FROM district_metrics
+ORDER BY withdrawals_per_inhabitant_rank, district_name;",1,correct,11090.103,265.187,chatgpt-siwc,gpt-6-luna,none,,standard,9,7,4,4,0,0,343.147,25394,598,25992,13824,0,7,7,7,7,7,28092.0,
+233,financial,challenging,B0,"WITH gold_accounts AS (
+    SELECT DISTINCT d.account_id
+    FROM card AS c
+    JOIN disp AS d ON c.disp_id = d.disp_id
+    WHERE c.type = 'gold'
+),
+transaction_totals AS (
+    SELECT
+        account_id,
+        SUM(CASE WHEN type = 'PRIJEM' THEN amount ELSE 0 END) AS total_received,
+        SUM(CASE WHEN type = 'VYDAJ' THEN amount ELSE 0 END) AS total_withdrawn,
+        COUNT(DISTINCT CASE
+            WHEN bank IS NOT NULL AND account IS NOT NULL
+            THEN bank || ':' || account
+        END) AS external_counterparties
+    FROM trans
+    GROUP BY account_id
+),
+loan_counts AS (
+    SELECT account_id, COUNT(*) AS number_of_loans
+    FROM loan
+    GROUP BY account_id
+)
+SELECT
+    ga.account_id,
+    di.A2 AS district_name,
+    di.A3 AS region,
+    COALESCE(tt.total_received, 0) AS total_received,
+    COALESCE(tt.total_withdrawn, 0) AS total_withdrawn,
+    COALESCE(lc.number_of_loans, 0) AS number_of_loans,
+    COALESCE(tt.external_counterparties, 0) AS external_counterparties,
+    DENSE_RANK() OVER (
+        ORDER BY COALESCE(tt.external_counterparties, 0) DESC
+    ) AS counterparty_rank
+FROM gold_accounts AS ga
+JOIN account AS a ON ga.account_id = a.account_id
+JOIN district AS di ON a.district_id = di.district_id
+LEFT JOIN transaction_totals AS tt ON ga.account_id = tt.account_id
+LEFT JOIN loan_counts AS lc ON ga.account_id = lc.account_id
+ORDER BY counterparty_rank, ga.account_id;",1,correct,548.757,578.554,chatgpt-siwc,gpt-6-luna,none,,standard,13,8,6,6,0,1,1001.7900000000001,34726,1010,35736,13696,0,8,8,8,8,8,40168.0,
+239,financial,challenging,B0,"SELECT 'young cohort' AS cohort, ROUND(AVG(d.A11)) AS average_district_salary
+FROM client c
+JOIN disp dp ON dp.client_id = c.client_id
+JOIN account a ON a.account_id = dp.account_id
+JOIN district d ON d.district_id = a.district_id
+WHERE c.birth_date >= '1980-01-01'
+UNION ALL
+SELECT 'old cohort' AS cohort, ROUND(AVG(d.A11)) AS average_district_salary
+FROM client c
+JOIN disp dp ON dp.client_id = c.client_id
+JOIN account a ON a.account_id = dp.account_id
+JOIN district d ON d.district_id = a.district_id
+WHERE c.birth_date <= '1919-12-31';",0,incorrect_result,2.397,2.172,chatgpt-siwc,gpt-6-luna,none,,standard,7,5,2,2,0,0,2.348,15784,466,16250,9600,0,5,5,5,5,5,19780.0,
+244,formula_1,challenging,B0,"WITH race_winners AS (
+  SELECT raceId, laps AS winner_laps
+  FROM results
+  WHERE positionOrder = 1
+),
+japanese_entries AS (
+  SELECT res.laps, rw.winner_laps
+  FROM results AS res
+  JOIN drivers AS d ON d.driverId = res.driverId
+  JOIN races AS ra ON ra.raceId = res.raceId
+  JOIN race_winners AS rw ON rw.raceId = res.raceId
+  WHERE d.nationality = 'Japanese'
+    AND ra.year BETWEEN 2007 AND 2009
+)
+SELECT ROUND(
+  100.0 * SUM(CASE WHEN laps = winner_laps THEN 1 ELSE 0 END) / COUNT(*),
+  2
+) AS percentage
+FROM japanese_entries;",1,correct,4.416,10.401,chatgpt-siwc,gpt-6-luna,none,,standard,5,4,1,1,0,0,37.427,12264,439,12703,7680,0,4,4,4,4,4,19292.0,
+249,formula_1,challenging,B0,"SELECT
+    d.forename || ' ' || d.surname AS full_name
+FROM lapTimes AS l
+JOIN drivers AS d ON d.driverId = l.driverId
+WHERE l.milliseconds IS NOT NULL
+GROUP BY l.driverId
+ORDER BY MIN(l.milliseconds) ASC, full_name ASC
+LIMIT 20;",1,correct,143.358,122.364,chatgpt-siwc,gpt-6-luna,none,,standard,5,4,1,1,0,0,535.789,12221,250,12471,7936,0,4,4,4,4,4,23390.0,
+252,formula_1,challenging,B0,"SELECT
+    d.forename,
+    d.surname,
+    d.url AS wikipedia_page_link,
+    d.dob AS date_of_birth,
+    COUNT(q.q3) AS q3_times
+FROM drivers AS d
+LEFT JOIN qualifying AS q
+    ON q.driverId = d.driverId
+WHERE d.nationality = 'German'
+  AND d.dob >= '1971-01-01'
+  AND d.dob < '1986-01-01'
+GROUP BY d.driverId, d.forename, d.surname, d.url, d.dob
+ORDER BY q3_times DESC, d.dob ASC;",0,incorrect_result,4.029,4.605,chatgpt-siwc,gpt-6-luna,none,,standard,4,4,1,1,0,0,14.293,11651,343,11994,7680,0,4,4,4,4,4,18166.0,
+253,formula_1,challenging,B0,"SELECT d.driverRef, d.nationality, d.dob, q.q1
+FROM races r
+JOIN qualifying q ON q.raceId = r.raceId
+JOIN drivers d ON d.driverId = q.driverId
+WHERE r.year = 1995
+  AND r.name = 'Japanese Grand Prix'
+  AND q.q1 IS NOT NULL
+  AND q.q1 <> ''
+  AND q.q1 = (
+      SELECT MAX(q2.q1)
+      FROM qualifying q2
+      WHERE q2.raceId = r.raceId
+        AND q2.q1 IS NOT NULL
+        AND q2.q1 <> ''
+  );",0,incorrect_result,6.58,4623.748,chatgpt-siwc,gpt-6-luna,none,,standard,5,4,1,1,0,0,8.224,12173,382,12555,7680,0,4,4,4,4,4,15376.0,
+254,formula_1,challenging,B0,"WITH qualifying_times AS (
+    SELECT d.nationality, q.q1
+    FROM qualifying AS q
+    JOIN races AS r ON r.raceId = q.raceId
+    JOIN drivers AS d ON d.driverId = q.driverId
+    WHERE r.year = 1995
+      AND r.name = 'Japanese Grand Prix'
+      AND q.q1 IS NOT NULL
+)
+SELECT DISTINCT nationality
+FROM qualifying_times
+WHERE q1 = (SELECT MIN(q1) FROM qualifying_times);",1,correct,2.086,1.654,chatgpt-siwc,gpt-6-luna,none,,standard,5,4,1,1,0,0,1.796,11731,319,12050,7936,0,4,4,4,4,4,15300.0,
+256,formula_1,challenging,B0,"SELECT COUNT(DISTINCT other.driverId) AS count
+FROM qualifying AS lucas_q
+JOIN races AS r
+  ON r.raceId = lucas_q.raceId
+JOIN qualifying AS other
+  ON other.raceId = lucas_q.raceId
+WHERE r.year = 2010
+  AND lucas_q.driverId = (
+    SELECT driverId
+    FROM drivers
+    WHERE forename = 'Lucas' AND surname = 'di Grassi'
+  )
+  AND other.driverId <> lucas_q.driverId
+  AND lucas_q.position < other.position;",1,correct,3.638,4.622,chatgpt-siwc,gpt-6-luna,none,,standard,5,4,1,1,0,0,6.109,11950,370,12320,6016,0,4,4,4,4,4,16563.0,
+262,formula_1,challenging,B0,"SELECT COUNT(*) AS driver_count
+FROM qualifying q
+JOIN races r ON r.raceId = q.raceId
+WHERE r.year = 2017
+  AND r.name = 'Italian Grand Prix'
+  AND q.q2 IS NOT NULL
+  AND q.q2 <> '\N'
+  AND (
+    CAST(substr(q.q2, 1, instr(q.q2, ':') - 1) AS INTEGER) * 60
+    + CAST(substr(q.q2, instr(q.q2, ':') + 1) AS REAL)
+  ) < 100;",0,incorrect_result,1.682,1.202,chatgpt-siwc,gpt-6-luna,none,,standard,4,4,1,1,0,0,2.068,11110,334,11444,7680,0,4,4,4,4,4,14310.0,
+264,formula_1,challenging,B0,"SELECT ROUND(AVG(COALESCE(q3_counts.q3_count, 0)), 2) AS avg_q3_lap_times
+FROM drivers d
+LEFT JOIN (
+    SELECT driverId, COUNT(q3) AS q3_count
+    FROM qualifying
+    WHERE q3 IS NOT NULL AND q3 <> '\\N'
+    GROUP BY driverId
+) q3_counts ON q3_counts.driverId = d.driverId
+WHERE d.dob >= '1981-01-01' AND d.dob < '1992-01-01';",0,incorrect_result,1.423,4.403,chatgpt-siwc,gpt-6-luna,none,,standard,4,4,1,1,0,0,1.362,11227,327,11554,7936,0,4,4,4,4,4,14685.0,
+284,formula_1,challenging,B0,"SELECT d.code, q.q3 AS fastest_q3_time
+FROM qualifying AS q
+JOIN races AS r ON r.raceId = q.raceId
+JOIN drivers AS d ON d.driverId = q.driverId
+WHERE r.year = 2017
+  AND r.name = 'Italian Grand Prix'
+  AND q.q3 = (
+    SELECT MIN(q2.q3)
+    FROM qualifying AS q2
+    WHERE q2.raceId = r.raceId
+      AND q2.q3 <> ''
+  );",1,correct,4.809,1.296,chatgpt-siwc,gpt-6-luna,none,,standard,7,6,3,3,0,0,3.623,19664,414,20078,11648,0,6,6,6,6,6,25542.0,
+289,formula_1,challenging,B0,"SELECT d.number AS permanent_race_number, d.surname
+FROM qualifying AS q
+JOIN races AS r ON r.raceId = q.raceId
+JOIN drivers AS d ON d.driverId = q.driverId
+WHERE r.year = 2017
+  AND r.name = 'Italian Grand Prix'
+  AND q.q3 IS NOT NULL
+  AND q.q3 <> ''
+  AND (
+    CAST(substr(q.q3, 1, instr(q.q3, ':') - 1) AS INTEGER) * 60
+    + CAST(substr(q.q3, instr(q.q3, ':') + 1, 2) AS INTEGER)
+    + CAST(substr(q.q3, -3) AS REAL) / 1000
+  ) < 98;",1,correct,1.391,1.127,chatgpt-siwc,gpt-6-luna,none,,standard,6,5,2,2,0,0,2.349,15916,456,16372,7680,0,5,5,5,5,5,19816.0,
+293,formula_1,challenging,B0,"SELECT COUNT(*) AS withdrew_count
+FROM results r
+JOIN races ra ON r.raceId = ra.raceId
+JOIN status s ON r.statusId = s.statusId
+WHERE ra.year = 1962
+  AND ra.name = 'British Grand Prix'
+  AND s.status = 'Withdrew';",0,incorrect_result,2.078,2.823,chatgpt-siwc,gpt-6-luna,none,,standard,5,4,1,1,0,0,3.617,11897,233,12130,8064,0,4,4,4,4,4,12126.0,
+298,student_club,challenging,B0,"SELECT 1.0 * y.amount / o.amount AS ratio
+FROM budget AS y
+JOIN event AS ey ON ey.event_id = y.link_to_event
+JOIN budget AS o
+JOIN event AS eo ON eo.event_id = o.link_to_event
+WHERE lower(ey.event_name) = 'yearly kickoff'
+  AND lower(eo.event_name) = 'october meeting'
+  AND lower(y.category) = 'advertisement'
+  AND lower(o.category) = 'advertisement';",1,correct,0.432,0.383,chatgpt-siwc,gpt-6-luna,none,,standard,5,5,2,2,0,0,1.5619999999999998,13550,356,13906,9600,0,5,5,5,5,5,21533.0,
+299,student_club,moderate,B0,"WITH event_ratios AS (
+    SELECT
+        e.event_id,
+        e.event_name,
+        SUM(b.spent) * 1.0 / NULLIF(SUM(b.amount), 0) AS spending_budget_ratio
+    FROM event AS e
+    JOIN budget AS b
+        ON b.link_to_event = e.event_id
+    WHERE LOWER(e.status) = 'closed'
+    GROUP BY e.event_id, e.event_name
+)
+SELECT event_name
+FROM event_ratios
+WHERE spending_budget_ratio = (
+    SELECT MAX(spending_budget_ratio)
+    FROM event_ratios
+);",1,correct,0.549,0.431,chatgpt-siwc,gpt-6-luna,none,,standard,6,5,2,2,0,0,1.396,15161,454,15615,8192,0,5,5,5,5,5,21613.0,
+303,student_club,challenging,B0,"WITH college_majors AS (
+    SELECT major_id, major_name, department
+    FROM major
+    WHERE college = 'College of Humanities and Social Sciences'
+),
+department_totals AS (
+    SELECT department, COUNT(*) AS major_count
+    FROM college_majors
+    GROUP BY department
+),
+held_majors AS (
+    SELECT DISTINCT cm.department, cm.major_name
+    FROM college_majors cm
+    JOIN ""member"" m ON m.link_to_major = cm.major_id
+),
+held_by_department AS (
+    SELECT department, GROUP_CONCAT(major_name, ', ') AS held_majors
+    FROM (
+        SELECT department, major_name
+        FROM held_majors
+        ORDER BY department, major_name
+    )
+    GROUP BY department
+),
+member_counts AS (
+    SELECT cm.department, COUNT(m.member_id) AS member_count
+    FROM college_majors cm
+    LEFT JOIN ""member"" m ON m.link_to_major = cm.major_id
+    GROUP BY cm.department
+)
+SELECT
+    d.department,
+    (
+        SELECT GROUP_CONCAT(major_name, ', ')
+        FROM (
+            SELECT major_name
+            FROM college_majors cm
+            WHERE cm.department = d.department
+            ORDER BY major_name
+        )
+    ) AS majors_offered,
+    COALESCE(h.held_majors, '') AS majors_held,
+    ROUND(1.0 * c.member_count / d.major_count, 2) AS average_members_per_major
+FROM department_totals d
+JOIN member_counts c ON c.department = d.department
+LEFT JOIN held_by_department h ON h.department = d.department
+ORDER BY d.department;",0,incorrect_result,0.805,0.407,chatgpt-siwc,gpt-6-luna,none,,standard,7,7,4,4,0,2,3.4259999999999997,23199,864,24063,14720,0,7,7,7,7,7,30829.0,
+304,student_club,challenging,B0,"WITH events_2019 AS (
+    SELECT event_id, type
+    FROM event
+    WHERE event_date >= '2019-01-01'
+      AND event_date < '2020-01-01'
+),
+attendance_by_type AS (
+    SELECT e.type, COUNT(DISTINCT a.link_to_member) AS members_attended
+    FROM events_2019 AS e
+    LEFT JOIN attendance AS a ON a.link_to_event = e.event_id
+    GROUP BY e.type
+),
+budget_by_type AS (
+    SELECT e.type, COALESCE(SUM(b.amount), 0) AS total_budgeted_amount
+    FROM events_2019 AS e
+    LEFT JOIN budget AS b ON b.link_to_event = e.event_id
+    GROUP BY e.type
+)
+SELECT a.type AS event_type,
+       a.members_attended,
+       b.total_budgeted_amount
+FROM attendance_by_type AS a
+JOIN budget_by_type AS b ON b.type = a.type
+ORDER BY a.type;",1,correct,0.573,0.594,chatgpt-siwc,gpt-6-luna,none,,standard,6,4,1,1,0,0,2.016,11937,447,12384,7808,0,4,4,4,4,4,19070.0,
+307,student_club,challenging,B0,"SELECT SUM(i.amount) AS total_dues
+FROM (
+    SELECT DISTINCT a.link_to_member
+    FROM attendance AS a
+    JOIN event AS e ON e.event_id = a.link_to_event
+    WHERE e.event_name LIKE '%Football%'
+) AS attendees
+JOIN income AS i ON i.link_to_member = attendees.link_to_member
+WHERE i.source = 'Dues';",1,correct,0.413,0.348,chatgpt-siwc,gpt-6-luna,none,,standard,8,6,3,3,0,0,3.714,19047,416,19463,9984,0,6,6,6,6,6,24872.0,
+317,student_club,challenging,B0,"WITH eligible AS (
+    SELECT e.event_id, e.event_name, MAX(b.amount) AS largest_line
+    FROM event e
+    JOIN budget b ON b.link_to_event = e.event_id
+    WHERE EXISTS (
+        SELECT 1
+        FROM expense x
+        JOIN budget bx ON bx.budget_id = x.link_to_budget
+        WHERE bx.link_to_event = e.event_id
+          AND LOWER(x.expense_description) LIKE '%chip%'
+    )
+    GROUP BY e.event_id, e.event_name
+)
+SELECT event_name
+FROM eligible
+WHERE largest_line = (SELECT MAX(largest_line) FROM eligible);",1,correct,0.573,0.393,chatgpt-siwc,gpt-6-luna,none,,standard,6,5,2,2,0,0,1.963,14676,441,15117,10112,0,5,5,5,5,5,18845.0,
+326,student_club,challenging,B0,"SELECT e.expense_description, COUNT(*) AS record_count
+FROM expense e
+JOIN budget b ON e.link_to_budget = b.budget_id
+WHERE LOWER(b.category) = 'food'
+GROUP BY e.expense_description
+ORDER BY record_count DESC, e.expense_description COLLATE NOCASE ASC
+LIMIT 1;",0,incorrect_result,0.271,0.412,chatgpt-siwc,gpt-6-luna,none,,standard,5,5,2,2,0,0,1.04,13915,254,14169,7808,0,5,5,5,5,5,23077.0,
+338,superhero,moderate,B0,"SELECT s.full_name
+FROM superhero AS s
+JOIN hero_attribute AS ha ON ha.hero_id = s.id
+JOIN attribute AS a ON a.id = ha.attribute_id
+WHERE a.attribute_name = 'Strength'
+  AND ha.attribute_value = (
+    SELECT MAX(ha2.attribute_value)
+    FROM hero_attribute AS ha2
+    JOIN attribute AS a2 ON a2.id = ha2.attribute_id
+    WHERE a2.attribute_name = 'Strength'
+  )
+  AND s.full_name IS NOT NULL;",0,incorrect_result,1.757,2.219,chatgpt-siwc,gpt-6-luna,none,,standard,5,4,1,1,0,1,5.186,11278,295,11573,7808,0,4,4,4,4,4,14112.0,
+343,superhero,challenging,B0,"SELECT AVG(CAST(h.height_cm AS REAL)) AS average_height_cm
+FROM superhero AS h
+JOIN publisher AS p ON p.id = h.publisher_id
+WHERE p.publisher_name = 'Marvel Comics'
+  AND h.height_cm IS NOT NULL
+  AND EXISTS (
+    SELECT 1
+    FROM hero_power AS hp
+    WHERE hp.hero_id = h.id
+      AND NOT EXISTS (
+        SELECT 1
+        FROM superhero AS d
+        JOIN publisher AS dp ON dp.id = d.publisher_id
+        JOIN hero_power AS dhp ON dhp.hero_id = d.id
+        WHERE dp.publisher_name = 'DC Comics'
+          AND dhp.power_id = hp.power_id
+      )
+  );",0,incorrect_result,59.334,54.446,chatgpt-siwc,gpt-6-luna,none,,standard,7,5,2,2,0,1,219.57899999999998,15472,422,15894,10240,0,5,5,5,5,5,19699.0,
+346,superhero,challenging,B0,"SELECT COUNT(*) AS count
+FROM superhero AS s
+JOIN alignment AS a ON s.alignment_id = a.id
+WHERE a.alignment NOT IN ('Good', 'Bad');",0,incorrect_result,0.7,0.696,chatgpt-siwc,gpt-6-luna,none,,standard,4,4,1,1,0,0,0.767,10989,161,11150,8064,0,4,4,4,4,4,12535.0,
+349,superhero,challenging,B0,"SELECT g.gender, COUNT(DISTINCT s.id) AS hero_count
+FROM superhero s
+JOIN gender g ON g.id = s.gender_id
+JOIN colour c ON c.id = s.hair_colour_id
+WHERE LOWER(c.colour) = 'blue'
+  AND LOWER(g.gender) IN ('male', 'female')
+  AND (
+    SELECT COUNT(DISTINCT hp.power_id)
+    FROM hero_power hp
+    WHERE hp.hero_id = s.id
+  ) >= 10
+GROUP BY g.gender;",0,incorrect_result,147.509,1.263,chatgpt-siwc,gpt-6-luna,none,,standard,14,11,8,8,0,1,154.774,41623,984,42607,23936,0,11,11,11,11,11,47881.0,
+353,superhero,challenging,B0,"SELECT ROUND(AVG(power_count), 2) AS avg_superpowers_per_hero
+FROM (
+  SELECT s.id, COUNT(hp.power_id) AS power_count
+  FROM superhero s
+  JOIN race r ON s.race_id = r.id
+  JOIN gender g ON s.gender_id = g.id
+  LEFT JOIN hero_power hp ON hp.hero_id = s.id
+  WHERE r.race IN ('God', 'Eternal')
+    AND g.gender = 'Male'
+  GROUP BY s.id
+);",0,incorrect_result,1.899,3.592,chatgpt-siwc,gpt-6-luna,none,,standard,18,13,10,9,1,1,7.65,51252,747,51999,29568,0,13,13,13,13,13,47226.0,
+362,superhero,challenging,B0,"WITH race_counts AS (
+    SELECT r.race, COUNT(*) AS superhero_count
+    FROM superhero h
+    JOIN race r ON r.id = h.race_id
+    WHERE h.publisher_id = (
+        SELECT publisher_id
+        FROM superhero
+        WHERE full_name = 'Charles Chandler'
+    )
+      AND h.race_id IS NOT NULL
+    GROUP BY r.race
+)
+SELECT race, superhero_count
+FROM race_counts
+WHERE superhero_count = (SELECT MAX(superhero_count) FROM race_counts)
+ORDER BY race;",0,incorrect_result,0.657,0.546,chatgpt-siwc,gpt-6-luna,none,,standard,6,5,2,2,0,0,1.225,14844,373,15217,7808,0,5,5,5,5,5,20121.0,
+369,superhero,challenging,B0,"SELECT ROUND(AVG(s.weight_kg))
+FROM superhero AS s
+JOIN alignment AS a ON a.id = s.alignment_id
+JOIN colour AS c ON c.id = s.skin_colour_id
+JOIN hero_power AS hp ON hp.hero_id = s.id
+JOIN superpower AS p ON p.id = hp.power_id
+WHERE a.alignment = 'Bad'
+  AND c.colour = 'Green'
+  AND p.power_name = 'Flight'
+  AND s.weight_kg IS NOT NULL;",0,incorrect_result,1.265,0.97,chatgpt-siwc,gpt-6-luna,none,,standard,8,5,2,2,0,0,3.1479999999999997,15993,387,16380,11648,0,5,5,5,5,5,22889.0,
+372,superhero,challenging,B0,"SELECT COUNT(DISTINCT hp.power_id)
+FROM superhero AS h
+JOIN gender AS g ON g.id = h.gender_id
+JOIN hero_power AS hp ON hp.hero_id = h.id
+WHERE g.gender = 'Male'
+  AND h.weight_kg IS NOT NULL
+  AND h.weight_kg < 70;",0,incorrect_result,1.173,0.905,chatgpt-siwc,gpt-6-luna,none,,standard,6,4,1,1,0,0,1.436,11444,257,11701,7808,0,4,4,4,4,4,17230.0,
+373,superhero,challenging,B0,"SELECT c.colour
+FROM superhero s
+LEFT JOIN colour c ON c.id = s.hair_colour_id
+WHERE s.height_cm = (
+    SELECT MIN(height_cm)
+    FROM superhero
+    WHERE height_cm IS NOT NULL AND height_cm > 0
+);",0,incorrect_result,0.486,0.555,chatgpt-siwc,gpt-6-luna,none,,standard,7,6,3,3,0,0,1.695,18547,326,18873,11904,0,6,6,6,6,6,24172.0,
+375,superhero,challenging,B0,"SELECT COUNT(*) AS count
+FROM superhero AS s
+JOIN alignment AS a ON s.alignment_id = a.id
+WHERE LOWER(a.alignment) = 'neutral'
+  AND s.full_name IS NOT NULL
+  AND TRIM(s.full_name) <> '';",0,incorrect_result,0.517,0.365,chatgpt-siwc,gpt-6-luna,none,,standard,4,4,1,1,0,0,0.911,10891,192,11083,7936,0,4,4,4,4,4,13471.0,
+382,thrombosis_prediction,challenging,B0,"WITH flagged AS (
+    SELECT DISTINCT p.ID, p.SEX
+    FROM Patient p
+    JOIN Laboratory l ON l.ID = p.ID
+    WHERE (p.SEX = 'M' AND l.UA > 8.0)
+       OR (p.SEX = 'F' AND l.UA > 6.5)
+),
+counts AS (
+    SELECT
+        COUNT(CASE WHEN SEX = 'M' THEN 1 END) AS males,
+        COUNT(CASE WHEN SEX = 'F' THEN 1 END) AS females
+    FROM flagged
+)
+SELECT CAST(males AS REAL) / NULLIF(females, 0) AS male_to_female_ratio
+FROM counts;",1,correct,4.084,2.874,chatgpt-siwc,gpt-6-luna,none,,standard,5,5,2,2,0,0,33.722,16743,478,17221,9856,0,5,5,5,5,5,19869.0,
+385,thrombosis_prediction,challenging,B0,"SELECT p.ID,
+       p.SEX,
+       CAST(strftime('%Y', '2026-10-09') AS INTEGER)
+         - CAST(strftime('%Y', p.Birthday) AS INTEGER)
+         - (strftime('%m-%d', '2026-10-09') < strftime('%m-%d', p.Birthday))
+         AS age_on_2026_10_09
+FROM Patient AS p
+WHERE p.Birthday IS NOT NULL
+  AND EXISTS (
+      SELECT 1
+      FROM Laboratory AS l
+      WHERE l.ID = p.ID
+        AND l.GLU >= 180
+        AND l.""T-CHO"" < 250
+  )
+ORDER BY p.ID;",1,correct,3.334,3.241,chatgpt-siwc,gpt-6-luna,none,,standard,8,8,3,3,0,0,8.979,31249,553,31802,17920,0,8,8,8,8,8,30759.0,
+386,thrombosis_prediction,challenging,B0,"SELECT p.ID,
+       CAST(strftime('%Y', '2026-10-09') AS INTEGER)
+         - CAST(strftime('%Y', p.Birthday) AS INTEGER)
+         - (strftime('%m-%d', '2026-10-09') < strftime('%m-%d', p.Birthday)) AS completed_age
+FROM Patient AS p
+JOIN Laboratory AS l ON l.ID = p.ID
+WHERE l.HCT >= 52
+GROUP BY p.ID
+HAVING COUNT(*) >= 2;",1,correct,3.446,3.47,chatgpt-siwc,gpt-6-luna,none,,standard,5,5,1,1,0,0,4.084,17247,327,17574,11648,0,5,5,5,5,5,16117.0,
+387,thrombosis_prediction,challenging,B0,"SELECT ROUND(
+    100.0 * COUNT(DISTINCT CASE WHEN p.SEX = 'F' THEN p.ID END)
+    / COUNT(DISTINCT p.ID),
+    2
+) AS female_percentage
+FROM Patient AS p
+JOIN Laboratory AS l ON l.ID = p.ID
+WHERE date(p.Birthday) < date('2026-10-09', '-55 years')
+  AND date(l.Date) <= '2026-10-09'
+  AND l.PT >= 14;",1,correct,4.06,3.283,chatgpt-siwc,gpt-6-luna,none,,standard,6,5,2,2,0,0,8.682,18001,394,18395,7680,0,5,5,5,5,5,18940.0,
+388,thrombosis_prediction,moderate,B0,"SELECT COUNT(DISTINCT p.ID) AS patient_count
+FROM Patient p
+JOIN Laboratory l ON l.ID = p.ID
+WHERE p.Description IS NULL
+  AND l.CRP LIKE '%+%';",1,correct,2.554,3.425,chatgpt-siwc,gpt-6-luna,none,,standard,6,5,2,2,0,1,11.002,18025,224,18249,9856,0,5,5,5,5,5,17354.0,
+396,thrombosis_prediction,challenging,B0,"SELECT p.ID, l.Date, l.DNA
+FROM Patient AS p
+JOIN Laboratory AS l ON l.ID = p.ID
+WHERE p.SEX = 'F'
+  AND p.Admission = '+'
+  AND l.DNA IS NOT NULL
+  AND CAST(l.DNA AS REAL) = (
+      SELECT MAX(CAST(l2.DNA AS REAL))
+      FROM Patient AS p2
+      JOIN Laboratory AS l2 ON l2.ID = p2.ID
+      WHERE p2.SEX = 'F'
+        AND p2.Admission = '+'
+        AND l2.DNA IS NOT NULL
+  )
+ORDER BY p.ID;",1,correct,3.212,3.748,chatgpt-siwc,gpt-6-luna,none,,standard,7,6,3,3,0,0,7.2010000000000005,23832,469,24301,11904,0,6,6,6,6,6,27695.0,
+399,thrombosis_prediction,challenging,B0,"SELECT MAX(CAST(L.RNP AS REAL)) AS highest_anti_RNP
+FROM Laboratory AS L
+JOIN Patient AS P ON P.ID = L.ID
+WHERE P.Admission = '-'
+  AND L.RNP IS NOT NULL
+  AND TRIM(L.RNP) <> '';",1,correct,2.831,2.641,chatgpt-siwc,gpt-6-luna,none,,standard,6,5,2,2,0,0,3.551,17922,254,18176,12160,0,5,5,5,5,5,18120.0,
+403,thrombosis_prediction,challenging,B0,"SELECT p.SEX AS sex, COUNT(DISTINCT p.ID) AS patient_count
+FROM Patient AS p
+JOIN Laboratory AS l ON l.ID = p.ID
+WHERE l.ALB < 3.5
+  AND p.SEX IN ('F', 'M')
+GROUP BY p.SEX
+ORDER BY p.SEX;",1,correct,2.492,2.731,chatgpt-siwc,gpt-6-luna,none,,standard,4,4,1,1,0,0,2.354,12547,230,12777,7808,0,4,4,4,4,4,18371.0,
+404,thrombosis_prediction,challenging,B0,"SELECT ROUND(
+    100.0 * COUNT(DISTINCT CASE
+        WHEN CAST(l.RNP AS REAL) > 64 THEN p.ID
+    END) / NULLIF(COUNT(DISTINCT CASE
+        WHEN l.RNP IS NOT NULL THEN p.ID
+    END), 0),
+    2
+) AS percentage
+FROM Patient AS p
+JOIN Examination AS e ON e.ID = p.ID
+LEFT JOIN Laboratory AS l ON l.ID = p.ID
+WHERE p.SEX = 'F'
+  AND e.Thrombosis > 0;",0,incorrect_result,0.437,3.433,chatgpt-siwc,gpt-6-luna,none,,standard,15,14,11,11,0,3,14.177,70017,851,70868,34688,0,14,14,14,14,14,53564.0,
+414,thrombosis_prediction,challenging,B0,"SELECT
+    P.ID AS patient_id,
+    CAST(strftime('%Y', '2026-10-09') AS INTEGER)
+      - CAST(strftime('%Y', P.Birthday) AS INTEGER)
+      - (strftime('%m-%d', '2026-10-09') < strftime('%m-%d', P.Birthday)) AS age_years
+FROM Patient AS P
+WHERE EXISTS (
+    SELECT 1
+    FROM Laboratory AS L
+    WHERE L.ID = P.ID
+      AND L.LDH > 600
+      AND L.LDH < 800
+      AND (
+          CASE
+              WHEN L.""U-PRO"" LIKE '>=%'
+                  THEN CAST(substr(L.""U-PRO"", 3) AS REAL)
+              WHEN L.""U-PRO"" GLOB '[0-9]*'
+                  THEN CAST(L.""U-PRO"" AS REAL)
+              WHEN L.""U-PRO"" LIKE '%([0-9]%)'
+                  THEN CAST(substr(L.""U-PRO"", instr(L.""U-PRO"", '(') + 1) AS REAL)
+              ELSE NULL
+          END
+      ) >= 300
+)
+ORDER BY P.ID;",1,correct,2.895,2.641,chatgpt-siwc,gpt-6-luna,none,,standard,8,7,4,4,0,0,14.118,29537,719,30256,13696,0,7,7,7,7,7,31630.0,
+419,thrombosis_prediction,challenging,B0,"SELECT AVG(HCT) AS average_hematocrit
+FROM Laboratory
+WHERE Date >= '1991-01-01'
+  AND Date < '1992-01-01'
+  AND HCT IS NOT NULL
+  AND (""U-PRO"" = '300' OR ""U-PRO"" = '>=300');",1,correct,2.685,4.516,chatgpt-siwc,gpt-6-luna,none,,standard,8,7,4,4,0,0,15.855,28638,425,29063,13696,0,7,7,7,7,7,26703.0,
+436,thrombosis_prediction,challenging,B0,"SELECT DISTINCT P.ID
+FROM Patient AS P
+JOIN Laboratory AS L ON L.ID = P.ID
+WHERE P.Admission = '-'
+  AND L.CPK < 250
+  AND L.RNP <> 'negative'
+  AND CAST(L.RNP AS REAL) > 4
+ORDER BY P.ID;",1,correct,2.11,2.404,chatgpt-siwc,gpt-6-luna,none,,standard,12,10,8,8,0,2,19.683,44038,510,44548,22016,0,10,10,10,10,10,33015.0,
+449,thrombosis_prediction,challenging,B0,"SELECT p.ID, p.SEX, p.Birthday
+FROM Patient AS p
+WHERE EXISTS (
+    SELECT 1
+    FROM Laboratory AS l
+    WHERE l.ID = p.ID
+      AND l.LDH >= 500
+)
+AND EXISTS (
+    SELECT 1
+    FROM Laboratory AS u
+    WHERE u.ID = p.ID
+      AND (
+          u.`U-PRO` IN ('100', '300', '>=300', '>=1000', '+2(100)')
+          OR (u.`U-PRO` GLOB '[0-9]*' AND CAST(u.`U-PRO` AS INTEGER) >= 100)
+      )
+)
+ORDER BY p.ID;",1,correct,3.706,4.044,chatgpt-siwc,gpt-6-luna,none,,standard,9,8,5,5,0,0,25.453999999999997,34842,489,35331,18688,0,8,8,8,8,8,28209.0,
+451,thrombosis_prediction,challenging,B0,"SELECT COUNT(*)
+FROM Patient
+WHERE SEX = 'F'
+  AND `First Date` >= '1998-01-01'
+  AND `First Date` < '1999-01-01'
+  AND Admission LIKE '+%';",1,correct,0.464,0.557,chatgpt-siwc,gpt-6-luna,none,,standard,5,4,1,1,0,0,0.531,13502,206,13708,7808,0,4,4,4,4,4,12801.0,
+452,thrombosis_prediction,challenging,B0,"SELECT p.Diagnosis AS overall_diagnosis,
+       e.Symptoms AS symptom
+FROM Patient AS p
+JOIN Examination AS e ON e.ID = p.ID
+WHERE e.Diagnosis LIKE '%SLE%'
+  AND e.Diagnosis NOT LIKE '%susp%'
+  AND e.Symptoms IS NOT NULL
+  AND TRIM(e.Symptoms) <> ''
+ORDER BY p.Birthday DESC,
+         p.ID ASC,
+         e.""Examination Date"" DESC
+LIMIT 1;",0,incorrect_result,0.385,0.374,chatgpt-siwc,gpt-6-luna,none,,standard,7,6,3,3,0,0,1.5050000000000001,24013,533,24546,11776,0,6,6,6,6,6,25351.0,
+455,thrombosis_prediction,challenging,B0,"SELECT COUNT(DISTINCT ID) AS patient_count
+FROM Patient
+WHERE Diagnosis LIKE '%psoriatic arthritis%';",1,correct,0.524,0.578,chatgpt-siwc,gpt-6-luna,none,,standard,5,4,1,1,0,0,0.546,13387,157,13544,6016,0,4,4,4,4,4,12985.0,
+456,thrombosis_prediction,challenging,B0,"WITH per_patient AS (
+    SELECT
+        p.ID,
+        p.SEX,
+        MAX(CASE WHEN l.GPT >= 60 THEN 1 ELSE 0 END) AS had_abnormal
+    FROM Patient AS p
+    LEFT JOIN Laboratory AS l ON l.ID = p.ID
+    WHERE p.SEX IN ('M', 'F')
+    GROUP BY p.ID, p.SEX
+)
+SELECT
+    CASE SEX WHEN 'M' THEN 'male' WHEN 'F' THEN 'female' END AS sex,
+    COUNT(*) AS patient_count
+FROM per_patient
+WHERE had_abnormal = 0
+GROUP BY SEX
+ORDER BY CASE SEX WHEN 'M' THEN 1 WHEN 'F' THEN 2 END;",0,incorrect_result,4.086,2.837,chatgpt-siwc,gpt-6-luna,none,,standard,6,6,3,3,0,0,5.7,21408,544,21952,11648,0,6,6,6,6,6,25881.0,
+463,thrombosis_prediction,challenging,B0,"SELECT DISTINCT p.ID
+FROM Patient AS p
+WHERE p.Admission = '-'
+  AND EXISTS (
+    SELECT 1
+    FROM Laboratory AS l
+    WHERE l.ID = p.ID
+      AND l.RBC IS NOT NULL
+      AND (l.RBC <= 3.5 OR l.RBC >= 6.0)
+  )
+  AND EXISTS (
+    SELECT 1
+    FROM Laboratory AS l
+    WHERE l.ID = p.ID
+      AND CAST(l.RNP AS REAL) > 0
+  )
+ORDER BY p.ID;",1,correct,2.149,2.004,chatgpt-siwc,gpt-6-luna,none,,standard,7,6,3,3,0,0,8.748,23293,421,23714,11904,0,6,6,6,6,6,22755.0,
+474,toxicology,moderate,B0,"SELECT DISTINCT b.bond_id
+FROM bond AS b
+JOIN connected AS c ON c.bond_id = b.bond_id
+JOIN atom AS a1 ON a1.atom_id = c.atom_id
+JOIN atom AS a2 ON a2.atom_id = c.atom_id2
+WHERE (a1.element = 'p' AND a2.element = 'n')
+   OR (a1.element = 'n' AND a2.element = 'p');",1,correct,14.492,2.352,chatgpt-siwc,gpt-6-luna,none,,standard,8,6,2,2,0,0,19.448,17038,374,17412,11776,0,6,6,6,6,6,21001.0,
+475,toxicology,challenging,B0,"SELECT DISTINCT a.element
+FROM atom AS a
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM connected AS c
+    WHERE c.atom_id = a.atom_id
+       OR c.atom_id2 = a.atom_id
+);",1,correct,7250.419,9.389,chatgpt-siwc,gpt-6-luna,none,,standard,6,5,1,1,0,0,7275.895,13555,210,13765,9856,0,5,5,5,5,5,22459.0,
+479,toxicology,challenging,B0,"WITH molecule_saturation AS (
+  SELECT
+    m.molecule_id,
+    m.label,
+    CASE
+      WHEN EXISTS (
+        SELECT 1
+        FROM bond b
+        WHERE b.molecule_id = m.molecule_id
+      )
+      AND NOT EXISTS (
+        SELECT 1
+        FROM bond b
+        WHERE b.molecule_id = m.molecule_id
+          AND b.bond_type <> '-'
+      )
+      THEN 1
+      ELSE 0
+    END AS all_single
+  FROM molecule m
+)
+SELECT
+  CASE WHEN all_single = 1 THEN 'all_single_bonds' ELSE 'other_molecules' END AS molecule_group,
+  SUM(CASE WHEN label = '+' THEN 1 ELSE 0 END)
+    - SUM(CASE WHEN label = '-' THEN 1 ELSE 0 END) AS carcinogenic_minus_noncarcinogenic
+FROM molecule_saturation
+GROUP BY all_single
+ORDER BY all_single DESC;",0,incorrect_result,186.316,78.671,chatgpt-siwc,gpt-6-luna,none,,standard,5,4,1,1,0,0,177.192,10878,525,11403,7680,0,4,4,4,4,4,19417.0,
+484,toxicology,challenging,B0,"SELECT COUNT(DISTINCT CASE WHEN a1.element = 'cl' THEN a2.atom_id ELSE a1.atom_id END)
+FROM connected c
+JOIN atom a1 ON a1.atom_id = c.atom_id
+JOIN atom a2 ON a2.atom_id = c.atom_id2
+WHERE a1.element = 'cl' OR a2.element = 'cl';",1,correct,13.498,10.706,chatgpt-siwc,gpt-6-luna,none,,standard,8,7,3,3,0,0,29.114,20413,498,20911,14848,0,7,7,7,7,7,25572.0,
+490,toxicology,challenging,B0,"WITH element_molecules AS (
+  SELECT DISTINCT element, molecule_id
+  FROM atom
+  WHERE element IS NOT NULL
+    AND molecule_id IS NOT NULL
+),
+rare_elements AS (
+  SELECT element
+  FROM element_molecules
+  GROUP BY element
+  HAVING COUNT(DISTINCT molecule_id) = 1
+),
+qualifying_atoms AS (
+  SELECT DISTINCT a.molecule_id, a.atom_id
+  FROM atom a
+  JOIN rare_elements r ON r.element = a.element
+)
+SELECT qa.molecule_id, COUNT(DISTINCT c.bond_id) AS bond_count
+FROM qualifying_atoms qa
+JOIN molecule m
+  ON m.molecule_id = qa.molecule_id
+ AND m.label = '+'
+LEFT JOIN connected c
+  ON c.atom_id = qa.atom_id
+  OR c.atom_id2 = qa.atom_id
+GROUP BY qa.molecule_id
+ORDER BY qa.molecule_id;",1,correct,15.072,11.503,chatgpt-siwc,gpt-6-luna,none,,standard,7,4,1,1,0,0,11.951,11603,515,12118,7168,0,4,4,4,4,4,17966.0,
+493,toxicology,challenging,B0,"SELECT ROUND(1.0 * (SELECT COUNT(*) FROM connected c JOIN atom a ON a.atom_id = c.atom_id WHERE a.molecule_id = 'TR397') / NULLIF((SELECT COUNT(*) FROM atom a WHERE a.molecule_id = 'TR397'), 0), 2) AS average_bonds_per_atom;",1,correct,1.516,119.834,chatgpt-siwc,gpt-6-luna,none,,standard,8,6,3,3,0,0,2.232,17753,402,18155,9984,0,6,6,6,6,6,23732.0,
+495,toxicology,challenging,B0,"SELECT
+    b.bond_type AS bond_kind_symbol,
+    COUNT(DISTINCT b.bond_id) AS bond_count,
+    COUNT(DISTINCT CASE
+        WHEN a1.element < a2.element
+            THEN a1.element || '|' || a2.element
+        ELSE a2.element || '|' || a1.element
+    END) AS element_pair_count,
+    m.label AS carcinogenicity_label
+FROM bond AS b
+JOIN molecule AS m ON m.molecule_id = b.molecule_id
+JOIN connected AS c ON c.bond_id = b.bond_id
+JOIN atom AS a1 ON a1.atom_id = c.atom_id
+JOIN atom AS a2 ON a2.atom_id = c.atom_id2
+WHERE b.molecule_id = 'TR377'
+  AND b.bond_type IN ('-', '=')
+GROUP BY b.bond_type, m.label
+ORDER BY bond_count DESC, bond_kind_symbol ASC;",1,correct,6.694,6.487,chatgpt-siwc,gpt-6-luna,none,,standard,7,5,2,2,0,0,9.502,14548,529,15077,9856,0,5,5,5,5,5,19207.0,

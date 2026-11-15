@@ -1,0 +1,351 @@
+test_builtin_virtual_filesystem_tool_is_allowed_in_trace (tests.test_bird_b0.B0Tests.test_builtin_virtual_filesystem_tool_is_allowed_in_trace) ... ok
+test_deep_agent_tool_budgets_and_default_harness (tests.test_bird_b0.B0Tests.test_deep_agent_tool_budgets_and_default_harness) ... ok
+test_extract_one_labelled_sql_only (tests.test_bird_b0.B0Tests.test_extract_one_labelled_sql_only) ... ok
+test_generalized_variant_changes_only_system_prompt (tests.test_bird_b0.B0Tests.test_generalized_variant_changes_only_system_prompt) ... ok
+test_no_optional_usage_returns_null_not_zero (tests.test_bird_b0.B0Tests.test_no_optional_usage_returns_null_not_zero) ... ok
+test_opt_in_generalized_prompt_preserves_baseline (tests.test_bird_b0.B0Tests.test_opt_in_generalized_prompt_preserves_baseline) ... ok
+test_optional_usage_fallback_and_missing_values (tests.test_bird_b0.B0Tests.test_optional_usage_fallback_and_missing_values) ... ok
+test_optional_usage_is_recorded_per_model_call_without_guessing (tests.test_bird_b0.B0Tests.test_optional_usage_is_recorded_per_model_call_without_guessing) ... ok
+test_plain_text_is_not_sql_success (tests.test_bird_b0.B0Tests.test_plain_text_is_not_sql_success) ... ok
+test_q1409_graph_success_without_fallback (tests.test_bird_b0.B0Tests.test_q1409_graph_success_without_fallback) ... ok
+test_q1409_recursion_keeps_observation_not_prediction (tests.test_bird_b0.B0Tests.test_q1409_recursion_keeps_observation_not_prediction) ... ok
+test_q45_inline_delimiter_is_valid (tests.test_bird_b0.B0Tests.test_q45_inline_delimiter_is_valid) ... ok
+test_question_evidence_only (tests.test_bird_b0.B0Tests.test_question_evidence_only) ... ok
+test_real_deep_agents_constructor_without_hosted_model (tests.test_bird_b0.B0Tests.test_real_deep_agents_constructor_without_hosted_model)
+Use real Deep Agents middleware, not a mocked create_deep_agent. ... ok
+test_settings (tests.test_bird_b0.B0Tests.test_settings) ... ok
+test_sql_tool_outcome_and_timing (tests.test_bird_b0.B0Tests.test_sql_tool_outcome_and_timing) ... ok
+test_structured_trace_links_tools_and_validation (tests.test_bird_b0.B0Tests.test_structured_trace_links_tools_and_validation) ... ok
+test_force_is_prepare_only (tests.test_bird_b0_eval.PipelineTests.test_force_is_prepare_only) ... usage: python -m unittest [-h] {prepare,infer,score,visualize,serve} ...
+python -m unittest: error: unrecognized arguments: --force
+ok
+test_force_refuses_existing_runs_and_unknown_files (tests.test_bird_b0_eval.PipelineTests.test_force_refuses_existing_runs_and_unknown_files) ... usage: python -m unittest [-h] {prepare,infer,score,visualize,serve} ...
+python -m unittest: error: Refusing --force: selection has runs, unexpected files or unsafe entries; use a new --selection-id
+usage: python -m unittest [-h] {prepare,infer,score,visualize,serve} ...
+python -m unittest: error: Refusing --force: selection has runs, unexpected files or unsafe entries; use a new --selection-id
+ok
+test_force_replaces_unused_selection (tests.test_bird_b0_eval.PipelineTests.test_force_replaces_unused_selection) ... ok
+test_infer_and_score_argument_bridge (tests.test_bird_b0_eval.PipelineTests.test_infer_and_score_argument_bridge) ... Selection /tmp/tmp_d56arqf/results/fixture: dev=3, test=1
+Selection /tmp/tmpfth7ds6k/results/fixture: dev=3, test=1
+Selection /tmp/tmpfth7ds6k/results/fixture: dev=1, test=1
+Selection /tmp/tmpm6y89a1h/results/fixture: dev=3, test=1
+Q1: final_sql_ready
+Q2: RuntimeError
+Q3: final_sql_ready
+usage: python -m unittest [-h] {prepare,infer,score,visualize,serve} ...
+python -m unittest: error: Refusing to overwrite run: /tmp/tmpm6y89a1h/results/fixture/B0/dev/one
+ok
+test_openai_provider_is_injected_and_recorded (tests.test_bird_b0_eval.PipelineTests.test_openai_provider_is_injected_and_recorded) ... Saved 3 predictions (1 missing SQL) to /tmp/tmpm6y89a1h/results/fixture/B0/dev/one
+Trace Explorer: /tmp/tmpm6y89a1h/results/fixture/B0/dev/one/trace-explorer.html
+Selection /tmp/tmp36uda6a1/results/fixture: dev=3, test=1
+Q1: final_sql_ready
+Q2: final_sql_ready
+Q3: final_sql_ready
+ok
+test_prepare_and_refuse_overwrite (tests.test_bird_b0_eval.PipelineTests.test_prepare_and_refuse_overwrite) ... usage: python -m unittest [-h] {prepare,infer,score,visualize,serve} ...
+python -m unittest: error: Refusing to overwrite selection: /tmp/tmp5704dzlf/results/fixture (use prepare --force for an unused selection)
+ok
+test_prompt_variant_parser_and_fingerprint (tests.test_bird_b0_eval.PipelineTests.test_prompt_variant_parser_and_fingerprint) ... usage: python -m unittest infer [-h] --selection-id SELECTION_ID
+                                [--dataset-root DATASET_ROOT]
+                                [--result-root RESULT_ROOT] --split {dev,test}
+                                --run-id RUN_ID
+                                [--prompt-variant {baseline,generalized-v1}]
+                                [--reasoning-effort {none,low,medium,high,xhigh,max}]
+                                [--preview-rows PREVIEW_ROWS]
+                                [--provider {ollama,gemini,deepseek,nvidia,openai,chatgpt-siwc}]
+                                [--model MODEL]
+python -m unittest infer: error: argument --prompt-variant: invalid choice: '../unsafe' (choose from 'baseline', 'generalized-v1')
+Saved 3 predictions (0 missing SQL) to /tmp/tmp36uda6a1/results/fixture/B0/dev/openai-run
+Selection /tmp/tmp5704dzlf/results/fixture: dev=3, test=1
+Selection /tmp/tmpe40_w4al/results/fixture: dev=3, test=1
+Q1: final_sql_ready
+Q2: final_sql_ready
+Q3: final_sql_ready
+ok
+test_reject_tampered_selection_and_unsafe_identifier (tests.test_bird_b0_eval.PipelineTests.test_reject_tampered_selection_and_unsafe_identifier) ... usage: python -m unittest [-h] {prepare,infer,score,visualize,serve} ...
+python -m unittest: error: --selection-id must be 1-80 path-safe characters
+ok
+test_score_refuses_prediction_hash_mismatch (tests.test_bird_b0_eval.PipelineTests.test_score_refuses_prediction_hash_mismatch) ... Saved 3 predictions (0 missing SQL) to /tmp/tmpe40_w4al/results/fixture/B0/dev/variant-run
+Selection /tmp/tmp_q42apko/results/fixture: dev=3, test=1
+Selection /tmp/tmpo7x8z6rb/results/fixture: dev=3, test=1
+Q1: final_sql_ready
+Q2: RuntimeError
+Q3: final_sql_ready
+usage: python -m unittest [-h] {prepare,infer,score,visualize,serve} ...
+python -m unittest: error: Refusing to overwrite run: /tmp/tmpo7x8z6rb/results/fixture/B0/dev/one
+ok
+test_score_refuses_tampered_manifest (tests.test_bird_b0_eval.PipelineTests.test_score_refuses_tampered_manifest) ... Saved 3 predictions (1 missing SQL) to /tmp/tmpo7x8z6rb/results/fixture/B0/dev/one
+Trace Explorer: /tmp/tmpo7x8z6rb/results/fixture/B0/dev/one/trace-explorer.html
+Selection /tmp/tmpmta2n2rb/results/fixture: dev=3, test=1
+Q1: final_sql_ready
+Q2: RuntimeError
+Q3: final_sql_ready
+usage: python -m unittest [-h] {prepare,infer,score,visualize,serve} ...
+python -m unittest: error: Refusing to overwrite run: /tmp/tmpmta2n2rb/results/fixture/B0/dev/one
+ok
+test_scoring_timeout_default_and_override (tests.test_bird_b0_eval.PipelineTests.test_scoring_timeout_default_and_override) ... ok
+test_duplicate_table_and_duplicate_columns_are_rejected (tests.test_bird_descriptions.DescriptionRestorationTests.test_duplicate_table_and_duplicate_columns_are_rejected) ... ok
+test_existing_description_is_never_overwritten (tests.test_bird_descriptions.DescriptionRestorationTests.test_existing_description_is_never_overwritten) ... ok
+test_invalid_later_table_prevents_all_writes (tests.test_bird_descriptions.DescriptionRestorationTests.test_invalid_later_table_prevents_all_writes) ... ok
+test_only_documented_release_adaptations_are_allowed (tests.test_bird_descriptions.DescriptionRestorationTests.test_only_documented_release_adaptations_are_allowed) ... ok
+test_restore_preserves_existing_files_and_verifies_identical_csv (tests.test_bird_descriptions.DescriptionRestorationTests.test_restore_preserves_existing_files_and_verifies_identical_csv) ... ok
+test_symlinked_output_directory_is_rejected (tests.test_bird_descriptions.DescriptionRestorationTests.test_symlinked_output_directory_is_rejected) ... ok
+test_jsonl_and_cli_artifacts (tests.test_bird_evaluator.EvaluatorTests.test_jsonl_and_cli_artifacts) ... ok
+test_missing_prediction_still_validates_gold (tests.test_bird_evaluator.EvaluatorTests.test_missing_prediction_still_validates_gold) ... ok
+test_missing_sql_and_nullable_usage (tests.test_bird_evaluator.EvaluatorTests.test_missing_sql_and_nullable_usage) ... ok
+test_optional_token_metrics_round_trip_through_scorer (tests.test_bird_evaluator.EvaluatorTests.test_optional_token_metrics_round_trip_through_scorer) ... ok
+test_reference_failure_invalidates_run (tests.test_bird_evaluator.EvaluatorTests.test_reference_failure_invalidates_run) ... ok
+test_reject_sql_writes_attach_and_multiple_statements (tests.test_bird_evaluator.EvaluatorTests.test_reject_sql_writes_attach_and_multiple_statements) ... ok
+test_reject_unknown_duplicate_wrong_db_and_bad_usage (tests.test_bird_evaluator.EvaluatorTests.test_reject_unknown_duplicate_wrong_db_and_bad_usage) ... ok
+test_same_results_different_sql_and_duplicates (tests.test_bird_evaluator.EvaluatorTests.test_same_results_different_sql_and_duplicates) ... ok
+test_smoke_subset_and_refuse_overwrite (tests.test_bird_evaluator.EvaluatorTests.test_smoke_subset_and_refuse_overwrite) ... usage: python -m unittest [-h]
+                          --variant {B0,B1,B2,B3,B4,Metadata,MetadataDiscoveryV2,SelfReflection}
+                          --split {dev,test,heldout} --predictions PREDICTIONS
+                          [--dataset-root DATASET_ROOT]
+                          --output-dir OUTPUT_DIR [--run-id RUN_ID]
+                          [--question-ids QUESTION_IDS]
+                          [--timeout-seconds TIMEOUT_SECONDS]
+                          [--max-result-rows MAX_RESULT_ROWS]
+python -m unittest: error: Output directory already exists: /tmp/tmp3thakv7w/results/smoke
+ok
+test_sql_timing_and_agent_efficiency_metrics (tests.test_bird_evaluator.EvaluatorTests.test_sql_timing_and_agent_efficiency_metrics) ... ok
+test_syntax_error_and_result_limit (tests.test_bird_evaluator.EvaluatorTests.test_syntax_error_and_result_limit) ... ok
+test_timeout_bounded_recursive_query (tests.test_bird_evaluator.EvaluatorTests.test_timeout_bounded_recursive_query) ... ok
+test_wrong_result_and_empty_result (tests.test_bird_evaluator.EvaluatorTests.test_wrong_result_and_empty_result) ... ok
+test_evaluator_reference_is_separate (tests.test_bird_loader.LoaderTests.test_evaluator_reference_is_separate) ... ok
+test_reference_fields_validate (tests.test_bird_loader.LoaderTests.test_reference_fields_validate) ... ok
+test_tampered_split_rejected (tests.test_bird_loader.LoaderTests.test_tampered_split_rejected) ... ok
+test_cache_is_verified_and_failed_download_is_not_installed (tests.test_bird_releases.RegistryTests.test_cache_is_verified_and_failed_download_is_not_installed) ... ok
+test_seed_mapping_rejects_later_layers (tests.test_bird_releases.RegistryTests.test_seed_mapping_rejects_later_layers) ... ok
+test_verified_documents_reject_corruption (tests.test_bird_releases.RegistryTests.test_verified_documents_reject_corruption) ... ok
+test_current_jsonl_install_and_release_mismatch (tests.test_bird_releases.ReleaseTests.test_current_jsonl_install_and_release_mismatch) ... BIRD setup/verification failed: Installed release/revision differs from requested verification
+ok
+test_image_export_copies_only_selected_database (tests.test_bird_releases.ReleaseTests.test_image_export_copies_only_selected_database) ... ok
+test_count_allocation (tests.test_bird_sampling.RatioTests.test_count_allocation) ... ok
+test_dev_heldout_never_overlap (tests.test_bird_sampling.SamplingTests.test_dev_heldout_never_overlap) ... ok
+test_exact_counts_determinism_and_different_seed (tests.test_bird_sampling.SamplingTests.test_exact_counts_determinism_and_different_seed) ... ok
+test_invalid_counts_and_unavailable_quantity (tests.test_bird_sampling.SamplingTests.test_invalid_counts_and_unavailable_quantity) ... ok
+test_round_robin_covers_database_where_possible (tests.test_bird_sampling.SamplingTests.test_round_robin_covers_database_where_possible) ... ok
+test_difficulty_distribution_counts (tests.test_bird_setup.OriginalMiniDevTests.test_difficulty_distribution_counts) ... ok
+test_legacy_heldout_manifest_read_without_rewriting (tests.test_bird_setup.OriginalMiniDevTests.test_legacy_heldout_manifest_read_without_rewriting) ... ok
+test_loader_gold_isolation_splits_schema_descriptions (tests.test_bird_setup.OriginalMiniDevTests.test_loader_gold_isolation_splits_schema_descriptions) ... ok
+test_partial_archive_never_installs_root (tests.test_bird_setup.OriginalMiniDevTests.test_partial_archive_never_installs_root) ... ok
+test_refuse_v2_wrong_counts_duplicates (tests.test_bird_setup.OriginalMiniDevTests.test_refuse_v2_wrong_counts_duplicates) ... ok
+test_reject_zip_traversal_symlink_duplicate (tests.test_bird_setup.OriginalMiniDevTests.test_reject_zip_traversal_symlink_duplicate) ... ok
+test_setup_verify_idempotence_and_checksums (tests.test_bird_setup.OriginalMiniDevTests.test_setup_verify_idempotence_and_checksums) ... ok
+test_split_determinism_unchanged_order (tests.test_bird_setup.OriginalMiniDevTests.test_split_determinism_unchanged_order) ... ok
+test_verify_only_cli (tests.test_bird_setup.OriginalMiniDevTests.test_verify_only_cli) ... ok
+test_write_denied_on_readonly_connection (tests.test_bird_setup.OriginalMiniDevTests.test_write_denied_on_readonly_connection) ... ok
+test_dev_test_share_notes_and_experiments_isolated (tests.test_metadata_agent.MetadataRunnerTests.test_dev_test_share_notes_and_experiments_isolated) ... Saved 3 predictions (1 missing SQL) to /tmp/tmpmta2n2rb/results/fixture/B0/dev/one
+Trace Explorer: /tmp/tmpmta2n2rb/results/fixture/B0/dev/one/trace-explorer.html
+B4 dev: 1/3 EX=33.33%
+Results: /tmp/tmptrg6japc/results/test-run
+B0 dev: 1/1 EX=100.00%
+Results: /tmp/tmp3thakv7w/results/smoke
+SMOKE SUBSET ONLY: not comparable to a full split
+B0 dev: 1/1 EX=100.00%
+Results: /tmp/tmpcxp46dbo/scores/20261112T162631Z
+SMOKE SUBSET ONLY: not comparable to a full split
+Q1: final_sql_ready
+Q2: final_sql_ready
+Metadata dev: 2 predictions; 0 missing SQL
+Q3: final_sql_ready
+ok
+test_reject_unsafe_identifiers (tests.test_metadata_agent.MetadataRunnerTests.test_reject_unsafe_identifiers) ... ok
+test_scoring_reuses_original_evaluator (tests.test_metadata_agent.MetadataRunnerTests.test_scoring_reuses_original_evaluator) ... Metadata test: 1 predictions; 0 missing SQL
+Q1: final_sql_ready
+Q2: final_sql_ready
+ok
+test_test_before_dev_fails_safely (tests.test_metadata_agent.MetadataRunnerTests.test_test_before_dev_fails_safely) ... ok
+test_accuracy_gain_and_regression_report (tests.test_metadata_compare.MetadataComparisonTests.test_accuracy_gain_and_regression_report) ... ok
+test_create_collision_and_revision_update (tests.test_metadata_engine.MetadataEngineTests.test_create_collision_and_revision_update) ... ok
+test_create_search_read_and_index (tests.test_metadata_engine.MetadataEngineTests.test_create_search_read_and_index) ... ok
+test_database_and_table_isolation (tests.test_metadata_engine.MetadataEngineTests.test_database_and_table_isolation) ... ok
+test_metadata_discovery_v2_repeated_note_read_is_not_charged_twice (tests.test_metadata_engine.MetadataEngineTests.test_metadata_discovery_v2_repeated_note_read_is_not_charged_twice) ... ok
+test_new_experiment_starts_empty_but_question_reuses (tests.test_metadata_engine.MetadataEngineTests.test_new_experiment_starts_empty_but_question_reuses) ... ok
+test_note_ids_are_opaque_and_no_parent_traversal (tests.test_metadata_engine.MetadataEngineTests.test_note_ids_are_opaque_and_no_parent_traversal) ... ok
+test_orphan_note_refuses_further_writes_non_destructively (tests.test_metadata_engine.MetadataEngineTests.test_orphan_note_refuses_further_writes_non_destructively) ... ok
+test_parallel_creates_do_not_drop_index_entries (tests.test_metadata_engine.MetadataEngineTests.test_parallel_creates_do_not_drop_index_entries) ... ok
+test_reject_oversize_and_invalid_sources_without_corrupting (tests.test_metadata_engine.MetadataEngineTests.test_reject_oversize_and_invalid_sources_without_corrupting) ... ok
+test_search_loads_index_only_and_has_context_budget (tests.test_metadata_engine.MetadataEngineTests.test_search_loads_index_only_and_has_context_budget) ... ok
+test_updating_preserves_independent_notes (tests.test_metadata_engine.MetadataEngineTests.test_updating_preserves_independent_notes) ... ok
+test_discovery_v2_paths_counters_and_old_v1_isolation (tests.test_metadata_discovery_v2_cli.MetadataDiscoveryV2CliTests.test_discovery_v2_paths_counters_and_old_v1_isolation) ... Metadata dev: 2 predictions; 0 missing SQL
+Q1: final_sql_ready
+Q2: final_sql_ready
+ok
+test_discovery_v2_scoring_uses_same_evaluator (tests.test_metadata_discovery_v2_cli.MetadataDiscoveryV2CliTests.test_discovery_v2_scoring_uses_same_evaluator) ... MetadataDiscoveryV2 dev: 2 predictions; 0 missing SQL
+Q1: final_sql_ready
+Q2: final_sql_ready
+ok
+test_dev_test_share_notes_and_experiments_isolated (tests.test_metadata_agent.MetadataRunnerTests.test_dev_test_share_notes_and_experiments_isolated) ... MetadataDiscoveryV2 dev: 2 predictions; 0 missing SQL
+Q1: final_sql_ready
+Q2: final_sql_ready
+Metadata dev: 2 predictions; 0 missing SQL
+Q3: final_sql_ready
+ok
+test_reject_unsafe_identifiers (tests.test_metadata_agent.MetadataRunnerTests.test_reject_unsafe_identifiers) ... ok
+test_scoring_reuses_original_evaluator (tests.test_metadata_agent.MetadataRunnerTests.test_scoring_reuses_original_evaluator) ... Metadata test: 1 predictions; 0 missing SQL
+Q1: final_sql_ready
+Q2: final_sql_ready
+ok
+test_test_before_dev_fails_safely (tests.test_metadata_agent.MetadataRunnerTests.test_test_before_dev_fails_safely) ... ok
+test_incomplete_question_activity_refuses_resume_without_overwrite (tests.test_metadata_resume.MetadataResumeTests.test_incomplete_question_activity_refuses_resume_without_overwrite) ... ok
+test_legacy_partial_resume_keeps_completed_records_and_fixes_new_labels (tests.test_metadata_resume.MetadataResumeTests.test_legacy_partial_resume_keeps_completed_records_and_fixes_new_labels) ... Metadata dev: 2 predictions; 0 missing SQL
+Safe resume verified: 1 completed questions; continuing at position 2
+Q2: final_sql_ready
+ok
+test_model_mismatch_refuses_resume (tests.test_metadata_resume.MetadataResumeTests.test_model_mismatch_refuses_resume) ... ok
+test_nonprefix_predictions_refuse_resume (tests.test_metadata_resume.MetadataResumeTests.test_nonprefix_predictions_refuse_resume) ... ok
+test_refuse_rerun_of_completed_split (tests.test_metadata_resume.MetadataResumeTests.test_refuse_rerun_of_completed_split) ... Metadata dev: 2 predictions; 0 missing SQL
+Q1: final_sql_ready
+Q2: final_sql_ready
+ok
+test_sql_mismatch_refuses_resume (tests.test_metadata_resume.MetadataResumeTests.test_sql_mismatch_refuses_resume) ... ok
+test_tampered_knowledge_refuses_resume (tests.test_metadata_resume.MetadataResumeTests.test_tampered_knowledge_refuses_resume) ... ok
+test_dev_test_share_notes_and_experiments_isolated (tests.test_metadata_agent.MetadataRunnerTests.test_dev_test_share_notes_and_experiments_isolated) ... Metadata dev: 2 predictions; 0 missing SQL
+Q1: final_sql_ready
+Q2: final_sql_ready
+Metadata dev: 2 predictions; 0 missing SQL
+Q3: final_sql_ready
+ok
+test_reject_unsafe_identifiers (tests.test_metadata_agent.MetadataRunnerTests.test_reject_unsafe_identifiers) ... ok
+test_scoring_reuses_original_evaluator (tests.test_metadata_agent.MetadataRunnerTests.test_scoring_reuses_original_evaluator) ... Metadata test: 1 predictions; 0 missing SQL
+Q1: final_sql_ready
+Q2: final_sql_ready
+ok
+test_test_before_dev_fails_safely (tests.test_metadata_agent.MetadataRunnerTests.test_test_before_dev_fails_safely) ... ok
+test_column_uses_exact_name_even_with_spaces (tests.test_metadata_discovery_v2_workflow.DefinitionFrameworkTests.test_column_uses_exact_name_even_with_spaces) ... ok
+test_old_v1_format_unchanged (tests.test_metadata_discovery_v2_workflow.DefinitionFrameworkTests.test_old_v1_format_unchanged) ... ok
+test_reject_missing_component_and_other_types (tests.test_metadata_discovery_v2_workflow.DefinitionFrameworkTests.test_reject_missing_component_and_other_types) ... ok
+test_revision_and_decisions (tests.test_metadata_discovery_v2_workflow.DefinitionFrameworkTests.test_revision_and_decisions) ... ok
+test_table_has_four_required_components (tests.test_metadata_discovery_v2_workflow.DefinitionFrameworkTests.test_table_has_four_required_components) ... ok
+test_discovery_limits_and_global_reservation (tests.test_metadata_discovery_v2_workflow.MetadataDiscoveryV2Tests.test_discovery_limits_and_global_reservation) ... ok
+test_false_claim_of_write_is_detected (tests.test_metadata_discovery_v2_workflow.MetadataDiscoveryV2Tests.test_false_claim_of_write_is_detected) ... ok
+test_incomplete_discovery_keeps_successful_note_writes (tests.test_metadata_discovery_v2_workflow.MetadataDiscoveryV2Tests.test_incomplete_discovery_keeps_successful_note_writes) ... ok
+test_invalid_judge_shape_rejected (tests.test_metadata_discovery_v2_workflow.MetadataDiscoveryV2Tests.test_invalid_judge_shape_rejected) ... ok
+test_one_pass_reaches_sql (tests.test_metadata_discovery_v2_workflow.MetadataDiscoveryV2Tests.test_one_pass_reaches_sql) ... ok
+test_real_write_and_later_read (tests.test_metadata_discovery_v2_workflow.MetadataDiscoveryV2Tests.test_real_write_and_later_read) ... ok
+test_refinement_loops_twice (tests.test_metadata_discovery_v2_workflow.MetadataDiscoveryV2Tests.test_refinement_loops_twice) ... ok
+test_schema_inspection_facts_survive_missing_a1_json (tests.test_metadata_discovery_v2_workflow.MetadataDiscoveryV2Tests.test_schema_inspection_facts_survive_missing_a1_json) ... ok
+test_three_attempts_fall_back_to_sql_with_uncertainty (tests.test_metadata_discovery_v2_workflow.MetadataDiscoveryV2Tests.test_three_attempts_fall_back_to_sql_with_uncertainty) ... ok
+test_b0_nvidia_request_and_token_budgets (tests.test_model_factory.ModelFactoryTests.test_b0_nvidia_request_and_token_budgets) ... ok
+test_deepseek_key_and_parameters (tests.test_model_factory.ModelFactoryTests.test_deepseek_key_and_parameters) ... ok
+test_explicit_siwc_effort_and_provider_validation (tests.test_model_factory.ModelFactoryTests.test_explicit_siwc_effort_and_provider_validation) ... ok
+test_gemini_api_key_and_parameters (tests.test_model_factory.ModelFactoryTests.test_gemini_api_key_and_parameters) ... ok
+test_input_validation (tests.test_model_factory.ModelFactoryTests.test_input_validation) ... ok
+test_invoke_trace_compatibility_and_credentials_redaction (tests.test_model_factory.ModelFactoryTests.test_invoke_trace_compatibility_and_credentials_redaction) ... ok
+test_legacy_default_ollama (tests.test_model_factory.ModelFactoryTests.test_legacy_default_ollama) ... ok
+test_nemotron_vl_sampling_and_top_p_validation (tests.test_model_factory.ModelFactoryTests.test_nemotron_vl_sampling_and_top_p_validation) ... ok
+test_no_silent_cloud_fallback (tests.test_model_factory.ModelFactoryTests.test_no_silent_cloud_fallback) ... ok
+test_nvidia_default_and_supported_models (tests.test_model_factory.ModelFactoryTests.test_nvidia_default_and_supported_models) ... ok
+test_nvidia_missing_key_and_unsupported_model (tests.test_model_factory.ModelFactoryTests.test_nvidia_missing_key_and_unsupported_model) ... ok
+test_openai_api_key_and_explicit_model (tests.test_model_factory.ModelFactoryTests.test_openai_api_key_and_explicit_model) ... ok
+test_siwc_requires_explicit_model_but_not_api_key (tests.test_model_factory.ModelFactoryTests.test_siwc_requires_explicit_model_but_not_api_key) ... ok
+test_stream_trace_survives_recursion_exception (tests.test_model_factory.ModelFactoryTests.test_stream_trace_survives_recursion_exception) ... ok
+test_fail_retries_whole_b0_without_mutating_question (tests.test_self_reflection_agent.CoordinatorTests.test_fail_retries_whole_b0_without_mutating_question) ... ok
+test_forced_sql_finalization_generates_executable_sql (tests.test_self_reflection_agent.CoordinatorTests.test_forced_sql_finalization_generates_executable_sql) ... FAIL
+test_known_issue_sql_is_output_when_no_repair_succeeds (tests.test_self_reflection_agent.CoordinatorTests.test_known_issue_sql_is_output_when_no_repair_succeeds) ... ok
+test_literal_case_and_whitespace_are_semantically_distinct (tests.test_self_reflection_agent.CoordinatorTests.test_literal_case_and_whitespace_are_semantically_distinct) ... ok
+test_missing_final_sql_stops (tests.test_self_reflection_agent.CoordinatorTests.test_missing_final_sql_stops) ... ok
+test_outer_budget_prevents_new_b0_invocation (tests.test_self_reflection_agent.CoordinatorTests.test_outer_budget_prevents_new_b0_invocation) ... ok
+test_pass_without_retry (tests.test_self_reflection_agent.CoordinatorTests.test_pass_without_retry) ... ok
+test_repeated_sql_terminates_and_preserves_safe_candidate (tests.test_self_reflection_agent.CoordinatorTests.test_repeated_sql_terminates_and_preserves_safe_candidate) ... ok
+test_review_budget_exhaustion_reason_preserved (tests.test_self_reflection_agent.CoordinatorTests.test_review_budget_exhaustion_reason_preserved) ... ok
+test_uncertain_and_error_preserve_unverified_sql (tests.test_self_reflection_agent.CoordinatorTests.test_uncertain_and_error_preserve_unverified_sql) ... ok
+test_unsafe_first_candidate_can_be_repaired (tests.test_self_reflection_agent.CoordinatorTests.test_unsafe_first_candidate_can_be_repaired) ... ok
+test_unsafe_sql_never_returned (tests.test_self_reflection_agent.CoordinatorTests.test_unsafe_sql_never_returned) ... ok
+test_default_sql_first_budgets (tests.test_self_reflection_eval.RunnerTests.test_default_sql_first_budgets) ... ok
+test_infer_writes_independent_manifest_and_trace (tests.test_self_reflection_eval.RunnerTests.test_infer_writes_independent_manifest_and_trace) ... Metadata dev: 2 predictions; 0 missing SQL
+Q1: PASS (final_sql_ready)
+ok
+test_safe_path_and_budget_validation (tests.test_self_reflection_eval.RunnerTests.test_safe_path_and_budget_validation) ... ok
+test_score_and_compare_reuse_independent_evaluator (tests.test_self_reflection_eval.RunnerTests.test_score_and_compare_reuse_independent_evaluator) ... SelfReflection: 1 predictions, 0 missing SQL: /tmp/tmp4cn9tu2q/results/sample/SelfReflection/dev/self-run
+Q1: PASS (final_sql_ready)
+ok
+test_bind_tools_delegates_to_langchain (tests.test_siwc_adapter.SIWCTests.test_bind_tools_delegates_to_langchain) ... ok
+test_explicit_effort_is_sent_without_inventing_reported_effort (tests.test_siwc_adapter.SIWCTests.test_explicit_effort_is_sent_without_inventing_reported_effort) ... ok
+test_final_text_and_replay (tests.test_siwc_adapter.SIWCTests.test_final_text_and_replay) ... ok
+test_function_call_and_stateless_history (tests.test_siwc_adapter.SIWCTests.test_function_call_and_stateless_history) ... ok
+test_incomplete_stream_never_becomes_an_answer (tests.test_siwc_adapter.SIWCTests.test_incomplete_stream_never_becomes_an_answer) ... ok
+test_missing_credentials_are_explicit (tests.test_siwc_adapter.SIWCTests.test_missing_credentials_are_explicit) ... ok
+test_missing_malformed_optional_usage_never_breaks_inference (tests.test_siwc_adapter.SIWCTests.test_missing_malformed_optional_usage_never_breaks_inference) ... ok
+test_partial_usage_details_survive_without_base_counts (tests.test_siwc_adapter.SIWCTests.test_partial_usage_details_survive_without_base_counts) ... ok
+test_reject_wrong_namespace_and_unhandled_messages (tests.test_siwc_adapter.SIWCTests.test_reject_wrong_namespace_and_unhandled_messages) ... ok
+test_reviewer_only_json_schema_format (tests.test_siwc_adapter.SIWCTests.test_reviewer_only_json_schema_format) ... ok
+test_usage_details_and_reported_reasoning_settings (tests.test_siwc_adapter.SIWCTests.test_usage_details_and_reported_reasoning_settings)
+Save only response-reported fields, never synthesize an effort level. ... ok
+test_all_na_or_ungrounded_pass_is_rejected (tests.test_sql_reflection_reviewer.SQLReviewTests.test_all_na_or_ungrounded_pass_is_rejected) ... ok
+test_bad_response_after_inspection_does_not_become_pass (tests.test_sql_reflection_reviewer.SQLReviewTests.test_bad_response_after_inspection_does_not_become_pass) ... ok
+test_evidence_backed_failure (tests.test_sql_reflection_reviewer.SQLReviewTests.test_evidence_backed_failure) ... ok
+test_format_retry_exhaustion_preserves_unverified_sql_and_usage (tests.test_sql_reflection_reviewer.SQLReviewTests.test_format_retry_exhaustion_preserves_unverified_sql_and_usage) ... ok
+test_generalized_prompt_and_false_positive_guard (tests.test_sql_reflection_reviewer.SQLReviewTests.test_generalized_prompt_and_false_positive_guard) ... ok
+test_hard_40_call_cap_and_uncertain_sql (tests.test_sql_reflection_reviewer.SQLReviewTests.test_hard_40_call_cap_and_uncertain_sql) ... ok
+test_invalid_final_sql_stops_without_model (tests.test_sql_reflection_reviewer.SQLReviewTests.test_invalid_final_sql_stops_without_model) ... ok
+test_invalid_json_and_provider_timeout_are_not_pass (tests.test_sql_reflection_reviewer.SQLReviewTests.test_invalid_json_and_provider_timeout_are_not_pass) ... ok
+test_limited_inspection_results_in_uncertain (tests.test_sql_reflection_reviewer.SQLReviewTests.test_limited_inspection_results_in_uncertain) ... ok
+test_multiround_inspection_and_early_finalization (tests.test_sql_reflection_reviewer.SQLReviewTests.test_multiround_inspection_and_early_finalization) ... ok
+test_observed_invalid_responses_repair_within_two_calls (tests.test_sql_reflection_reviewer.SQLReviewTests.test_observed_invalid_responses_repair_within_two_calls) ... ok
+test_openai_structured_reply_keeps_raw_usage (tests.test_sql_reflection_reviewer.SQLReviewTests.test_openai_structured_reply_keeps_raw_usage) ... ok
+test_provisional_pass_and_token_usage (tests.test_sql_reflection_reviewer.SQLReviewTests.test_provisional_pass_and_token_usage) ... ok
+test_redaction_is_bounded (tests.test_sql_reflection_reviewer.SQLReviewTests.test_redaction_is_bounded) ... ok
+test_structured_format_rejection_falls_back_only_within_budget (tests.test_sql_reflection_reviewer.SQLReviewTests.test_structured_format_rejection_falls_back_only_within_budget) ... ok
+test_targeted_inspection_and_truncation (tests.test_sql_reflection_reviewer.SQLReviewTests.test_targeted_inspection_and_truncation) ... ok
+test_create_demo_db_closes_connection (tests.test_sql_safety.SQLiteSafetyTests.test_create_demo_db_closes_connection)
+Immediately deleting the database must work on Windows, too. ... ok
+test_cte_read_only (tests.test_sql_safety.SQLiteSafetyTests.test_cte_read_only) ... ok
+test_list_and_inspect_tables (tests.test_sql_safety.SQLiteSafetyTests.test_list_and_inspect_tables) ... ok
+test_no_writes_or_unsafe_commands (tests.test_sql_safety.SQLiteSafetyTests.test_no_writes_or_unsafe_commands) ... ok
+test_query_timeout_default_and_override (tests.test_sql_safety.SQLiteSafetyTests.test_query_timeout_default_and_override) ... ok
+test_refuses_to_overwrite_seeded_database (tests.test_sql_safety.SQLiteSafetyTests.test_refuses_to_overwrite_seeded_database) ... ok
+test_safe_identifier_handling (tests.test_sql_safety.SQLiteSafetyTests.test_safe_identifier_handling) ... ok
+test_timed_sql_and_bounded_preview (tests.test_sql_safety.SQLiteSafetyTests.test_timed_sql_and_bounded_preview) ... ok
+test_valid_select_and_truncation (tests.test_sql_safety.SQLiteSafetyTests.test_valid_select_and_truncation) ... ok
+test_discovers_new_runs_and_json_files (tests.test_trace_viewer.LiveViewerTests.test_discovers_new_runs_and_json_files) ... ok
+test_jsonl_append_and_unfinished_last_record (tests.test_trace_viewer.LiveViewerTests.test_jsonl_append_and_unfinished_last_record) ... ok
+test_live_and_static_html_controls (tests.test_trace_viewer.LiveViewerTests.test_live_and_static_html_controls) ... ok
+test_malformed_supplemental_file_is_nonfatal (tests.test_trace_viewer.LiveViewerTests.test_malformed_supplemental_file_is_nonfatal) ... ok
+test_readonly_local_server_endpoints (tests.test_trace_viewer.LiveViewerTests.test_readonly_local_server_endpoints) ... /home/devuser/.local/share/uv/python/cpython-3.14.10-linux-x86_64-gnu/lib/python3.14/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 404: 'Not Found'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+/home/devuser/.local/share/uv/python/cpython-3.14.10-linux-x86_64-gnu/lib/python3.14/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 405: 'Method Not Allowed'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+ok
+test_symlink_trace_is_ignored (tests.test_trace_viewer.LiveViewerTests.test_symlink_trace_is_ignored) ... ok
+test_correlates_parallel_tool_results (tests.test_trace_viewer.TraceViewerTests.test_correlates_parallel_tool_results) ... ok
+test_html_never_embeds_untrusted_script_text (tests.test_trace_viewer.TraceViewerTests.test_html_never_embeds_untrusted_script_text) ... ok
+test_invalid_trace_rejected (tests.test_trace_viewer.TraceViewerTests.test_invalid_trace_rejected) ... ok
+test_legacy_trace_has_observed_data_only (tests.test_trace_viewer.TraceViewerTests.test_legacy_trace_has_observed_data_only) ... ok
+test_multi_run_and_no_mutation (tests.test_trace_viewer.TraceViewerTests.test_multi_run_and_no_mutation) ... ok
+test_optional_model_usage_is_visible_in_graph (tests.test_trace_viewer.TraceViewerTests.test_optional_model_usage_is_visible_in_graph) ... ok
+test_browser_script_syntax_when_node_available (tests.test_trace_viewer.WidthControlTests.test_browser_script_syntax_when_node_available) ... skipped 'Node.js is unavailable for JavaScript syntax checks'
+test_shared_width_and_individual_overrides_with_node_if_available (tests.test_trace_viewer.WidthControlTests.test_shared_width_and_individual_overrides_with_node_if_available)
+Execute the real JavaScript width functions in Node when available. ... skipped 'Node.js is unavailable for JavaScript behavior tests'
+test_width_controls_in_static_and_live_html (tests.test_trace_viewer.WidthControlTests.test_width_controls_in_static_and_live_html) ... ok
+
+======================================================================
+FAIL: test_forced_sql_finalization_generates_executable_sql (tests.test_self_reflection_agent.CoordinatorTests.test_forced_sql_finalization_generates_executable_sql)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/tests/test_self_reflection_agent.py", line 136, in test_forced_sql_finalization_generates_executable_sql
+    self.assertEqual(result["final_sql"], "SELECT 42")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None != 'SELECT 42'
+
+----------------------------------------------------------------------
+Ran 198 tests in 4.782s
+
+FAILED (failures=1, skipped=2)
+SelfReflection: 1 predictions, 0 missing SQL: /tmp/tmpm7n1r881/results/sample/SelfReflection/dev/self-run
+# B0 vs SelfReflection — Paired EX Comparison
+
+Dataset: sample; split: dev; total: 1
+
+B0: **0/1**; SelfReflection: **1/1**; delta **+100.00 percentage points**.
+
+Corrected: **1**; regressed: **0**.
+
+**Interpretation:** The reflection workflow has additional computation; this is not a matched-compute causal result.
+
+Corrected question IDs: [1]
+
+Regressed question IDs: []
+

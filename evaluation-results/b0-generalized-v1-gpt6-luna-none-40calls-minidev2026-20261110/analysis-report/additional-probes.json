@@ -1,0 +1,82 @@
+{
+  "46": {
+    "sql": "SELECT s.School,s.City,f.`NSLP Provision Status` FROM schools s JOIN frpm f ON s.CDSCode=f.CDSCode WHERE s.Magnet=1 AND f.`NSLP Provision Status` LIKE '%Provision 2%' AND f.`NSLP Provision Status`<>'Provision 2'",
+    "result": {
+      "columns": [
+        "School",
+        "City",
+        "NSLP Provision Status"
+      ],
+      "rows": [
+        [
+          "Washington Elementary",
+          "Santa Barbara",
+          "Breakfast Provision 2"
+        ]
+      ],
+      "truncated": false,
+      "execution_ms": 25.593
+    }
+  },
+  "155": {
+    "sql": "SELECT MIN(t.Date||' '||t.Time) first_ts, MAX(t.Date||' '||t.Time) last_ts, (julianday(MAX(t.Date||' '||t.Time))-julianday(MIN(t.Date||' '||t.Time)))*1440 float_minutes, (strftime('%s',MAX(t.Date||' '||t.Time))-strftime('%s',MIN(t.Date||' '||t.Time)))/60 exact_minutes FROM transactions_1k t JOIN gasstations g ON g.GasStationID=t.GasStationID WHERE g.Country='CZE' AND t.Price>1000",
+    "result": {
+      "columns": [
+        "first_ts",
+        "last_ts",
+        "float_minutes",
+        "exact_minutes"
+      ],
+      "rows": [
+        [
+          "2012-08-23 21:20:00",
+          "2012-08-26 10:30:00",
+          3669.9999998509884,
+          3670
+        ]
+      ],
+      "truncated": false,
+      "execution_ms": 0.673
+    }
+  },
+  "245": {
+    "sql": "SELECT r.year,SUM(x.milliseconds) sum_ms,COUNT(*) n,AVG(x.milliseconds) avg_ms,AVG(x.milliseconds)/1000 avg_seconds FROM results x JOIN races r ON r.raceId=x.raceId WHERE r.year=1952 AND x.positionOrder=1 AND x.milliseconds IS NOT NULL GROUP BY r.year",
+    "result": {
+      "columns": [
+        "year",
+        "sum_ms",
+        "n",
+        "avg_ms",
+        "avg_seconds"
+      ],
+      "rows": [
+        [
+          1952,
+          88492680,
+          8,
+          11061585.0,
+          11061.585
+        ]
+      ],
+      "truncated": false,
+      "execution_ms": 2.496
+    }
+  },
+  "253": {
+    "sql": "SELECT MIN(q.q1) lexical_min,MAX(q.q1) lexical_max FROM qualifying q JOIN races r ON r.raceId=q.raceId WHERE r.year=1995 AND r.name='Japanese Grand Prix' AND q.q1 IS NOT NULL AND q.q1<>''",
+    "result": {
+      "columns": [
+        "lexical_min",
+        "lexical_max"
+      ],
+      "rows": [
+        [
+          "16:42.640",
+          "1:48.289"
+        ]
+      ],
+      "truncated": false,
+      "execution_ms": 1.535
+    }
+  }
+}

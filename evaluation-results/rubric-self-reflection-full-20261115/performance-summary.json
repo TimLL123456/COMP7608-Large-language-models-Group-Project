@@ -1,0 +1,426 @@
+{
+  "dev": {
+    "scores": {
+      "variant": "RubricSelfReflection",
+      "correct": 255,
+      "total": 400,
+      "ex": 0.6375,
+      "predictions_supplied": 400,
+      "missing_predictions": 0,
+      "status_counts": {
+        "correct": 255,
+        "incorrect_result": 145
+      },
+      "by_difficulty": {
+        "challenging": {
+          "correct": 231,
+          "total": 369,
+          "ex": 0.6260162601626016
+        },
+        "moderate": {
+          "correct": 18,
+          "total": 24,
+          "ex": 0.75
+        },
+        "simple": {
+          "correct": 6,
+          "total": 7,
+          "ex": 0.8571428571428571
+        }
+      },
+      "mean_tool_calls": 12.3325,
+      "observed_tool_calls": 400,
+      "mean_input_tokens": 45557.9775,
+      "observed_input_tokens": 400,
+      "mean_output_tokens": 6315.5325,
+      "observed_output_tokens": 400,
+      "mean_total_tokens": 51873.51,
+      "observed_total_tokens": 400,
+      "mean_cached_input_tokens": 16046.08,
+      "observed_cached_input_tokens": 400,
+      "mean_reasoning_tokens": 0.0,
+      "observed_reasoning_tokens": 400,
+      "mean_latency_ms": 206195.04,
+      "observed_latency_ms": 400,
+      "mean_cost_usd": null,
+      "observed_cost_usd": 0,
+      "performance": {
+        "tool_calls": {
+          "observed": 400,
+          "total": 4933,
+          "mean": 12.3325,
+          "p50": 11.0,
+          "p95": 24
+        },
+        "model_calls": {
+          "observed": 400,
+          "total": 6390,
+          "mean": 15.975,
+          "p50": 13.0,
+          "p95": 41
+        },
+        "sql_calls": {
+          "observed": 400,
+          "total": 2540,
+          "mean": 6.35,
+          "p50": 5.0,
+          "p95": 14
+        },
+        "sql_success_calls": {
+          "observed": 0,
+          "total": null,
+          "mean": null,
+          "p50": null,
+          "p95": null
+        },
+        "sql_error_calls": {
+          "observed": 0,
+          "total": null,
+          "mean": null,
+          "p50": null,
+          "p95": null
+        },
+        "sql_truncated_calls": {
+          "observed": 0,
+          "total": null,
+          "mean": null,
+          "p50": null,
+          "p95": null
+        },
+        "input_tokens": {
+          "observed": 400,
+          "total": 18223191,
+          "mean": 45557.9775,
+          "p50": 36024.5,
+          "p95": 105962
+        },
+        "output_tokens": {
+          "observed": 400,
+          "total": 2526213,
+          "mean": 6315.5325,
+          "p50": 3771.0,
+          "p95": 22357
+        },
+        "total_tokens": {
+          "observed": 400,
+          "total": 20749404,
+          "mean": 51873.51,
+          "p50": 40335.5,
+          "p95": 124334
+        },
+        "cached_input_tokens": {
+          "observed": 400,
+          "total": 6418432,
+          "mean": 16046.08,
+          "p50": 12928.0,
+          "p95": 34816
+        },
+        "reasoning_tokens": {
+          "observed": 400,
+          "total": 0,
+          "mean": 0.0,
+          "p50": 0.0,
+          "p95": 0
+        },
+        "input_tokens_observed_calls": {
+          "observed": 0,
+          "total": null,
+          "mean": null,
+          "p50": null,
+          "p95": null
+        },
+        "output_tokens_observed_calls": {
+          "observed": 0,
+          "total": null,
+          "mean": null,
+          "p50": null,
+          "p95": null
+        },
+        "total_tokens_observed_calls": {
+          "observed": 0,
+          "total": null,
+          "mean": null,
+          "p50": null,
+          "p95": null
+        },
+        "cached_input_tokens_observed_calls": {
+          "observed": 0,
+          "total": null,
+          "mean": null,
+          "p50": null,
+          "p95": null
+        },
+        "reasoning_tokens_observed_calls": {
+          "observed": 0,
+          "total": null,
+          "mean": null,
+          "p50": null,
+          "p95": null
+        },
+        "latency_ms": {
+          "observed": 400,
+          "total": 82478016.0,
+          "mean": 206195.04,
+          "p50": 107343.0,
+          "p95": 939194.0
+        },
+        "sql_execution_ms": {
+          "observed": 400,
+          "total": 372058.78599999996,
+          "mean": 930.1469649999999,
+          "p50": 3.565,
+          "p95": 427.795
+        },
+        "gold_sql_execution_ms": {
+          "observed": 400,
+          "total": 30114.078,
+          "mean": 75.285195,
+          "p50": 4.236,
+          "p95": 348.963
+        },
+        "agent_sql_execution_ms": {
+          "observed": 0,
+          "total": null,
+          "mean": null,
+          "p50": null,
+          "p95": null
+        },
+        "sql_tool_success_rate": null,
+        "final_sql_generation_rate": 1.0,
+        "final_sql_execution_rate": 1.0
+      },
+      "split": "dev",
+      "is_full_split": false
+    },
+    "output_statuses": {
+      "verified": 177,
+      "generated_unverified": 223
+    },
+    "review_statuses": {
+      "PASS": 177,
+      "UNCERTAIN": 184,
+      "ERROR": 39
+    },
+    "usage_totals": {
+      "model_calls": 6390,
+      "tool_calls": 4933,
+      "sql_calls": 2540,
+      "input_tokens": 18223191,
+      "output_tokens": 2526213,
+      "total_tokens": 20749404,
+      "latency_ms": 82478016.0
+    }
+  },
+  "test": {
+    "scores": {
+      "variant": "RubricSelfReflection",
+      "correct": 71,
+      "total": 100,
+      "ex": 0.71,
+      "predictions_supplied": 100,
+      "missing_predictions": 0,
+      "status_counts": {
+        "correct": 71,
+        "incorrect_result": 29
+      },
+      "by_difficulty": {
+        "challenging": {
+          "correct": 64,
+          "total": 91,
+          "ex": 0.7032967032967034
+        },
+        "moderate": {
+          "correct": 6,
+          "total": 8,
+          "ex": 0.75
+        },
+        "simple": {
+          "correct": 1,
+          "total": 1,
+          "ex": 1.0
+        }
+      },
+      "mean_tool_calls": 13.12,
+      "observed_tool_calls": 100,
+      "mean_input_tokens": 50190.52,
+      "observed_input_tokens": 100,
+      "mean_output_tokens": 7387.29,
+      "observed_output_tokens": 100,
+      "mean_total_tokens": 57577.81,
+      "observed_total_tokens": 100,
+      "mean_cached_input_tokens": 18137.6,
+      "observed_cached_input_tokens": 100,
+      "mean_reasoning_tokens": 0.0,
+      "observed_reasoning_tokens": 100,
+      "mean_latency_ms": 231399.26,
+      "observed_latency_ms": 100,
+      "mean_cost_usd": null,
+      "observed_cost_usd": 0,
+      "performance": {
+        "tool_calls": {
+          "observed": 100,
+          "total": 1312,
+          "mean": 13.12,
+          "p50": 11.0,
+          "p95": 25
+        },
+        "model_calls": {
+          "observed": 100,
+          "total": 1790,
+          "mean": 17.9,
+          "p50": 14.0,
+          "p95": 44
+        },
+        "sql_calls": {
+          "observed": 100,
+          "total": 686,
+          "mean": 6.86,
+          "p50": 6.0,
+          "p95": 16
+        },
+        "sql_success_calls": {
+          "observed": 0,
+          "total": null,
+          "mean": null,
+          "p50": null,
+          "p95": null
+        },
+        "sql_error_calls": {
+          "observed": 0,
+          "total": null,
+          "mean": null,
+          "p50": null,
+          "p95": null
+        },
+        "sql_truncated_calls": {
+          "observed": 0,
+          "total": null,
+          "mean": null,
+          "p50": null,
+          "p95": null
+        },
+        "input_tokens": {
+          "observed": 100,
+          "total": 5019052,
+          "mean": 50190.52,
+          "p50": 38280.0,
+          "p95": 101789
+        },
+        "output_tokens": {
+          "observed": 100,
+          "total": 738729,
+          "mean": 7387.29,
+          "p50": 4071.5,
+          "p95": 25433
+        },
+        "total_tokens": {
+          "observed": 100,
+          "total": 5757781,
+          "mean": 57577.81,
+          "p50": 43325.5,
+          "p95": 126718
+        },
+        "cached_input_tokens": {
+          "observed": 100,
+          "total": 1813760,
+          "mean": 18137.6,
+          "p50": 13632.0,
+          "p95": 32896
+        },
+        "reasoning_tokens": {
+          "observed": 100,
+          "total": 0,
+          "mean": 0.0,
+          "p50": 0.0,
+          "p95": 0
+        },
+        "input_tokens_observed_calls": {
+          "observed": 0,
+          "total": null,
+          "mean": null,
+          "p50": null,
+          "p95": null
+        },
+        "output_tokens_observed_calls": {
+          "observed": 0,
+          "total": null,
+          "mean": null,
+          "p50": null,
+          "p95": null
+        },
+        "total_tokens_observed_calls": {
+          "observed": 0,
+          "total": null,
+          "mean": null,
+          "p50": null,
+          "p95": null
+        },
+        "cached_input_tokens_observed_calls": {
+          "observed": 0,
+          "total": null,
+          "mean": null,
+          "p50": null,
+          "p95": null
+        },
+        "reasoning_tokens_observed_calls": {
+          "observed": 0,
+          "total": null,
+          "mean": null,
+          "p50": null,
+          "p95": null
+        },
+        "latency_ms": {
+          "observed": 100,
+          "total": 23139926.0,
+          "mean": 231399.26,
+          "p50": 110318.0,
+          "p95": 971980.0
+        },
+        "sql_execution_ms": {
+          "observed": 100,
+          "total": 26389.584,
+          "mean": 263.89583999999996,
+          "p50": 4.1235,
+          "p95": 593.03
+        },
+        "gold_sql_execution_ms": {
+          "observed": 100,
+          "total": 56777.165,
+          "mean": 567.77165,
+          "p50": 7.65,
+          "p95": 2064.915
+        },
+        "agent_sql_execution_ms": {
+          "observed": 0,
+          "total": null,
+          "mean": null,
+          "p50": null,
+          "p95": null
+        },
+        "sql_tool_success_rate": null,
+        "final_sql_generation_rate": 1.0,
+        "final_sql_execution_rate": 1.0
+      },
+      "split": "test",
+      "is_full_split": false
+    },
+    "output_statuses": {
+      "generated_unverified": 59,
+      "verified": 41
+    },
+    "review_statuses": {
+      "UNCERTAIN": 49,
+      "PASS": 41,
+      "ERROR": 10
+    },
+    "usage_totals": {
+      "model_calls": 1790,
+      "tool_calls": 1312,
+      "sql_calls": 686,
+      "input_tokens": 5019052,
+      "output_tokens": 738729,
+      "total_tokens": 5757781,
+      "latency_ms": 23139926.0
+    }
+  }
+}

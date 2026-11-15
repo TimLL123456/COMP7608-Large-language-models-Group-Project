@@ -1,0 +1,101 @@
+[
+  {
+    "database": "california_schools",
+    "indexed": 69,
+    "files": 69,
+    "orphaned": [],
+    "missing_files": [],
+    "hash_mismatches": [],
+    "write_marker": false
+  },
+  {
+    "database": "card_games",
+    "indexed": 83,
+    "files": 83,
+    "orphaned": [],
+    "missing_files": [],
+    "hash_mismatches": [],
+    "write_marker": false
+  },
+  {
+    "database": "codebase_community",
+    "indexed": 58,
+    "files": 58,
+    "orphaned": [],
+    "missing_files": [],
+    "hash_mismatches": [],
+    "write_marker": false
+  },
+  {
+    "database": "debit_card_specializing",
+    "indexed": 21,
+    "files": 21,
+    "orphaned": [],
+    "missing_files": [],
+    "hash_mismatches": [],
+    "write_marker": false
+  },
+  {
+    "database": "european_football_2",
+    "indexed": 59,
+    "files": 59,
+    "orphaned": [],
+    "missing_files": [],
+    "hash_mismatches": [],
+    "write_marker": false
+  },
+  {
+    "database": "financial",
+    "indexed": 52,
+    "files": 52,
+    "orphaned": [],
+    "missing_files": [],
+    "hash_mismatches": [],
+    "write_marker": false
+  },
+  {
+    "database": "formula_1",
+    "indexed": 80,
+    "files": 80,
+    "orphaned": [],
+    "missing_files": [],
+    "hash_mismatches": [],
+    "write_marker": false
+  },
+  {
+    "database": "student_club",
+    "indexed": 43,
+    "files": 43,
+    "orphaned": [],
+    "missing_files": [],
+    "hash_mismatches": [],
+    "write_marker": false
+  },
+  {
+    "database": "superhero",
+    "indexed": 39,
+    "files": 39,
+    "orphaned": [],
+    "missing_files": [],
+    "hash_mismatches": [],
+    "write_marker": false
+  },
+  {
+    "database": "thrombosis_prediction",
+    "indexed": 53,
+    "files": 53,
+    "orphaned": [],
+    "missing_files": [],
+    "hash_mismatches": [],
+    "write_marker": false
+  },
+  {
+    "database": "toxicology",
+    "indexed": 15,
+    "files": 15,
+    "orphaned": [],
+    "missing_files": [],
+    "hash_mismatches": [],
+    "write_marker": false
+  }
+]

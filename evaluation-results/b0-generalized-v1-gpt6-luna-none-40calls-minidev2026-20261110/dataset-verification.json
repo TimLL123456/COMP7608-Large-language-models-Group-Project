@@ -1,0 +1,21 @@
+{
+  "questions": 500,
+  "databases": 11,
+  "dev": 400,
+  "test": 100,
+  "difficulty_distribution": {
+    "dev": {
+      "simple": 7,
+      "moderate": 24,
+      "challenging": 369
+    },
+    "test": {
+      "simple": 1,
+      "moderate": 8,
+      "challenging": 91
+    }
+  },
+  "annotations_sha256": "65500531300316e6a6e65d4b982460d73bafafd2497ee882f96a9f6f06bf8a29",
+  "source_verification": "pinned_hf_download",
+  "status": "PASS"
+}

@@ -179,9 +179,9 @@ function nodeCard(node,children){
  const toggle=make(head,'button','toggle',store.expanded.has(node.id)?'− Collapse':'+ Expand');toggle.type='button';
  const detail=make(card,'div','details');
  if(node.kind==='model'){
-  detailField(detail,node,'Model call', {finish:d.finish,input_tokens:d.input_tokens,output_tokens:d.output_tokens,observed_at_ms:d.observed_at_ms},'model');
+  detailField(detail,node,'Model call', {finish:d.finish,input_tokens:d.input_tokens,output_tokens:d.output_tokens,total_tokens:d.total_tokens??null,cached_input_tokens:d.cached_input_tokens??null,reasoning_tokens:d.reasoning_tokens??null,reasoning_effort:d.reasoning_effort??null,thinking_level:d.thinking_level??null,reasoning_mode:d.reasoning_mode??null,observed_at_ms:d.observed_at_ms},'model');
   if(d.content!==null&&d.content!==undefined)detailField(detail,node,'Observed model output',d.content,'auto');
-  make(detail,'div','output-note','Model latency or hidden reasoning: Not recorded unless explicitly provided');
+  make(detail,'div','output-note','Optional token details and reasoning settings appear only if reported by the API. Hidden reasoning text is not available.');
  }else if(isTool){
   detailField(detail,node,'Tool input / arguments',d.args,d.args&&typeof d.args==='object'&&'sql' in d.args?'sql':'auto');
   detailField(detail,node,'Tool execution output',d.output,'auto');

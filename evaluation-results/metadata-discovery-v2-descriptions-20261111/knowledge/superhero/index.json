@@ -1,0 +1,870 @@
+{
+  "n_023582dcd5b8332fd68c55fd": {
+    "concept_id": "id",
+    "keywords": [
+      "superhero",
+      "id",
+      "primary key",
+      "record identifier"
+    ],
+    "note_id": "n_023582dcd5b8332fd68c55fd",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "c7bbb14f3a13a6fe07917a86a82e76fa38951439436e53ee13314850998324b1",
+    "source_refs": [
+      "schema:superhero DDL id INTEGER not null primary key"
+    ],
+    "status": "provisional",
+    "summary": "Integer primary key identifying a row in the superhero table.",
+    "table_name": "superhero",
+    "title": "Superhero record identifier"
+  },
+  "n_0b7375aa5f2ed830af9fdb17": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "publisher",
+      "superhero",
+      "publisher name",
+      "lookup",
+      "dc comics"
+    ],
+    "note_id": "n_0b7375aa5f2ed830af9fdb17",
+    "note_type": "table",
+    "revision": 3,
+    "sha256": "81e9f1d6188536280fb70d52857a25b013117b0e5b76a9e1c88f6fbbab1e513f",
+    "source_refs": [
+      "schema:publisher DDL primary key id",
+      "schema:superhero.publisher_id foreign key",
+      "values:publisher.publisher_name includes DC Comics and Marvel Comics"
+    ],
+    "status": "provisional",
+    "summary": "Lookup records of publisher IDs and names, referenced by superhero.publisher_id; observed publisher labels include DC Comics.",
+    "table_name": "publisher",
+    "title": "Publisher table definition"
+  },
+  "n_0f76a00bd4a2d412a69306d1": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "superpower",
+      "power",
+      "name",
+      "catalog",
+      "hero_power"
+    ],
+    "note_id": "n_0f76a00bd4a2d412a69306d1",
+    "note_type": "table",
+    "revision": 5,
+    "sha256": "1482b9c62a18a1f4c3523acf654cd8a42e27d6d91464936a06bbd8f0f21542ac",
+    "source_refs": [
+      "schema:superpower DDL",
+      "schema:hero_power.power_id foreign key",
+      "description:superpower.csv:1-2"
+    ],
+    "status": "provisional",
+    "summary": "Catalog of power records with integer primary-key IDs and nullable text names; associations to heroes are stored in hero_power.",
+    "table_name": "superpower",
+    "title": "Superpower table definition"
+  },
+  "n_140ac494f3c305c9a84e1786": {
+    "concept_id": "alignment",
+    "keywords": [
+      "alignment",
+      "label",
+      "superhero",
+      "lookup",
+      "observed values"
+    ],
+    "note_id": "n_140ac494f3c305c9a84e1786",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "a370f5d5d87788d75789497bc4b804f96a1fb7dd46c7edb42f018e6158eafafa",
+    "source_refs": [
+      "schema:alignment.alignment TEXT nullable",
+      "description:alignment.csv:2",
+      "schema:superhero.alignment_id foreign key to alignment.id",
+      "values:alignment.alignment grouped values"
+    ],
+    "status": "provisional",
+    "summary": "Nullable text naming alignment lookup records; observed labels are Bad, Good, N/A and Neutral, not God or Eternal.",
+    "table_name": "alignment",
+    "title": "Alignment label"
+  },
+  "n_14141b2c69856a5c2f26d067": {
+    "concept_id": "alignment_id",
+    "keywords": [
+      "superhero",
+      "alignment",
+      "foreign key",
+      "alignment id",
+      "lookup"
+    ],
+    "note_id": "n_14141b2c69856a5c2f26d067",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "361596124ac4a46fb32e632266872e7f61092ba9c4ca29b71ca0954cb3678a1d",
+    "source_refs": [
+      "schema:superhero.alignment_id INTEGER nullable foreign key to alignment.id",
+      "schema:alignment.alignment TEXT nullable"
+    ],
+    "status": "provisional",
+    "summary": "Nullable foreign-key ID linking superhero records to alignment.id; join to alignment.alignment for the moral-alignment label.",
+    "table_name": "superhero",
+    "title": "Superhero alignment reference"
+  },
+  "n_21dca4bba661aa45ee649e29": {
+    "concept_id": "id",
+    "keywords": [
+      "superpower id",
+      "primary key",
+      "identifier"
+    ],
+    "note_id": "n_21dca4bba661aa45ee649e29",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "c0d3066157876cf8e311a4693784acce881fc21724d9449fc15dca2ebd9e131a",
+    "source_refs": [
+      "schema:superpower.id primary key",
+      "schema:hero_power.power_id foreign key to superpower.id"
+    ],
+    "status": "provisional",
+    "summary": "Primary-key integer identifying a superpower record.",
+    "table_name": "superpower",
+    "title": "Superpower record identifier"
+  },
+  "n_2817525834af683a803fd3f5": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "hero power",
+      "superhero",
+      "superpower",
+      "association"
+    ],
+    "note_id": "n_2817525834af683a803fd3f5",
+    "note_type": "table",
+    "revision": 3,
+    "sha256": "6e78bb945ba7bd5f83254187f38b57bc2c7ea6c873058afd6ce45d37141e77ca",
+    "source_refs": [
+      "schema:hero_power DDL and foreign keys",
+      "schema:superhero.id primary key",
+      "schema:superpower.id primary key"
+    ],
+    "status": "provisional",
+    "summary": "Association records link superhero IDs to superpower IDs; joins connect heroes to their recorded powers.",
+    "table_name": "hero_power",
+    "title": "Hero power association table definition"
+  },
+  "n_315871da0735ee5bb8c2872f": {
+    "concept_id": "race",
+    "keywords": [
+      "race",
+      "label",
+      "eternal",
+      "demi-god",
+      "lookup"
+    ],
+    "note_id": "n_315871da0735ee5bb8c2872f",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "0b8cb0cbe8dba78b1b64ab2f24a0c076daaea903e250bafd5c6349b8b44c2188",
+    "source_refs": [
+      "schema:race.race TEXT",
+      "schema:superhero.race_id foreign key to race.id",
+      "values:race.race grouped labels"
+    ],
+    "status": "provisional",
+    "summary": "Nullable text label naming a superhero race category; observed labels include Eternal and Demi-God, with exact-label semantics only.",
+    "table_name": "race",
+    "title": "Superhero race label"
+  },
+  "n_3ad9bbc329d3ac0a1310dcf9": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "gender",
+      "lookup",
+      "superhero",
+      "gender_id"
+    ],
+    "note_id": "n_3ad9bbc329d3ac0a1310dcf9",
+    "note_type": "table",
+    "revision": 1,
+    "sha256": "85a0092f88545637fea951354d145528773ce0f483b127f6ef12c62626dab2df",
+    "source_refs": [
+      "schema:gender DDL",
+      "schema:superhero.gender_id foreign key to gender.id",
+      "values:gender grouped label values observed"
+    ],
+    "status": "provisional",
+    "summary": "Lookup of gender IDs and nullable text labels referenced by superhero.gender_id.",
+    "table_name": "gender",
+    "title": "Gender lookup table definition"
+  },
+  "n_3bb56b59a44fcccaffc75be7": {
+    "concept_id": "gender_id",
+    "keywords": [
+      "gender",
+      "gender_id",
+      "superhero",
+      "lookup"
+    ],
+    "note_id": "n_3bb56b59a44fcccaffc75be7",
+    "note_type": "column",
+    "revision": 4,
+    "sha256": "371dabbdc84dfd9d9e2fe09002eea0bf33f496c80814fc28d27c451c11b533bc",
+    "source_refs": [
+      "schema:superhero.gender_id INTEGER nullable foreign key to gender.id",
+      "schema:gender.gender TEXT",
+      "values:gender observed labels Female, Male, N/A"
+    ],
+    "status": "provisional",
+    "summary": "Nullable foreign-key lookup ID for a hero's gender; join gender.id for category labels including Male.",
+    "table_name": "superhero",
+    "title": "Superhero gender reference"
+  },
+  "n_3eb550397e225916e1ff6dd7": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "race",
+      "superhero",
+      "category",
+      "lookup",
+      "eternal"
+    ],
+    "note_id": "n_3eb550397e225916e1ff6dd7",
+    "note_type": "table",
+    "revision": 2,
+    "sha256": "13783ddccef988cc60014f7f6d2a4df92d6ae48f28772b24e9e152c38921108c",
+    "source_refs": [
+      "schema:race DDL primary key id",
+      "schema:superhero.race_id foreign key to race.id",
+      "description:race.csv:2",
+      "values:race.race grouped labels"
+    ],
+    "status": "provisional",
+    "summary": "Lookup records with integer IDs and nullable text labels for superhero race categories, including observed Eternal label.",
+    "table_name": "race",
+    "title": "Race table definition"
+  },
+  "n_46da1cd5325b02c0068d3dae": {
+    "concept_id": "id",
+    "keywords": [
+      "gender",
+      "id",
+      "lookup",
+      "primary key"
+    ],
+    "note_id": "n_46da1cd5325b02c0068d3dae",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "7aa193c0f51ceeedaf88e095315a8ad8fe37a8d588a13f332f841a5419f358b5",
+    "source_refs": [
+      "schema:gender.id INTEGER PRIMARY KEY",
+      "schema:superhero.gender_id foreign key to gender.id",
+      "values:gender observed rows grouped by label"
+    ],
+    "status": "provisional",
+    "summary": "Integer primary key identifying a gender lookup record referenced by superhero.gender_id.",
+    "table_name": "gender",
+    "title": "Gender lookup identifier"
+  },
+  "n_4f69b49654ca31286bd6482d": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "colour",
+      "lookup",
+      "eye",
+      "hair",
+      "skin"
+    ],
+    "note_id": "n_4f69b49654ca31286bd6482d",
+    "note_type": "table",
+    "revision": 1,
+    "sha256": "da8503b6f308248258b618ad8f7c1b8252e04da16b90e37b424eea1c873791ee",
+    "source_refs": [
+      "schema:colour DDL",
+      "schema:superhero foreign keys",
+      "description:colour.csv:2"
+    ],
+    "status": "provisional",
+    "summary": "Lookup table containing colour identifiers and text labels used for superhero colour references.",
+    "table_name": "colour",
+    "title": "Colour table definition"
+  },
+  "n_51e47dbe115077da94956cbc": {
+    "concept_id": "hero_id",
+    "keywords": [
+      "hero id",
+      "superhero",
+      "power association",
+      "count"
+    ],
+    "note_id": "n_51e47dbe115077da94956cbc",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "7cd6be14aa1e18adebc43ac545c0b7b3d26c448e453695c1ff56aa1c7d601b15",
+    "source_refs": [
+      "schema:hero_power.hero_id INTEGER nullable foreign key",
+      "schema:hero_power has no primary/pair-unique constraint",
+      "values:hero_power 5,825 rows and distinct pairs"
+    ],
+    "status": "provisional",
+    "summary": "Nullable superhero ID in a hero-power association; no schema uniqueness constraint on hero-power pairs.",
+    "table_name": "hero_power",
+    "title": "Hero reference in power association"
+  },
+  "n_53083df1cccef8c311be95b4": {
+    "concept_id": "height_cm",
+    "keywords": [
+      "superhero",
+      "height",
+      "centimeters",
+      "measurement",
+      "missing"
+    ],
+    "note_id": "n_53083df1cccef8c311be95b4",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "c6487f2b896a9400457c2d00ab23c019e154aa0b15d3aa8e87321bdaff672325",
+    "source_refs": [
+      "schema:superhero.height_cm INTEGER",
+      "description:superhero.csv:11"
+    ],
+    "status": "provisional",
+    "summary": "Integer height measurement in centimeters; NULL or 0 denotes missing height per field description.",
+    "table_name": "superhero",
+    "title": "Superhero height in centimeters"
+  },
+  "n_584e133013fedb3e7d2b30a2": {
+    "concept_id": "id",
+    "keywords": [
+      "alignment",
+      "id",
+      "lookup",
+      "primary key"
+    ],
+    "note_id": "n_584e133013fedb3e7d2b30a2",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "d09d753736e68037312740648c22a5bf890844c39b7e209d3d12b6fd8dba77f6",
+    "source_refs": [
+      "schema:alignment.id INTEGER primary key",
+      "schema:superhero foreign key alignment_id to alignment.id"
+    ],
+    "status": "provisional",
+    "summary": "Integer primary key identifying an alignment lookup record referenced by superhero.alignment_id.",
+    "table_name": "alignment",
+    "title": "Alignment lookup identifier"
+  },
+  "n_68e4e8f517824fd5f86eb024": {
+    "concept_id": "id",
+    "keywords": [
+      "colour",
+      "id",
+      "lookup",
+      "primary key"
+    ],
+    "note_id": "n_68e4e8f517824fd5f86eb024",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "c737550650c84dd6db01201f08c48eec03e09db7c32ac0321f6a9d4257b63f40",
+    "source_refs": [
+      "schema:colour.id INTEGER primary key",
+      "schema:superhero foreign keys to colour.id"
+    ],
+    "status": "provisional",
+    "summary": "Integer primary key identifying a colour lookup record referenced by superhero colour fields.",
+    "table_name": "colour",
+    "title": "Colour lookup identifier"
+  },
+  "n_6e9b98540d4dcca253e89eb1": {
+    "concept_id": "attribute_value",
+    "keywords": [
+      "hero attribute",
+      "attribute value",
+      "integer",
+      "strength",
+      "speed",
+      "intelligence"
+    ],
+    "note_id": "n_6e9b98540d4dcca253e89eb1",
+    "note_type": "column",
+    "revision": 6,
+    "sha256": "92ca7668c8b2ee044b2a9b9098263d19df12fbef2de3a73f9d1327698e8d1607",
+    "source_refs": [
+      "schema:hero_attribute.attribute_value",
+      "schema:hero_attribute foreign keys to superhero.id and attribute.id",
+      "values:hero_attribute joined to attribute where attribute_name='Strength', 623 rows, 623 non-null, maximum 100",
+      "values:hero_attribute joined to attribute where attribute_name='Intelligence', observed 623 non-null values min 35 max 100",
+      "values:attribute lookup and hero_attribute rows for Speed, 623 rows all non-null, maximum 100"
+    ],
+    "status": "provisional",
+    "summary": "Nullable integer recorded for a hero-attribute association; Strength has 623 rows, all non-null, with maximum 100.",
+    "table_name": "hero_attribute",
+    "title": "Hero attribute value"
+  },
+  "n_6f68b2d61125ba071bde249e": {
+    "concept_id": "power_name",
+    "keywords": [
+      "power name",
+      "superpower",
+      "hero power",
+      "flight",
+      "label"
+    ],
+    "note_id": "n_6f68b2d61125ba071bde249e",
+    "note_type": "column",
+    "revision": 6,
+    "sha256": "c9e15361d2c1429b3f73f52c7122f85352031996cd3b419eda9ebf39cc39c62e",
+    "source_refs": [
+      "schema:superpower.power_name TEXT",
+      "schema:hero_power.power_id foreign key to superpower.id",
+      "values:superpower.power_name exact observed label Flight"
+    ],
+    "status": "provisional",
+    "summary": "Nullable text label for a power record joined to heroes via hero_power; exact observed label includes Flight.",
+    "table_name": "superpower",
+    "title": "Superpower name"
+  },
+  "n_746306e31fcafa31e79d678b": {
+    "concept_id": "full_name",
+    "keywords": [
+      "full name",
+      "superhero",
+      "name",
+      "placeholder",
+      "nullable text"
+    ],
+    "note_id": "n_746306e31fcafa31e79d678b",
+    "note_type": "column",
+    "revision": 9,
+    "sha256": "b26c44a41b8e52f4e7b14f08d9d17b3b560129a03979a005dee4e8e0ede29811",
+    "source_refs": [
+      "schema:superhero.full_name TEXT default NULL",
+      "schema:superhero.superhero_name TEXT default NULL",
+      "values:superhero full_name grouped counts, '-' observed as a value"
+    ],
+    "status": "provisional",
+    "summary": "Nullable text field distinct from superhero_name; '-' and NULL observed. Real-world identity-name meaning remains unverified despite the field label.",
+    "table_name": "superhero",
+    "title": "Recorded full-name field"
+  },
+  "n_7d4b82ff2771bf39c8fd4ede": {
+    "concept_id": "skin_colour_id",
+    "keywords": [
+      "superhero",
+      "skin colour",
+      "colour id",
+      "foreign key"
+    ],
+    "note_id": "n_7d4b82ff2771bf39c8fd4ede",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "192688846a3e68094ee56b229434ce9d659f5e41ddbd9e566bc203c706f5ff9c",
+    "source_refs": [
+      "schema:superhero.skin_colour_id foreign key to colour.id",
+      "description:colour.csv:2"
+    ],
+    "status": "provisional",
+    "summary": "Nullable integer foreign key referencing the colour lookup record assigned to a superhero's skin colour.",
+    "table_name": "superhero",
+    "title": "Superhero skin colour reference"
+  },
+  "n_897d921b0946e819eb858fc3": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "hero attribute",
+      "superhero",
+      "attribute",
+      "association",
+      "creator attribution"
+    ],
+    "note_id": "n_897d921b0946e819eb858fc3",
+    "note_type": "table",
+    "revision": 2,
+    "sha256": "71b2f1d4a6c8e37b593d32477cd1cb2e12fc2cc1f8d1559ad218d0a616999e6b",
+    "source_refs": [
+      "schema:hero_attribute DDL",
+      "schema:hero_attribute foreign keys to superhero.id and attribute.id",
+      "schema:sqlite_master lists available tables",
+      "schema:superhero DDL"
+    ],
+    "status": "provisional",
+    "summary": "Association rows link superhero IDs to attribute IDs and an integer value; available schema gives no creator attribution link.",
+    "table_name": "hero_attribute",
+    "title": "Hero attribute association table definition"
+  },
+  "n_90bd054e9192327ce74b5a71": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "alignment",
+      "superhero",
+      "lookup",
+      "neutral"
+    ],
+    "note_id": "n_90bd054e9192327ce74b5a71",
+    "note_type": "table",
+    "revision": 2,
+    "sha256": "60677204bc1e39abd430904b00f214eb7612c61eb2f76208755dd740f948cc2e",
+    "source_refs": [
+      "schema:alignment DDL",
+      "schema:superhero foreign key alignment_id",
+      "description:alignment.csv:2",
+      "values:alignment.alignment observed labels including Good, Bad, Neutral, N/A"
+    ],
+    "status": "provisional",
+    "summary": "Lookup records for superhero alignment classifications, with IDs for Good, Bad, Neutral, and N/A.",
+    "table_name": "alignment",
+    "title": "Alignment table definition"
+  },
+  "n_911f3a03954efe5d805e49e7": {
+    "concept_id": "publisher_name",
+    "keywords": [
+      "publisher name",
+      "label",
+      "publisher lookup"
+    ],
+    "note_id": "n_911f3a03954efe5d805e49e7",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "7af4a013e07958dee589d894495f4ca9d9f11e1c8b1974df5e21cabcf0c25186",
+    "source_refs": [
+      "schema:publisher.publisher_name nullable TEXT",
+      "schema:superhero.publisher_id foreign key to publisher.id",
+      "values:publisher.publisher_name includes DC Comics and Marvel Comics"
+    ],
+    "status": "provisional",
+    "summary": "Text label naming a publisher record; may be null, and uniqueness is not verified.",
+    "table_name": "publisher",
+    "title": "Publisher display name"
+  },
+  "n_a5f658bef692022c2da8a08a": {
+    "concept_id": "attribute_name",
+    "keywords": [
+      "attribute",
+      "attribute name",
+      "lookup",
+      "hero attribute",
+      "strength"
+    ],
+    "note_id": "n_a5f658bef692022c2da8a08a",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "7b58a612d2e21dec6499fa9aaad485bb30faff7ff9e16a97621726e99318aed6",
+    "source_refs": [
+      "schema:attribute.attribute_name",
+      "schema:hero_attribute foreign key attribute_id to attribute.id",
+      "values:attribute.attribute_name observed labels Intelligence, Strength, Speed, Durability, Power, Combat"
+    ],
+    "status": "provisional",
+    "summary": "Text label naming an attribute lookup record; observed labels include Strength.",
+    "table_name": "attribute",
+    "title": "Attribute name"
+  },
+  "n_a716c50a4015ba6495c49d66": {
+    "concept_id": "race_id",
+    "keywords": [
+      "superhero",
+      "race",
+      "race_id",
+      "foreign key"
+    ],
+    "note_id": "n_a716c50a4015ba6495c49d66",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "e309c48168a5dbfec68d6795ed652874be9cb20e14181057acce023604a9302d",
+    "source_refs": [
+      "schema:superhero.race_id INTEGER nullable and FK race.id",
+      "schema:race DDL",
+      "description:superhero.csv:8"
+    ],
+    "status": "provisional",
+    "summary": "Nullable integer foreign key assigning a superhero record to a race lookup record.",
+    "table_name": "superhero",
+    "title": "Superhero race reference"
+  },
+  "n_aebcb3975444f962f8ab3b87": {
+    "concept_id": "colour",
+    "keywords": [
+      "colour",
+      "lookup",
+      "eye colour",
+      "label"
+    ],
+    "note_id": "n_aebcb3975444f962f8ab3b87",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "6802091afd6bd007e4ed1709032b30fa5fd059cf53dac09020ad09efd7367aee",
+    "source_refs": [
+      "schema:colour.colour TEXT nullable",
+      "schema:superhero foreign keys to colour.id",
+      "description:colour.csv:2",
+      "values:colour.colour observed labels include Blue and No Colour"
+    ],
+    "status": "provisional",
+    "summary": "Nullable text label for a colour lookup record; observed labels include Blue and No Colour and labels resolve superhero colour references.",
+    "table_name": "colour",
+    "title": "Colour lookup label"
+  },
+  "n_b1f6df8f5e5ea80dc0746139": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "superhero",
+      "character",
+      "weight",
+      "height",
+      "gender",
+      "alignment",
+      "lookup"
+    ],
+    "note_id": "n_b1f6df8f5e5ea80dc0746139",
+    "note_type": "table",
+    "revision": 6,
+    "sha256": "7928534924172cfc3ba017229b44855aae93cbc0ba29624fd2bcda89a65b9064",
+    "source_refs": [
+      "schema:superhero DDL and foreign keys"
+    ],
+    "status": "provisional",
+    "summary": "Superhero records include names, nullable lookup references, height in cm and weight in kg.",
+    "table_name": "superhero",
+    "title": "Superhero table definition"
+  },
+  "n_b6343a60f93137c126dbcc96": {
+    "concept_id": "eye_colour_id",
+    "keywords": [
+      "superhero",
+      "eye colour",
+      "colour id",
+      "foreign key"
+    ],
+    "note_id": "n_b6343a60f93137c126dbcc96",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "042551732f16b3fb9297c1870f7dd0ade43fca6b038141d7ecebced92c506df1",
+    "source_refs": [
+      "schema:superhero.eye_colour_id nullable INTEGER foreign key to colour.id",
+      "description:superhero.csv:5"
+    ],
+    "status": "provisional",
+    "summary": "Nullable foreign-key ID assigning a superhero record to a colour lookup record for eye colour.",
+    "table_name": "superhero",
+    "title": "Superhero eye colour reference"
+  },
+  "n_bc7d74de2785a13a7dbb0099": {
+    "concept_id": "hero_id",
+    "keywords": [
+      "hero id",
+      "superhero",
+      "attribute association",
+      "foreign key"
+    ],
+    "note_id": "n_bc7d74de2785a13a7dbb0099",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "b3fa9d15fcfba149413e189f9ce6e7f731fb0f6a48de59499a5c1f866c33f1e3",
+    "source_refs": [
+      "schema:hero_attribute.hero_id INTEGER default NULL",
+      "schema:hero_attribute foreign key hero_id to superhero.id"
+    ],
+    "status": "provisional",
+    "summary": "Nullable integer foreign key identifying the superhero associated with an attribute value.",
+    "table_name": "hero_attribute",
+    "title": "Hero reference in attribute association"
+  },
+  "n_c5ab20056dfab71fecee92a7": {
+    "concept_id": "attribute_id",
+    "keywords": [
+      "attribute id",
+      "hero attribute",
+      "foreign key",
+      "superhero"
+    ],
+    "note_id": "n_c5ab20056dfab71fecee92a7",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "83b2886755c2869a50b0c7d8bd21ac8aaace3e46b05e2826d75269b18b6eb651",
+    "source_refs": [
+      "schema:hero_attribute.attribute_id INTEGER default NULL",
+      "schema:hero_attribute foreign key attribute_id to attribute.id"
+    ],
+    "status": "provisional",
+    "summary": "Nullable integer foreign key identifying the attribute lookup associated with a superhero's attribute value.",
+    "table_name": "hero_attribute",
+    "title": "Attribute reference in hero-attribute association"
+  },
+  "n_c69894799e9cf51622e07327": {
+    "concept_id": "gender",
+    "keywords": [
+      "gender",
+      "label",
+      "lookup",
+      "category"
+    ],
+    "note_id": "n_c69894799e9cf51622e07327",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "0544f9a5fd315abc19a5f72a0db7d21bd5fa0c277e04e9c7079119b37daa1e00",
+    "source_refs": [
+      "schema:gender.gender TEXT",
+      "schema:superhero.gender_id foreign key to gender.id",
+      "values:gender observed labels Female, Male, N/A"
+    ],
+    "status": "provisional",
+    "summary": "Nullable text label for a gender lookup record; observed values include Female, Male and N/A.",
+    "table_name": "gender",
+    "title": "Gender label"
+  },
+  "n_cffa20bf83a1c3d4a20dc2ce": {
+    "concept_id": "id",
+    "keywords": [
+      "attribute",
+      "id",
+      "primary key",
+      "lookup",
+      "hero attribute"
+    ],
+    "note_id": "n_cffa20bf83a1c3d4a20dc2ce",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "22f44095015353791619c85dff0dc26007ff2e002ff04af6a86fc2951130e704",
+    "source_refs": [
+      "schema:attribute DDL primary key id",
+      "schema:hero_attribute foreign key attribute_id to attribute.id"
+    ],
+    "status": "provisional",
+    "summary": "Non-null integer primary key identifying an attribute lookup row; referenced by hero_attribute.attribute_id.",
+    "table_name": "attribute",
+    "title": "Attribute lookup identifier"
+  },
+  "n_d1b5888e04d1b42c722fcb30": {
+    "concept_id": "superhero_name",
+    "keywords": [
+      "superhero name",
+      "character",
+      "superhero",
+      "nullable text",
+      "full name"
+    ],
+    "note_id": "n_d1b5888e04d1b42c722fcb30",
+    "note_type": "column",
+    "revision": 6,
+    "sha256": "d94b0abf056eacea129ede5a7a93b326780e9df8c00dbbc26164b70c55167f2a",
+    "source_refs": [
+      "schema:superhero.superhero_name nullable TEXT",
+      "schema:superhero.full_name TEXT"
+    ],
+    "status": "provisional",
+    "summary": "Nullable text field holding a superhero record's superhero_name; schema distinguishes it from full_name; no uniqueness constraint is defined.",
+    "table_name": "superhero",
+    "title": "Superhero display name"
+  },
+  "n_d56c8b219fd96e47fee9a00f": {
+    "concept_id": "weight_kg",
+    "keywords": [
+      "superhero",
+      "weight",
+      "kilograms",
+      "measurement",
+      "missing"
+    ],
+    "note_id": "n_d56c8b219fd96e47fee9a00f",
+    "note_type": "column",
+    "revision": 8,
+    "sha256": "7b18074289a7eb38c5790f50e0ce165be756cdcbc2d545ce3f295492028b1fbb",
+    "source_refs": [
+      "schema:superhero.weight_kg INTEGER nullable",
+      "description:superhero.csv:12"
+    ],
+    "status": "provisional",
+    "summary": "Nullable integer weight in kilograms; field metadata specifies NULL or 0 as missing.",
+    "table_name": "superhero",
+    "title": "Superhero weight in kilograms"
+  },
+  "n_d8f382ecdd078ccab1cdd825": {
+    "concept_id": "publisher_id",
+    "keywords": [
+      "superhero",
+      "publisher_id",
+      "publisher",
+      "foreign key",
+      "marvel comics"
+    ],
+    "note_id": "n_d8f382ecdd078ccab1cdd825",
+    "note_type": "column",
+    "revision": 6,
+    "sha256": "188f60dd963893e6dbfa2f3740b79fedd014c8ea1df9150cc1435472f217dd58",
+    "source_refs": [
+      "schema:superhero.publisher_id foreign key to publisher.id",
+      "schema:publisher DDL",
+      "values:publisher.publisher_name includes Marvel Comics and George Lucas"
+    ],
+    "status": "provisional",
+    "summary": "Nullable foreign key to publisher.id; observed labels such as Marvel Comics filter dataset association, while creator or franchise semantics are not verified.",
+    "table_name": "superhero",
+    "title": "Superhero publisher reference and creator ambiguity"
+  },
+  "n_e52309a8725cb19996e6495b": {
+    "concept_id": "power_id",
+    "keywords": [
+      "power id",
+      "superpower",
+      "association",
+      "count"
+    ],
+    "note_id": "n_e52309a8725cb19996e6495b",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "7da7480e3fb3a0716658dca507d0c6b4dd84c6f49590c62c37fa354f5a1a919e",
+    "source_refs": [
+      "schema:hero_power.power_id INTEGER nullable foreign key",
+      "schema:hero_power has no primary/pair-unique constraint",
+      "values:hero_power 5,825 rows and distinct pairs"
+    ],
+    "status": "provisional",
+    "summary": "Nullable superpower ID in an association row; no schema uniqueness constraint on hero-power pairs.",
+    "table_name": "hero_power",
+    "title": "Power reference in hero-power association"
+  },
+  "n_e6e02c09dd846fc6494c732a": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "attribute",
+      "lookup",
+      "attribute name",
+      "hero attribute"
+    ],
+    "note_id": "n_e6e02c09dd846fc6494c732a",
+    "note_type": "table",
+    "revision": 2,
+    "sha256": "b9375679c8b022c66353cc87f6e36fd9a37bae291db282766a578218c7538ce0",
+    "source_refs": [
+      "schema:attribute DDL",
+      "schema:hero_attribute foreign key attribute_id to attribute.id",
+      "values:attribute.attribute_name observed labels Intelligence, Strength, Speed, Durability, Power, Combat"
+    ],
+    "status": "provisional",
+    "summary": "Lookup records with integer IDs and text attribute names, linked from hero_attribute associations.",
+    "table_name": "attribute",
+    "title": "Attribute lookup table definition"
+  },
+  "n_f15feb33cba602bd310f3711": {
+    "concept_id": "hair_colour_id",
+    "keywords": [
+      "superhero",
+      "hair colour",
+      "colour lookup",
+      "foreign key"
+    ],
+    "note_id": "n_f15feb33cba602bd310f3711",
+    "note_type": "column",
+    "revision": 4,
+    "sha256": "e06b7b50366810db15b5a24e7e7b0ab7ddca92816a3e02d4d119c757a45deb48",
+    "source_refs": [
+      "schema:superhero.hair_colour_id nullable INTEGER foreign key to colour.id",
+      "description:superhero.csv:6",
+      "values:superhero.hair_colour_id id 1 resolves to colour.colour No Colour"
+    ],
+    "status": "provisional",
+    "summary": "Nullable integer foreign key assigning a superhero record to a colour lookup used for hair colour; observed lookup includes No Colour.",
+    "table_name": "superhero",
+    "title": "Superhero hair colour reference"
+  }
+}

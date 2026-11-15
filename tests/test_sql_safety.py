@@ -13,6 +13,10 @@ from scr.baselines.sqlite_readonly import ReadOnlySqlite, create_demo_db
 
 
 class SQLiteSafetyTests(unittest.TestCase):
+    def test_query_timeout_default_and_override(self):
+        self.assertEqual(self.store.max_seconds, 300.0)
+        self.assertEqual(ReadOnlySqlite(self.path, max_seconds=0.01).max_seconds, 0.01)
+
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)

@@ -1,0 +1,2415 @@
+question_id,split,database,difficulty,category,structural_review_flags,interpretation,fallback,a1_attempts,predicted_sql
+2,dev,california_schools,moderate,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT s.School,
+       ROUND(f.`Percent (%) Eligible FRPM (K-12)`, 6) AS eligible_meal_rate
+FROM schools AS s
+JOIN frpm AS f ON f.CDSCode = s.CDSCode
+WHERE s.DOC = '66'
+ORDER BY f.`FRPM Count (K-12)` DESC
+LIMIT 5;"
+4,dev,california_schools,simple,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",False,1,"SELECT sch.MailStreet, sch.School
+FROM satscores AS s
+JOIN schools AS sch ON sch.CDSCode = s.cds
+WHERE s.AvgScrMath IS NOT NULL
+ORDER BY s.AvgScrMath DESC
+LIMIT 1 OFFSET 6;"
+6,dev,california_schools,moderate,result_mismatch,order_by;count,"Structural flags are review candidates, not verified semantic causes",False,2,"SELECT s.School,
+       f.`Percent (%) Eligible FRPM (Ages 5-17)`
+FROM schools AS s
+JOIN frpm AS f ON f.CDSCode = s.CDSCode
+WHERE s.County = 'Los Angeles'
+  AND s.GSserved = 'K-9'
+ORDER BY s.School;"
+7,dev,california_schools,moderate,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",False,1,"SELECT
+    f.`District Code`,
+    100.0 * f.`Free Meal Count (K-12)` / f.`Enrollment (K-12)` AS `Percent (%) Eligible Free (K-12)`
+FROM schools AS s
+JOIN frpm AS f ON f.CDSCode = s.CDSCode
+WHERE s.AdmFName1 = 'Alusine';"
+8,dev,california_schools,challenging,result_mismatch,distinct;union,"Structural flags are review candidates, not verified semantic causes",False,1,"SELECT DISTINCT AdmEmail1
+FROM schools
+WHERE City = 'San Bernardino'
+  AND County = 'San Bernardino'
+  AND DOCType = 'Unified School District'
+  AND SOCType = 'Intermediate/Middle Schools (Public)'
+  AND OpenDate >= '2009-01-01'
+  AND OpenDate < '2011-01-01'
+  AND AdmEmail1 IS NOT NULL
+  AND TRIM(AdmEmail1) <> ''
+ORDER BY AdmEmail1;"
+11,dev,california_schools,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",False,2,"SELECT s.School, s.GSserved
+FROM schools AS s
+LEFT JOIN satscores AS sat
+    ON sat.cds = s.CDSCode
+WHERE s.NCESDist = '0613360'
+  AND s.StatusType = 'Active'
+  AND s.EILCode = 'HS'
+  AND s.GSserved LIKE '%12'
+  AND (sat.cds IS NULL OR sat.NumTstTakr = 0)
+ORDER BY s.School;"
+13,dev,california_schools,challenging,missing_SQL:RuntimeError,,"Structural flags are review candidates, not verified semantic causes",False,2,
+16,dev,california_schools,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",False,1,"SELECT s.AvgScrMath, s.NumTstTakr
+FROM schools AS sch
+JOIN satscores AS s ON s.cds = sch.CDSCode
+WHERE sch.CDSCode = '1611190130609'
+  AND sch.FundingType = 'Directly funded';"
+17,dev,california_schools,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",False,2,"SELECT COUNT(*)
+FROM satscores AS s
+JOIN schools AS sch ON sch.CDSCode = s.cds
+WHERE sch.County = 'Contra Costa'
+  AND s.NumTstTakr > (
+      SELECT target.NumTstTakr
+      FROM satscores AS target
+      WHERE target.cds = '07618040730051'
+  );"
+18,dev,california_schools,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT COUNT(*) AS qualifying_schools
+FROM schools AS s
+JOIN satscores AS sat
+  ON sat.cds = s.CDSCode
+WHERE s.MailCity = 'San Francisco'
+  AND s.DOCType IN (
+    'Unified School District',
+    'High School District',
+    'Elementary School District',
+    'County Office of Education (COE)'
+  )
+  AND s.SOCType LIKE '%(Public)'
+  AND sat.AvgScrRead + sat.AvgScrMath + sat.AvgScrWrite >= 1500;"
+20,dev,california_schools,challenging,missing_SQL:RuntimeError,distinct;group_by;limit;order_by;count;union,"Structural flags are review candidates, not verified semantic causes",True,3,
+24,dev,california_schools,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT SOCType AS ""School Type"",
+       School AS ""School Name"",
+       Latitude
+FROM schools
+WHERE (
+    SOCType IN ('Intermediate/Middle Schools (Public)', 'Junior High Schools (Public)')
+    OR School LIKE '%Middle%'
+    OR School LIKE '%Junior High%'
+)
+AND Latitude = (
+    SELECT MAX(Latitude)
+    FROM schools
+    WHERE (
+        SOCType IN ('Intermediate/Middle Schools (Public)', 'Junior High Schools (Public)')
+        OR School LIKE '%Middle%'
+        OR School LIKE '%Junior High%'
+    )
+);"
+26,dev,california_schools,challenging,result_mismatch,order_by,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT
+    s.FundingType,
+    COUNT(*) AS school_count,
+    SUM(f.`Enrollment (K-12)`) AS total_k12_enrollment,
+    ROUND(AVG(f.`Percent (%) Eligible FRPM (K-12)`) * 100, 2) AS avg_frpm_eligible_pct,
+    ROUND(
+        AVG(
+            CASE
+                WHEN sat.AvgScrRead IS NOT NULL
+                 AND sat.AvgScrMath IS NOT NULL
+                 AND sat.AvgScrWrite IS NOT NULL
+                THEN sat.AvgScrRead + sat.AvgScrMath + sat.AvgScrWrite
+            END
+        ),
+        2
+    ) AS avg_combined_sat_score
+FROM schools AS s
+LEFT JOIN frpm AS f
+    ON f.CDSCode = s.CDSCode
+   AND f.`Academic Year` = '2014-2015'
+LEFT JOIN satscores AS sat
+    ON sat.cds = s.CDSCode
+WHERE s.StatusType = 'Active'
+  AND s.FundingType IN ('Directly funded', 'Locally funded')
+GROUP BY s.FundingType;"
+28,dev,california_schools,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT COUNT(*) AS school_count
+FROM schools AS s
+JOIN frpm AS f
+  ON f.CDSCode = s.CDSCode
+LEFT JOIN satscores AS sat
+  ON sat.cds = s.CDSCode
+WHERE s.School IS NOT NULL
+  AND trim(s.School) <> ''
+  AND s.DOCType <> 'County Office of Education (COE)'
+  AND f.""Enrollment (K-12)"" > 500
+  AND CAST(
+        CASE
+          WHEN instr(s.GSserved, '-') > 0
+            THEN substr(s.GSserved, instr(s.GSserved, '-') + 1)
+          ELSE s.GSserved
+        END AS INTEGER
+      ) BETWEEN 1 AND 8
+  AND (sat.cds IS NULL OR sat.NumTstTakr = 0);"
+34,dev,california_schools,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",False,2,"SELECT ROUND(
+    100.0 * SUM(CASE WHEN s.Virtual IN ('F', 'P') THEN 1 ELSE 0 END) / COUNT(*),
+    1
+) AS percentage
+FROM schools AS s
+JOIN satscores AS sat ON sat.cds = s.CDSCode
+WHERE s.State = 'CA'
+  AND sat.AvgScrMath > 400;"
+36,dev,california_schools,challenging,result_mismatch,round,"Structural flags are review candidates, not verified semantic causes",True,3,"WITH eligible_schools AS (
+    SELECT
+        s.CDSCode,
+        s.School,
+        s.GSserved,
+        s.Charter,
+        f.""Free Meal Count (K-12)"" / f.""Enrollment (K-12)"" AS free_meal_rate
+    FROM schools AS s
+    JOIN frpm AS f
+        ON f.CDSCode = s.CDSCode
+    WHERE s.County = 'Alameda'
+      AND s.GSserved LIKE '%-12'
+      AND f.""Enrollment (K-12)"" > 0
+),
+highest_rate AS (
+    SELECT MAX(free_meal_rate) AS rate
+    FROM eligible_schools
+)
+SELECT
+    e.School AS school_name,
+    printf('%.4f', e.free_meal_rate) AS free_meal_rate,
+    CASE e.Charter
+        WHEN 1 THEN 'Yes'
+        WHEN 0 THEN 'No'
+        ELSE 'Unknown'
+    END AS charter_status,
+    e.GSserved AS grades_served,
+    CASE
+        WHEN sat.AvgScrRead IS NULL
+          OR sat.AvgScrMath IS NULL
+          OR sat.AvgScrWrite IS NULL THEN 'No SAT Data'
+        WHEN sat.AvgScrRead + sat.AvgScrMath + sat.AvgScrWrite < 1200
+            THEN 'Below Average'
+        WHEN sat.AvgScrRead + sat.AvgScrMath + sat.AvgScrWrite <= 1500
+            THEN 'Average'
+        ELSE 'Above Average'
+    END AS sat_performance_level
+FROM eligible_schools AS e
+JOIN highest_rate AS h
+    ON e.free_meal_rate = h.rate
+LEFT JOIN satscores AS sat
+    ON sat.cds = e.CDSCode;"
+42,dev,california_schools,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",False,2,"SELECT s.School, s.Street
+FROM frpm AS f
+JOIN schools AS s ON s.CDSCode = f.CDSCode
+WHERE f.""Low Grade"" IN ('9', '10', '11', '12', 'Adult')
+  AND f.""Enrollment (K-12)"" - f.""Enrollment (Ages 5-17)"" > 30
+ORDER BY s.CDSCode ASC;"
+44,dev,california_schools,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT s.AdmFName1, s.AdmLName1
+FROM schools AS s
+JOIN satscores AS t ON t.cds = s.CDSCode
+WHERE s.County = (
+    SELECT County
+    FROM schools
+    WHERE substr(CDSCode, 1, 2) = substr('1611430131177', 1, 2)
+    LIMIT 1
+)
+  AND t.rtype = 'S'
+ORDER BY t.NumGE1500 DESC, s.CDSCode ASC
+LIMIT 1;"
+45,dev,california_schools,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",False,2,"SELECT sch.Street, sch.City, sch.Zip, sch.State
+FROM satscores AS s
+JOIN schools AS sch ON sch.CDSCode = s.cds
+WHERE s.NumTstTakr >= 700
+  AND s.NumGE1500 IS NOT NULL
+ORDER BY CAST(s.NumGE1500 AS REAL) / s.NumTstTakr ASC,
+         CAST(s.cds AS INTEGER) ASC
+LIMIT 1;"
+52,dev,card_games,simple,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",False,1,"SELECT DISTINCT text
+FROM cards
+WHERE name = 'Benalish Knight';"
+66,dev,card_games,challenging,execution:sql_error,distinct;count,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT
+    s.type,
+    COUNT(DISTINCT CASE
+        WHEN t.translation IS NOT NULL AND TRIM(t.translation) <> '' THEN s.code
+    END) AS translated_set_count,
+    COALESCE(SUM(CASE
+        WHEN t.translation IS NOT NULL AND TRIM(t.translation) <> '' THEN s.totalSetSize
+        ELSE 0
+    END), 0) AS total_cards
+FROM sets AS s
+LEFT JOIN (
+    SELECT DISTINCT setCode
+    FROM set_translations
+    WHERE translation IS NOT NULL
+      AND TRIM(translation) <> ''
+) AS t
+    ON t.setCode = s.code
+GROUP BY s.type
+ORDER BY s.type;"
+67,dev,card_games,challenging,result_mismatch,distinct,"Structural flags are review candidates, not verified semantic causes",False,2,"WITH target_rulings AS (
+  SELECT r.date
+  FROM rulings AS r
+  JOIN cards AS c ON c.uuid = r.uuid
+  WHERE c.name = 'Mishra''s Factory'
+),
+latest_date AS (
+  SELECT MAX(date) AS date
+  FROM target_rulings
+)
+SELECT COUNT(*) AS ruling_count
+FROM target_rulings
+WHERE date = (SELECT date FROM latest_date);"
+69,dev,card_games,challenging,result_mismatch,limit;order_by,"Structural flags are review candidates, not verified semantic causes",True,3,"WITH newest_frame AS (
+    SELECT frameVersion
+    FROM cards
+    WHERE convertedManaCost = 0
+    GROUP BY frameVersion
+    ORDER BY CASE
+        WHEN frameVersion = 'future' THEN 9999
+        WHEN frameVersion GLOB '[0-9][0-9][0-9][0-9]' THEN CAST(frameVersion AS INTEGER)
+    END DESC
+    LIMIT 1
+)
+SELECT c.frameVersion, COUNT(*) AS card_count
+FROM cards AS c
+JOIN newest_frame AS n ON c.frameVersion = n.frameVersion
+GROUP BY c.frameVersion;"
+70,dev,card_games,challenging,result_mismatch,group_by;sum,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT
+    frameVersion AS frame_version_year,
+    ROUND(100.0 * COUNT(*) / (SELECT COUNT(*) FROM cards WHERE name = 'Tarmogoyf'), 2) AS percentage_of_printings
+FROM cards
+WHERE name = 'Tarmogoyf'
+  AND frameVersion = 'future';"
+71,dev,card_games,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",False,1,"SELECT COUNT(DISTINCT c.uuid) AS card_count
+FROM cards AS c
+WHERE c.manaCost = '{0}'
+  AND EXISTS (
+    SELECT 1
+    FROM legalities AS l
+    WHERE l.uuid = c.uuid
+      AND l.format = 'commander'
+      AND l.status = 'Legal'
+  );"
+82,dev,card_games,challenging,result_mismatch,distinct;group_by;having,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT COUNT(DISTINCT scryfallOracleId) AS count_cards
+FROM cards
+WHERE hasContentWarning = 1
+  AND availability LIKE '%paper%'
+  AND availability NOT LIKE '%mtgo%';"
+85,dev,card_games,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",True,3,"WITH latest_release AS (
+    SELECT MAX(s.releaseDate) AS releaseDate
+    FROM cards c
+    JOIN sets s ON s.code = c.setCode
+    WHERE c.name = 'Ancestor''s Chosen'
+)
+SELECT COUNT(*) AS count
+FROM cards c
+JOIN sets s ON s.code = c.setCode
+JOIN latest_release lr ON s.releaseDate = lr.releaseDate
+WHERE c.types LIKE '%Creature%'
+  AND c.power GLOB '[0-9]*'
+  AND c.toughness GLOB '[0-9]*'
+  AND CAST(c.power AS INTEGER) > CAST(c.toughness AS INTEGER);"
+86,dev,card_games,challenging,result_mismatch,limit;order_by,"Structural flags are review candidates, not verified semantic causes",True,3,"WITH eligible AS (
+    SELECT frameVersion
+    FROM cards
+    WHERE cardKingdomId IS NOT NULL
+      AND cardKingdomFoilId IS NOT NULL
+      AND leadershipSkills LIKE '%commander%'
+      AND leadershipSkills LIKE '%True%'
+),
+latest_year AS (
+    SELECT MAX(CAST(frameVersion AS INTEGER)) AS frame_year
+    FROM eligible
+    WHERE frameVersion GLOB '[0-9]*'
+      AND frameVersion NOT GLOB '*[^0-9]*'
+)
+SELECT frame_year, COUNT(*) AS card_count
+FROM eligible
+CROSS JOIN latest_year
+WHERE CAST(frameVersion AS INTEGER) = frame_year
+GROUP BY frame_year;"
+88,dev,card_games,challenging,result_mismatch,window,"Structural flags are review candidates, not verified semantic causes",True,3,"WITH eligible_cards AS (
+    SELECT DISTINCT scryfallOracleId, name
+    FROM cards
+    WHERE originalType = 'Creature - Elf'
+      AND scryfallOracleId IS NOT NULL
+      AND name IS NOT NULL
+),
+ruling_counts AS (
+    SELECT e.name, COUNT(r.id) AS ruling_count
+    FROM eligible_cards AS e
+    JOIN cards AS c
+      ON c.scryfallOracleId = e.scryfallOracleId
+    LEFT JOIN rulings AS r
+      ON r.uuid = c.uuid
+    GROUP BY e.scryfallOracleId, e.name
+),
+ranked AS (
+    SELECT name, ruling_count,
+           DENSE_RANK() OVER (ORDER BY ruling_count DESC) AS ranking
+    FROM ruling_counts
+)
+SELECT name, ruling_count
+FROM ranked
+WHERE ranking = 1;"
+93,dev,card_games,challenging,result_mismatch,window,"Structural flags are review candidates, not verified semantic causes",True,3,"WITH eligible_cards AS (
+    SELECT c.uuid, c.types
+    FROM cards AS c
+    WHERE c.watermark = 'boros'
+      AND EXISTS (
+          SELECT 1
+          FROM foreign_data AS f
+          WHERE f.uuid = c.uuid
+            AND f.language <> 'English'
+      )
+),
+type_counts AS (
+    SELECT TRIM(j.value) AS card_type,
+           COUNT(DISTINCT e.uuid) AS card_count
+    FROM eligible_cards AS e,
+         json_each(
+             '[""' || REPLACE(REPLACE(e.types, '""', '\\""'), ',', '"",""') || '""]'
+         ) AS j
+    WHERE e.types IS NOT NULL
+    GROUP BY TRIM(j.value)
+),
+ranked AS (
+    SELECT card_type,
+           card_count,
+           RANK() OVER (ORDER BY card_count DESC) AS rnk
+    FROM type_counts
+)
+SELECT card_type, card_count
+FROM ranked
+WHERE rnk = 1;"
+95,dev,card_games,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",False,1,"SELECT c.originalType AS card_type,
+       COUNT(DISTINCT c.uuid) AS card_count
+FROM cards AS c
+WHERE c.watermark = 'azorius'
+  AND c.originalType IS NOT NULL
+  AND EXISTS (
+      SELECT 1
+      FROM foreign_data AS fd
+      WHERE fd.uuid = c.uuid
+        AND fd.language IS NOT NULL
+        AND TRIM(fd.language) <> ''
+  )
+GROUP BY c.originalType
+ORDER BY card_count DESC, card_type ASC;"
+96,dev,card_games,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT COUNT(DISTINCT scryfallOracleId)
+FROM cards
+WHERE frameVersion = '2015'
+  AND isTextless = 0
+  AND TRIM(COALESCE(text, '')) <> '';"
+106,dev,card_games,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT
+    s.block AS block_name,
+    COUNT(DISTINCT CASE
+        WHEN t.translation IS NOT NULL AND TRIM(t.translation) <> ''
+        THEN s.code
+    END) AS sets_with_translated_name,
+    SUM(s.baseSetSize) AS total_base_set_cards
+FROM sets AS s
+LEFT JOIN set_translations AS t
+    ON t.setCode = s.code
+WHERE s.block IN ('Masques', 'Mirage')
+  AND s.type = 'expansion'
+GROUP BY s.block
+ORDER BY s.block;"
+109,dev,card_games,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT COUNT(DISTINCT c.scryfallOracleId)
+FROM cards AS c
+WHERE c.scryfallOracleId IS NOT NULL
+  AND CAST(c.power AS REAL) >= 10
+  AND EXISTS (
+      SELECT 1
+      FROM set_translations AS st
+      WHERE st.setCode = c.setCode
+        AND st.language = 'French'
+        AND NULLIF(TRIM(st.translation), '') IS NOT NULL
+  );"
+112,dev,card_games,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT COUNT(*) AS printing_count
+FROM cards AS c
+JOIN sets AS s ON s.code = c.setCode
+WHERE s.releaseDate >= '2014-01-01'
+  AND s.releaseDate < '2015-01-01'
+  AND s.mtgoCode IS NOT NULL;"
+115,dev,card_games,challenging,result_mismatch,distinct;group_by;count,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT id, name, totalSetSize
+FROM sets
+WHERE type = 'commander'
+  AND releaseDate >= '2020-01-01'
+  AND releaseDate < '2021-01-01'
+  AND totalSetSize = (
+      SELECT MAX(totalSetSize)
+      FROM sets
+      WHERE type = 'commander'
+        AND releaseDate >= '2020-01-01'
+        AND releaseDate < '2021-01-01'
+  )
+ORDER BY id ASC;"
+120,dev,codebase_community,challenging,result_mismatch,count,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT
+    100.0 * SUM(CASE WHEN strftime('%Y', Date) = '2010' AND Name = 'Student' THEN 1 ELSE 0 END)
+        / SUM(CASE WHEN strftime('%Y', Date) = '2010' THEN 1 ELSE 0 END)
+    -
+    100.0 * SUM(CASE WHEN strftime('%Y', Date) = '2011' AND Name = 'Student' THEN 1 ELSE 0 END)
+        / SUM(CASE WHEN strftime('%Y', Date) = '2011' THEN 1 ELSE 0 END)
+    AS percentage_point_difference
+FROM badges
+WHERE strftime('%Y', Date) IN ('2010', '2011');"
+124,dev,codebase_community,moderate,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",False,2,"SELECT c.Text, c.UserDisplayName
+FROM comments AS c
+JOIN posts AS p ON p.Id = c.PostId
+WHERE p.Title = 'Analysing wind data with R'
+ORDER BY c.CreationDate DESC
+LIMIT 10;"
+127,dev,codebase_community,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT SUM(u.Reputation) AS total_reputation
+FROM users AS u
+WHERE (u.Location = 'United Kingdom' OR u.Location LIKE '%, United Kingdom')
+  AND EXISTS (
+      SELECT 1
+      FROM posts AS p
+      WHERE p.OwnerUserId = u.Id
+  );"
+130,dev,codebase_community,challenging,result_mismatch,union,"Structural flags are review candidates, not verified semantic causes",True,3,"WITH first_posts AS (
+    SELECT OwnerUserId, MIN(CreaionDate) AS first_post_date
+    FROM posts
+    WHERE OwnerUserId IS NOT NULL
+    GROUP BY OwnerUserId
+)
+SELECT COUNT(*) AS users_in_india
+FROM first_posts AS fp
+JOIN users AS u ON u.Id = fp.OwnerUserId
+WHERE fp.first_post_date >= '2010-01-01'
+  AND fp.first_post_date < '2011-01-01'
+  AND LOWER(TRIM(u.Location)) = 'india';"
+131,dev,codebase_community,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",False,1,"SELECT ROUND(AVG(u.Reputation))
+FROM posts AS p
+JOIN users AS u ON u.Id = p.OwnerUserId
+WHERE p.Score < 20
+  AND p.Tags LIKE '%<r>%';"
+133,dev,codebase_community,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",False,1,"SELECT SUM(u.Reputation) AS combined_reputation
+FROM posts AS p
+JOIN users AS u ON u.Id = p.OwnerUserId
+WHERE p.Score = 10
+  AND p.Tags LIKE '%<r>%';"
+134,dev,codebase_community,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",False,1,"SELECT SUM(u.Reputation) AS combined_reputation
+FROM posts p
+JOIN users u ON u.Id = p.OwnerUserId
+WHERE p.Tags LIKE '%<r>%'
+  AND p.LasActivityDate >= '2014-08-27'
+  AND p.LasActivityDate < '2014-08-28';"
+138,dev,codebase_community,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",False,2,"SELECT Age
+FROM users
+WHERE Location = 'York'
+  AND Reputation = (
+    SELECT MAX(Reputation)
+    FROM users
+    WHERE Location = 'York'
+  );"
+140,dev,codebase_community,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",True,1,"SELECT COUNT(DISTINCT u.DisplayName) AS distinct_display_names
+FROM users AS u
+WHERE u.Age BETWEEN 19 AND 65
+  AND u.DisplayName IS NOT NULL
+  AND EXISTS (
+    SELECT 1
+    FROM badges AS b
+    WHERE b.UserId = u.Id
+      AND b.Name = 'Supporter'
+  );"
+142,dev,codebase_community,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT Id
+FROM users
+WHERE DisplayName = 'Michael'
+ORDER BY CreationDate ASC, Id ASC
+LIMIT 1;"
+145,dev,codebase_community,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",True,3,"WITH active_users AS (
+    SELECT OwnerUserId
+    FROM posts
+    WHERE CreaionDate >= '2012-01-01'
+      AND CreaionDate < '2013-01-01'
+      AND OwnerUserId IS NOT NULL
+    GROUP BY OwnerUserId
+    HAVING COUNT(*) > 10
+),
+cast_upvotes AS (
+    SELECT UserId, COUNT(*) AS upvotes_cast
+    FROM votes
+    WHERE VoteTypeId = 5
+      AND UserId IS NOT NULL
+    GROUP BY UserId
+)
+SELECT
+    ROUND(AVG(COALESCE(c.upvotes_cast, 0)), 2) AS average_upvotes_cast,
+    ROUND(AVG(u.Age), 2) AS average_age
+FROM active_users a
+JOIN users u ON u.Id = a.OwnerUserId
+LEFT JOIN cast_upvotes c ON c.UserId = a.OwnerUserId;"
+152,dev,debit_card_specializing,challenging,result_mismatch,group_by,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT COUNT(*)
+FROM (
+    SELECT ym.CustomerID
+    FROM yearmonth AS ym
+    JOIN customers AS c ON c.CustomerID = ym.CustomerID
+    WHERE c.Currency = 'EUR'
+      AND ym.Consumption > 0
+      AND ym.Date BETWEEN '201201' AND '201212'
+    GROUP BY ym.CustomerID
+
+    INTERSECT
+
+    SELECT ym.CustomerID
+    FROM yearmonth AS ym
+    JOIN customers AS c ON c.CustomerID = ym.CustomerID
+    WHERE c.Currency = 'EUR'
+      AND ym.Consumption > 0
+      AND ym.Date BETWEEN '201301' AND '201312'
+    GROUP BY ym.CustomerID
+);"
+153,dev,debit_card_specializing,challenging,result_mismatch,distinct;order_by,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT c.Segment, COUNT(DISTINCT y.CustomerID) AS customer_count
+FROM customers AS c
+JOIN yearmonth AS y
+  ON y.CustomerID = c.CustomerID
+WHERE y.Date LIKE '2012%'
+GROUP BY c.Segment
+HAVING SUM(y.Consumption) < 30000;"
+155,dev,debit_card_specializing,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",False,3,"WITH qualifying AS (
+  SELECT datetime(t.Date || ' ' || t.Time) AS ts
+  FROM transactions_1k AS t
+  JOIN gasstations AS g ON g.GasStationID = t.GasStationID
+  WHERE g.Country = 'CZE'
+    AND t.Price > 1000
+)
+SELECT CAST((julianday(MAX(ts)) - julianday(MIN(ts))) * 24 * 60 AS INTEGER) AS elapsed_whole_minutes
+FROM qualifying;"
+156,dev,debit_card_specializing,challenging,result_mismatch,union,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT c.Currency, COUNT(DISTINCT ym.CustomerID) AS customer_count
+FROM yearmonth AS ym
+JOIN customers AS c ON c.CustomerID = ym.CustomerID
+WHERE ym.Date BETWEEN '201301' AND '201311'
+  AND ym.Consumption > 0
+GROUP BY c.Currency
+HAVING COUNT(DISTINCT ym.Date) = 11;"
+157,dev,debit_card_specializing,challenging,result_mismatch,order_by,"Structural flags are review candidates, not verified semantic causes",False,3,"WITH quarterly AS (
+  SELECT
+    ym.CustomerID,
+    SUM(ym.Consumption) AS quarter_consumption
+  FROM yearmonth AS ym
+  WHERE ym.Date >= '201304'
+    AND ym.Date <= '201306'
+    AND ym.Consumption IS NOT NULL
+  GROUP BY ym.CustomerID
+)
+SELECT
+  c.Currency,
+  ROUND(AVG(q.quarter_consumption), 2) AS average_quarterly_consumption
+FROM quarterly AS q
+JOIN customers AS c
+  ON c.CustomerID = q.CustomerID
+WHERE c.Currency IN ('EUR', 'CZK')
+GROUP BY c.Currency
+ORDER BY CASE c.Currency WHEN 'EUR' THEN 1 WHEN 'CZK' THEN 2 END;"
+162,dev,debit_card_specializing,challenging,result_mismatch,distinct;count,"Structural flags are review candidates, not verified semantic causes",True,3,SELECT 0;
+165,dev,european_football_2,moderate,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT
+    p.player_api_id,
+    p.player_name,
+    AVG(pa.heading_accuracy) AS mean_heading_accuracy
+FROM Player AS p
+JOIN Player_Attributes AS pa
+    ON pa.player_api_id = p.player_api_id
+WHERE p.height > 180
+GROUP BY p.player_api_id, p.player_name
+ORDER BY mean_heading_accuracy DESC, p.player_api_id ASC
+LIMIT 10;"
+172,dev,european_football_2,challenging,result_mismatch,group_by,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT ROUND(AVG(p.height), 2) AS average_height_cm
+FROM ""Match"" AS m
+JOIN Player AS p ON p.player_api_id = m.home_player_3
+WHERE p.height > 180;"
+175,dev,european_football_2,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",True,3,"WITH ranked AS (
+    SELECT
+        player_api_id,
+        defensive_work_rate,
+        ROW_NUMBER() OVER (
+            PARTITION BY player_api_id
+            ORDER BY date DESC, id DESC
+        ) AS rn
+    FROM Player_Attributes
+)
+SELECT ROUND(AVG(p.height), 2)
+FROM ranked r
+JOIN Player p ON p.player_api_id = r.player_api_id
+WHERE r.rn = 1
+  AND r.defensive_work_rate <> 'medium';"
+176,dev,european_football_2,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",False,1,"WITH risky_teams AS (
+    SELECT DISTINCT team_api_id
+    FROM Team_Attributes
+    WHERE chanceCreationPassingClass = 'Risky'
+),
+dated_risks AS (
+    SELECT team_api_id, chanceCreationPassing
+    FROM Team_Attributes
+    WHERE date = '2014-09-19 00:00:00'
+)
+SELECT
+    t.team_short_name,
+    COUNT(DISTINCT t.team_api_id) AS club_count,
+    ROUND(AVG(d.chanceCreationPassing), 1) AS avg_chance_creation_passing_risk
+FROM Team AS t
+JOIN risky_teams AS r ON r.team_api_id = t.team_api_id
+JOIN dated_risks AS d ON d.team_api_id = t.team_api_id
+GROUP BY t.team_short_name
+HAVING COUNT(DISTINCT t.team_api_id) > 1
+ORDER BY avg_chance_creation_passing_risk DESC, t.team_short_name ASC;"
+177,dev,european_football_2,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",True,3,"WITH ranked AS (
+    SELECT
+        player_api_id,
+        defensive_work_rate,
+        ROW_NUMBER() OVER (
+            PARTITION BY player_api_id
+            ORDER BY date DESC, id DESC
+        ) AS rn
+    FROM Player_Attributes
+    WHERE defensive_work_rate IS NOT NULL
+      AND TRIM(defensive_work_rate) <> ''
+)
+SELECT ROUND(AVG(p.height), 2) AS average_height_cm
+FROM ranked AS r
+JOIN Player AS p ON p.player_api_id = r.player_api_id
+WHERE r.rn = 1
+  AND r.defensive_work_rate = 'medium'
+  AND p.birthday >= '1990-01-01'
+  AND p.birthday < '1996-01-01';"
+186,dev,european_football_2,challenging,result_mismatch,distinct;group_by;count;avg,"Structural flags are review candidates, not verified semantic causes",False,1,"WITH per_player AS (
+    SELECT
+        home_player_3 AS player_id,
+        SUM(home_team_goal) AS total_home_goals
+    FROM ""Match""
+    WHERE home_player_3 IS NOT NULL
+    GROUP BY home_player_3
+)
+SELECT ROUND(AVG(total_home_goals), 2) AS average_total_home_goals
+FROM per_player;"
+191,dev,european_football_2,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",False,1,"SELECT COUNT(DISTINCT player_api_id) AS player_count
+FROM Player_Attributes
+WHERE date >= '2007-02-22'
+  AND date <= '2007-08-30'
+  AND jumping >= 80;"
+199,dev,financial,challenging,result_mismatch,distinct,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT
+    d.A2 AS district,
+    ROUND((d.A9 - d.A8) * 100.0 / NULLIF(d.A8, 0), 2) AS percentage_change
+FROM district AS d
+WHERE EXISTS (
+    SELECT 1
+    FROM account AS a
+    JOIN loan AS l ON l.account_id = a.account_id
+    WHERE a.district_id = d.district_id
+      AND l.status = 'D'
+)
+ORDER BY d.A2;"
+201,dev,financial,challenging,execution:sql_error,group_by,"Structural flags are review candidates, not verified semantic causes",True,3,"WITH yearly AS (
+    SELECT
+        CAST(strftime('%Y', l.date) AS INTEGER) AS loan_year,
+        SUM(l.amount) AS total_amount
+    FROM loan AS l
+    WHERE l.date >= '1996-01-01'
+      AND l.date < '1998-01-01'
+      AND EXISTS (
+          SELECT 1
+          FROM disp AS d
+          JOIN client AS c ON c.client_id = d.client_id
+          WHERE d.account_id = l.account_id
+            AND d.type = 'OWNER'
+            AND c.gender = 'M'
+      )
+    GROUP BY CAST(strftime('%Y', l.date) AS INTEGER)
+)
+SELECT
+    (1997.0_total - 1996.0_total) * 100.0 / 1996.0_total AS percentage_growth
+FROM (
+    SELECT
+        SUM(CASE WHEN loan_year = 1996 THEN total_amount ELSE 0 END) AS 1996_total,
+        SUM(CASE WHEN loan_year = 1997 THEN total_amount ELSE 0 END) AS 1997_total
+    FROM yearly
+);"
+203,dev,financial,challenging,result_mismatch,order_by,"Structural flags are review candidates, not verified semantic causes",False,1,"WITH first_month AS (
+    SELECT date(MIN(date), 'start of month') AS month_start
+    FROM account
+),
+opened_districts AS (
+    SELECT DISTINCT a.district_id
+    FROM account AS a
+    CROSS JOIN first_month AS f
+    WHERE date(a.date) >= f.month_start
+      AND date(a.date) < date(f.month_start, '+1 month')
+)
+SELECT d.district_id, CAST(d.A4 AS INTEGER) AS population
+FROM district AS d
+JOIN opened_districts AS od ON od.district_id = d.district_id
+WHERE CAST(d.A4 AS INTEGER) = (
+    SELECT MAX(CAST(d2.A4 AS INTEGER))
+    FROM district AS d2
+    JOIN opened_districts AS od2 ON od2.district_id = d2.district_id
+)
+ORDER BY d.district_id;"
+205,dev,financial,challenging,result_mismatch,count;avg,"Structural flags are review candidates, not verified semantic causes",False,1,"WITH top_districts AS (
+    SELECT district_id, A2 AS district_name
+    FROM district
+    ORDER BY CAST(A4 AS INTEGER) DESC
+    LIMIT 5
+),
+per_account AS (
+    SELECT
+        a.account_id,
+        a.district_id,
+        COALESCE(SUM(CASE WHEN l.status IN ('C', 'D') THEN l.amount ELSE 0 END), 0) AS active_loan_amount
+    FROM account AS a
+    LEFT JOIN loan AS l ON l.account_id = a.account_id
+    GROUP BY a.account_id, a.district_id
+),
+district_averages AS (
+    SELECT
+        d.district_id,
+        d.district_name,
+        AVG(p.active_loan_amount) AS average_active_loan_per_account
+    FROM top_districts AS d
+    JOIN per_account AS p ON p.district_id = d.district_id
+    GROUP BY d.district_id, d.district_name
+)
+SELECT
+    district_name,
+    ROUND(average_active_loan_per_account) AS average_active_loan_per_account
+FROM district_averages
+WHERE average_active_loan_per_account = (
+    SELECT MAX(average_active_loan_per_account)
+    FROM district_averages
+)
+ORDER BY district_name;"
+213,dev,financial,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",True,3,"WITH account_avg AS (
+    SELECT account_id, AVG(balance) AS avg_balance
+    FROM trans
+    GROUP BY account_id
+),
+eligible_districts AS (
+    SELECT DISTINCT c.gender, a.district_id
+    FROM card cd
+    JOIN disp dp ON cd.disp_id = dp.disp_id
+    JOIN client c ON dp.client_id = c.client_id
+    JOIN account a ON dp.account_id = a.account_id
+    JOIN account_avg aa ON aa.account_id = a.account_id
+    JOIN district d ON d.district_id = a.district_id
+    WHERE cd.type = 'gold'
+      AND dp.type = 'OWNER'
+      AND aa.avg_balance > 1000
+      AND CAST(d.A4 AS INTEGER) > 100000
+      AND c.gender IN ('F', 'M')
+),
+district_metrics AS (
+    SELECT ed.gender,
+           d.district_id,
+           CAST(d.A4 AS INTEGER) AS inhabitants,
+           d.A11 AS salary,
+           d.A10 AS urban_ratio
+    FROM eligible_districts ed
+    JOIN district d ON ed.district_id = d.district_id
+),
+ranked AS (
+    SELECT *,
+           MAX(inhabitants) OVER (PARTITION BY gender) AS max_inhabitants
+    FROM district_metrics
+)
+SELECT CASE gender WHEN 'F' THEN 'women' ELSE 'men' END AS gender,
+       COUNT(*) OVER (PARTITION BY gender) AS district_count,
+       district_id,
+       inhabitants,
+       ROUND(AVG(salary) OVER (PARTITION BY gender), 2) AS avg_salary,
+       ROUND(AVG(urban_ratio) OVER (PARTITION BY gender), 2) AS avg_urban_inhabitant_ratio
+FROM ranked
+WHERE inhabitants = max_inhabitants
+ORDER BY CASE gender WHEN 'F' THEN 1 ELSE 2 END, district_id;"
+216,dev,financial,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",True,3,"WITH eligible_districts AS (
+    SELECT DISTINCT c.district_id
+    FROM client AS c
+    JOIN disp AS dp
+      ON dp.client_id = c.client_id
+     AND dp.type = 'OWNER'
+    JOIN account AS a
+      ON a.account_id = dp.account_id
+    WHERE c.gender = 'F'
+      AND EXISTS (
+          SELECT 1
+          FROM card AS ca
+          JOIN disp AS card_dp
+            ON card_dp.disp_id = ca.disp_id
+          WHERE card_dp.account_id = a.account_id
+            AND ca.type IN ('classic', 'gold')
+      )
+      AND EXISTS (
+          SELECT 1
+          FROM loan AS l
+          WHERE l.account_id = a.account_id
+      )
+)
+SELECT
+    d.A3 AS region,
+    ROUND(AVG(CAST(d.A11 AS REAL)), 2) AS avg_district_salary,
+    ROUND(AVG(CAST(d.A9 AS REAL)), 2) AS avg_unemployment_1996,
+    (
+        SELECT d2.A2
+        FROM district AS d2
+        JOIN eligible_districts AS ed2
+          ON ed2.district_id = d2.district_id
+        WHERE d2.A3 = d.A3
+        ORDER BY CAST(d2.A4 AS INTEGER) DESC, d2.A2 ASC
+        LIMIT 1
+    ) AS most_populous_district
+FROM district AS d
+JOIN eligible_districts AS ed
+  ON ed.district_id = d.district_id
+GROUP BY d.A3;"
+217,dev,financial,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",True,3,"WITH top3 AS (
+    SELECT
+        A2 AS district_name,
+        CAST(A4 AS INTEGER) AS inhabitants,
+        CAST(A6 AS INTEGER) AS crimes_1996
+    FROM district
+    WHERE A3 = 'central Bohemia'
+    ORDER BY CAST(A4 AS INTEGER) DESC, A2 COLLATE NOCASE
+    LIMIT 3
+),
+averages AS (
+    SELECT AVG(crimes_1996) AS three_district_average
+    FROM top3
+),
+overall AS (
+    SELECT AVG(CAST(A6 AS INTEGER)) AS overall_average
+    FROM district
+)
+SELECT
+    t.district_name,
+    t.crimes_1996,
+    ROUND(a.three_district_average, 2) AS three_district_average,
+    ROUND(o.overall_average, 2) AS all_district_average,
+    ROUND(a.three_district_average - o.overall_average, 2) AS difference
+FROM top3 AS t
+CROSS JOIN averages AS a
+CROSS JOIN overall AS o
+ORDER BY t.inhabitants DESC, t.district_name COLLATE NOCASE;"
+219,dev,financial,challenging,execution:sql_error,window;union,"Structural flags are review candidates, not verified semantic causes",False,3,"WITH region AS (
+    SELECT A3
+    FROM district
+    WHERE A2 = 'Litomerice'
+),
+ranked_transactions AS (
+    SELECT
+        a.account_id,
+        d.A2 AS district_name,
+        t.balance,
+        ROW_NUMBER() OVER (
+            PARTITION BY a.account_id
+            ORDER BY t.date DESC, t.trans_id DESC
+        ) AS transaction_rank
+    FROM account AS a
+    JOIN district AS d
+        ON d.district_id = a.district_id
+    JOIN region AS r
+        ON r.A3 = d.A3
+    JOIN trans AS t
+        ON t.account_id = a.account_id
+    WHERE a.date >= '1996-01-01'
+      AND a.date < '1997-01-01'
+      AND t.date <= '1996-12-31'
+),
+account_balances AS (
+    SELECT account_id, district_name, balance
+    FROM ranked_transactions
+    WHERE transaction_rank = 1
+),
+district_stats AS (
+    SELECT
+        district_name,
+        COUNT(*) AS accounts_opened,
+        ROUND(AVG(balance), 2) AS avg_balance
+    FROM account_balances
+    GROUP BY district_name
+),
+region_stats AS (
+    SELECT ROUND(AVG(balance), 2) AS avg_balance
+    FROM account_balances
+),
+highest_district AS (
+    SELECT district_name
+    FROM district_stats
+    ORDER BY avg_balance DESC, district_name ASC
+    LIMIT 1
+)
+SELECT
+    'DISTRICT' AS result_type,
+    district_name,
+    accounts_opened,
+    avg_balance
+FROM district_stats
+UNION ALL
+SELECT
+    'REGION_AVERAGE',
+    NULL,
+    NULL,
+    avg_balance
+FROM region_stats
+UNION ALL
+SELECT
+    'HIGHEST_DISTRICT',
+    district_name,
+    NULL,
+    avg_balance
+FROM district_stats
+WHERE district_name = (SELECT district_name FROM highest_district)
+ORDER BY
+    CASE result_type
+        WHEN 'DISTRICT' THEN 1
+        WHEN 'REGION_AVERAGE' THEN 2
+        ELSE 3
+    END,
+    district_name;"
+220,dev,financial,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",False,2,"WITH top_loans AS (
+    SELECT
+        l.loan_id,
+        a.district_id,
+        ROW_NUMBER() OVER (ORDER BY l.amount DESC, l.loan_id ASC) AS rn
+    FROM loan AS l
+    JOIN account AS a ON a.account_id = l.account_id
+    WHERE l.duration = 24
+      AND a.frequency = 'POPLATEK TYDNE'
+),
+selected_districts AS (
+    SELECT DISTINCT
+        d.district_id,
+        CAST(d.A4 AS INTEGER) AS inhabitants,
+        d.A11 AS average_salary
+    FROM top_loans AS t
+    JOIN district AS d ON d.district_id = t.district_id
+    WHERE t.rn <= 10
+)
+SELECT
+    district_id,
+    inhabitants,
+    ROUND(AVG(average_salary) OVER (), 2) AS avg_salary_across_districts
+FROM selected_districts
+ORDER BY inhabitants DESC, district_id ASC
+LIMIT 1;"
+226,dev,financial,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT d.A2 AS branch, COUNT(*) AS transaction_count
+FROM district AS d
+JOIN account AS a ON a.district_id = d.district_id
+JOIN trans AS t ON t.account_id = a.account_id
+WHERE d.A3 = 'north Moravia'
+  AND t.date <= '1998-10-14'
+  AND t.k_symbol IS NULL
+GROUP BY d.district_id, d.A2
+ORDER BY transaction_count DESC, branch ASC
+LIMIT 3;"
+227,dev,financial,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT
+    t.bank AS bank_code,
+    t.account AS account_number,
+    COUNT(*) AS number_of_outgoing_payments,
+    SUM(t.amount) AS total_amount_paid
+FROM loan AS l
+JOIN trans AS t
+    ON t.account_id = l.account_id
+WHERE l.loan_id = 98832
+  AND l.date = '1996-01-03'
+  AND t.type = 'VYDAJ'
+  AND t.date < '1996-01-03'
+  AND t.bank IS NOT NULL
+  AND t.account IS NOT NULL
+GROUP BY t.bank, t.account
+ORDER BY total_amount_paid DESC;"
+228,dev,financial,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT COUNT(DISTINCT a.account_id)
+FROM account AS a
+JOIN loan AS l ON l.account_id = a.account_id
+WHERE a.district_id = 1
+  AND a.date <= '1995-12-31'
+  AND l.status IN ('C', 'D')
+  AND l.date <= '1995-12-31';"
+231,dev,financial,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",False,1,"WITH qualifying_districts AS (
+    SELECT DISTINCT a.district_id
+    FROM account AS a
+    JOIN loan AS l ON l.account_id = a.account_id
+    WHERE a.date < '1997-01-01'
+      AND l.duration > 24
+),
+region_totals AS (
+    SELECT
+        d.A3 AS region,
+        COUNT(DISTINCT d.district_id) AS district_count,
+        SUM(CAST(d.A4 AS INTEGER)) AS combined_population,
+        COUNT(*) AS account_count
+    FROM qualifying_districts AS q
+    JOIN district AS d ON d.district_id = q.district_id
+    JOIN account AS a ON a.district_id = d.district_id
+    JOIN loan AS l ON l.account_id = a.account_id
+    WHERE a.date < '1997-01-01'
+      AND l.duration > 24
+    GROUP BY d.A3
+)
+SELECT region, district_count, combined_population, account_count
+FROM region_totals
+ORDER BY combined_population DESC, region ASC
+LIMIT 1;"
+245,dev,formula_1,challenging,result_mismatch,round;count;avg;sum,"Structural flags are review candidates, not verified semantic causes",False,1,"SELECT
+    r.year,
+    ROUND(AVG(res.milliseconds) / 1000.0, 2) AS mean_elapsed_seconds
+FROM races AS r
+JOIN results AS res ON res.raceId = r.raceId
+WHERE r.year < 1975
+  AND res.positionOrder = 1
+  AND res.milliseconds IS NOT NULL
+GROUP BY r.year
+ORDER BY r.year;"
+247,dev,formula_1,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",False,2,"SELECT c.name, c.nationality, SUM(res.points) AS score
+FROM races AS ra
+JOIN results AS res ON res.raceId = ra.raceId
+JOIN constructors AS c ON c.constructorId = res.constructorId
+WHERE ra.name = 'Monaco Grand Prix'
+  AND ra.year BETWEEN 1980 AND 2010
+GROUP BY c.constructorId, c.name, c.nationality
+ORDER BY score DESC
+LIMIT 1;"
+258,dev,formula_1,challenging,result_mismatch,distinct,"Structural flags are review candidates, not verified semantic causes",False,1,"SELECT d.forename, COUNT(*) AS runner_up_count
+FROM races AS ra
+JOIN results AS re ON re.raceId = ra.raceId
+JOIN drivers AS d ON d.driverId = re.driverId
+WHERE ra.name = 'Italian Grand Prix'
+  AND re.position = 2
+GROUP BY d.forename
+HAVING COUNT(*) >= 2
+ORDER BY runner_up_count DESC, d.forename ASC;"
+266,dev,formula_1,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",False,1,"SELECT d.driverRef, SUM(r.points) AS total_points
+FROM drivers AS d
+JOIN results AS r
+  ON r.driverId = d.driverId
+WHERE d.forename = 'Robert'
+  AND EXISTS (
+      SELECT 1
+      FROM lapTimes AS lt
+      WHERE lt.driverId = r.driverId
+        AND lt.raceId = r.raceId
+  )
+GROUP BY d.driverId, d.driverRef
+ORDER BY d.driverRef;"
+270,dev,formula_1,challenging,result_mismatch,order_by;window,"Structural flags are review candidates, not verified semantic causes",True,3,"WITH ranked AS (
+    SELECT
+        raceId,
+        driverId,
+        RANK() OVER (
+            PARTITION BY raceId
+            ORDER BY fastestLapTime
+        ) AS lap_rank
+    FROM results
+    WHERE fastestLapTime IS NOT NULL
+)
+SELECT COUNT(DISTINCT d.driverId) AS driver_count
+FROM ranked AS r
+JOIN drivers AS d ON d.driverId = r.driverId
+WHERE r.lap_rank = 2
+  AND d.dob >= '1976-01-01';"
+292,dev,formula_1,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",False,2,"SELECT d.driverRef
+FROM qualifying AS q
+JOIN races AS r ON r.raceId = q.raceId
+JOIN drivers AS d ON d.driverId = q.driverId
+WHERE r.year = 2017
+  AND r.name = 'Italian Grand Prix'
+  AND q.q2 IS NULL
+ORDER BY
+  CAST(substr(q.q1, 1, instr(q.q1, ':') - 1) AS INTEGER) * 60
+    + CAST(substr(q.q1, instr(q.q1, ':') + 1) AS REAL) DESC,
+  q.driverId;"
+312,dev,student_club,challenging,result_mismatch,distinct,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT ROUND(
+    100.0 * (
+        COUNT(*) - COUNT(DISTINCT m.link_to_major)
+    ) / COUNT(*),
+    2
+) AS percentage_unrepresented
+FROM major AS ma
+LEFT JOIN member AS m
+    ON m.link_to_major = ma.major_id;"
+313,dev,student_club,challenging,result_mismatch,distinct,"Structural flags are review candidates, not verified semantic causes",True,3,"WITH member_attendance AS (
+    SELECT
+        m.member_id,
+        CASE
+            WHEN m.position IN ('President', 'Vice President', 'Secretary', 'Treasurer')
+                THEN 'officer'
+            ELSE 'other student'
+        END AS group_name,
+        COUNT(DISTINCT a.link_to_event) AS events_attended
+    FROM member AS m
+    LEFT JOIN attendance AS a
+        ON a.link_to_member = m.member_id
+    GROUP BY m.member_id
+)
+SELECT
+    group_name,
+    ROUND(AVG(events_attended), 2) AS average_events_attended
+FROM member_attendance
+GROUP BY group_name;"
+314,dev,student_club,challenging,result_mismatch,union,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT COUNT(DISTINCT lower(trim(item.value))) AS item_kind_count
+FROM budget AS b
+JOIN expense AS ex ON ex.link_to_budget = b.budget_id
+JOIN event AS ev ON ev.event_id = b.link_to_event
+JOIN json_each(
+    '[""' || replace(replace(ex.expense_description, '""', ''), ', ', '"",""') || '""]'
+) AS item
+WHERE b.remaining < 0;"
+320,dev,student_club,challenging,result_mismatch,distinct,"Structural flags are review candidates, not verified semantic causes",False,2,"WITH college_counts AS (
+  SELECT ma.college, COUNT(*) AS major_count
+  FROM member AS me
+  JOIN major AS ma ON ma.major_id = me.link_to_major
+  GROUP BY ma.college
+)
+SELECT college, major_count
+FROM college_counts
+WHERE major_count = (SELECT MAX(major_count) FROM college_counts)
+ORDER BY college;"
+321,dev,student_club,challenging,result_mismatch,order_by;union,"Structural flags are review candidates, not verified semantic causes",True,3,"WITH qualifying_events AS (
+    SELECT DISTINCT link_to_event
+    FROM budget
+    WHERE amount > 40
+),
+purchased_things AS (
+    SELECT DISTINCT
+        ev.location,
+        TRIM(j.value) AS thing
+    FROM qualifying_events qe
+    JOIN event ev ON ev.event_id = qe.link_to_event
+    JOIN budget b ON b.link_to_event = qe.link_to_event
+    JOIN expense x ON x.link_to_budget = b.budget_id
+    JOIN json_each(
+        '[""' || REPLACE(
+            REPLACE(x.expense_description, '""', '\""'),
+            ', ',
+            '"",""'
+        ) || '""]'
+    ) AS j
+)
+SELECT location, COUNT(DISTINCT thing) AS number_of_different_things
+FROM purchased_things
+GROUP BY location;"
+322,dev,student_club,challenging,result_mismatch,distinct;round,"Structural flags are review candidates, not verified semantic causes",False,2,"SELECT SUM(b.amount) AS total_budgeted
+FROM budget b
+JOIN event ev ON ev.event_id = b.link_to_event
+WHERE ev.event_date >= '2019-09-01'
+  AND ev.event_date < '2019-10-01'
+  AND EXISTS (
+      SELECT 1
+      FROM expense ex
+      WHERE ex.link_to_budget = b.budget_id
+        AND ex.expense_description = 'Pizza'
+  );"
+324,dev,student_club,challenging,result_mismatch,count,"Structural flags are review candidates, not verified semantic causes",True,3,"WITH event_totals AS (
+    SELECT
+        ev.event_id,
+        ev.event_name,
+        COALESCE(SUM(b.amount), 0) AS total_budget,
+        COALESCE(SUM(b.spent), 0) AS total_spending
+    FROM event AS ev
+    LEFT JOIN budget AS b ON b.link_to_event = ev.event_id
+    WHERE ev.status = 'Closed'
+    GROUP BY ev.event_id, ev.event_name
+),
+purchase_counts AS (
+    SELECT
+        b.link_to_event AS event_id,
+        COUNT(*) AS purchase_count
+    FROM budget AS b
+    JOIN expense AS x ON x.link_to_budget = b.budget_id
+    GROUP BY b.link_to_event
+)
+SELECT et.event_name
+FROM event_totals AS et
+LEFT JOIN purchase_counts AS pc ON pc.event_id = et.event_id
+WHERE et.total_spending <= et.total_budget
+ORDER BY COALESCE(pc.purchase_count, 0) DESC, et.event_id ASC
+LIMIT 1;"
+329,dev,student_club,challenging,result_mismatch,union,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT expense_description AS item_name, COUNT(*) AS purchase_count
+FROM expense
+JOIN member ON expense.link_to_member = member.member_id
+WHERE member.first_name = 'Sacha'
+  AND member.last_name = 'Harrison'
+GROUP BY expense_description
+ORDER BY item_name;"
+332,dev,superhero,moderate,result_mismatch,distinct,"Structural flags are review candidates, not verified semantic causes",False,2,"SELECT
+    c.colour AS eye_colour,
+    COUNT(DISTINCT s.id) AS hero_count,
+    RANK() OVER (ORDER BY COUNT(DISTINCT s.id) DESC) AS rank
+FROM superhero AS s
+JOIN publisher AS p
+    ON p.id = s.publisher_id
+JOIN colour AS c
+    ON c.id = s.eye_colour_id
+WHERE p.publisher_name = 'Marvel Comics'
+  AND c.colour IS NOT NULL
+  AND TRIM(c.colour) <> ''
+GROUP BY c.colour
+ORDER BY hero_count DESC, eye_colour ASC;"
+336,dev,superhero,moderate,result_mismatch,distinct,"Structural flags are review candidates, not verified semantic causes",False,1,"SELECT superhero_name
+FROM superhero
+WHERE height_cm BETWEEN 170 AND 190
+  AND eye_colour_id IS NULL;"
+339,dev,superhero,challenging,result_mismatch,order_by,"Structural flags are review candidates, not verified semantic causes",False,1,"SELECT s.superhero_name, p.publisher_name
+FROM superhero AS s
+LEFT JOIN publisher AS p
+    ON p.id = s.publisher_id
+WHERE s.eye_colour_id IS NOT NULL
+  AND s.eye_colour_id = s.hair_colour_id
+  AND s.eye_colour_id = s.skin_colour_id
+ORDER BY s.superhero_name;"
+342,dev,superhero,challenging,result_mismatch,group_by;count,"Structural flags are review candidates, not verified semantic causes",False,1,"SELECT CASE
+         WHEN SUM(CASE WHEN publisher_name = 'Marvel Comics' THEN superhero_count ELSE 0 END) >
+              SUM(CASE WHEN publisher_name = 'DC Comics' THEN superhero_count ELSE 0 END)
+         THEN 'Marvel Comics by ' ||
+              (SUM(CASE WHEN publisher_name = 'Marvel Comics' THEN superhero_count ELSE 0 END) -
+               SUM(CASE WHEN publisher_name = 'DC Comics' THEN superhero_count ELSE 0 END))
+         WHEN SUM(CASE WHEN publisher_name = 'DC Comics' THEN superhero_count ELSE 0 END) >
+              SUM(CASE WHEN publisher_name = 'Marvel Comics' THEN superhero_count ELSE 0 END)
+         THEN 'DC Comics by ' ||
+              (SUM(CASE WHEN publisher_name = 'DC Comics' THEN superhero_count ELSE 0 END) -
+               SUM(CASE WHEN publisher_name = 'Marvel Comics' THEN superhero_count ELSE 0 END))
+         ELSE 'Tie'
+       END AS result
+FROM (
+  SELECT p.publisher_name, COUNT(s.id) AS superhero_count
+  FROM superhero s
+  JOIN publisher p ON s.publisher_id = p.id
+  WHERE p.publisher_name IN ('DC Comics', 'Marvel Comics')
+  GROUP BY p.publisher_name
+);"
+344,dev,superhero,challenging,result_mismatch,distinct,"Structural flags are review candidates, not verified semantic causes",True,3,"WITH strength_heroes AS (
+    SELECT DISTINCT hero_id
+    FROM hero_attribute
+    WHERE attribute_id = (
+        SELECT id
+        FROM attribute
+        WHERE attribute_name = 'Strength'
+    )
+),
+strength_only_powers AS (
+    SELECT DISTINCT hp.power_id
+    FROM hero_power hp
+    WHERE hp.hero_id IN (SELECT hero_id FROM strength_heroes)
+      AND hp.power_id IS NOT NULL
+      AND NOT EXISTS (
+          SELECT 1
+          FROM hero_power other_hp
+          WHERE other_hp.power_id = hp.power_id
+            AND other_hp.hero_id NOT IN (SELECT hero_id FROM strength_heroes)
+      )
+)
+SELECT COUNT(*) AS power_count
+FROM strength_only_powers;"
+347,dev,superhero,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",False,3,"WITH power_counts AS (
+  SELECT sp.power_name, COUNT(DISTINCT s.id) AS hero_count
+  FROM superhero AS s
+  JOIN publisher AS pub ON pub.id = s.publisher_id
+  JOIN hero_power AS hp ON hp.hero_id = s.id
+  JOIN superpower AS sp ON sp.id = hp.power_id
+  WHERE pub.publisher_name = 'Marvel Comics'
+    AND s.full_name IS NOT NULL
+    AND TRIM(s.full_name) <> ''
+    AND sp.power_name IS NOT NULL
+  GROUP BY sp.id, sp.power_name
+)
+SELECT power_name, hero_count
+FROM power_counts
+WHERE hero_count = (SELECT MAX(hero_count) FROM power_counts)
+ORDER BY power_name;"
+352,dev,superhero,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",False,1,"SELECT COUNT(*)
+FROM superhero AS s
+JOIN publisher AS p ON p.id = s.publisher_id
+WHERE p.id = (
+    SELECT publisher_id
+    FROM superhero
+    WHERE superhero_name = 'A-Bomb'
+)
+AND s.race_id IS NULL;"
+354,dev,superhero,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",False,2,"SELECT ROUND(AVG(power_count), 1)
+FROM (
+    SELECT hp.hero_id, COUNT(DISTINCT hp.power_id) AS power_count
+    FROM hero_power hp
+    WHERE hp.hero_id IN (
+        SELECT DISTINCT shared.hero_id
+        FROM hero_power shared
+        WHERE shared.power_id IN (
+            SELECT id
+            FROM superpower
+            WHERE power_name = 'Cryokinesis'
+        )
+    )
+    GROUP BY hp.hero_id
+);"
+358,dev,superhero,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",False,1,"SELECT COUNT(DISTINCT p.id) AS publisher_count
+FROM publisher AS p
+JOIN superhero AS s ON s.publisher_id = p.id
+WHERE s.height_cm > 200;"
+365,dev,superhero,challenging,result_mismatch,distinct;avg;sum,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT gender.gender,
+       ROUND(AVG(COALESCE(pc.power_count, 0)), 2) AS avg_powers
+FROM superhero AS s
+JOIN gender ON gender.id = s.gender_id
+LEFT JOIN (
+    SELECT hero_id, COUNT(DISTINCT power_id) AS power_count
+    FROM hero_power
+    WHERE power_id IS NOT NULL
+    GROUP BY hero_id
+) AS pc ON pc.hero_id = s.id
+WHERE gender.gender IN ('Male', 'Female')
+  AND s.full_name IS NOT NULL
+  AND TRIM(s.full_name) <> ''
+  AND INSTR(TRIM(s.full_name), ' ') > 0
+GROUP BY gender.gender;"
+377,dev,superhero,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",False,1,"SELECT eye_colour.colour AS eye_colour,
+       COUNT(*) AS hero_count
+FROM superhero AS hero
+JOIN colour AS eye_colour
+  ON eye_colour.id = hero.eye_colour_id
+WHERE hero.hair_colour_id <> (
+    SELECT id
+    FROM colour
+    WHERE colour = 'Brown'
+)
+  AND hero.eye_colour_id IN (
+    SELECT DISTINCT brown_hero.eye_colour_id
+    FROM superhero AS brown_hero
+    JOIN colour AS hair_colour
+      ON hair_colour.id = brown_hero.hair_colour_id
+    WHERE hair_colour.colour = 'Brown'
+)
+GROUP BY eye_colour.id, eye_colour.colour
+ORDER BY hero_count DESC, eye_colour.colour ASC;"
+384,dev,thrombosis_prediction,moderate,result_mismatch,distinct,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT COUNT(DISTINCT p.ID) AS patient_count
+FROM Laboratory AS l
+JOIN Patient AS p ON p.ID = l.ID
+WHERE l.TG >= 200
+  AND p.Birthday IS NOT NULL
+  AND p.Birthday <= date('2026-10-09', '-51 years');"
+392,dev,thrombosis_prediction,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT COUNT(*)
+FROM Patient AS p
+WHERE p.Birthday > '1960-01-01'
+  AND EXISTS (
+      SELECT 1
+      FROM Examination AS e
+      WHERE e.ID = p.ID
+        AND e.Thrombosis > 0
+  )
+  AND NOT EXISTS (
+      SELECT 1
+      FROM Laboratory AS l
+      WHERE l.ID = p.ID
+        AND CAST(l.RNP AS REAL) > 10
+  );"
+393,dev,thrombosis_prediction,challenging,result_mismatch,order_by,"Structural flags are review candidates, not verified semantic causes",True,3,"WITH eligible AS (
+    SELECT DISTINCT p.ID
+    FROM Patient AS p
+    JOIN Laboratory AS l ON l.ID = p.ID
+    WHERE p.Admission = '-'
+      AND l.SSA IS NOT NULL
+      AND l.SSA NOT IN ('negative', '0')
+),
+titers AS (
+    SELECT l.ID, CAST(l.RNP AS INTEGER) AS rnp_titer
+    FROM Laboratory AS l
+    JOIN eligible AS e ON e.ID = l.ID
+    WHERE l.RNP IS NOT NULL
+      AND l.RNP != 'negative'
+)
+SELECT ID, rnp_titer
+FROM titers
+WHERE rnp_titer = (SELECT MAX(rnp_titer) FROM titers)
+ORDER BY ID;"
+400,dev,thrombosis_prediction,challenging,result_mismatch,distinct;count;sum,"Structural flags are review candidates, not verified semantic causes",True,3,"WITH cohort AS (
+    SELECT ID
+    FROM Patient
+    WHERE Diagnosis IN ('RA, SJS', 'SJS, RA')
+)
+SELECT
+    COUNT(DISTINCT CASE
+        WHEN EXISTS (
+            SELECT 1
+            FROM Laboratory l
+            WHERE l.ID = cohort.ID
+              AND l.PLT > 100
+              AND l.PLT < 400
+        ) THEN cohort.ID
+    END) AS patients_with_normal_platelet,
+    COUNT(DISTINCT CASE
+        WHEN NOT EXISTS (
+            SELECT 1
+            FROM Laboratory l
+            WHERE l.ID = cohort.ID
+              AND l.PLT > 100
+              AND l.PLT < 400
+        ) THEN cohort.ID
+    END) AS patients_never_normal
+FROM cohort;"
+406,dev,thrombosis_prediction,challenging,result_mismatch,group_by;order_by,"Structural flags are review candidates, not verified semantic causes",False,1,"SELECT
+    p.SEX,
+    COUNT(DISTINCT p.ID) AS patient_count
+FROM Patient AS p
+WHERE p.SEX IN ('F', 'M')
+  AND EXISTS (
+      SELECT 1
+      FROM Laboratory AS l
+      WHERE l.ID = p.ID
+        AND CAST(l.RNP AS REAL) > 32
+  )
+GROUP BY p.SEX
+ORDER BY p.SEX;"
+407,dev,thrombosis_prediction,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT MIN(
+    CAST(strftime('%Y', l.Date) AS INTEGER)
+    - CAST(strftime('%Y', p.Birthday) AS INTEGER)
+) AS youngest_age_years
+FROM Patient AS p
+JOIN Laboratory AS l ON l.ID = p.ID
+WHERE CAST(l.RNP AS INTEGER) >= 64
+  AND l.RNP GLOB '[0-9]*'
+  AND p.Birthday IS NOT NULL
+  AND EXISTS (
+      SELECT 1
+      FROM Examination AS e
+      WHERE e.ID = p.ID
+        AND e.Thrombosis > 0
+  );"
+409,dev,thrombosis_prediction,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT COUNT(DISTINCT e.ID)
+FROM Examination AS e
+JOIN Patient AS p ON p.ID = e.ID
+WHERE p.Diagnosis = 'APS'
+  AND e.`Examination Date` >= '1997-01-01'
+  AND e.`Examination Date` < '1998-01-01'
+  AND e.Thrombosis BETWEEN 1 AND 3;"
+411,dev,thrombosis_prediction,challenging,result_mismatch,distinct;sum,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT ROUND(
+    100.0 * SUM(CASE WHEN Diagnosis LIKE '%SLE%' THEN 1 ELSE 0 END) / COUNT(*),
+    2
+) AS percentage
+FROM Examination
+WHERE Thrombosis IN (1, 2, 3);"
+412,dev,thrombosis_prediction,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT ROUND(AVG(julianday(first_exam) - julianday(""First Date""))) AS average_delay_days
+FROM (
+    SELECT p.ID,
+           p.""First Date"",
+           MIN(e.""Examination Date"") AS first_exam
+    FROM Patient AS p
+    JOIN Examination AS e ON e.ID = p.ID
+    WHERE p.Diagnosis = 'APS'
+      AND instr(p.Admission, '+') > 0
+      AND p.""First Date"" IS NOT NULL
+      AND e.""Examination Date"" IS NOT NULL
+    GROUP BY p.ID, p.""First Date""
+);"
+418,dev,thrombosis_prediction,challenging,result_mismatch,distinct;group_by;order_by,"Structural flags are review candidates, not verified semantic causes",True,3,"WITH patient_levels AS (
+  SELECT
+    p.ID,
+    MAX(CAST(l.RNP AS INTEGER)) AS rnp_level
+  FROM Patient AS p
+  JOIN Laboratory AS l ON l.ID = p.ID
+  WHERE p.`First Date` >= '1991-01-01'
+    AND p.`First Date` < '1992-01-01'
+    AND l.RNP IS NOT NULL
+    AND l.RNP <> 'negative'
+  GROUP BY p.ID
+)
+SELECT ID, rnp_level AS RNP
+FROM patient_levels
+WHERE rnp_level = (SELECT MAX(rnp_level) FROM patient_levels)
+ORDER BY ID;"
+420,dev,thrombosis_prediction,challenging,result_mismatch,group_by;order_by,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT
+  CASE p.Admission
+    WHEN '+' THEN 'hospital admission'
+    WHEN '-' THEN 'outpatient clinic'
+  END AS care_setting,
+  COUNT(DISTINCT p.ID) AS patient_count
+FROM Patient AS p
+WHERE p.Diagnosis = 'SLE'
+  AND p.Admission IN ('+', '-')
+  AND EXISTS (
+    SELECT 1
+    FROM Laboratory AS l
+    WHERE l.ID = p.ID
+      AND (
+        CAST(l.`U-PRO` AS REAL) >= 30
+        OR l.`U-PRO` IN ('+1(30)', '+2(100)', '>=300', '>=1000')
+      )
+  )
+GROUP BY p.Admission
+ORDER BY p.Admission DESC;"
+422,dev,thrombosis_prediction,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",True,3,"WITH latest AS (
+    SELECT ID, MAX(Date) AS max_date
+    FROM Laboratory
+    GROUP BY ID
+)
+SELECT l.ID
+FROM Laboratory AS l
+JOIN latest AS x
+    ON l.ID = x.ID
+   AND l.Date = x.max_date
+WHERE l.Date > '1997-01-01'
+  AND l.SC170 IN ('negative', '0')
+ORDER BY l.ID;"
+423,dev,thrombosis_prediction,challenging,result_mismatch,distinct,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT COUNT(DISTINCT s.ID)
+FROM Laboratory AS s
+WHERE s.SSA IS NOT NULL
+  AND s.SSA NOT IN ('negative', '0')
+  AND EXISTS (
+      SELECT 1
+      FROM Laboratory AS u
+      WHERE u.ID = s.ID
+        AND u.`U-PRO` IS NOT NULL
+        AND LOWER(u.`U-PRO`) NOT IN ('negative', 'none')
+  );"
+425,dev,thrombosis_prediction,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT COUNT(*)
+FROM Patient AS p
+WHERE p.Admission = '+'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM Laboratory AS l
+      WHERE l.ID = p.ID
+        AND l.ALP >= 300
+  );"
+430,dev,thrombosis_prediction,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",True,3,"WITH cohort AS (
+    SELECT ID, Admission
+    FROM Patient
+    WHERE Diagnosis LIKE '%APS%'
+)
+SELECT
+    CASE Admission
+        WHEN '+' THEN 'admitted to the hospital'
+        WHEN '-' THEN 'followed at the outpatient clinic'
+    END AS ""patient group"",
+    COUNT(*) AS ""number of normal lactate dehydrogenase measurements""
+FROM cohort
+JOIN Laboratory USING (ID)
+WHERE Admission IN ('+', '-')
+  AND LDH < 500
+GROUP BY Admission
+ORDER BY CASE Admission WHEN '+' THEN 1 WHEN '-' THEN 2 END;"
+431,dev,thrombosis_prediction,challenging,result_mismatch,distinct;sum,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT COUNT(*) AS patients_without_recorded_sex,
+       SUM(CASE WHEN EXISTS (
+           SELECT 1
+           FROM Laboratory AS l
+           WHERE l.ID = p.ID
+       ) THEN 1 ELSE 0 END) AS with_any_laboratory_record,
+       SUM(CASE WHEN EXISTS (
+           SELECT 1
+           FROM Laboratory AS l
+           WHERE l.ID = p.ID
+             AND l.`T-BIL` >= 2.0
+       ) THEN 1 ELSE 0 END) AS with_elevated_total_bilirubin
+FROM Patient AS p
+WHERE p.SEX IS NULL OR TRIM(p.SEX) = '';"
+432,dev,thrombosis_prediction,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",False,1,"SELECT COUNT(DISTINCT p.ID) AS patient_count
+FROM Patient AS p
+JOIN Examination AS e ON e.ID = p.ID
+WHERE p.SEX = 'F'
+  AND p.Admission = '+'
+  AND p.Birthday >= '1945-01-01'
+  AND p.Birthday < '1990-01-01'
+  AND e.`ANA Pattern` = 'P';"
+442,dev,thrombosis_prediction,challenging,result_mismatch,distinct,"Structural flags are review candidates, not verified semantic causes",True,3,"WITH cohort AS (
+    SELECT
+        ID,
+        CASE
+            WHEN Admission = '+' THEN 'Admitted to the hospital'
+            ELSE 'Followed at the outpatient clinic'
+        END AS care_setting
+    FROM Patient
+    WHERE SEX = 'F'
+      AND Birthday <= '1976-10-09'
+      AND Admission IN ('+', '-')
+),
+elevated AS (
+    SELECT DISTINCT ID
+    FROM Laboratory
+    WHERE CAST(RNP AS REAL) >= 4
+)
+SELECT
+    care_setting,
+    SUM(CASE WHEN elevated.ID IS NOT NULL THEN 1 ELSE 0 END) AS patients_with_result_at_least_4,
+    SUM(CASE WHEN elevated.ID IS NULL THEN 1 ELSE 0 END) AS patients_with_no_such_result
+FROM cohort
+LEFT JOIN elevated USING (ID)
+GROUP BY care_setting
+ORDER BY care_setting;"
+443,dev,thrombosis_prediction,challenging,result_mismatch,group_by;order_by;window,"Structural flags are review candidates, not verified semantic causes",False,1,"WITH latest_labs AS (
+    SELECT ID, IGG,
+           ROW_NUMBER() OVER (PARTITION BY ID ORDER BY Date DESC) AS rn
+    FROM Laboratory
+)
+SELECT COUNT(*) AS patient_count
+FROM Patient p
+JOIN latest_labs l ON l.ID = p.ID AND l.rn = 1
+WHERE p.Admission = '-'
+  AND l.IGG >= 2000;"
+446,dev,thrombosis_prediction,challenging,result_mismatch,group_by;order_by;count;sum;window,"Structural flags are review candidates, not verified semantic causes",True,3,"WITH cohort AS (
+    SELECT DISTINCT ID
+    FROM Examination
+    WHERE Thrombosis > 0
+),
+ranked_labs AS (
+    SELECT
+        l.ID,
+        l.RNP,
+        ROW_NUMBER() OVER (
+            PARTITION BY l.ID
+            ORDER BY l.Date DESC
+        ) AS rn
+    FROM Laboratory AS l
+    JOIN cohort AS c ON c.ID = l.ID
+)
+SELECT
+    COALESCE(SUM(CASE WHEN p.SEX = 'F' AND CAST(r.RNP AS REAL) >= 32 THEN 1 ELSE 0 END), 0)
+    - COALESCE(SUM(CASE WHEN p.SEX = 'M' AND CAST(r.RNP AS REAL) >= 32 THEN 1 ELSE 0 END), 0)
+    AS female_minus_male
+FROM ranked_labs AS r
+JOIN Patient AS p ON p.ID = r.ID
+WHERE r.rn = 1;"
+447,dev,thrombosis_prediction,challenging,result_mismatch,distinct;order_by;window,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT COUNT(*) AS patient_count
+FROM (
+    SELECT l.ID,
+           ROW_NUMBER() OVER (PARTITION BY l.ID ORDER BY l.Date DESC) AS rn,
+           l.RNP,
+           l.CPK
+    FROM Laboratory AS l
+    JOIN Patient AS p ON p.ID = l.ID
+    WHERE p.SEX = 'F'
+) AS latest
+WHERE rn = 1
+  AND CAST(RNP AS INTEGER) > 64
+  AND CPK < 250;"
+464,dev,thrombosis_prediction,challenging,result_mismatch,distinct,"Structural flags are review candidates, not verified semantic causes",False,1,"WITH eligible_patients AS (
+    SELECT DISTINCT p.ID, p.Birthday
+    FROM Patient AS p
+    JOIN Laboratory AS l ON l.ID = p.ID
+    WHERE l.RNP GLOB '[0-9]*'
+      AND CAST(l.RNP AS INTEGER) >= 64
+      AND p.Birthday IS NOT NULL
+      AND date(p.Birthday) <= date('2026-10-09')
+      AND date(p.Birthday, '+70 years') > date('2026-10-09')
+)
+SELECT ROUND(
+    AVG((julianday('2026-10-09') - julianday(Birthday)) / 365.2425),
+    1
+)
+FROM eligible_patients;"
+473,dev,toxicology,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",False,1,"WITH bond_counts AS (
+  SELECT bond_type, COUNT(*) AS n
+  FROM bond
+  WHERE molecule_id = 'TR010'
+  GROUP BY bond_type
+),
+most_common AS (
+  SELECT bond_type
+  FROM bond_counts
+  ORDER BY n DESC
+  LIMIT 1
+)
+SELECT
+  CASE most_common.bond_type
+    WHEN '-' THEN 'single'
+    WHEN '=' THEN 'double'
+    WHEN '#' THEN 'triple'
+    ELSE most_common.bond_type
+  END AS bond_type,
+  CASE WHEN molecule.label = '+' THEN 'YES' ELSE 'NO' END AS carcinogenic
+FROM most_common
+JOIN molecule ON molecule.molecule_id = 'TR010';"
+483,dev,toxicology,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",False,1,"SELECT
+  CASE b.bond_type
+    WHEN '-' THEN 'single'
+    WHEN '=' THEN 'double'
+    WHEN '#' THEN 'triple'
+  END AS bond_type,
+  COUNT(DISTINCT b.bond_id) AS bond_count
+FROM bond AS b
+JOIN molecule AS m ON m.molecule_id = b.molecule_id
+JOIN connected AS c ON c.bond_id = b.bond_id
+JOIN atom AS a1 ON a1.atom_id = c.atom_id
+JOIN atom AS a2 ON a2.atom_id = c.atom_id2
+WHERE m.label = '+'
+  AND a1.element = 'c'
+  AND a2.element = 'c'
+  AND b.bond_type IN ('-', '=', '#')
+GROUP BY b.bond_type
+ORDER BY CASE b.bond_type
+  WHEN '-' THEN 1
+  WHEN '=' THEN 2
+  WHEN '#' THEN 3
+END;"
+488,dev,toxicology,challenging,result_mismatch,distinct,"Structural flags are review candidates, not verified semantic causes",False,3,"WITH endpoints AS (
+    SELECT
+        molecule_id,
+        substr(bond_id, 7, instr(substr(bond_id, 7), '_') - 1) AS atom1_num,
+        substr(bond_id, 7 + instr(substr(bond_id, 7), '_')) AS atom2_num
+    FROM bond
+)
+SELECT COUNT(*) AS bonded_atom_count
+FROM endpoints e
+JOIN atom a
+    ON a.molecule_id = e.molecule_id
+   AND a.atom_id IN (
+       e.molecule_id || '_' || e.atom1_num,
+       e.molecule_id || '_' || e.atom2_num
+   )
+WHERE a.element = 'cl';"
+489,dev,toxicology,challenging,result_mismatch,group_by;order_by;sum;window,"Structural flags are review candidates, not verified semantic causes",False,1,"WITH triple_bond_molecules AS (
+    SELECT DISTINCT molecule_id
+    FROM bond
+    WHERE bond_type = '#'
+),
+classified AS (
+    SELECT m.label
+    FROM molecule AS m
+    JOIN triple_bond_molecules AS t USING (molecule_id)
+    WHERE m.label IN ('+', '-')
+)
+SELECT
+    label,
+    ROUND(100.0 * COUNT(*) / SUM(COUNT(*)) OVER (), 2) AS percentage
+FROM classified
+GROUP BY label
+ORDER BY label DESC;"
+496,dev,toxicology,challenging,result_mismatch,distinct,"Structural flags are review candidates, not verified semantic causes",False,3,"SELECT m.molecule_id
+FROM molecule AS m
+WHERE m.label = '-'
+  AND EXISTS (
+      SELECT 1
+      FROM atom AS a
+      WHERE a.molecule_id = m.molecule_id
+        AND a.element IN ('na', 'k', 'ca', 'cu', 'zn', 'sn', 'pb', 'mg', 'li')
+  )
+  AND EXISTS (
+      SELECT 1
+      FROM bond AS b
+      WHERE b.molecule_id = m.molecule_id
+  )
+  AND NOT EXISTS (
+      SELECT 1
+      FROM bond AS b
+      WHERE b.molecule_id = m.molecule_id
+        AND b.bond_type <> '-'
+  )
+ORDER BY m.molecule_id
+LIMIT 3;"
+497,dev,toxicology,challenging,result_mismatch,count;sum;union,"Structural flags are review candidates, not verified semantic causes",False,1,"WITH atom_bond_flags AS (
+    SELECT c.atom_id AS atom_id,
+           MAX(CASE WHEN b.bond_type = '-' THEN 1 ELSE 0 END) AS has_single,
+           MAX(CASE WHEN b.bond_type IN ('=', '#') THEN 1 ELSE 0 END) AS has_multiple
+    FROM connected c
+    JOIN bond b ON b.bond_id = c.bond_id
+    GROUP BY c.atom_id
+
+    UNION ALL
+
+    SELECT c.atom_id2 AS atom_id,
+           MAX(CASE WHEN b.bond_type = '-' THEN 1 ELSE 0 END) AS has_single,
+           MAX(CASE WHEN b.bond_type IN ('=', '#') THEN 1 ELSE 0 END) AS has_multiple
+    FROM connected c
+    JOIN bond b ON b.bond_id = c.bond_id
+    GROUP BY c.atom_id2
+),
+atom_flags AS (
+    SELECT atom_id,
+           MAX(has_single) AS has_single,
+           MAX(has_multiple) AS has_multiple
+    FROM atom_bond_flags
+    GROUP BY atom_id
+)
+SELECT a.element AS element_symbol,
+       COUNT(*) AS atom_count
+FROM atom a
+JOIN atom_flags f ON f.atom_id = a.atom_id
+WHERE f.has_single = 1
+  AND f.has_multiple = 0
+GROUP BY a.element
+ORDER BY a.element;"
+498,dev,toxicology,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",False,1,"SELECT a.element AS element_symbol,
+       COUNT(DISTINCT a.molecule_id) AS molecule_count
+FROM bond AS b
+JOIN connected AS c ON c.bond_id = b.bond_id
+JOIN atom AS a ON a.atom_id = c.atom_id
+WHERE b.bond_type = '#'
+  AND a.element IS NOT NULL
+  AND a.molecule_id IS NOT NULL
+GROUP BY a.element
+ORDER BY molecule_count DESC, element_symbol ASC;"
+499,dev,toxicology,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",False,1,"SELECT a.element, COUNT(DISTINCT a.atom_id) AS bonded_atom_count
+FROM atom AS a
+WHERE a.molecule_id = 'TR397'
+  AND a.element IS NOT NULL
+  AND (
+    EXISTS (SELECT 1 FROM connected AS c WHERE c.atom_id = a.atom_id)
+    OR EXISTS (SELECT 1 FROM connected AS c WHERE c.atom_id2 = a.atom_id)
+  )
+GROUP BY a.element
+ORDER BY a.element;"
+0,test,california_schools,moderate,result_mismatch,count,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT MAX(f.`Percent (%) Eligible FRPM (Ages 5-17)`) AS highest_ages_5_17_frpm_rate
+FROM satscores s
+JOIN frpm f ON f.CDSCode = s.cds
+WHERE s.NumTstTakr > 0
+  AND CAST(s.NumGE1500 AS REAL) / s.NumTstTakr > 0.3;"
+15,test,california_schools,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",False,2,"SELECT s.School, s.Phone
+FROM schools AS s
+JOIN satscores AS x ON x.cds = s.CDSCode
+WHERE s.DOCType = 'Statewide Benefit Charter'
+  AND x.NumGE1500 IS NOT NULL
+  AND x.NumGE1500 = (
+      SELECT MAX(x2.NumGE1500)
+      FROM schools AS s2
+      JOIN satscores AS x2 ON x2.cds = s2.CDSCode
+      WHERE s2.DOCType = 'Statewide Benefit Charter'
+        AND x2.NumGE1500 IS NOT NULL
+  );"
+40,test,california_schools,challenging,result_mismatch,order_by;window,"Structural flags are review candidates, not verified semantic causes",True,3,"WITH eligible AS (
+    SELECT
+        s.CDSCode,
+        s.School,
+        s.County,
+        s.City,
+        s.MailStreet,
+        s.MailCity,
+        s.MailState,
+        s.MailZip,
+        s.Website,
+        s.OpenDate,
+        s.ClosedDate,
+        f.`Enrollment (K-12)` AS enrollment_k12,
+        f.`FRPM Count (K-12)` AS frpm_count,
+        f.`Percent (%) Eligible FRPM (K-12)` AS frpm_share,
+        sat.NumTstTakr,
+        sat.NumGE1500,
+        sat.AvgScrRead,
+        sat.AvgScrMath,
+        sat.AvgScrWrite
+    FROM schools AS s
+    JOIN frpm AS f
+        ON f.CDSCode = s.CDSCode
+    LEFT JOIN satscores AS sat
+        ON sat.cds = s.CDSCode
+    WHERE f.`School Type` = 'High Schools (Public)'
+      AND f.`Charter School (Y/N)` = 0
+      AND f.`Enrollment (K-12)` > 100
+),
+ranked AS (
+    SELECT
+        *,
+        MAX(frpm_count) OVER () AS largest_frpm_count,
+        MIN(frpm_share) OVER () AS smallest_frpm_share
+    FROM eligible
+),
+selected AS (
+    SELECT
+        *,
+        'largest FRPM-eligible count' AS part,
+        1 AS part_order
+    FROM ranked
+    WHERE frpm_count = largest_frpm_count
+
+    UNION ALL
+
+    SELECT
+        *,
+        'smallest FRPM share' AS part,
+        2 AS part_order
+    FROM ranked
+    WHERE frpm_share = smallest_frpm_share
+
+    UNION ALL
+
+    SELECT
+        *,
+        'the CDS code from my notes' AS part,
+        3 AS part_order
+    FROM ranked
+    WHERE CDSCode = '04615150435602'
+)
+SELECT
+    part,
+    School AS school_name,
+    County AS county,
+    City AS city,
+    MailStreet AS mailing_street,
+    MailCity AS mailing_city,
+    MailState AS mailing_state,
+    MailZip AS mailing_zip,
+    Website AS website,
+    enrollment_k12,
+    frpm_count AS frpm_eligible_student_count,
+    frpm_share,
+    AvgScrRead + AvgScrMath + AvgScrWrite AS average_total_sat_score,
+    100.0 * NumGE1500 / NULLIF(NumTstTakr, 0) AS percentage_sat_takers_scoring_1500_or_more,
+    OpenDate AS opening_date,
+    CASE WHEN ClosedDate IS NOT NULL THEN 'closed' ELSE 'open' END AS status
+FROM selected
+ORDER BY part_order, school_name;"
+46,test,california_schools,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",False,1,"SELECT s.City, COUNT(*) AS MagnetSchoolsWithProvision2
+FROM schools AS s
+JOIN frpm AS f ON f.CDSCode = s.CDSCode
+WHERE s.Magnet = 1
+  AND f.`NSLP Provision Status` = 'Provision 2'
+GROUP BY s.City
+ORDER BY s.City;"
+73,test,card_games,challenging,execution:sql_error,,"Structural flags are review candidates, not verified semantic causes",True,3,"WITH chosen_sets AS (
+    SELECT s.code, s.name
+    FROM sets AS s
+    WHERE s.code = (
+        SELECT s2.code
+        FROM sets AS s2
+        JOIN cards AS c ON c.setCode = s2.code
+        WHERE c.name = 'Abyssal Horror'
+        ORDER BY s2.releaseDate ASC, s2.code ASC
+        LIMIT 1
+    )
+
+    UNION
+
+    SELECT s.code, s.name
+    FROM sets AS s
+    ORDER BY s.releaseDate DESC, s.code ASC
+    LIMIT 1
+)
+SELECT
+    s.name AS set_name,
+    ROUND(
+        100.0 * SUM(
+            CASE
+                WHEN c.manaCost IS NOT NULL AND c.convertedManaCost <= 3 THEN 1
+                ELSE 0
+            END
+        ) / COUNT(*),
+        2
+    ) AS percentage
+FROM chosen_sets AS s
+JOIN cards AS c ON c.setCode = s.code
+GROUP BY s.code, s.name
+ORDER BY s.code;"
+87,test,card_games,challenging,result_mismatch,distinct,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT COUNT(*) AS ruling_count
+FROM rulings AS r
+JOIN cards AS c ON c.uuid = r.uuid
+WHERE c.name = 'Fireball';"
+91,test,card_games,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",False,2,"SELECT COUNT(*) AS printing_count
+FROM cards c
+WHERE c.artist = 'Erica Yang'
+  AND c.rarity = 'common'
+  AND instr(',' || c.availability || ',', ',paper,') > 0
+  AND EXISTS (
+      SELECT 1
+      FROM legalities l
+      WHERE l.uuid = c.uuid
+        AND l.format = 'pauper'
+        AND l.status = 'Legal'
+  );"
+117,test,card_games,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT COUNT(DISTINCT c.uuid)
+FROM cards c
+WHERE c.colors = 'B'
+  AND c.types LIKE '%Artifact%'
+  AND EXISTS (
+    SELECT 1
+    FROM foreign_data f
+    WHERE f.uuid = c.uuid
+      AND f.language IS NOT NULL
+      AND TRIM(f.language) <> ''
+      AND f.flavorText IS NOT NULL
+      AND TRIM(f.flavorText) <> ''
+  );"
+135,test,codebase_community,challenging,result_mismatch,distinct,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT COALESCE(SUM(p.Score), 0) AS total_score
+FROM postLinks AS pl
+JOIN posts AS target
+  ON target.Id = pl.RelatedPostId
+JOIN posts AS p
+  ON p.Id = pl.PostId
+WHERE target.Title = 'A Probability distribution value exceeding 1 is OK?'
+  AND p.Tags LIKE '%<r>%';"
+141,test,codebase_community,challenging,result_mismatch,order_by,"Structural flags are review candidates, not verified semantic causes",True,3,"WITH candidates AS (
+    SELECT Id, Title
+    FROM posts
+    WHERE Title LIKE '%principal component scores%' COLLATE NOCASE
+),
+counts AS (
+    SELECT c.Id, c.Title, COUNT(DISTINCT pl.Id) AS related_post_count
+    FROM candidates AS c
+    LEFT JOIN postLinks AS pl
+        ON pl.PostId = c.Id OR pl.RelatedPostId = c.Id
+    GROUP BY c.Id, c.Title
+)
+SELECT Title, related_post_count
+FROM counts
+WHERE related_post_count = (SELECT MAX(related_post_count) FROM counts);"
+187,test,european_football_2,challenging,result_mismatch,distinct;union,"Structural flags are review candidates, not verified semantic causes",True,3,"WITH match_players AS (
+    SELECT m.id AS match_id, l.country_id, p.player_api_id
+    FROM ""Match"" AS m
+    JOIN League AS l ON l.id = m.league_id
+    JOIN Player AS p
+      ON p.weight <= 160
+     AND p.player_api_id IN (
+        m.home_player_1, m.home_player_2, m.home_player_3,
+        m.home_player_4, m.home_player_5, m.home_player_6,
+        m.home_player_7, m.home_player_8, m.home_player_9,
+        m.home_player_10, m.home_player_11,
+        m.away_player_1, m.away_player_2, m.away_player_3,
+        m.away_player_4, m.away_player_5, m.away_player_6,
+        m.away_player_7, m.away_player_8, m.away_player_9,
+        m.away_player_10, m.away_player_11
+     )
+),
+country_counts AS (
+    SELECT country_id, COUNT(*) AS player_match_count
+    FROM match_players
+    GROUP BY country_id
+)
+SELECT c.name
+FROM country_counts AS cc
+JOIN Country AS c ON c.id = cc.country_id
+WHERE cc.player_match_count = (
+    SELECT MIN(player_match_count)
+    FROM country_counts
+);"
+193,test,european_football_2,challenging,result_mismatch,group_by,"Structural flags are review candidates, not verified semantic causes",True,3,"WITH eligible AS (
+    SELECT player_api_id, overall_rating
+    FROM Player_Attributes
+    WHERE date(date) = '2013-07-12'
+      AND lower(defensive_work_rate) IN ('low', 'medium', 'high')
+      AND overall_rating IS NOT NULL
+)
+SELECT ROUND(
+    100.0 * (
+        MAX(CASE WHEN player_api_id = 30700 THEN overall_rating END)
+        - AVG(overall_rating)
+    ) / AVG(overall_rating),
+    2
+) AS pct_higher
+FROM eligible;"
+204,test,financial,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",False,2,"SELECT COUNT(*)
+FROM trans AS t
+WHERE t.k_symbol IS NULL
+  AND t.account_id IN (
+    SELECT d.account_id
+    FROM disp AS d
+    JOIN client AS c ON c.client_id = d.client_id
+    WHERE d.type = 'OWNER'
+      AND c.gender = 'M'
+      AND c.birth_date >= '1974-01-01'
+      AND c.birth_date < '1977-01-01'
+  );"
+211,test,financial,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT
+    COUNT(DISTINCT CASE WHEN t.k_symbol = 'SIPO' THEN t.trans_id END) AS household_payments,
+    COUNT(DISTINCT CASE
+        WHEN t.k_symbol IS NOT NULL
+         AND t.k_symbol <> 'SIPO'
+         AND TRIM(t.k_symbol) <> ''
+        THEN t.trans_id
+    END) AS other_purpose_payments
+FROM trans AS t
+JOIN disp AS d
+    ON d.account_id = t.account_id
+JOIN client AS c
+    ON c.client_id = d.client_id
+WHERE d.type = 'OWNER'
+  AND c.gender = 'M'
+  AND c.birth_date >= '1974-01-01'
+  AND c.birth_date < '1977-01-01'
+  AND t.type = 'VYDAJ'
+  AND t.operation = 'PREVOD NA UCET'
+  AND t.amount > 4000;"
+221,test,financial,challenging,result_mismatch,distinct,"Structural flags are review candidates, not verified semantic causes",True,3,"WITH
+district_accounts AS (
+    SELECT
+        d.district_id,
+        d.A2 AS district_name,
+        d.A3 AS region,
+        CAST(d.A4 AS INTEGER) AS population,
+        a.account_id
+    FROM district AS d
+    JOIN account AS a
+      ON a.district_id = d.district_id
+    WHERE CAST(d.A4 AS INTEGER) >= 100000
+),
+district_withdrawals AS (
+    SELECT
+        da.district_id,
+        SUM(t.amount) AS total_amount_withdrawn
+    FROM district_accounts AS da
+    JOIN trans AS t
+      ON t.account_id = da.account_id
+    WHERE t.type = 'VYDAJ'
+      AND t.operation IN ('VYBER', 'VYBER KARTOU')
+    GROUP BY da.district_id
+),
+district_standing_orders AS (
+    SELECT
+        da.district_id,
+        SUM(o.amount) AS total_standing_order_debit
+    FROM district_accounts AS da
+    JOIN `order` AS o
+      ON o.account_id = da.account_id
+    WHERE o.k_symbol = 'SIPO'
+    GROUP BY da.district_id
+),
+district_metrics AS (
+    SELECT
+        da.district_id,
+        da.district_name,
+        da.region,
+        da.population,
+        dw.total_amount_withdrawn,
+        1.0 * dw.total_amount_withdrawn / da.population AS withdrawals_per_inhabitant,
+        COALESCE(dso.total_standing_order_debit, 0.0)
+            / COUNT(DISTINCT da.account_id) AS average_standing_order_debit_per_account
+    FROM district_accounts AS da
+    JOIN district_withdrawals AS dw
+      ON dw.district_id = da.district_id
+    LEFT JOIN district_standing_orders AS dso
+      ON dso.district_id = da.district_id
+    GROUP BY
+        da.district_id,
+        da.district_name,
+        da.region,
+        da.population,
+        dw.total_amount_withdrawn,
+        dso.total_standing_order_debit
+)
+SELECT
+    district_name,
+    region,
+    population,
+    total_amount_withdrawn,
+    ROUND(withdrawals_per_inhabitant, 2) AS withdrawals_per_inhabitant,
+    RANK() OVER (ORDER BY withdrawals_per_inhabitant DESC) AS rank_by_withdrawals_per_inhabitant,
+    ROUND(average_standing_order_debit_per_account, 2) AS average_standing_order_debit_per_account
+FROM district_metrics
+ORDER BY rank_by_withdrawals_per_inhabitant, district_name;"
+239,test,financial,challenging,result_mismatch,group_by;order_by;union,"Structural flags are review candidates, not verified semantic causes",False,1,"SELECT 'Young cohort' AS cohort, ROUND(AVG(d.A11)) AS average_salary
+FROM client c
+JOIN disp dp ON dp.client_id = c.client_id
+JOIN account a ON a.account_id = dp.account_id
+JOIN district d ON d.district_id = a.district_id
+WHERE c.birth_date >= '1980-01-01'
+
+UNION ALL
+
+SELECT 'Old cohort' AS cohort, ROUND(AVG(d.A11)) AS average_salary
+FROM client c
+JOIN disp dp ON dp.client_id = c.client_id
+JOIN account a ON a.account_id = dp.account_id
+JOIN district d ON d.district_id = a.district_id
+WHERE c.birth_date <= '1919-12-31';"
+249,test,formula_1,challenging,result_mismatch,group_by,"Structural flags are review candidates, not verified semantic causes",False,1,"SELECT d.forename || ' ' || d.surname AS full_name
+FROM results AS r
+JOIN drivers AS d ON d.driverId = r.driverId
+WHERE r.fastestLapTime IS NOT NULL
+  AND TRIM(r.fastestLapTime) <> ''
+ORDER BY CAST(substr(r.fastestLapTime, 1, instr(r.fastestLapTime, ':') - 1) AS INTEGER) * 60000
+       + CAST(substr(r.fastestLapTime, instr(r.fastestLapTime, ':') + 1, 2) AS INTEGER) * 1000
+       + CAST(substr(r.fastestLapTime, instr(r.fastestLapTime, '.') + 1) AS INTEGER)
+LIMIT 20;"
+252,test,formula_1,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",False,1,"SELECT
+    d.forename,
+    d.surname,
+    d.url,
+    d.dob,
+    COUNT(q.q3) AS q3_times
+FROM drivers AS d
+LEFT JOIN qualifying AS q
+    ON q.driverId = d.driverId
+WHERE d.nationality = 'German'
+  AND d.dob >= '1971-01-01'
+  AND d.dob < '1986-01-01'
+GROUP BY d.driverId, d.forename, d.surname, d.url, d.dob
+ORDER BY q3_times DESC, d.dob ASC;"
+254,test,formula_1,challenging,result_mismatch,order_by;window,"Structural flags are review candidates, not verified semantic causes",False,1,"SELECT d.nationality
+FROM qualifying AS q
+JOIN races AS r ON r.raceId = q.raceId
+JOIN drivers AS d ON d.driverId = q.driverId
+WHERE r.year = 1995
+  AND r.name = 'Japanese Grand Prix'
+  AND q.q1 = (
+      SELECT MAX(q1)
+      FROM qualifying AS q2
+      JOIN races AS r2 ON r2.raceId = q2.raceId
+      WHERE r2.year = 1995
+        AND r2.name = 'Japanese Grand Prix'
+        AND q2.q1 IS NOT NULL
+  );"
+256,test,formula_1,challenging,result_mismatch,distinct,"Structural flags are review candidates, not verified semantic causes",False,1,"SELECT COUNT(*) AS count
+FROM qualifying AS di_grassi
+JOIN races AS race
+  ON race.raceId = di_grassi.raceId
+JOIN qualifying AS other
+  ON other.raceId = di_grassi.raceId
+WHERE race.year = 2010
+  AND di_grassi.driverId = 810
+  AND other.driverId <> di_grassi.driverId
+  AND di_grassi.position IS NOT NULL
+  AND other.position IS NOT NULL
+  AND di_grassi.position < other.position;"
+299,test,student_club,moderate,result_mismatch,having,"Structural flags are review candidates, not verified semantic causes",True,3,"WITH per_event AS (
+    SELECT
+        e.event_id,
+        e.event_name,
+        SUM(b.spent) AS total_spending,
+        SUM(b.amount) AS total_budget,
+        SUM(b.spent) * 1.0 / NULLIF(SUM(b.amount), 0) AS spending_to_budget_ratio
+    FROM event AS e
+    JOIN budget AS b
+        ON b.link_to_event = e.event_id
+    WHERE e.status = 'Closed'
+    GROUP BY e.event_id, e.event_name
+)
+SELECT event_id, event_name, total_spending, total_budget, spending_to_budget_ratio
+FROM per_event
+WHERE spending_to_budget_ratio = (
+    SELECT MAX(spending_to_budget_ratio)
+    FROM per_event
+);"
+303,test,student_club,challenging,result_mismatch,distinct;order_by;avg,"Structural flags are review candidates, not verified semantic causes",True,3,"WITH dept_majors AS (
+    SELECT department, major_id, major_name
+    FROM major
+    WHERE college = 'College of Humanities and Social Sciences'
+),
+major_counts AS (
+    SELECT
+        dm.department,
+        dm.major_id,
+        dm.major_name,
+        COUNT(m.member_id) AS member_count
+    FROM dept_majors AS dm
+    LEFT JOIN member AS m
+        ON m.link_to_major = dm.major_id
+    GROUP BY dm.department, dm.major_id, dm.major_name
+)
+SELECT
+    department,
+    GROUP_CONCAT(major_name, ', ') AS majors_offered,
+    GROUP_CONCAT(
+        CASE WHEN member_count > 0 THEN major_name END,
+        ', '
+    ) AS majors_held_by_members,
+    ROUND(AVG(member_count), 2) AS average_members_per_major
+FROM major_counts
+GROUP BY department
+ORDER BY department;"
+304,test,student_club,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",True,3,"WITH events_2019 AS (
+    SELECT event_id, type
+    FROM event
+    WHERE event_date >= '2019-01-01'
+      AND event_date < '2020-01-01'
+),
+attendance_by_event AS (
+    SELECT link_to_event, COUNT(DISTINCT link_to_member) AS member_count
+    FROM attendance
+    GROUP BY link_to_event
+),
+budget_by_event AS (
+    SELECT link_to_event, SUM(amount) AS budgeted_amount
+    FROM budget
+    GROUP BY link_to_event
+)
+SELECT
+    e.type AS event_type,
+    SUM(COALESCE(a.member_count, 0)) AS members_attended,
+    SUM(COALESCE(b.budgeted_amount, 0)) AS total_budgeted_dollars
+FROM events_2019 AS e
+LEFT JOIN attendance_by_event AS a
+    ON a.link_to_event = e.event_id
+LEFT JOIN budget_by_event AS b
+    ON b.link_to_event = e.event_id
+GROUP BY e.type
+ORDER BY e.type;"
+346,test,superhero,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",False,2,"SELECT COUNT(*) AS count
+FROM superhero s
+JOIN alignment a ON a.id = s.alignment_id
+WHERE a.alignment NOT IN ('Good', 'Bad');"
+353,test,superhero,challenging,result_mismatch,group_by,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT ROUND(AVG(power_count), 2) AS avg_powers_per_hero
+FROM (
+  SELECT s.id, COUNT(hp.power_id) AS power_count
+  FROM superhero s
+  JOIN gender g ON g.id = s.gender_id
+    AND g.gender = 'Male'
+  JOIN race r ON r.id = s.race_id
+    AND r.race IN ('God', 'Eternal')
+  LEFT JOIN hero_power hp ON hp.hero_id = s.id
+  GROUP BY s.id
+);"
+372,test,superhero,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",False,1,"SELECT COUNT(DISTINCT hp.power_id) AS different_superpower_count
+FROM superhero AS h
+JOIN gender AS g ON g.id = h.gender_id
+JOIN hero_power AS hp ON hp.hero_id = h.id
+WHERE g.gender = 'Male'
+  AND h.weight_kg < 70
+  AND h.weight_kg IS NOT NULL;"
+373,test,superhero,challenging,result_mismatch,distinct,"Structural flags are review candidates, not verified semantic causes",False,1,"SELECT c.colour
+FROM superhero AS s
+LEFT JOIN colour AS c ON c.id = s.hair_colour_id
+WHERE s.height_cm IS NOT NULL
+  AND s.height_cm <> 0
+  AND s.height_cm = (
+      SELECT MIN(height_cm)
+      FROM superhero
+      WHERE height_cm IS NOT NULL
+        AND height_cm <> 0
+  );"
+388,test,thrombosis_prediction,moderate,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",False,1,"SELECT COUNT(DISTINCT p.ID) AS patient_count
+FROM Patient AS p
+JOIN Laboratory AS l ON l.ID = p.ID
+WHERE p.Description IS NULL
+  AND l.CRP = '+';"
+396,test,thrombosis_prediction,challenging,result_mismatch,window,"Structural flags are review candidates, not verified semantic causes",True,3,"WITH eligible AS (
+    SELECT
+        l.ID,
+        l.Date,
+        l.DNA,
+        CAST(l.DNA AS REAL) AS level
+    FROM Laboratory AS l
+    JOIN Patient AS p ON p.ID = l.ID
+    WHERE p.SEX = 'F'
+      AND p.Admission = '+'
+      AND l.DNA IS NOT NULL
+),
+ranked AS (
+    SELECT
+        ID,
+        Date,
+        DNA,
+        level,
+        MAX(level) OVER (PARTITION BY ID) AS max_level
+    FROM eligible
+)
+SELECT ID, Date, DNA
+FROM ranked
+WHERE level = max_level
+ORDER BY ID, Date;"
+404,test,thrombosis_prediction,challenging,result_mismatch,distinct,"Structural flags are review candidates, not verified semantic causes",True,3,"SELECT ROUND(
+    100.0 * SUM(CASE WHEN CAST(l.RNP AS INTEGER) > 64 THEN 1 ELSE 0 END)
+    / COUNT(*),
+    2
+) AS percentage
+FROM (
+    SELECT DISTINCT p.ID
+    FROM Patient p
+    WHERE p.SEX = 'F'
+      AND EXISTS (
+          SELECT 1
+          FROM Examination e
+          WHERE e.ID = p.ID
+            AND e.Thrombosis > 0
+      )
+) AS cohort
+JOIN Laboratory l ON l.ID = cohort.ID
+WHERE l.RNP IS NOT NULL;"
+452,test,thrombosis_prediction,challenging,result_mismatch,,"Structural flags are review candidates, not verified semantic causes",False,1,"SELECT e.Symptoms, p.Diagnosis AS overall_diagnosis
+FROM Examination AS e
+JOIN Patient AS p ON p.ID = e.ID
+WHERE e.Diagnosis LIKE '%SLE%'
+  AND e.Diagnosis NOT LIKE '%SLE susp%'
+  AND e.Symptoms IS NOT NULL
+  AND TRIM(e.Symptoms) <> ''
+ORDER BY p.Birthday ASC, p.ID ASC, e.`Examination Date` DESC
+LIMIT 1;"
+479,test,toxicology,challenging,result_mismatch,group_by;order_by;count,"Structural flags are review candidates, not verified semantic causes",False,1,"WITH molecule_groups AS (
+  SELECT
+    m.molecule_id,
+    m.label,
+    CASE
+      WHEN COUNT(b.bond_id) > 0
+       AND SUM(CASE WHEN b.bond_type = '-' THEN 0 ELSE 1 END) = 0
+      THEN 'all_single'
+      ELSE 'other'
+    END AS saturation_group
+  FROM molecule AS m
+  LEFT JOIN bond AS b
+    ON b.molecule_id = m.molecule_id
+  GROUP BY m.molecule_id, m.label
+)
+SELECT
+  saturation_group,
+  SUM(CASE WHEN label = '+' THEN 1 ELSE 0 END)
+    - SUM(CASE WHEN label = '-' THEN 1 ELSE 0 END)
+      AS carcinogenic_minus_non_carcinogenic
+FROM molecule_groups
+GROUP BY saturation_group
+ORDER BY CASE saturation_group WHEN 'all_single' THEN 1 ELSE 2 END;"

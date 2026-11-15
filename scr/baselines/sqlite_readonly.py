@@ -4,12 +4,14 @@ from pathlib import Path
 import sqlite3
 import time
 
+DEFAULT_SQL_TIMEOUT_SECONDS = 300.0
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 class ReadOnlySqlite:
     """A database-level read-only boundary, independent of LLM instructions."""
 
-    def __init__(self, database, max_rows=20, max_seconds=5.0):
+    def __init__(self, database, max_rows=20, max_seconds=DEFAULT_SQL_TIMEOUT_SECONDS):
         self.database = Path(database).expanduser().resolve()
         if not self.database.is_file():
             raise FileNotFoundError(f"Database does not exist: {self.database}")

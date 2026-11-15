@@ -1,17 +1,17 @@
-# Secret files, environments and caches
-.env
-.env.*
-!.env.example
+# Generated local data and evaluations (study source files remain tracked)
+data/*.sqlite
+data/*.sqlite-journal
+/data/bird/
+results/
 .venv/
 __pycache__/
 *.pyc
+/scr/evaluation/result/
+
+# Secrets and local caches
+.env
+.env.*
+!.env.example
 .pytest_cache/
 .DS_Store
-
-# Downloaded BIRD dataset and local inference/evaluation traces
-/data/bird/
-/data/*.sqlite
-/data/*.sqlite-journal
-/results/
-/scr/evaluation/result/
 *.sqlite-journal

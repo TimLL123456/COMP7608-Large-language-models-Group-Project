@@ -1,0 +1,40 @@
+[
+  {
+    "split": "dev",
+    "predictions": 400,
+    "scored": 400,
+    "correct": 272,
+    "missing_sql": 2,
+    "statuses": {
+      "correct": 272,
+      "incorrect_result": 123,
+      "missing_sql": 2,
+      "sql_error": 3
+    }
+  },
+  {
+    "split": "test",
+    "predictions": 100,
+    "scored": 100,
+    "correct": 68,
+    "missing_sql": 0,
+    "statuses": {
+      "incorrect_result": 31,
+      "correct": 68,
+      "sql_error": 1
+    }
+  },
+  {
+    "split": "overall",
+    "predictions": 500,
+    "scored": 500,
+    "correct": 340,
+    "missing_sql": 2,
+    "statuses": {
+      "correct": 340,
+      "incorrect_result": 154,
+      "missing_sql": 2,
+      "sql_error": 4
+    }
+  }
+]

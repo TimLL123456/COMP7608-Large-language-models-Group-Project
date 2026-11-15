@@ -1,4 +1,4 @@
-"""Original BIRD Mini-Dev (SQLite) access for KORA agents.
+"""Original and current BIRD Mini-Dev (SQLite) access for KORA agents.
 
 Agent-facing functions deliberately omit reference SQL. Evaluation-only references
 are handled by a separate class and must never be passed to an agent or prompt.
@@ -32,15 +32,17 @@ def sha256_file(path: Path) -> str:
 
 def read_annotations(path: Path, *, expected_count: int = EXPECTED_QUESTIONS,
                      expected_databases: int = EXPECTED_DATABASES) -> list[dict]:
-    """Validate original SQLite annotations; fail closed on V2 or malformed input."""
-    data = json.loads(Path(path).read_text(encoding="utf-8"))
+    """Validate 500-question SQLite JSON or JSONL annotations."""
+    text = Path(path).read_text(encoding="utf-8")
+    data = ([json.loads(line) for line in text.splitlines() if line.strip()]
+            if Path(path).suffix == ".jsonl" else json.loads(text))
     if not isinstance(data, list) or len(data) != expected_count:
-        raise ValueError(f"Expected {expected_count} original Mini-Dev questions, got {len(data) if isinstance(data, list) else 'non-list'}")
+        raise ValueError(f"Expected {expected_count} Mini-Dev questions, got {len(data) if isinstance(data, list) else 'non-list'}")
     required = {"question_id", "db_id", "question", "evidence", "SQL", "difficulty"}
     ids, db_ids = set(), set()
     for row in data:
         if not isinstance(row, dict) or not required.issubset(row):
-            raise ValueError("Original Mini-Dev record missing required fields")
+            raise ValueError("Mini-Dev record missing required fields")
         qid = row["question_id"]
         if not isinstance(qid, int) or isinstance(qid, bool) or qid in ids:
             raise ValueError(f"Duplicate/invalid question_id: {qid!r}")
@@ -115,12 +117,14 @@ class BirdDataset:
         self.root = Path(root).resolve()
         manifest_file = self.root / "dataset_manifest.json"
         self.manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
-        if self.manifest.get("dataset") != "bird-mini-dev-original-sqlite":
-            raise ValueError("Manifest does not describe original BIRD Mini-Dev SQLite")
+        if self.manifest.get("dataset") not in {"bird-mini-dev-original-sqlite", "bird-mini-dev-2026-sqlite"}:
+            raise ValueError("Manifest does not describe a supported BIRD Mini-Dev SQLite release")
         self.annotations_path = self.root / "annotations.json"
         if sha256_file(self.annotations_path) != self.manifest["annotations_sha256"]:
             raise ValueError("Dataset annotations changed since setup")
         self._rows = read_annotations(self.annotations_path)
+        if self.manifest["dataset"] == "bird-mini-dev-2026-sqlite" and {r["question_id"] for r in self._rows} != set(range(500)):
+            raise ValueError("Mini-Dev 2026 requires IDs 0–499")
         self._by_id = {row["question_id"]: row for row in self._rows}
         raw_split = self.manifest["split"]
         if set(raw_split) not in ({"dev", "test"}, {"dev", "heldout"}):

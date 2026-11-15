@@ -1,0 +1,249 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Count 3 /Kids [ 6 0 R 8 0 R 10 0 R ] >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Courier >>
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 7210 >>
+stream
+0.09 0.24 0.36 rg BT /F2 14 Tf 1 0 0 1 49 741 Tm (Draft A - BIRD Mini-Dev) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 716 Tm (Project Title: Reliable and Cost-Efficient Self-Service Data Analytics through Agentic Text-to-SQL) Tj ET
+0.09 0.24 0.36 rg BT /F2 11.5 Tf 1 0 0 1 49 692.1 Tm (1. Group Members) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 672.1 Tm (- [Name] - [Student ID]) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 658.2 Tm (- [Name] - [Student ID]) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 644.3000000000001 Tm (- [Name] - [Student ID]) Tj ET
+0.09 0.24 0.36 rg BT /F2 11.5 Tf 1 0 0 1 49 620.4000000000001 Tm (2. Project Objective) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 600.4000000000001 Tm (This project aims to develop and evaluate an agentic Text-to-SQL system that helps users with limited SQL) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 589.5000000000001 Tm (expertise retrieve reliable answers from relational databases through natural-language questions. We study how) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 578.6000000000001 Tm (agentic system design can improve both query correctness and computational efficiency, rather than focusing) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 567.7000000000002 Tm (only on SQL generation.) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 553.8000000000002 Tm (Intended users and needs. Our primary users are business and operations analysts who regularly need data but) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 542.9000000000002 Tm (may not know the database schema or how to write complex SQL. Junior data analysts are secondary users who may) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 532.0000000000002 Tm (need support with joins, aggregations, and debugging. These users need: \(1\) accessible natural-language) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 521.1000000000003 Tm (querying; \(2\) automatic discovery of relevant tables, columns, and PK/FK relationships; \(3\) reliable handling) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 510.2000000000003 Tm (of complex analyses and SQL errors; and \(4\) timely answers at reasonable inference cost.) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 496.3000000000003 Tm (We first build an agentic baseline that explores schemas, generates and executes SQL, and debugs failed) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 485.4000000000003 Tm (queries. We then evaluate two targeted improvements:) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 471.50000000000034 Tm (- Query Planner: Decompose complex analytical questions into logical steps before SQL generation.) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 457.60000000000036 Tm (- Adaptive Controller: Route simpler questions to a normal model and harder questions to a stronger reasoning) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 446.7000000000004 Tm (model.) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 432.8000000000004 Tm (Research questions) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 418.90000000000043 Tm (- RQ1: Does explicit query planning improve Text-to-SQL execution accuracy, especially on moderate and) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 408.00000000000045 Tm (challenging queries?) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 394.1000000000005 Tm (- RQ2: Can adaptive model routing maintain strong query accuracy while reducing latency, token usage, and) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 383.2000000000005 Tm (estimated model cost compared with always using a strong model?) Tj ET
+0.09 0.24 0.36 rg BT /F2 11.5 Tf 1 0 0 1 49 359.3000000000005 Tm (3. Motivation and Challenges) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 339.3000000000005 Tm (Self-service analytics is difficult when users must understand unfamiliar schemas, identify correct joins,) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 328.40000000000055 Tm (express multi-step calculations, and fix SQL errors. For example, a retail analyst may ask: "Which three) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 317.50000000000057 Tm (products had the largest sales increase between 2022 and 2023?" Answering this requires finding the right sales) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 306.6000000000006 Tm (and product data, aggregating by year, matching products, calculating differences, and ranking results.) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 292.7000000000006 Tm (A Text-to-SQL agent can make this workflow more accessible, but it may choose incorrect tables or columns,) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 281.80000000000064 Tm (misunderstand relationships, generate logically wrong SQL that still executes, or fail to recover from) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 270.90000000000066 Tm (execution errors. Stronger models and additional reasoning may help, but increase cost and response time. The) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 260.0000000000007 Tm (challenge is to determine which agentic mechanisms improve answer reliability and whether their computational) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 249.10000000000068 Tm (overhead is justified.) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 235.20000000000067 Tm (The design connects concrete user needs to agent features:) Tj ET
+0.89 0.93 0.96 rg 48 206.60000000000068 518 17.7 re f
+0.10 0.18 0.27 rg BT /F2 7.8 Tf 1 0 0 1 53 214.30000000000067 Tm (User need) Tj ET
+0.10 0.18 0.27 rg BT /F2 7.8 Tf 1 0 0 1 303 214.30000000000067 Tm (Agent capability) Tj ET
+1 1 1 rg 48 188.9000000000007 518 17.7 re f
+0.10 0.18 0.27 rg BT /F1 7.8 Tf 1 0 0 1 53 196.60000000000068 Tm (Query data without writing SQL) Tj ET
+0.10 0.18 0.27 rg BT /F1 7.8 Tf 1 0 0 1 303 196.60000000000068 Tm (Natural-language input and executable SQL output) Tj ET
+0.97 0.98 0.99 rg 48 171.2000000000007 518 17.7 re f
+0.10 0.18 0.27 rg BT /F1 7.8 Tf 1 0 0 1 53 178.9000000000007 Tm (Navigate unfamiliar databases) Tj ET
+0.10 0.18 0.27 rg BT /F1 7.8 Tf 1 0 0 1 303 178.9000000000007 Tm (Active table, column, and PK/FK exploration) Tj ET
+1 1 1 rg 48 153.5000000000007 518 17.7 re f
+0.10 0.18 0.27 rg BT /F1 7.8 Tf 1 0 0 1 53 161.2000000000007 Tm (Answer multi-step business questions) Tj ET
+0.10 0.18 0.27 rg BT /F1 7.8 Tf 1 0 0 1 303 161.2000000000007 Tm (Explicit Query Planner) Tj ET
+0.97 0.98 0.99 rg 48 135.80000000000072 518 17.7 re f
+0.10 0.18 0.27 rg BT /F1 7.8 Tf 1 0 0 1 53 143.5000000000007 Tm (Reduce manual query debugging) Tj ET
+0.10 0.18 0.27 rg BT /F1 7.8 Tf 1 0 0 1 303 143.5000000000007 Tm (Execution feedback and self-correction) Tj ET
+1 1 1 rg 48 118.10000000000072 518 17.7 re f
+0.10 0.18 0.27 rg BT /F1 7.8 Tf 1 0 0 1 53 125.80000000000072 Tm (Obtain timely, affordable responses) Tj ET
+0.10 0.18 0.27 rg BT /F1 7.8 Tf 1 0 0 1 303 125.80000000000072 Tm (Adaptive model routing) Tj ET
+0.09 0.24 0.36 rg BT /F2 11.5 Tf 1 0 0 1 49 97.10000000000072 Tm (4. Potential Solution) Tj ET
+0.09 0.24 0.36 rg BT /F2 9.8 Tf 1 0 0 1 49 70.10000000000072 Tm (4.1 Baseline - Agentic Schema Search and Query Debugging) Tj ET
+0.4 0.4 0.4 rg BT /F1 8 Tf 1 0 0 1 49 30 Tm (COMP7608 | BIRD Mini-Dev - Proposal Draft) Tj ET BT /F1 8 Tf 1 0 0 1 550 30 Tm (1) Tj ET
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 9 0 R >>
+endobj
+9 0 obj
+<< /Length 6961 >>
+stream
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 742 Tm (The baseline is an agentic, tool-using system rather than a one-shot LLM. It inspects relevant tables, columns,) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 731.1 Tm (and PK/FK relationships, creates SQL, executes it, examines execution feedback, and revises failed queries) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 720.2 Tm (within a bounded retry budget.) Tj ET
+0.95 0.96 0.97 rg 46 595.3000000000001 520 122 re f
+0.1 0.16 0.2 rg BT /F3 7.6 Tf 1 0 0 1 55 702.3000000000001 Tm (User Question) Tj ET
+0.1 0.16 0.2 rg BT /F3 7.6 Tf 1 0 0 1 55 692.3000000000001 Tm (      |) Tj ET
+0.1 0.16 0.2 rg BT /F3 7.6 Tf 1 0 0 1 55 682.3000000000001 Tm (      v) Tj ET
+0.1 0.16 0.2 rg BT /F3 7.6 Tf 1 0 0 1 55 672.3000000000001 Tm (Search Tables / Columns / PK-FK) Tj ET
+0.1 0.16 0.2 rg BT /F3 7.6 Tf 1 0 0 1 55 662.3000000000001 Tm (      |) Tj ET
+0.1 0.16 0.2 rg BT /F3 7.6 Tf 1 0 0 1 55 652.3000000000001 Tm (      v) Tj ET
+0.1 0.16 0.2 rg BT /F3 7.6 Tf 1 0 0 1 55 642.3000000000001 Tm (Generate SQL --> Execute SQL --> Success? --> Yes --> SQL + Query Result) Tj ET
+0.1 0.16 0.2 rg BT /F3 7.6 Tf 1 0 0 1 55 632.3000000000001 Tm (                       ^               |) Tj ET
+0.1 0.16 0.2 rg BT /F3 7.6 Tf 1 0 0 1 55 622.3000000000001 Tm (                       |               No) Tj ET
+0.1 0.16 0.2 rg BT /F3 7.6 Tf 1 0 0 1 55 612.3000000000001 Tm (                       |               v) Tj ET
+0.1 0.16 0.2 rg BT /F3 7.6 Tf 1 0 0 1 55 602.3000000000001 Tm (                       +---------- Debug / Revise) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 584.3000000000001 Tm (A successful execution does not guarantee a correct answer; correctness is measured by benchmark evaluation,) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 573.4000000000001 Tm (not just by the absence of runtime errors. The user-facing prototype presents the SQL and query results,) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 562.5000000000001 Tm (without requiring a full analytics dashboard.) Tj ET
+0.09 0.24 0.36 rg BT /F2 9.8 Tf 1 0 0 1 49 541.6000000000001 Tm (4.2 Improvement 1 - Query Planner) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 525.4000000000001 Tm (The Query Planner explicitly decomposes a question into steps before SQL generation. For the retail example) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 514.5000000000001 Tm (above, it would: \(1\) calculate 2022 sales per product; \(2\) calculate 2023 sales; \(3\) join the corresponding) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 503.60000000000014 Tm (products; \(4\) compute the increase; and \(5\) sort and return the top three. The plan then informs SQL generation) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 492.70000000000016 Tm (and the existing execution/debug loop.) Tj ET
+0.95 0.96 0.97 rg 46 387.8000000000002 520 102 re f
+0.1 0.16 0.2 rg BT /F3 7.6 Tf 1 0 0 1 55 474.8000000000002 Tm (User Question --> Schema Search --> Query Planner --> Logical Plan) Tj ET
+0.1 0.16 0.2 rg BT /F3 7.6 Tf 1 0 0 1 55 464.8000000000002 Tm (                                                     |) Tj ET
+0.1 0.16 0.2 rg BT /F3 7.6 Tf 1 0 0 1 55 454.8000000000002 Tm (                                                     v) Tj ET
+0.1 0.16 0.2 rg BT /F3 7.6 Tf 1 0 0 1 55 444.8000000000002 Tm (                                              Generate / Execute SQL) Tj ET
+0.1 0.16 0.2 rg BT /F3 7.6 Tf 1 0 0 1 55 434.8000000000002 Tm (                                                     |) Tj ET
+0.1 0.16 0.2 rg BT /F3 7.6 Tf 1 0 0 1 55 424.8000000000002 Tm (                                               Debug if needed) Tj ET
+0.1 0.16 0.2 rg BT /F3 7.6 Tf 1 0 0 1 55 414.8000000000002 Tm (                                                     |) Tj ET
+0.1 0.16 0.2 rg BT /F3 7.6 Tf 1 0 0 1 55 404.8000000000002 Tm (                                                     v) Tj ET
+0.1 0.16 0.2 rg BT /F3 7.6 Tf 1 0 0 1 55 394.8000000000002 Tm (                                              SQL + Query Result) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 376.8000000000002 Tm (Hypothesis: Planning improves accuracy most for queries involving multi-table joins, aggregation, comparisons,) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 365.9000000000002 Tm (nested operations, or ranking, but it may add latency and tokens.) Tj ET
+0.09 0.24 0.36 rg BT /F2 9.8 Tf 1 0 0 1 49 345.0000000000002 Tm (4.3 Improvement 2 - Adaptive Controller) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 328.80000000000024 Tm (The Adaptive Controller estimates query difficulty from information available at inference time and selects a) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 317.90000000000026 Tm (normal or stronger model for the baseline workflow; it does not use benchmark difficulty labels as routing) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 307.0000000000003 Tm (inputs.) Tj ET
+0.95 0.96 0.97 rg 46 182.1000000000003 520 122 re f
+0.1 0.16 0.2 rg BT /F3 7.6 Tf 1 0 0 1 55 289.1000000000003 Tm (                  User Question) Tj ET
+0.1 0.16 0.2 rg BT /F3 7.6 Tf 1 0 0 1 55 279.1000000000003 Tm (                        |) Tj ET
+0.1 0.16 0.2 rg BT /F3 7.6 Tf 1 0 0 1 55 269.1000000000003 Tm (                Adaptive Controller) Tj ET
+0.1 0.16 0.2 rg BT /F3 7.6 Tf 1 0 0 1 55 259.1000000000003 Tm (                    /       \\) Tj ET
+0.1 0.16 0.2 rg BT /F3 7.6 Tf 1 0 0 1 55 249.1000000000003 Tm (              General       Hard) Tj ET
+0.1 0.16 0.2 rg BT /F3 7.6 Tf 1 0 0 1 55 239.1000000000003 Tm (                 |            |) Tj ET
+0.1 0.16 0.2 rg BT /F3 7.6 Tf 1 0 0 1 55 229.1000000000003 Tm (           Normal Model  Strong Model) Tj ET
+0.1 0.16 0.2 rg BT /F3 7.6 Tf 1 0 0 1 55 219.1000000000003 Tm (                 \\            /) Tj ET
+0.1 0.16 0.2 rg BT /F3 7.6 Tf 1 0 0 1 55 209.1000000000003 Tm (                  Baseline Agent) Tj ET
+0.1 0.16 0.2 rg BT /F3 7.6 Tf 1 0 0 1 55 199.1000000000003 Tm (                        |) Tj ET
+0.1 0.16 0.2 rg BT /F3 7.6 Tf 1 0 0 1 55 189.1000000000003 Tm (                 SQL + Query Result) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 171.1000000000003 Tm (Compare \(A\) normal-model-only, \(B\) strong-model-only, and \(C\) adaptive routing, keeping the remaining agent) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 160.2000000000003 Tm (tools and retry policy comparable. If time permits, test a combined Planner + Adaptive system.) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 146.3000000000003 Tm (Hypothesis: Adaptive routing approaches the accuracy of strong-model-only execution with lower overall token) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 135.4000000000003 Tm (usage, latency, and estimated model cost.) Tj ET
+0.09 0.24 0.36 rg BT /F2 11.5 Tf 1 0 0 1 49 111.50000000000028 Tm (5. Experimental Dataset and Evaluation Plan) Tj ET
+0.4 0.4 0.4 rg BT /F1 8 Tf 1 0 0 1 49 30 Tm (COMP7608 | BIRD Mini-Dev - Proposal Draft) Tj ET BT /F1 8 Tf 1 0 0 1 550 30 Tm (2) Tj ET
+endstream
+endobj
+10 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 11 0 R >>
+endobj
+11 0 obj
+<< /Length 8002 >>
+stream
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 742 Tm (Dataset. We will use BIRD Mini-Dev for controlled evaluation. Its natural-language questions, relational) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 731.1 Tm (databases, schemas, reference SQL, and difficulty annotations support execution-based scoring and analysis by) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 720.2 Tm (query complexity. We will check the selected split, evaluation script, and availability of each metric before) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 709.3000000000001 Tm (reporting results.) Tj ET
+0.09 0.24 0.36 rg BT /F2 9.8 Tf 1 0 0 1 49 688.4000000000001 Tm (5.1 System Comparison) Tj ET
+0.89 0.93 0.96 rg 48 657.5 518 17.7 re f
+0.10 0.18 0.27 rg BT /F2 7.8 Tf 1 0 0 1 53 665.2 Tm (Configuration) Tj ET
+0.10 0.18 0.27 rg BT /F2 7.8 Tf 1 0 0 1 282 665.2 Tm (Schema Search + Debug) Tj ET
+0.10 0.18 0.27 rg BT /F2 7.8 Tf 1 0 0 1 387 665.2 Tm (Planner) Tj ET
+0.10 0.18 0.27 rg BT /F2 7.8 Tf 1 0 0 1 471 665.2 Tm (Adaptive Routing) Tj ET
+1 1 1 rg 48 639.8 518 17.7 re f
+0.10 0.18 0.27 rg BT /F1 7.8 Tf 1 0 0 1 53 647.5 Tm (Baseline \(normal model\)) Tj ET
+0.10 0.18 0.27 rg BT /F1 7.8 Tf 1 0 0 1 282 647.5 Tm (Yes) Tj ET
+0.10 0.18 0.27 rg BT /F1 7.8 Tf 1 0 0 1 387 647.5 Tm (No) Tj ET
+0.10 0.18 0.27 rg BT /F1 7.8 Tf 1 0 0 1 471 647.5 Tm (No) Tj ET
+0.97 0.98 0.99 rg 48 622.0999999999999 518 17.7 re f
+0.10 0.18 0.27 rg BT /F1 7.8 Tf 1 0 0 1 53 629.8 Tm (Baseline + Query Planner) Tj ET
+0.10 0.18 0.27 rg BT /F1 7.8 Tf 1 0 0 1 282 629.8 Tm (Yes) Tj ET
+0.10 0.18 0.27 rg BT /F1 7.8 Tf 1 0 0 1 387 629.8 Tm (Yes) Tj ET
+0.10 0.18 0.27 rg BT /F1 7.8 Tf 1 0 0 1 471 629.8 Tm (No) Tj ET
+1 1 1 rg 48 604.3999999999999 518 17.7 re f
+0.10 0.18 0.27 rg BT /F1 7.8 Tf 1 0 0 1 53 612.0999999999999 Tm (Baseline \(strong model\)) Tj ET
+0.10 0.18 0.27 rg BT /F1 7.8 Tf 1 0 0 1 282 612.0999999999999 Tm (Yes) Tj ET
+0.10 0.18 0.27 rg BT /F1 7.8 Tf 1 0 0 1 387 612.0999999999999 Tm (No) Tj ET
+0.10 0.18 0.27 rg BT /F1 7.8 Tf 1 0 0 1 471 612.0999999999999 Tm (No) Tj ET
+0.97 0.98 0.99 rg 48 586.6999999999998 518 17.7 re f
+0.10 0.18 0.27 rg BT /F1 7.8 Tf 1 0 0 1 53 594.3999999999999 Tm (Baseline + Adaptive Controller) Tj ET
+0.10 0.18 0.27 rg BT /F1 7.8 Tf 1 0 0 1 282 594.3999999999999 Tm (Yes) Tj ET
+0.10 0.18 0.27 rg BT /F1 7.8 Tf 1 0 0 1 387 594.3999999999999 Tm (No) Tj ET
+0.10 0.18 0.27 rg BT /F1 7.8 Tf 1 0 0 1 471 594.3999999999999 Tm (Yes) Tj ET
+1 1 1 rg 48 568.9999999999998 518 17.7 re f
+0.10 0.18 0.27 rg BT /F1 7.8 Tf 1 0 0 1 53 576.6999999999998 Tm (Planner + Adaptive Controller \(optional\)) Tj ET
+0.10 0.18 0.27 rg BT /F1 7.8 Tf 1 0 0 1 282 576.6999999999998 Tm (Yes) Tj ET
+0.10 0.18 0.27 rg BT /F1 7.8 Tf 1 0 0 1 387 576.6999999999998 Tm (Yes) Tj ET
+0.10 0.18 0.27 rg BT /F1 7.8 Tf 1 0 0 1 471 576.6999999999998 Tm (Yes) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 557.9999999999998 Tm (To isolate improvements, use the same dataset, database permissions, execution environment, tool access, prompt) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 547.0999999999998 Tm (conventions, and retry limits wherever possible. The Planner experiment uses a fixed base model; the routing) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 536.1999999999998 Tm (experiment explicitly compares normal-only, strong-only, and adaptive configurations.) Tj ET
+0.09 0.24 0.36 rg BT /F2 9.8 Tf 1 0 0 1 49 515.2999999999998 Tm (5.2 Correctness and Reliability) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 499.09999999999985 Tm (- Execution Accuracy \(EX\), with Soft F1 and R-VES where supported by the chosen evaluation implementation.) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 485.1999999999999 Tm (- Accuracy by difficulty \(simple / moderate / challenging\), particularly for RQ1.) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 471.2999999999999 Tm (- First-attempt accuracy, final accuracy after debugging, and debug recovery rate.) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 457.3999999999999 Tm (- Error analysis of incorrect schema selection, joins, logic, execution failures, and unsuccessful retries.) Tj ET
+0.09 0.24 0.36 rg BT /F2 9.8 Tf 1 0 0 1 49 436.49999999999994 Tm (5.3 Efficiency and Agent Traces) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 420.29999999999995 Tm (- Efficiency: input/output tokens, LLM calls, database/tool calls, retries, end-to-end latency, and estimated) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 409.4 Tm (model cost per query.) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 395.5 Tm (- Schema exploration: table recall and column recall, using reference SQL as a *diagnostic approximation* of) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 384.6 Tm (required objects rather than exhaustive schema ground truth.) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 370.70000000000005 Tm (- Debugging: number of retries and fraction of initially incorrect queries corrected after retries.) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 356.80000000000007 Tm (- Routing: fraction routed to the strong model, accuracy and cost by routing decision, and cost savings) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 345.9000000000001 Tm (relative to strong-model-only execution. Difficulty labels are used only for post-hoc analysis, not as routing) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 335.0000000000001 Tm (ground truth.) Tj ET
+0.09 0.24 0.36 rg BT /F2 9.8 Tf 1 0 0 1 49 314.10000000000014 Tm (5.4 Evaluation Aligned to User Needs) Tj ET
+0.89 0.93 0.96 rg 48 283.20000000000016 518 17.7 re f
+0.10 0.18 0.27 rg BT /F2 7.8 Tf 1 0 0 1 53 290.90000000000015 Tm (User need) Tj ET
+0.10 0.18 0.27 rg BT /F2 7.8 Tf 1 0 0 1 303 290.90000000000015 Tm (Evaluation evidence) Tj ET
+1 1 1 rg 48 265.50000000000017 518 17.7 re f
+0.10 0.18 0.27 rg BT /F1 7.8 Tf 1 0 0 1 53 273.20000000000016 Tm (Accurate answers to business questions) Tj ET
+0.10 0.18 0.27 rg BT /F1 7.8 Tf 1 0 0 1 303 273.20000000000016 Tm (EX, Soft F1, accuracy by difficulty) Tj ET
+0.97 0.98 0.99 rg 48 247.80000000000018 518 17.7 re f
+0.10 0.18 0.27 rg BT /F1 7.8 Tf 1 0 0 1 53 255.50000000000017 Tm (Reliable handling of complex queries) Tj ET
+0.10 0.18 0.27 rg BT /F1 7.8 Tf 1 0 0 1 303 255.50000000000017 Tm (Moderate/challenging EX, first-attempt vs final accuracy) Tj ET
+1 1 1 rg 48 230.1000000000002 518 17.7 re f
+0.10 0.18 0.27 rg BT /F1 7.8 Tf 1 0 0 1 53 237.80000000000018 Tm (Reduced debugging effort) Tj ET
+0.10 0.18 0.27 rg BT /F1 7.8 Tf 1 0 0 1 303 237.80000000000018 Tm (Debug recovery rate, retries, failure categories) Tj ET
+0.97 0.98 0.99 rg 48 212.4000000000002 518 17.7 re f
+0.10 0.18 0.27 rg BT /F1 7.8 Tf 1 0 0 1 53 220.1000000000002 Tm (Fast and affordable querying) Tj ET
+0.10 0.18 0.27 rg BT /F1 7.8 Tf 1 0 0 1 303 220.1000000000002 Tm (End-to-end latency, tokens/query, estimated cost/query) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 201.4000000000002 Tm (Scope and limitations. BIRD assesses SQL correctness and agent efficiency, not actual user satisfaction,) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 190.5000000000002 Tm (usability, or business impact. We will therefore describe the intended users as the *application motivation*,) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 179.6000000000002 Tm (not claim that benchmark gains establish real-world user acceptance. A small illustrative business question may) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 168.7000000000002 Tm (be included in the demo; formal usability testing is optional and outside the core experiment.) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 154.80000000000018 Tm (Expected contribution. Compare correctness, efficiency, and observable agent behavior to explain when explicit) Tj ET
+0.09 0.12 0.16 rg BT /F1 9 Tf 1 0 0 1 49 143.90000000000018 Tm (planning helps and when stronger reasoning is worth its cost for practical self-service analytics.) Tj ET
+0.4 0.4 0.4 rg BT /F1 8 Tf 1 0 0 1 49 30 Tm (COMP7608 | BIRD Mini-Dev - Proposal Draft) Tj ET BT /F1 8 Tf 1 0 0 1 550 30 Tm (3) Tj ET
+endstream
+endobj
+xref
+0 12
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000130 00000 n 
+0000000200 00000 n 
+0000000275 00000 n 
+0000000343 00000 n 
+0000000489 00000 n 
+0000007750 00000 n 
+0000007896 00000 n 
+0000014908 00000 n 
+0000015056 00000 n 
+trailer
+<< /Size 12 /Root 1 0 R >>
+startxref
+23110
+%%EOF

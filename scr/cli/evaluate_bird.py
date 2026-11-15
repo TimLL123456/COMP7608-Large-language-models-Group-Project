@@ -16,6 +16,7 @@ import sys
 # Direct script invocation from the project root (no editable package required).
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+from scr.baselines.sqlite_readonly import DEFAULT_SQL_TIMEOUT_SECONDS
 from scr.datasets.bird import BirdDataset, BirdEvaluationReferences, DEFAULT_ROOT  # noqa: E402
 from scr.evaluation.bird import (USAGE_FIELDS, VARIANTS, evaluate_predictions,
                                  load_predictions)  # noqa: E402
@@ -31,10 +32,14 @@ def run(argv: list[str] | None = None) -> int:
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--run-id", help="Explicit path-safe run name (otherwise UTC timestamp)")
     parser.add_argument("--question-ids", help="Optional comma-separated smoke-test IDs; output is not full-split EX")
-    parser.add_argument("--timeout-seconds", type=float, default=30.0)
+    parser.add_argument("--timeout-seconds", type=float, default=DEFAULT_SQL_TIMEOUT_SECONDS)
     parser.add_argument("--max-result-rows", type=int, default=100_000)
     args = parser.parse_args(argv)
     dataset = BirdDataset(args.dataset_root)
+    if dataset.manifest["dataset"] == "bird-mini-dev-2026-sqlite":
+        provenance = args.predictions.parent / "inference_manifest.json"
+        if not provenance.is_file() or json.loads(provenance.read_text(encoding="utf-8")).get("dataset_manifest") != dataset.manifest:
+            raise ValueError("Mini-Dev 2026 predictions require a matching inference_manifest.json; regenerate on this release")
     args.split = "test" if args.split == "heldout" else args.split
     questions = dataset.get_split(args.split)
     if args.question_ids is not None:

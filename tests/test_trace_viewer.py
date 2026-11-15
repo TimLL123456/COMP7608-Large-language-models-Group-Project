@@ -35,6 +35,24 @@ class TraceViewerTests(unittest.TestCase):
         self.assertEqual(graph["nodes"][-1]["detail"]["status"], "invalid_final_answer")
         self.assertEqual(sum(e["kind"] == "tool" for e in graph["edges"]), 2)
 
+    def test_optional_model_usage_is_visible_in_graph(self):
+        record = self.fixture()
+        record["structured_events"][0].update({
+            "input_tokens": 150, "output_tokens": 50,
+            "total_tokens": 200, "cached_input_tokens": 45,
+            "reasoning_tokens": 30, "reasoning_effort": "high",
+            "thinking_level": "deep", "reasoning_mode": "pro",
+        })
+        graph = build_graph(record)
+        model = next(n for n in graph["nodes"] if n["kind"] == "model")
+        detail = model["detail"]
+        self.assertEqual(detail["cached_input_tokens"], 45)
+        self.assertEqual(detail["reasoning_tokens"], 30)
+        self.assertEqual(detail["reasoning_effort"], "high")
+        self.assertEqual(detail["thinking_level"], "deep")
+        self.assertEqual(detail["reasoning_mode"], "pro")
+        self.assertEqual(detail["total_tokens"], 200)
+
     def test_legacy_trace_has_observed_data_only(self):
         graph = build_graph({"question_id":45,"report":{"stop_reason":"invalid_final_answer"},
             "events":["MODEL #1 usage={'input_tokens': 9, 'output_tokens': 3} finish=tool_calls",

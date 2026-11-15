@@ -1,0 +1,208 @@
+{
+  "source_commit": "7ad91446420cd590d6b24e51d8baed6bdb677212",
+  "recorded_outcome": {
+    "dev": "255/400",
+    "test": "64/100",
+    "overall": "319/500"
+  },
+  "inferences": 501,
+  "unique_questions": 500,
+  "analysis_source_checks": [
+    {
+      "check": "dev_full_membership",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "dev_prediction_digest",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "dev_selection_digest",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "dev_dataset_manifest",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "dev_max_model_calls",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "dev_max_total_tool_calls",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "dev_max_sql_executions",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "dev_provider",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "dev_model",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "dev_prompt_variant",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "dev_requested_reasoning_effort",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "dev_preview_rows",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "dev_ids_align",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "dev_score_counts",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "dev_archive_dataset",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "test_full_membership",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "test_prediction_digest",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "test_selection_digest",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "test_dataset_manifest",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "test_max_model_calls",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "test_max_total_tool_calls",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "test_max_sql_executions",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "test_provider",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "test_model",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "test_prompt_variant",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "test_requested_reasoning_effort",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "test_preview_rows",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "test_ids_align",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "test_score_counts",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "test_archive_dataset",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "all500unique",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "gold_annotations_digest",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "q60_only_replacement_predictions.jsonl",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "q60_only_replacement_traces.jsonl",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "q60_replacement_success",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "frozen_source:scr/baselines/bird_b0.py",
+      "passed": true,
+      "detail": "d7cb7e2497f34c944c5315a878d0b1b4363d47f7504031aad7b18fbc87a9ec5c"
+    },
+    {
+      "check": "frozen_source:scr/baselines/prompts/generalized-v1.txt",
+      "passed": true,
+      "detail": "c276c339c329be5949459f7076f73ddac2c11bbe009be7b2558649da6947e925"
+    },
+    {
+      "check": "frozen_source:scr/cli/run_bird_b0_eval.py",
+      "passed": true,
+      "detail": "3f786eae499ff1c91b15208fac109b06b63a3cb5e3acf20cf532dfa00c9da463"
+    },
+    {
+      "check": "frozen_source:uv.lock",
+      "passed": true,
+      "detail": "75fd2d1a6c5aa88c02dc70873c454c1edb3dc7cfd10ca15288fe28e8b3d62c92"
+    }
+  ],
+  "packaging": "Compact archive excludes credentials, datasets, virtualenvs, raw traces, HTML trace payloads, screenshots, local backups and machine-specific analysis scripts. Markdown links adapted for repository review. Prediction files and manifests copied byte-for-byte. Original score metadata is_full_split=false is retained; independently verified actual coverage is full400/full100."
+}

@@ -24,6 +24,7 @@ class ModelFactoryTests(unittest.TestCase):
             "langchain_google_genai": types.SimpleNamespace(ChatGoogleGenerativeAI=FakeModel),
             "langchain_deepseek": types.SimpleNamespace(ChatDeepSeek=FakeModel),
             "langchain_nvidia_ai_endpoints": types.SimpleNamespace(ChatNVIDIA=FakeModel),
+            "langchain_openai": types.SimpleNamespace(ChatOpenAI=FakeModel),
         }
         patcher = patch.dict(sys.modules, modules)
         patcher.start()
@@ -125,6 +126,37 @@ class ModelFactoryTests(unittest.TestCase):
                 build_model("other/model", provider="nvidia")
             self.assertNotIn("a-sensitive-placeholder", str(error.exception))
 
+    def test_openai_api_key_and_explicit_model(self):
+        with patch.dict(os.environ, {}, clear=True):
+            with self.assertRaisesRegex(ValueError, "--model"):
+                build_model(provider="openai")
+            with self.assertRaisesRegex(ValueError, "OPENAI_API_KEY"):
+                build_model("gpt-example", provider="openai")
+        with patch.dict(os.environ, {"OPENAI_API_KEY": "mock-key"}, clear=True):
+            kwargs = build_model("gpt-example", provider="openai",
+                                 temperature=None, max_tokens=128, timeout=20).kwargs
+            self.assertEqual(kwargs, {
+                "model": "gpt-example", "use_responses_api": True,
+                "temperature": None, "max_tokens": 128,
+                "timeout": 20, "max_retries": 0,
+            })
+
+    def test_siwc_requires_explicit_model_but_not_api_key(self):
+        with patch.dict(os.environ, {}, clear=True):
+            with self.assertRaisesRegex(ValueError, "--model"):
+                build_model(provider="chatgpt-siwc")
+            model = build_model("account-model", provider="chatgpt-siwc", timeout=45)
+        self.assertEqual(model.model, "account-model")
+        self.assertEqual(model.timeout, 45)
+
+    def test_explicit_siwc_effort_and_provider_validation(self):
+        model = build_model("gpt-6-luna", provider="chatgpt-siwc", reasoning_effort="none")
+        self.assertEqual(model.reasoning_effort, "none")
+        with self.assertRaisesRegex(ValueError, "requires chatgpt-siwc"):
+            build_model(reasoning_effort="none")
+        with self.assertRaisesRegex(ValueError, "Unsupported reasoning_effort"):
+            build_model("gpt-6-luna", provider="chatgpt-siwc", reasoning_effort="typo")
+
     def test_no_silent_cloud_fallback(self):
         with patch.dict(os.environ, {}, clear=True):
             with self.assertRaisesRegex(ValueError, "GOOGLE_API_KEY"):
@@ -188,7 +220,7 @@ class ModelFactoryTests(unittest.TestCase):
 
     def test_input_validation(self):
         invalid = [
-            ({"provider": "openai"}, "Unsupported model provider"),
+            ({"provider": "unknown-provider"}, "Unsupported model provider"),
             ({"provider": ""}, "Unsupported model provider"),
             ({"model_name": " "}, "model_name"),
             ({"num_ctx": 0}, "num_ctx"),

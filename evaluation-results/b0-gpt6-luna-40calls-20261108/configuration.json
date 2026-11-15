@@ -1,0 +1,14 @@
+{
+  "provider": "chatgpt-siwc",
+  "model": "gpt-6-luna",
+  "requested_reasoning_effort": "none",
+  "max_model_calls": 40,
+  "max_total_tool_calls": 40,
+  "max_sql_executions": 20,
+  "recursion_limit": 200,
+  "request_timeout_seconds": 300,
+  "scoring_timeout_seconds": 600,
+  "expected_questions": 500,
+  "run_id": "gpt6-luna-none-40calls-001",
+  "selection_id": "full-500-40calls-20261108"
+}

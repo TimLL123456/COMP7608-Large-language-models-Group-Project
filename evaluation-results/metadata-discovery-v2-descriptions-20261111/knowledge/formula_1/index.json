@@ -1,0 +1,1692 @@
+{
+  "n_033f111c2cfd24227de34b06": {
+    "concept_id": "url",
+    "keywords": [
+      "constructors",
+      "url",
+      "website",
+      "constructor"
+    ],
+    "note_id": "n_033f111c2cfd24227de34b06",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "ffa71a2dafd6eefad2cbad971f88530bec0522616c6026a5f0dbc3f263b38524",
+    "source_refs": [
+      "schema:constructors DDL and column list"
+    ],
+    "status": "provisional",
+    "summary": "URL field recorded on a constructor identity record; exact destination purpose is not verified.",
+    "table_name": "constructors",
+    "title": "Constructor URL"
+  },
+  "n_040ec124f5a87be8b5584f22": {
+    "concept_id": "q3",
+    "keywords": [
+      "qualifying",
+      "q3",
+      "timing",
+      "session",
+      "mm:ss.mmm"
+    ],
+    "note_id": "n_040ec124f5a87be8b5584f22",
+    "note_type": "column",
+    "revision": 8,
+    "sha256": "4ec356eb5b091a1ab696e25895b9ad108039046c8c99a2a1952805a36b7b617b",
+    "source_refs": [
+      "schema:qualifying DDL q3 TEXT nullable and driverId foreign key to drivers.driverId",
+      "values:qualifying.q3 observed NULL, empty strings, and m:ss.mmm timing strings"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT timing field for a qualifying record's Q3 segment; observed timing strings, NULLs, and empty strings.",
+    "table_name": "qualifying",
+    "title": "Q3 qualifying time"
+  },
+  "n_05b8fd1bb76b58af38094720": {
+    "concept_id": "lng",
+    "keywords": [
+      "circuits",
+      "longitude",
+      "coordinate",
+      "location"
+    ],
+    "note_id": "n_05b8fd1bb76b58af38094720",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "bb88b2d7d281259d8a88efcbde0f41c38611a166c5b035b34789464355d8198b",
+    "source_refs": [
+      "schema:circuits DDL (lng REAL nullable)"
+    ],
+    "status": "provisional",
+    "summary": "Longitude coordinate stored as nullable REAL for a circuit; coordinate reference convention is not specified in schema.",
+    "table_name": "circuits",
+    "title": "Circuit longitude"
+  },
+  "n_07597c5056fbe21ce0d3e00f": {
+    "concept_id": "circuitId",
+    "keywords": [
+      "races",
+      "circuit",
+      "circuitid",
+      "relationship"
+    ],
+    "note_id": "n_07597c5056fbe21ce0d3e00f",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "bfc45057ac11eb0ced23bafd60a790faf21e3fa79f481fb3111022b60694646c",
+    "source_refs": [
+      "schema:races DDL and foreign key circuitId references circuits.circuitId"
+    ],
+    "status": "provisional",
+    "summary": "Circuit ID recorded for each race event; schema references circuits.circuitId.",
+    "table_name": "races",
+    "title": "Race circuit identifier"
+  },
+  "n_09ca0c8b4ea5e24d1d16d8e6": {
+    "concept_id": "lap",
+    "keywords": [
+      "pitstops",
+      "lap",
+      "pit stop",
+      "race"
+    ],
+    "note_id": "n_09ca0c8b4ea5e24d1d16d8e6",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "0e5f588ac28e0beef2a2d1a4bb94aa83f5bdfe3b37dde7dff98421dc6ed7b510",
+    "source_refs": [
+      "schema:pitStops DDL and column list"
+    ],
+    "status": "provisional",
+    "summary": "Lap number recorded for a pit-stop event; required INTEGER field in pitStops.",
+    "table_name": "pitStops",
+    "title": "Pit-stop lap number"
+  },
+  "n_0defee36c01422192085a2d8": {
+    "concept_id": "laps",
+    "keywords": [
+      "results",
+      "laps",
+      "completed laps",
+      "race distance",
+      "finish"
+    ],
+    "note_id": "n_0defee36c01422192085a2d8",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "e2cc83eba8d1d4b5c8071778d21bdeb7313b6af7235e9623d1a5193a72150247",
+    "source_refs": [
+      "schema:results DDL (laps INTEGER default 0 not null)",
+      "values:results 1988 Australian Grand Prix includes results at 82 laps and a did-not-prequalify entry at 0 laps",
+      "values:results position=1 winner rows and matching laps observed in sampled 2007-2009 races"
+    ],
+    "status": "provisional",
+    "summary": "Integer lap count associated with a race result; schema default 0, not null.",
+    "table_name": "results",
+    "title": "Result laps completed"
+  },
+  "n_1676932b5727910718d31193": {
+    "concept_id": "positionText",
+    "keywords": [
+      "results",
+      "positiontext",
+      "result position",
+      "outcome code",
+      "classification"
+    ],
+    "note_id": "n_1676932b5727910718d31193",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "b90a0d52253e6794746825359538b21b72c5252e2625589ecdbbc46cf289fff7",
+    "source_refs": [
+      "schema:results DDL positionText TEXT NOT NULL DEFAULT ''",
+      "values:results observed numeric and nonnumeric positionText categories"
+    ],
+    "status": "provisional",
+    "summary": "Text representation of the recorded race-result position or outcome; numeric places and nonnumeric codes can occur.",
+    "table_name": "results",
+    "title": "Result position text"
+  },
+  "n_17dc35df8ff1a5a6304d9e62": {
+    "concept_id": "fastestLapSpeed",
+    "keywords": [
+      "fastest lap",
+      "speed",
+      "result",
+      "km/h"
+    ],
+    "note_id": "n_17dc35df8ff1a5a6304d9e62",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "decda19730fc0988c7ccc31aa65801f3d4a950470434d29482540d3e3aa1e49e",
+    "source_refs": [
+      "schema:results DDL fastestLapSpeed TEXT",
+      "schema:results foreign key driverId references drivers.driverId",
+      "values:results fastestLapSpeed blank count and nonblank character-format checks",
+      "description: question evidence describes speed in km/h (not independently verified)"
+    ],
+    "status": "provisional",
+    "summary": "TEXT average-speed value attached to a race result; valid nonblank observed values use numeric formatting, with many records blank.",
+    "table_name": "results",
+    "title": "Fastest lap speed"
+  },
+  "n_1894f74c9279938dff08d55d": {
+    "concept_id": "time",
+    "keywords": [
+      "results",
+      "time",
+      "elapsed",
+      "time gap",
+      "finish",
+      "second place"
+    ],
+    "note_id": "n_1894f74c9279938dff08d55d",
+    "note_type": "column",
+    "revision": 5,
+    "sha256": "f2efed577071926033cda8c163db6b5b3d5fbe5a58a03f3288952cc432daf1e5",
+    "source_refs": [
+      "schema:results DDL time nullable TEXT",
+      "values:results Chinese Grand Prix 2004–2009 rows where positionOrder=2"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT result timing; observed classified second-place rows show relative gaps, but general interpretation rules remain unverified.",
+    "table_name": "results",
+    "title": "Result elapsed time or gap"
+  },
+  "n_189625b0afee6d36b7956242": {
+    "concept_id": "position",
+    "keywords": [
+      "driverstandings",
+      "position",
+      "rank",
+      "standings",
+      "race"
+    ],
+    "note_id": "n_189625b0afee6d36b7956242",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "19981f617531b4d40e27e02202049f5e40c0c0297646c3f6381adc50bf7cf15c",
+    "source_refs": [
+      "schema:driverStandings DDL and column list"
+    ],
+    "status": "provisional",
+    "summary": "Integer position value recorded on a race-linked driver standings record; nullable in the schema.",
+    "table_name": "driverStandings",
+    "title": "Driver standings position"
+  },
+  "n_1b3ab617b51a096269b81bb2": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "lap timing",
+      "race",
+      "driver",
+      "lap",
+      "time",
+      "milliseconds"
+    ],
+    "note_id": "n_1b3ab617b51a096269b81bb2",
+    "note_type": "table",
+    "revision": 2,
+    "sha256": "b7264d39c250b7ef19e0f852a86fc2e991b99192cad7c417c2755059982c6afc",
+    "source_refs": [
+      "schema:lapTimes DDL and foreign keys"
+    ],
+    "status": "provisional",
+    "summary": "Lap timing rows associate race, driver and lap number with position and recorded lap time text/milliseconds.",
+    "table_name": "lapTimes",
+    "title": "Lap-by-lap timing records"
+  },
+  "n_1d863ce19aafbaacbb92904e": {
+    "concept_id": "points",
+    "keywords": [
+      "constructorresults",
+      "points",
+      "constructor",
+      "race",
+      "result"
+    ],
+    "note_id": "n_1d863ce19aafbaacbb92904e",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "1c712fab8228de52a2b563f215cc9c3337e76b6f4d77b4af72e09e4beb4740f8",
+    "source_refs": [
+      "schema:constructorResults DDL"
+    ],
+    "status": "provisional",
+    "summary": "REAL points field in constructor race result records.",
+    "table_name": "constructorResults",
+    "title": "Constructor result points"
+  },
+  "n_20d428eeab1340c02fb44eec": {
+    "concept_id": "raceId",
+    "keywords": [
+      "races",
+      "raceid",
+      "identifier",
+      "event",
+      "foreign key"
+    ],
+    "note_id": "n_20d428eeab1340c02fb44eec",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "bcb2616836ac68f5a9f6859eaa267218008699ec88db1c67807eb0c1c877b43d",
+    "source_refs": [
+      "schema:races DDL",
+      "schema:qualifying foreign keys"
+    ],
+    "status": "provisional",
+    "summary": "INTEGER primary-key identifier for a race event, referenced by qualifying records and other event data.",
+    "table_name": "races",
+    "title": "Race event identifier"
+  },
+  "n_2186ec96c56319db7503ab09": {
+    "concept_id": "dob",
+    "keywords": [
+      "drivers",
+      "dob",
+      "date of birth",
+      "birth year"
+    ],
+    "note_id": "n_2186ec96c56319db7503ab09",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "132c97d701e5074455046766fa448f0bffe99f09b2c913178d13f981d98c3c1f",
+    "source_refs": [
+      "schema:drivers DDL dob DATE nullable",
+      "values:drivers nonnull count, observed range, and YYYY-MM-DD format check"
+    ],
+    "status": "provisional",
+    "summary": "Nullable DATE field recording a driver's date of birth; observed nonnull values use YYYY-MM-DD form.",
+    "table_name": "drivers",
+    "title": "Driver date of birth"
+  },
+  "n_22bbe8233206bf3c75d8f8af": {
+    "concept_id": "q2",
+    "keywords": [
+      "qualifying",
+      "q2",
+      "session",
+      "timing"
+    ],
+    "note_id": "n_22bbe8233206bf3c75d8f8af",
+    "note_type": "column",
+    "revision": 4,
+    "sha256": "ffdd7642ce6818034a33bf57036777c91927b5d4ce0f9e78511417ee8fe0233c",
+    "source_refs": [
+      "schema:qualifying DDL (q2 TEXT)",
+      "values:qualifying q2 values for raceId 981 include M:SS.mmm strings, empty strings and NULLs"
+    ],
+    "status": "provisional",
+    "summary": "Q2 timing text on a qualifying record; nullable TEXT with observed M:SS.mmm values, empty strings and NULLs.",
+    "table_name": "qualifying",
+    "title": "Q2 qualifying time"
+  },
+  "n_2df665705e461a72c788619d": {
+    "concept_id": "position",
+    "keywords": [
+      "results",
+      "finishing position",
+      "winner",
+      "position",
+      "race"
+    ],
+    "note_id": "n_2df665705e461a72c788619d",
+    "note_type": "column",
+    "revision": 4,
+    "sha256": "5f80c70861073c26b53d9b5d04cff8cb1f121fe092f8b003b4496fe1181bfc39",
+    "source_refs": [
+      "schema:results DDL (position INTEGER nullable)",
+      "values:results grouped results joined by raceId, with position=1 winner rows observed"
+    ],
+    "status": "provisional",
+    "summary": "Nullable INTEGER finishing place; position=1 identifies recorded winner rows in examined data; broader winner conventions remain unverified.",
+    "table_name": "results",
+    "title": "Result finishing position"
+  },
+  "n_2ec43914a15cec529af6178a": {
+    "concept_id": "raceId",
+    "keywords": [
+      "result race event reference id"
+    ],
+    "note_id": "n_2ec43914a15cec529af6178a",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "b7bfb1957d8eceb341b65aadb4fc3b01097e5c53e3937944e1c4cfe497d1c37b",
+    "source_refs": [
+      "schema:results DDL foreign key raceId references races.raceId"
+    ],
+    "status": "provisional",
+    "summary": "Race identifier referenced by each result record; INTEGER and a foreign key to races.raceId.",
+    "table_name": "results",
+    "title": "Result race reference"
+  },
+  "n_2faec522611a9bb52d5f11e1": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "constructors",
+      "team",
+      "name",
+      "nationality",
+      "url",
+      "constructorid"
+    ],
+    "note_id": "n_2faec522611a9bb52d5f11e1",
+    "note_type": "table",
+    "revision": 3,
+    "sha256": "eb5f75963734709a52a4a20067ecf828846d1d05edbfff085b4ef41f2e01b747",
+    "source_refs": [
+      "schema:constructors DDL and column list",
+      "values:constructors observed nationality values include Italian"
+    ],
+    "status": "provisional",
+    "summary": "Constructor identity records include name, nullable nationality, and URL fields.",
+    "table_name": "constructors",
+    "title": "Constructors"
+  },
+  "n_3451b6fc6736a051092a0dd9": {
+    "concept_id": "points",
+    "keywords": [
+      "constructorstandings",
+      "points",
+      "constructor",
+      "race",
+      "standings",
+      "cumulative"
+    ],
+    "note_id": "n_3451b6fc6736a051092a0dd9",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "5c3b9029455dcf8abeca65dcda57c3bd5dda694f0ee584dc76a86b2f86bacc42",
+    "source_refs": [
+      "schema:constructorStandings DDL",
+      "schema:races DDL",
+      "values:constructorStandings points and rounds for Ferrari 2016 and Italian constructor rows across years"
+    ],
+    "status": "provisional",
+    "summary": "Non-null REAL points value on a constructor standings snapshot associated with a race event.",
+    "table_name": "constructorStandings",
+    "title": "Constructor standings points"
+  },
+  "n_35ca02fc920b257b8d0802e1": {
+    "concept_id": "driverId",
+    "keywords": [
+      "qualifying",
+      "driverid",
+      "driver",
+      "foreign key"
+    ],
+    "note_id": "n_35ca02fc920b257b8d0802e1",
+    "note_type": "column",
+    "revision": 4,
+    "sha256": "d81438164f23c2428841527aa70d0aa755285a3d2453c560f1df2c261f3c865d",
+    "source_refs": [
+      "schema:qualifying DDL (driverId INTEGER default 0 not null)",
+      "schema:qualifying foreign key driverId->drivers.driverId"
+    ],
+    "status": "provisional",
+    "summary": "Driver ID on a qualifying record; foreign key references drivers.driverId.",
+    "table_name": "qualifying",
+    "title": "Qualifying driver identifier"
+  },
+  "n_35dbd4406dd01f720f3d550b": {
+    "concept_id": "stop",
+    "keywords": [
+      "pitstops stop sequence number"
+    ],
+    "note_id": "n_35dbd4406dd01f720f3d550b",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "707991b9483ebe4fd7202c8a32e062fb34c68ac684bd4095ca5e9f71c2dea8d1",
+    "source_refs": [
+      "schema:pitStops DDL and composite primary key"
+    ],
+    "status": "provisional",
+    "summary": "Stop sequence value for a driver's pit-stop record within a race; INTEGER, part of composite primary key.",
+    "table_name": "pitStops",
+    "title": "Pit-stop sequence number"
+  },
+  "n_360a778e18f095e88da77b9c": {
+    "concept_id": "positionOrder",
+    "keywords": [
+      "results",
+      "positionorder",
+      "finishing order",
+      "positiontext",
+      "race"
+    ],
+    "note_id": "n_360a778e18f095e88da77b9c",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "ddc59ee9f61609d704d01c5f42488f3d69acf87c78d6d4a641bb06f2c9c85ec8",
+    "source_refs": [
+      "schema:results DDL positionOrder INTEGER NOT NULL DEFAULT 0",
+      "description:results.csv:9 finishing order of positions",
+      "values:results raceId 780 positionOrder and positionText values"
+    ],
+    "status": "provisional",
+    "summary": "Integer ordering field for race records; numeric positionText values 1–8 mark the eight classified finishers observed at 1957 British GP.",
+    "table_name": "results",
+    "title": "Result finishing order"
+  },
+  "n_367d43d87120f111407bb823": {
+    "concept_id": "points",
+    "keywords": [
+      "results",
+      "points",
+      "score",
+      "race",
+      "constructor"
+    ],
+    "note_id": "n_367d43d87120f111407bb823",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "74e8678cec18dd280b7920c09293296ceb92de70351fbf7dc95ac4de21777c9f",
+    "source_refs": [
+      "schema:results DDL and foreign keys"
+    ],
+    "status": "provisional",
+    "summary": "Points recorded for an individual constructor-driver race result.",
+    "table_name": "results",
+    "title": "Result points"
+  },
+  "n_37dc1fb2a03f257139608703": {
+    "concept_id": "surname",
+    "keywords": [
+      "driver",
+      "surname",
+      "family name"
+    ],
+    "note_id": "n_37dc1fb2a03f257139608703",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "ec64672f4523a21f44ca537fa4b2a7e90d86378e9f12f78d0c75932318f8b075",
+    "source_refs": [
+      "schema:drivers DDL (surname TEXT default '' not null)"
+    ],
+    "status": "provisional",
+    "summary": "Driver’s surname text stored in the drivers record.",
+    "table_name": "drivers",
+    "title": "Driver surname"
+  },
+  "n_3c34a6db7c09c1a7733bafb6": {
+    "concept_id": "constructorId",
+    "keywords": [
+      "results",
+      "constructorid",
+      "constructor",
+      "relationship"
+    ],
+    "note_id": "n_3c34a6db7c09c1a7733bafb6",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "365c8a4017758a0eb7c001f552622b208abc5e56d501b8e5518f3346d6cdd885",
+    "source_refs": [
+      "schema:results DDL and foreign keys"
+    ],
+    "status": "provisional",
+    "summary": "Constructor ID associated with a result record, referencing constructors.constructorId.",
+    "table_name": "results",
+    "title": "Result constructor identifier"
+  },
+  "n_3cea05de8abffb33ac55e602": {
+    "concept_id": "code",
+    "keywords": [
+      "drivers",
+      "code",
+      "abbreviation",
+      "identifier"
+    ],
+    "note_id": "n_3cea05de8abffb33ac55e602",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "807337188bd9c6d60be10817ae7f41e178d46eac0e8a8b6df5371a7ad34a782f",
+    "source_refs": [
+      "schema:drivers DDL (code TEXT)",
+      "description:drivers.csv:4"
+    ],
+    "status": "provisional",
+    "summary": "Nullable text field for a driver's abbreviated code; source description says null or empty means no code.",
+    "table_name": "drivers",
+    "title": "Driver abbreviation code"
+  },
+  "n_3f3ce7c411fa4a23ff320ff9": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "circuits",
+      "name",
+      "country",
+      "location",
+      "circuitid"
+    ],
+    "note_id": "n_3f3ce7c411fa4a23ff320ff9",
+    "note_type": "table",
+    "revision": 1,
+    "sha256": "97196cbb7d0e399f924eddc5a637addfb6a231c404571023751b3f74bea98a3e",
+    "source_refs": [
+      "schema:circuits DDL and column list",
+      "description:circuits.csv:1",
+      "description:circuits.csv:2",
+      "description:circuits.csv:3"
+    ],
+    "status": "provisional",
+    "summary": "Circuit records with identifying name and location fields, including country; circuitId is the primary key.",
+    "table_name": "circuits",
+    "title": "Formula 1 circuits"
+  },
+  "n_4219bcf0b2b4a6bf11d271c0": {
+    "concept_id": "name",
+    "keywords": [
+      "races",
+      "name",
+      "race event",
+      "canadian grand prix"
+    ],
+    "note_id": "n_4219bcf0b2b4a6bf11d271c0",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "0c646c209da2ac5884504c09b4a8158826e46e1a29500a09e001bb095e2f5205",
+    "source_refs": [
+      "schema:races DDL",
+      "values:races records with name Canadian Grand Prix and circuits in Canada"
+    ],
+    "status": "provisional",
+    "summary": "Text title stored for a race event; observed Canadian Grand Prix event names use this label.",
+    "table_name": "races",
+    "title": "Race event name"
+  },
+  "n_4773f74693363e6737924668": {
+    "concept_id": "url",
+    "keywords": [
+      "circuits",
+      "url",
+      "information",
+      "link"
+    ],
+    "note_id": "n_4773f74693363e6737924668",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "04d10cf3727231c8c9926ee2fea3b89fe55184e6860f4a97c4fd9eff2d5f8b91",
+    "source_refs": [
+      "schema:circuits DDL (url TEXT default '' not null unique)"
+    ],
+    "status": "provisional",
+    "summary": "URL text stored with each circuit record, schema-defined non-null and unique.",
+    "table_name": "circuits",
+    "title": "Circuit information URL"
+  },
+  "n_49fa010da048d28c6ec18a70": {
+    "concept_id": "driverRef",
+    "keywords": [
+      "driver",
+      "reference name",
+      "driverref",
+      "identifier"
+    ],
+    "note_id": "n_49fa010da048d28c6ec18a70",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "ee4f2fdbb080aef879b9878b509a2122b9c91dca2ed804574a2b094b9b424447",
+    "source_refs": [
+      "schema:drivers DDL (driverRef TEXT NOT NULL, no uniqueness constraint)",
+      "description:drivers.csv:2"
+    ],
+    "status": "provisional",
+    "summary": "Text reference identifier stored on a driver record; schema does not declare it unique.",
+    "table_name": "drivers",
+    "title": "Driver reference name"
+  },
+  "n_4e14d04cc3f1dbdece2ed154": {
+    "concept_id": "url",
+    "keywords": [
+      "drivers",
+      "url",
+      "information page",
+      "link"
+    ],
+    "note_id": "n_4e14d04cc3f1dbdece2ed154",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "88767708635517d198e16c77e43c3723439351027e934f0c0b680e4e1bbfaab6",
+    "source_refs": [
+      "schema:drivers DDL (url TEXT default '' not null unique)"
+    ],
+    "status": "provisional",
+    "summary": "Driver-record URL stored as unique, non-null TEXT; page content/purpose beyond URL field is not verified.",
+    "table_name": "drivers",
+    "title": "Driver information-page URL"
+  },
+  "n_4f52457fa7f87176b2ca5c49": {
+    "concept_id": "milliseconds",
+    "keywords": [
+      "lap timing",
+      "milliseconds",
+      "lap time"
+    ],
+    "note_id": "n_4f52457fa7f87176b2ca5c49",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "d74bd948b1f91bcc0a515f21112f69ffc8b70ed79f2b2a6c2da1233624c7813d",
+    "source_refs": [
+      "schema:lapTimes DDL"
+    ],
+    "status": "provisional",
+    "summary": "Integer milliseconds field on each lap timing record; nullable per schema.",
+    "table_name": "lapTimes",
+    "title": "Lap time milliseconds"
+  },
+  "n_56455f00a27af4c14edbbba8": {
+    "concept_id": "q1",
+    "keywords": [
+      "qualifying",
+      "q1",
+      "timing",
+      "session"
+    ],
+    "note_id": "n_56455f00a27af4c14edbbba8",
+    "note_type": "column",
+    "revision": 4,
+    "sha256": "014f638a8393fb63248ba11f0b5681771609bffb68484b1414f1dc258cb093e5",
+    "source_refs": [
+      "schema:qualifying DDL (q1 TEXT)",
+      "description:qualifying.csv:7",
+      "values:qualifying q1 formatting and null/non-colon scan"
+    ],
+    "status": "provisional",
+    "summary": "Q1 time text on qualifying rows; source describes minutes/seconds, with observed M:SS.mmm values and nulls.",
+    "table_name": "qualifying",
+    "title": "Q1 qualifying time"
+  },
+  "n_5a1dda0d182c0d6a8ba36daf": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "results",
+      "race",
+      "driver",
+      "constructor",
+      "finish",
+      "position",
+      "participation",
+      "start"
+    ],
+    "note_id": "n_5a1dda0d182c0d6a8ba36daf",
+    "note_type": "table",
+    "revision": 5,
+    "sha256": "c8a04a3dd07ed65e6861c55ac1e046ee693496e9a4d2267738d720f55a916548",
+    "source_refs": [
+      "schema:results DDL and foreign keys",
+      "values:results row and distinct-pair counts",
+      "values:duplicate driver-race status observations"
+    ],
+    "status": "provisional",
+    "summary": "Race result entries link events, drivers and constructors; duplicate driver-race records and non-starters occur.",
+    "table_name": "results",
+    "title": "Race results"
+  },
+  "n_6d02462957503deaa0fc2b0e": {
+    "concept_id": "duration",
+    "keywords": [
+      "pitstops duration stop seconds"
+    ],
+    "note_id": "n_6d02462957503deaa0fc2b0e",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "086e5eb55111f9c93f17a4a9d587c82024f52c2bae0ca303e602fdf5d352f883",
+    "source_refs": [
+      "schema:pitStops DDL column duration TEXT",
+      "description:pitStops.csv:6"
+    ],
+    "status": "provisional",
+    "summary": "TEXT duration field for recorded pit stops; description identifies it as duration time in seconds, but encoding/precision details are not verified.",
+    "table_name": "pitStops",
+    "title": "Pit-stop duration"
+  },
+  "n_6f6d0af5023f86a29e5c606f": {
+    "concept_id": "statusId",
+    "keywords": [
+      "status",
+      "statusid",
+      "results",
+      "lookup",
+      "identifier"
+    ],
+    "note_id": "n_6f6d0af5023f86a29e5c606f",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "cb94e7d9ef7c58d04af32ad402d6f346bbf9db170bd7d5606c5a2b6c84f8fa8c",
+    "source_refs": [
+      "schema:status DDL",
+      "schema:results foreign key statusId->status.statusId",
+      "values:status statusId 54 maps to Withdrew"
+    ],
+    "status": "provisional",
+    "summary": "Integer primary-key identifier for a result status label; results.statusId references it.",
+    "table_name": "status",
+    "title": "Status lookup identifier"
+  },
+  "n_705a86c197323457373293b0": {
+    "concept_id": "milliseconds",
+    "keywords": [
+      "pitstops milliseconds duration timing conversion"
+    ],
+    "note_id": "n_705a86c197323457373293b0",
+    "note_type": "column",
+    "revision": 5,
+    "sha256": "3d244b788e9d8298ec36c3f8ffa006a68adbe947403d399a02ca0b5edb1f93e9",
+    "source_refs": [
+      "schema:pitStops DDL column milliseconds INTEGER nullable",
+      "description:pitStops.csv:7",
+      "values:pitStops duration and milliseconds sampled rows"
+    ],
+    "status": "provisional",
+    "summary": "Nullable INTEGER timing field paired with duration text; observed values match seconds converted to milliseconds; interval boundaries undocumented.",
+    "table_name": "pitStops",
+    "title": "Pit-stop milliseconds timing"
+  },
+  "n_71220379518a2da2f75e398c": {
+    "concept_id": "lap",
+    "keywords": [
+      "lap timing",
+      "lap number",
+      "race lap"
+    ],
+    "note_id": "n_71220379518a2da2f75e398c",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "bbe2c36dce2d5b33914d03553a36c59c709522cdcd0db5f663a54c2cc2afa2b4",
+    "source_refs": [
+      "schema:lapTimes DDL"
+    ],
+    "status": "provisional",
+    "summary": "Lap number associated with a lap timing archive record.",
+    "table_name": "lapTimes",
+    "title": "Lap number"
+  },
+  "n_74e9e47722381cc3722ecb29": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "races",
+      "race event",
+      "raceid",
+      "season",
+      "year",
+      "circuit",
+      "name"
+    ],
+    "note_id": "n_74e9e47722381cc3722ecb29",
+    "note_type": "table",
+    "revision": 6,
+    "sha256": "261ec56df42a45299e9da49e597eb3f5ecf0b8d605643cb6fd68d9eb29ffe9c5",
+    "source_refs": [
+      "schema:races DDL and column list",
+      "schema:races foreign keys year->seasons.year and circuitId->circuits.circuitId",
+      "schema:qualifying foreign key raceId->races.raceId"
+    ],
+    "status": "provisional",
+    "summary": "Race-event metadata with raceId primary key and season/year, round, circuit, name, date, time and URL fields.",
+    "table_name": "races",
+    "title": "Race events"
+  },
+  "n_76364909ad95d582218fb85d": {
+    "concept_id": "constructorId",
+    "keywords": [
+      "constructors",
+      "constructorid",
+      "primary key",
+      "results"
+    ],
+    "note_id": "n_76364909ad95d582218fb85d",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "3d42d53890179d80003519a27f1b4ad874c34cb1048f107cee607a7cf7fd7404",
+    "source_refs": [
+      "schema:constructors DDL",
+      "schema:results DDL foreign key"
+    ],
+    "status": "provisional",
+    "summary": "INTEGER primary key identifying constructor identity records; results.constructorId references it.",
+    "table_name": "constructors",
+    "title": "Constructor identifier"
+  },
+  "n_79fc0d71a71c33195a501a8e": {
+    "concept_id": "wins",
+    "keywords": [
+      "driverstandings",
+      "wins",
+      "driver",
+      "race",
+      "cumulative",
+      "standings"
+    ],
+    "note_id": "n_79fc0d71a71c33195a501a8e",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "5200d68b508c9d723dba68d7a9f950844a1be1d6ec5800b4d74f18f4086270b0",
+    "source_refs": [
+      "schema:driverStandings DDL",
+      "values:driverStandings rows for driverId 20 ordered by raceId"
+    ],
+    "status": "provisional",
+    "summary": "Wins field behaves as cumulative driver win total across ordered race-linked standings snapshots in observed data.",
+    "table_name": "driverStandings",
+    "title": "Recorded wins in driver standings"
+  },
+  "n_7a3a1d8964b52fa02772f5c5": {
+    "concept_id": "rank",
+    "keywords": [
+      "results",
+      "rank",
+      "fastest lap",
+      "race"
+    ],
+    "note_id": "n_7a3a1d8964b52fa02772f5c5",
+    "note_type": "column",
+    "revision": 4,
+    "sha256": "fb2dc84a8d781f5448e163b28841ad3315a039158f2aaf9c21b6591047dd1b7f",
+    "source_refs": [
+      "schema:results DDL",
+      "description:results.csv:15-16",
+      "values:results rank=1 per raceId"
+    ],
+    "status": "provisional",
+    "summary": "INTEGER result rank; observed 242 races each have one rank 1 result with fastestLapTime recorded.",
+    "table_name": "results",
+    "title": "Fastest-lap rank field"
+  },
+  "n_7b07dbcb114dba2d697192d8": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "qualifying",
+      "session",
+      "q1",
+      "q2",
+      "q3",
+      "driver",
+      "constructor",
+      "race"
+    ],
+    "note_id": "n_7b07dbcb114dba2d697192d8",
+    "note_type": "table",
+    "revision": 4,
+    "sha256": "8bcf358f6f4fdc11604bf504e55b29b866531cdfbb608a831185dae8dc623566",
+    "source_refs": [
+      "schema:qualifying DDL, column list and foreign keys",
+      "values:qualifying observed null and empty timing entries"
+    ],
+    "status": "provisional",
+    "summary": "Qualifying records connect race, driver and constructor IDs with position and Q1–Q3 timing fields.",
+    "table_name": "qualifying",
+    "title": "Qualifying session results"
+  },
+  "n_7bf68a4a2b7c8639dcda5527": {
+    "concept_id": "position",
+    "keywords": [
+      "qualifying",
+      "position",
+      "rank",
+      "grid"
+    ],
+    "note_id": "n_7bf68a4a2b7c8639dcda5527",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "5a3b309eaf135e19cb7b551b6ccc4dd727c01b8aa97fa7939572999a24436f20",
+    "source_refs": [
+      "schema:qualifying DDL (position INTEGER)",
+      "schema:results DDL (grid INTEGER default 0 not null)"
+    ],
+    "status": "provisional",
+    "summary": "Nullable INTEGER position field on qualifying records; it is distinct from results.grid, the stored starting-grid position.",
+    "table_name": "qualifying",
+    "title": "Qualifying position"
+  },
+  "n_7c93b078e97def00c23f394e": {
+    "concept_id": "circuitRef",
+    "keywords": [
+      "circuits",
+      "circuit reference",
+      "circuitref",
+      "identifier",
+      "name"
+    ],
+    "note_id": "n_7c93b078e97def00c23f394e",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "46c41122404aec7a1d4e39430f0356650d19ffd52a1f34c16bc502472cebd4eb",
+    "source_refs": [
+      "schema:circuits DDL column circuitRef TEXT NOT NULL DEFAULT ''",
+      "schema:circuits foreign key linkage from races.circuitId",
+      "description:circuits.csv:2"
+    ],
+    "status": "provisional",
+    "summary": "TEXT field documented as the circuit reference name, usable as a circuit label; formatting and uniqueness are not verified.",
+    "table_name": "circuits",
+    "title": "Circuit reference name"
+  },
+  "n_7ee64d44fec392126753c2bc": {
+    "concept_id": "raceId",
+    "keywords": [
+      "qualifying",
+      "raceid",
+      "race",
+      "foreign key"
+    ],
+    "note_id": "n_7ee64d44fec392126753c2bc",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "4695b1a99a0b27c3907060bc31fa80a0a920efa1526dde30194ba4a1abdee855",
+    "source_refs": [
+      "schema:qualifying DDL (raceId INTEGER NOT NULL)",
+      "schema:qualifying foreign key raceId → races.raceId"
+    ],
+    "status": "provisional",
+    "summary": "Race ID associated with a qualifying record; schema foreign key targets races.raceId.",
+    "table_name": "qualifying",
+    "title": "Qualifying race identifier"
+  },
+  "n_819660a48f9608f5bc769483": {
+    "concept_id": "forename",
+    "keywords": [
+      "driver",
+      "forename",
+      "given name",
+      "identity"
+    ],
+    "note_id": "n_819660a48f9608f5bc769483",
+    "note_type": "column",
+    "revision": 4,
+    "sha256": "07a709490eecb75cb30a884eae35f71b56a56473ab26bd5d6c59eefe764e9a69",
+    "source_refs": [
+      "schema:drivers DDL",
+      "description:drivers.csv:5"
+    ],
+    "status": "provisional",
+    "summary": "Given-name text stored in each driver record; can combine with surname for a full name.",
+    "table_name": "drivers",
+    "title": "Driver forename"
+  },
+  "n_81b97bcc06fb70a7a549b770": {
+    "concept_id": "driverId",
+    "keywords": [
+      "results",
+      "driver",
+      "reference",
+      "foreign key",
+      "join"
+    ],
+    "note_id": "n_81b97bcc06fb70a7a549b770",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "13eee762c902ad1d4aae38abd4ca270a6e31500af878dba3fd097fb84cc95144",
+    "source_refs": [
+      "schema:results DDL",
+      "schema:results foreign key driverId references drivers.driverId"
+    ],
+    "status": "provisional",
+    "summary": "Driver identifier referenced by each result record; INTEGER and a foreign key to drivers.driverId.",
+    "table_name": "results",
+    "title": "Result driver reference"
+  },
+  "n_89e70a85809f2b47ab17235a": {
+    "concept_id": "time",
+    "keywords": [
+      "races",
+      "event time",
+      "time",
+      "timezone",
+      "start"
+    ],
+    "note_id": "n_89e70a85809f2b47ab17235a",
+    "note_type": "column",
+    "revision": 10,
+    "sha256": "fe6f2f9d48e593279cf6d2d6918668a7e66e99afa7a98616b4bd2caddbccd130",
+    "source_refs": [
+      "schema:races DDL time TEXT nullable",
+      "values:races aggregate non-NULL counts and observed time/year formats"
+    ],
+    "status": "provisional",
+    "summary": "Nullable race-associated TEXT clock values; some are HH:MM:SS, but start-time and venue-local semantics are not documented or confirmed.",
+    "table_name": "races",
+    "title": "Race event time field"
+  },
+  "n_8b668b160eb0736ef59a5902": {
+    "concept_id": "status",
+    "keywords": [
+      "status",
+      "result",
+      "accident",
+      "fatal accident",
+      "outcome"
+    ],
+    "note_id": "n_8b668b160eb0736ef59a5902",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "1ef21ce073038bbe1a3fdc1e1de9e461b00305f6ed6f44d16d0e75f2795c170d",
+    "source_refs": [
+      "schema:status DDL",
+      "values:status status labels Accident and Fatal accident"
+    ],
+    "status": "provisional",
+    "summary": "Text label for a result status; values include Accident and the separate Fatal accident label.",
+    "table_name": "status",
+    "title": "Race result status label"
+  },
+  "n_9022d2c427f153f3316fcca3": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "driverstandings",
+      "driver",
+      "standings",
+      "points",
+      "wins",
+      "snapshots"
+    ],
+    "note_id": "n_9022d2c427f153f3316fcca3",
+    "note_type": "table",
+    "revision": 3,
+    "sha256": "4fc706018ac5f94f0008ce36d1f9664f4da0e95c351087e5103dadea51aa8cb2",
+    "source_refs": [
+      "schema:driverStandings DDL and foreign keys",
+      "values:driverStandings aggregate counts",
+      "values:driverStandings rows for driverId 20 ordered by raceId"
+    ],
+    "status": "provisional",
+    "summary": "Race-linked driver standings snapshots hold points and wins totals that rise or persist over ordered records in an observed driver sample.",
+    "table_name": "driverStandings",
+    "title": "Driver standings"
+  },
+  "n_90e0a64830b21ed25066fc07": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "pitstops",
+      "pit stop",
+      "race",
+      "driver",
+      "duration"
+    ],
+    "note_id": "n_90e0a64830b21ed25066fc07",
+    "note_type": "table",
+    "revision": 1,
+    "sha256": "4b6daab801c5823ad0e15a3a0d3adb8986a8f2bbb2d794f69c27559f7c4dfff1",
+    "source_refs": [
+      "schema:pitStops DDL and column list",
+      "schema:pitStops foreign keys raceId to races.raceId and driverId to drivers.driverId"
+    ],
+    "status": "provisional",
+    "summary": "Pit-stop event records linked to a race and driver, with stop sequence, lap, timing, duration and milliseconds.",
+    "table_name": "pitStops",
+    "title": "Pit stops"
+  },
+  "n_984f67eeda78179260997eff": {
+    "concept_id": "milliseconds",
+    "keywords": [
+      "results",
+      "elapsed time",
+      "milliseconds",
+      "winner",
+      "timing"
+    ],
+    "note_id": "n_984f67eeda78179260997eff",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "9c536a6c7e4cf9a6ea7ce2c0cd8674ed6c3d02a22f99e3933a4e825759e565ad",
+    "source_refs": [
+      "schema:results DDL (milliseconds INTEGER nullable)",
+      "values:2017 Azerbaijan Grand Prix results joined to races and drivers (winner time and cumulative milliseconds)"
+    ],
+    "status": "provisional",
+    "summary": "Nullable INTEGER timing value; race results include elapsed milliseconds for the winner and cumulative timing for classified finishers in observed races.",
+    "table_name": "results",
+    "title": "Result elapsed time in milliseconds"
+  },
+  "n_99a791d8cec55d9845bf9d44": {
+    "concept_id": "name",
+    "keywords": [
+      "circuits name full name"
+    ],
+    "note_id": "n_99a791d8cec55d9845bf9d44",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "27164da663ab9d26e7040328ecdab7bf77cbbfb72a11b62ef4211a296fd6d349",
+    "source_refs": [
+      "schema:circuits DDL column name TEXT",
+      "description:circuits.csv:3"
+    ],
+    "status": "provisional",
+    "summary": "TEXT full name for a circuit, as identified by the circuits schema description.",
+    "table_name": "circuits",
+    "title": "Circuit full name"
+  },
+  "n_9aa2aa9df88fcad49e2002cc": {
+    "concept_id": "constructorId",
+    "keywords": [
+      "qualifying",
+      "constructorid",
+      "constructor",
+      "foreign key"
+    ],
+    "note_id": "n_9aa2aa9df88fcad49e2002cc",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "f3a09c8b2e3c0a0706e06f773939073e6fe459f2a2a63df6df7e70d7f7f5ce47",
+    "source_refs": [
+      "schema:qualifying DDL constructorId INTEGER default 0 not null",
+      "schema:qualifying foreign key to constructors.constructorId"
+    ],
+    "status": "provisional",
+    "summary": "Constructor ID associated with a qualifying record; schema foreign key references constructors.constructorId.",
+    "table_name": "qualifying",
+    "title": "Qualifying constructor identifier"
+  },
+  "n_9c6f118370ee960fb3c8eeb0": {
+    "concept_id": "country",
+    "keywords": [
+      "circuits country geography location"
+    ],
+    "note_id": "n_9c6f118370ee960fb3c8eeb0",
+    "note_type": "column",
+    "revision": 4,
+    "sha256": "25966550976844d7614bb28e426ad5bde8cb58de3c8d077998240204e8409413",
+    "source_refs": [
+      "schema:circuits DDL (country TEXT nullable)",
+      "description:circuits.csv:5 (country of circuit)",
+      "values:circuits circuitId 8 Magny-Cours and 34 Paul Ricard have country France"
+    ],
+    "status": "provisional",
+    "summary": "Nullable text identifying a circuit's country; queried Grand Prix circuits include Paul Ricard and Magny-Cours in France.",
+    "table_name": "circuits",
+    "title": "Circuit country"
+  },
+  "n_9fbb263250cf58382040e2de": {
+    "concept_id": "driverId",
+    "keywords": [
+      "lap timing",
+      "driver identifier",
+      "driver"
+    ],
+    "note_id": "n_9fbb263250cf58382040e2de",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "be9ef06a9944035d86691e2327dfb6a05179a16a68787648b6d7be1956684ff0",
+    "source_refs": [
+      "schema:lapTimes DDL and foreign keys"
+    ],
+    "status": "provisional",
+    "summary": "Driver identifier on a lap timing record; foreign key to drivers.driverId.",
+    "table_name": "lapTimes",
+    "title": "Lap timing driver reference"
+  },
+  "n_a0cb96bf6f0087ea77afd858": {
+    "concept_id": "time",
+    "keywords": [
+      "lap timing",
+      "time",
+      "text"
+    ],
+    "note_id": "n_a0cb96bf6f0087ea77afd858",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "809ca9ac4a600ffc67056d731250b340985c3dd51258330d31fbaa33683bacb1",
+    "source_refs": [
+      "schema:lapTimes DDL"
+    ],
+    "status": "provisional",
+    "summary": "Text-form timing value on a lap timing record; nullable per schema.",
+    "table_name": "lapTimes",
+    "title": "Lap time text"
+  },
+  "n_a78ca454e27d55e76f12d007": {
+    "concept_id": "number",
+    "keywords": [
+      "qualifying",
+      "number",
+      "car number",
+      "entry"
+    ],
+    "note_id": "n_a78ca454e27d55e76f12d007",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "3b2cc1eb53abe67220c92fe2d669927b405bf340d887589e6fc3d3b439c15847",
+    "source_refs": [
+      "schema:qualifying DDL number INTEGER default 0 not null",
+      "schema:qualifying driverId foreign key to drivers.driverId",
+      "schema:drivers DDL nullable number"
+    ],
+    "status": "provisional",
+    "summary": "INTEGER car-number value recorded for a qualifying entry; schema defines default zero and non-null.",
+    "table_name": "qualifying",
+    "title": "Qualifying car number"
+  },
+  "n_aa80fea2e718070659a4f170": {
+    "concept_id": "grid",
+    "keywords": [
+      "results",
+      "grid",
+      "starting position",
+      "race"
+    ],
+    "note_id": "n_aa80fea2e718070659a4f170",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "5f934da26645dc0ce39bbf7d5389e45578fc3eb916e647254d8043469688a471",
+    "source_refs": [
+      "schema:results DDL (grid INTEGER default 0 not null)",
+      "schema:results foreign keys"
+    ],
+    "status": "provisional",
+    "summary": "INTEGER grid field on a race result; provides the recorded starting-grid position, distinct from qualifying position.",
+    "table_name": "results",
+    "title": "Race starting grid position"
+  },
+  "n_aecc65f0a8a9756799a53f2f": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "seasons",
+      "year",
+      "race calendar",
+      "url"
+    ],
+    "note_id": "n_aecc65f0a8a9756799a53f2f",
+    "note_type": "table",
+    "revision": 1,
+    "sha256": "5ff18733a3324c9585320aa7f7c197607fbd6a0a4f9f969e264485bc82fc6321",
+    "source_refs": [
+      "schema:seasons DDL"
+    ],
+    "status": "provisional",
+    "summary": "Season-year records linked from races.year; schema provides a primary-key year and season URL.",
+    "table_name": "seasons",
+    "title": "Season calendar records"
+  },
+  "n_b2e15464a51998752011d14a": {
+    "concept_id": "fastestLapTime",
+    "keywords": [
+      "results",
+      "fastest lap time",
+      "race",
+      "timing"
+    ],
+    "note_id": "n_b2e15464a51998752011d14a",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "23835602277a55dae719db184a6e8725cbbf16003962692687b6b90efa164ad4",
+    "source_refs": [
+      "schema:results DDL fastestLapTime TEXT nullable",
+      "schema:results raceId field",
+      "values:results observed fastestLapTime formats"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT fastest-lap time attached to a race result; observed format m:ss.mmm.",
+    "table_name": "results",
+    "title": "Fastest lap time recorded on result"
+  },
+  "n_b6515ac4d5905b39c4334cd2": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "drivers",
+      "identity",
+      "driverid",
+      "forename",
+      "surname",
+      "dob"
+    ],
+    "note_id": "n_b6515ac4d5905b39c4334cd2",
+    "note_type": "table",
+    "revision": 3,
+    "sha256": "ed6c7683e17d9402611a06b43c464814ebca9c464621df2ea4a3744a3520375f",
+    "source_refs": [
+      "schema:drivers DDL and column list",
+      "schema:drivers primary key",
+      "schema:results foreign key driverId references drivers.driverId"
+    ],
+    "status": "provisional",
+    "summary": "Driver identity and descriptive attribute records, including name fields and nullable date of birth.",
+    "table_name": "drivers",
+    "title": "Drivers"
+  },
+  "n_b91a68da86793685cfbcc5dc": {
+    "concept_id": "raceId",
+    "keywords": [
+      "lap timing",
+      "race identifier",
+      "race"
+    ],
+    "note_id": "n_b91a68da86793685cfbcc5dc",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "a152af6e2958dd2be01c07665cdf9f8f99e901e302e4fec48bdc978a10d0288d",
+    "source_refs": [
+      "schema:lapTimes DDL and foreign keys"
+    ],
+    "status": "provisional",
+    "summary": "Race identifier on a lap timing record; foreign key to races.raceId.",
+    "table_name": "lapTimes",
+    "title": "Lap timing race reference"
+  },
+  "n_ba69618cb98c07ce5557cfc1": {
+    "concept_id": "position",
+    "keywords": [
+      "lap timing",
+      "position",
+      "driver position"
+    ],
+    "note_id": "n_ba69618cb98c07ce5557cfc1",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "252fd9295b544e58240991253fd01c48ad0c7283ccdafe2440f92c6ce4fa1e10",
+    "source_refs": [
+      "schema:lapTimes DDL"
+    ],
+    "status": "provisional",
+    "summary": "Nullable integer position value recorded for a driver on a lap timing row.",
+    "table_name": "lapTimes",
+    "title": "Lap timing position"
+  },
+  "n_bdd523eef4b70779db948e9e": {
+    "concept_id": "date",
+    "keywords": [
+      "races",
+      "race date",
+      "calendar date",
+      "event date"
+    ],
+    "note_id": "n_bdd523eef4b70779db948e9e",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "74b2eb9a54200215d2b7a026b4cd412328b3bb98c5404af3d8777d6f895e5b42",
+    "source_refs": [
+      "schema:races DDL and column list"
+    ],
+    "status": "provisional",
+    "summary": "Calendar date associated with each race event; DATE field in the races table.",
+    "table_name": "races",
+    "title": "Race event date"
+  },
+  "n_bf8270e3de4b68b2cd1066b7": {
+    "concept_id": "raceId",
+    "keywords": [
+      "pitstops raceid race reference"
+    ],
+    "note_id": "n_bf8270e3de4b68b2cd1066b7",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "9e36de5c6bcddc2cefa4f3f060347b918f4c73a95fa7631eeff5a61f2ecf8517",
+    "source_refs": [
+      "schema:pitStops DDL",
+      "schema:pitStops foreign key raceId to races.raceId"
+    ],
+    "status": "provisional",
+    "summary": "Race identifier associated with each pit-stop record; INTEGER and foreign key to races.raceId.",
+    "table_name": "pitStops",
+    "title": "Pit-stop race reference"
+  },
+  "n_c4f7828055830b017773592a": {
+    "concept_id": "statusId",
+    "keywords": [
+      "results",
+      "statusid",
+      "status",
+      "result outcome"
+    ],
+    "note_id": "n_c4f7828055830b017773592a",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "328d76808bcc51d6deb1f69ac66db06b3805c86e230f345add5f1aa0bb7e95b3",
+    "source_refs": [
+      "schema:results DDL and foreign key statusId->status.statusId",
+      "schema:status DDL and status column"
+    ],
+    "status": "provisional",
+    "summary": "Non-null integer status code on a result row, linked to the status lookup table.",
+    "table_name": "results",
+    "title": "Race result status identifier"
+  },
+  "n_c73ff0ffdefcc462bcff0297": {
+    "concept_id": "nationality",
+    "keywords": [
+      "constructor",
+      "nationality",
+      "italian",
+      "team"
+    ],
+    "note_id": "n_c73ff0ffdefcc462bcff0297",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "23fe6cd5207db0491987b607637cc3d955bf6f1b7d419a2d8e8c70881d41953f",
+    "source_refs": [
+      "schema:constructors DDL",
+      "values:constructors nationality values and records with nationality='Italian'"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT nationality attribute on a constructor record; the observed Italian value is exactly 'Italian'.",
+    "table_name": "constructors",
+    "title": "Constructor nationality"
+  },
+  "n_d26e52e2fa0c6d9d6411e771": {
+    "concept_id": "points",
+    "keywords": [
+      "driverstandings",
+      "points",
+      "driver",
+      "race",
+      "standings",
+      "cumulative"
+    ],
+    "note_id": "n_d26e52e2fa0c6d9d6411e771",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "62eaf6fb16bcefc4549ee03d2520f6ad07f406004a780ab879a9b5dc5dc3bef0",
+    "source_refs": [
+      "schema:driverStandings DDL",
+      "description:driverStandings.csv:4",
+      "values:driverStandings rows for driverId 20 ordered by raceId"
+    ],
+    "status": "provisional",
+    "summary": "Points field behaves as a standings tally that rises or persists across ordered snapshots in an observed driver sample.",
+    "table_name": "driverStandings",
+    "title": "Driver standings points"
+  },
+  "n_d46ec267efcb63d76c09e8d8": {
+    "concept_id": "nationality",
+    "keywords": [
+      "drivers",
+      "nationality",
+      "driver attribute"
+    ],
+    "note_id": "n_d46ec267efcb63d76c09e8d8",
+    "note_type": "column",
+    "revision": 5,
+    "sha256": "f3173e4e4555447a5e73cd78d247fc5f4eb16cea110b1cf73ed03b98867fbe34",
+    "source_refs": [
+      "schema:drivers DDL nationality TEXT nullable",
+      "description:drivers.csv:8"
+    ],
+    "status": "provisional",
+    "summary": "Nullable text nationality attribute stored on a driver record; values are source-reported, not inferred citizenship.",
+    "table_name": "drivers",
+    "title": "Driver nationality"
+  },
+  "n_e32f89ad494c2e539a83db49": {
+    "concept_id": "lat",
+    "keywords": [
+      "circuits",
+      "latitude",
+      "coordinate",
+      "location"
+    ],
+    "note_id": "n_e32f89ad494c2e539a83db49",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "90b109bd86a2304743661c3882cba6cd2493d6b74c331e1519a2d87f2d6ddce5",
+    "source_refs": [
+      "schema:circuits DDL (lat REAL nullable)"
+    ],
+    "status": "provisional",
+    "summary": "Latitude coordinate stored as nullable REAL for a circuit; coordinate reference convention is not specified in schema.",
+    "table_name": "circuits",
+    "title": "Circuit latitude"
+  },
+  "n_e5929eb3f0669664ff19c9c8": {
+    "concept_id": "name",
+    "keywords": [
+      "constructors",
+      "name",
+      "constructor identity",
+      "team"
+    ],
+    "note_id": "n_e5929eb3f0669664ff19c9c8",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "364a8e5bc9ea444202441ef250a324d8fe524b84f2e23cac5101606d5699c062",
+    "source_refs": [
+      "schema:constructors DDL and column list"
+    ],
+    "status": "provisional",
+    "summary": "Name attribute identifying the constructor in its identity record; declared unique in the schema.",
+    "table_name": "constructors",
+    "title": "Constructor name"
+  },
+  "n_e7fda1cd346fb83bc4c07c94": {
+    "concept_id": "year",
+    "keywords": [
+      "races",
+      "year",
+      "season",
+      "event"
+    ],
+    "note_id": "n_e7fda1cd346fb83bc4c07c94",
+    "note_type": "column",
+    "revision": 5,
+    "sha256": "67cf397d6607802726af2d2f4ad17396a8b259407505a305231bfa8e754108f4",
+    "source_refs": [
+      "schema:races DDL",
+      "description:races.csv:2"
+    ],
+    "status": "provisional",
+    "summary": "Year associated with a race event; races.year references seasons.year and can scope event records by season.",
+    "table_name": "races",
+    "title": "Race season year"
+  },
+  "n_e853e1d28202adfe6a900db7": {
+    "concept_id": "number",
+    "keywords": [
+      "drivers",
+      "number",
+      "driver number",
+      "permanent number"
+    ],
+    "note_id": "n_e853e1d28202adfe6a900db7",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "c9d3ac96245bbcdf7d8a1c887cb88dcf9089eccd9188693ff2b169ba2036fdd3",
+    "source_refs": [
+      "schema:drivers DDL (nullable INTEGER number)",
+      "values:drivers.number observed alongside driver records and qualifying linkage"
+    ],
+    "status": "provisional",
+    "summary": "Nullable INTEGER driver number field; observed records correspond to permanent race numbers, though schema alone does not define its semantics.",
+    "table_name": "drivers",
+    "title": "Driver permanent number"
+  },
+  "n_eaf2669bcc18f2a23fcb9b2d": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "constructorstandings",
+      "constructor",
+      "race",
+      "cumulative points",
+      "position",
+      "wins"
+    ],
+    "note_id": "n_eaf2669bcc18f2a23fcb9b2d",
+    "note_type": "table",
+    "revision": 3,
+    "sha256": "426b40c17bd88ce195172ae8f364f957c643bdfb66d16e218e37243fcad438a9",
+    "source_refs": [
+      "schema:constructorStandings DDL and foreign keys",
+      "schema:races DDL",
+      "values:constructorStandings points and rounds for Ferrari 2016 and Italian constructor rows across years"
+    ],
+    "status": "provisional",
+    "summary": "Constructor standings snapshots linked to constructors and races; points and ranking fields represent values recorded at a race event.",
+    "table_name": "constructorStandings",
+    "title": "Constructor race standings"
+  },
+  "n_f5a2909d6100ca6dd60e078a": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "constructorresults",
+      "constructor",
+      "race",
+      "points",
+      "status"
+    ],
+    "note_id": "n_f5a2909d6100ca6dd60e078a",
+    "note_type": "table",
+    "revision": 1,
+    "sha256": "294f2157eb700ed6bec6fd1d8b5955f0d99b4389d4670a31e9b19d1687cb375c",
+    "source_refs": [
+      "schema:constructorResults DDL and foreign keys"
+    ],
+    "status": "provisional",
+    "summary": "Constructor points recorded against races and constructors, with a result status field.",
+    "table_name": "constructorResults",
+    "title": "Constructor race results"
+  },
+  "n_f85d9e93a10aa67833fd7850": {
+    "concept_id": "location",
+    "keywords": [
+      "circuits location geography"
+    ],
+    "note_id": "n_f85d9e93a10aa67833fd7850",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "0f0677f480ecc902d27a4b7587e65f10184da038b29e054df5272b9048cb2af6",
+    "source_refs": [
+      "schema:circuits DDL column location TEXT",
+      "description:circuits.csv:4"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT identifying the location associated with a circuit; specific geographic granularity is not defined by schema.",
+    "table_name": "circuits",
+    "title": "Circuit location"
+  },
+  "n_fc81521ac36c2b459e20d41e": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "status",
+      "result",
+      "statusid",
+      "lookup"
+    ],
+    "note_id": "n_fc81521ac36c2b459e20d41e",
+    "note_type": "table",
+    "revision": 1,
+    "sha256": "4f1b4bb19749fd88acd1d0ee5a5fa385d43f93aa3c1a13626e0d58de0b98f91e",
+    "source_refs": [
+      "schema:status DDL and columns",
+      "schema:results foreign key statusId to status.statusId"
+    ],
+    "status": "provisional",
+    "summary": "Status lookup assigns text labels to statusId values referenced by race result rows; exact coverage and interpretation require value checks.",
+    "table_name": "status",
+    "title": "Race result status codes"
+  },
+  "n_fe9cadd5440aed85f4b86e01": {
+    "concept_id": "qualifyId",
+    "keywords": [
+      "qualifying",
+      "qualifyid",
+      "record identifier",
+      "primary key"
+    ],
+    "note_id": "n_fe9cadd5440aed85f4b86e01",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "878a182d47a06f71ee901b943c6bd9ebfb04057b6d434e65ae7be20e7511f30f",
+    "source_refs": [
+      "schema:qualifying DDL (qualifyId INTEGER primary key autoincrement)"
+    ],
+    "status": "provisional",
+    "summary": "INTEGER primary key identifying a qualifying record; does not by itself establish a race-driver uniqueness rule.",
+    "table_name": "qualifying",
+    "title": "Qualifying record identifier"
+  }
+}

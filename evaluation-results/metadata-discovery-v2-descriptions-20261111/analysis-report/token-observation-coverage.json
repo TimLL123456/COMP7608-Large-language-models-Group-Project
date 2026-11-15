@@ -1,0 +1,74 @@
+[
+  {
+    "split": "dev",
+    "field": "input_tokens",
+    "observed_calls": 11424,
+    "model_calls": 11425
+  },
+  {
+    "split": "dev",
+    "field": "output_tokens",
+    "observed_calls": 11424,
+    "model_calls": 11425
+  },
+  {
+    "split": "dev",
+    "field": "cached_input_tokens",
+    "observed_calls": 11424,
+    "model_calls": 11425
+  },
+  {
+    "split": "dev",
+    "field": "reasoning_tokens",
+    "observed_calls": 11424,
+    "model_calls": 11425
+  },
+  {
+    "split": "test",
+    "field": "input_tokens",
+    "observed_calls": 2997,
+    "model_calls": 2997
+  },
+  {
+    "split": "test",
+    "field": "output_tokens",
+    "observed_calls": 2997,
+    "model_calls": 2997
+  },
+  {
+    "split": "test",
+    "field": "cached_input_tokens",
+    "observed_calls": 2997,
+    "model_calls": 2997
+  },
+  {
+    "split": "test",
+    "field": "reasoning_tokens",
+    "observed_calls": 2997,
+    "model_calls": 2997
+  },
+  {
+    "split": "overall",
+    "field": "input_tokens",
+    "observed_calls": 14421,
+    "model_calls": 14422
+  },
+  {
+    "split": "overall",
+    "field": "output_tokens",
+    "observed_calls": 14421,
+    "model_calls": 14422
+  },
+  {
+    "split": "overall",
+    "field": "cached_input_tokens",
+    "observed_calls": 14421,
+    "model_calls": 14422
+  },
+  {
+    "split": "overall",
+    "field": "reasoning_tokens",
+    "observed_calls": 14421,
+    "model_calls": 14422
+  }
+]

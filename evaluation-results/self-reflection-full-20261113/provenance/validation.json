@@ -1,0 +1,19 @@
+{
+  "unique_questions": 500,
+  "dev": 400,
+  "test": 100,
+  "correct": 350,
+  "incorrect_result": 148,
+  "missing_sql": 2,
+  "source_hashes_verified": true,
+  "gzip_roundtrip_verified": true,
+  "agent_inputs_exclude_gold_sql": true,
+  "no_new_inference": true,
+  "tests": {
+    "run": 198,
+    "passed": 195,
+    "failed": 1,
+    "skipped": 2
+  },
+  "credential_pattern_scan": "No matches in archived plaintext, decompressed traces/viewers, and source snapshot"
+}

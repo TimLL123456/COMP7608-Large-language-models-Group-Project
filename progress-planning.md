@@ -1,26 +1,49 @@
 # KORA — Progress Planning & Development Tickets
 
+
+## Research progress update — 15 November 2026
+
+This is the **current research snapshot** for the private HKU repository. The v4.4 ticket plan, initial four-question smoke test, original requirements and decisions further below are retained as **historical records**, not the newest benchmark summary.
+
+| Research milestone | Latest verified evidence | Status |
+| --- | --- | --- |
+| B0 generalized-v1 | [319/500 (63.80%)](evaluation-results/b0-generalized-v1-gpt6-luna-none-40calls-minidev2026-20261110/README.md) | Full local Mini-Dev 2026 evaluation completed |
+| MetadataDiscoveryV2 (A1/B1/C1) | [340/500 (68.00%)](evaluation-results/metadata-discovery-v2-descriptions-20261111/README.md) | Completed, shared Dev/Test knowledge; budgets and restored descriptions differ from historical B0 |
+| Self Reflection Agent | [350/500 (70.00%)](evaluation-results/self-reflection-full-20261113/README.md) | Full local evaluation completed, 498/500 SQL outputs |
+| Rubric Self Reflection | [326/500 (65.20%)](evaluation-results/rubric-self-reflection-full-20261115/README.md) | Completed; 24 Dev transport-failure retries are documented |
+| Role-Specialized Self Reflection | [Agent design and parallel shard CLI](docs/role-specialized-self-reflection-agent.md) | Implementation present; full EX benchmark not yet verified |
+
+Source code is in [`scr/`](scr/), with separate [Agent documentation](docs/agent-development.md) and [offline regression tests](tests/). Original local Mini-Dev (historical B0) and Mini-Dev 2026 are **not interchangeable**, and these experimental budgets/retry conditions are **not matched causal controls**. The B1/B2/B3/B4 roadmap, team commitments, live application, and TC-I/TC-R scenarios are separate workstreams; do not mark them completed solely because an experimental SQL agent was evaluated.
+
+## Historical v4.4 planning snapshot — 3 November 2026
+
+
 **COMP7608B Large Language Models | Group 9 | 2026–2027 Semester 1**  
-**Version:** v4.4 — Progress Reconciliation (shared group edition) | **Updated:** 3 November 2026  
+**Version:** v4.4 — Progress Reconciliation (private HKU edition) | **Updated:** 3 November 2026  
 **Status:** **KORA-02 Done** (BIRD dataset), **KORA-03 Done** (EX evaluator with 16/16 selected-case upstream parity), **KORA-05 In Progress** (B0 implemented; 1 Nov four-dev-question smoke scored **EX 1/4 = 25%**), and **KORA-10 Stage A In Progress** (initial failure diagnosis). This small sample is **not** a representative/full-split benchmark. Interactive app, B0–B4 controlled comparisons and eight TC-I/TC-R application scenarios remain pending. Active KORA-05/10/11/12/14–17 are now private Notion Task Tracker records, not GitHub Issues; KORA-02/03 remain documented completed foundation tickets.
 
-> **Working group plan:** **B0 is the sole active baseline**. B1/B2/B3 are optional evidence-selected improvements; B4 is conditional integration. The earlier submitted proposal includes fixed S0/S1 metrics; posting this roadmap does **not** revise it. Confirm scope changes with the team and disclose them in the final report.
+> **Working plan / submitted-proposal boundary:** **B0 is the sole active baseline**, with evidence-selected B1/B2/B3 and conditional B4. Private and public v4.4 roadmaps are now aligned; the [submitted S0/S1 proposal](proposal/KORA/proposal.md) is **historical and unchanged**. Confirm material scope revisions with the team/teaching team where required; document delivered-versus-planned changes honestly in the final report.
 
-> **Public repository scope:** This repo contains B0, original BIRD loader and EX evaluator, tracing, focused tests, tutorials and the v4.4 shared roadmap. Private submitted proposal materials, learning/RAG experiments, downloaded BIRD reference data and raw traces are deliberately **not** included.
+> **Privacy and repository boundary:** The public group repo already contains B0, the BIRD loader, independent EX scorer, tracing, tests, guides and roadmap; private HKU research/proposals, learning RAG and non-migrated files remain private. On 3 November the two code trees shared 30 identical file blobs; nine document/config files differ by repository purpose. Private HKU URLs may require repository access.
 
-## v4.4 Reconciliation — 3 November 2026
+## v4.4 Reconciliation — 3 November 2026 (historical)
 
-**Current implementation:** KORA-02 original BIRD Mini-Dev loader and KORA-03 EX evaluator are **Done** based on recorded local checks (16/16 **selected-case scorer parity**, not full parity or model accuracy). KORA-05 B0 and KORA-10 Stage A failure diagnosis are **In Progress**. The 1 November four-dev-question smoke produced 4/4 final SQL and strict EX 1/4 (25%); neither a representative scored benchmark nor a verified current Windows regression run is available.
+| P0 ticket(s) | Notion execution record | Verified progress / next gate |
+| --- | --- | --- |
+| KORA-02 / KORA-03 | Roadmap completion evidence | **Done:** original BIRD Mini-Dev loader and strict EX evaluator; 16/16 **selected-case scorer parity**, not model accuracy |
+| KORA-05 | [B0 agent](https://app.notion.com/p/40cce09ce40c81d2baf9eb532185dedc) | **In Progress:** B0 implemented, 1 Nov four-dev-question smoke EX 1/4; current full regression and larger frozen dev evaluation pending |
+| KORA-10 | [Evaluation](https://app.notion.com/p/40cce09ce40c818bbbacfaeaab52a77f) | **In Progress:** inspect aggregation/join/temporal failures and recorded traces; research improvements only when evidence supports them |
+| KORA-17 → 14 → 15 | [Fixtures](https://app.notion.com/p/40cce09ce40c818cbdbce5ca8e192943) · [Controller](https://app.notion.com/p/40cce09ce40c81ebbd64c9e3900f9871) · [UI](https://app.notion.com/p/40cce09ce40c8120b3dbe3a9ce73c31e) | **To Do:** fictional repeatable SQLite demo, session-aware controller and genuine interactive frontend |
+| KORA-16 | [Integration and reliability](https://app.notion.com/p/40cce09ce40c8176ba7ce0fdbeb4f3ea) | **To Do:** verified TC-I01/I02/I03 and TC-R01/R02 outcomes; distinguish faults injected for tests |
+| KORA-11 / KORA-12 | [Report/ZIP](https://app.notion.com/p/40cce09ce40c81c995addc2c3cd64242) · [Live demo](https://app.notion.com/p/40cce09ce40c81fcaad5f314622c646e) | **To Do:** submit PDF plus independently runnable source ZIP by 25 Nov 23:59 HKT; live demo 1 or 8 Dec, assignment pending |
 
-**P0 delivery to do:** KORA-17 deterministic fictional SQLite fixtures; KORA-14 session-aware backend/controller; KORA-15 interactive SQL UI; KORA-16 actual changed-condition/follow-up and two failure investigations; KORA-11 PDF plus runnable source ZIP; KORA-12 live demo. The eight active P0 tasks are tracked in a **private Notion Task Tracker** (not GitHub Issues). B1–B4 are evidence-gated P1 enhancements; document RAG remains optional P2. The originally submitted S0/S1 proposal remains historical and unchanged.
-
-**Repository boundary:** This public repository already includes B0 source, strict EX evaluation, tests, Trace Explorer and beginner tutorials; additional HKU research/proposal files and private-only experiments have not been copied. There is no claim of a working end-to-end application or completed TC-I/TC-R tests.
+**Notion reconciliation:** [Task Tracker](https://app.notion.com/p/ae1642e8bb734b7183a470de01fb99b2) now holds the eight active P0 execution records; BENCH-03 research is **Done**, while BENCH-04's broader three-dataset planning remains **Backlog**. These are Notion records, **not GitHub Issues**. The B0-only design is the **working plan**, not a retrospective edit to the submitted S0/S1 proposal. The public group repository now shares B0 implementation, tests, tutorials and this roadmap; proposal files, optional RAG study and other private-only materials stay private. A full scored model benchmark, fresh Windows regression, P1 experiments and the complete interactive app are **not yet verified**.
 
 ## How to use this document
 
 **New team member?** Start with [dataset setup](docs/bird-setup.md) → [B0 Prepare/Infer/Score/Visualize](docs/bird-b0.md) → [EX explanation](docs/bird-evaluation.md). For B1–B4 implementation, use [framework reuse guide](docs/agent-development.md).
 
-**This roadmap lists tickets, dependencies and evidence**, not duplicate installation instructions. For step-by-step commands use `docs/`. Publishing a working plan does not imply the submitted proposal has been changed or the teaching team has approved a scope revision.
+**This file is the roadmap, not a second installation tutorial.** Ticket statuses, dependencies, acceptance criteria and previous validation evidence appear below. Manual downloads, alternate sampling, low-level scoring and trace live refresh are marked **Optional / Advanced** in their canonical guides. **Nothing in this private planning revision automatically changes the submitted proposal or public team repo.**
 
 ## 1. Project Overview — User-facing Autonomous Agent
 
@@ -62,25 +85,25 @@
 **Planned test suite (not yet implemented or run):** `TC-R01–R04` cover Reliability & Recovery; `TC-I01–I04` cover Interactive & Multi-turn. **Five P0 scenarios** are `R01`, `R02`, `I01`, `I02` and `I03`; **three P1 scenarios** are `R03`, `R04` and `I04`. P1 indicates additional dedicated test-case coverage, **not permission to omit underlying P0 SQL read-only protection, bounded execution or safe clarification**. The case definitions, evidence and pass rules are maintained in KORA-16 (with KORA-17 fixtures and KORA-10 evaluation).
 
 **Test isolation:** Use separate, manually verified synthetic/fictional database cases for session and recovery behavior; preserve original BIRD Mini-Dev EX and evaluator-only gold SQL unchanged. Keep prepared tests separate from a further **unseen-question rehearsal** within the declared read-only SQL domain.
-## 2. Current Repository Status (1 November 2026)
+## 2. Historical Repository Status (1 November 2026)
 
 | Component | Verified repository evidence | Status / remaining work |
 | --- | --- | --- |
-| Final proposal | Group 9 proposal (not included here) and submitted PDF | Submitted; scope frozen for planning |
+| Final proposal | [Group 9 proposal](proposal/KORA/proposal.md) and submitted PDF | Submitted; scope frozen for planning |
 | SQL baseline | [scr/baselines/bird_b0.py](scr/baselines/bird_b0.py) | **Current B0:** NVIDIA Nemotron 3.5 Super VL / Deep Agents and three read-only SQLite tools; Q1409 single-question inference and 1 Nov four-dev-question B0 scored smoke (1/4 strict EX); interactive app pending |
-| Optional Document RAG (P2) | Excluded from this Text-to-SQL code migration | Independent prototype remains separate; no integrated RAG system is claimed |
+| Existing document RAG Deep Agent | [scr/baselines/rag.py](scr/baselines/rag.py) | **Prototype scaffold**: chunking, embeddings, retrieval tool; optional track; full live RAG evaluation not verified |
 | Shared utilities | [scr/baselines/common.py](scr/baselines/common.py) | Explicit Ollama/Gemini/DeepSeek/NVIDIA factory and partial trace preservation; shared default stays Ollama |
 | BIRD dataset setup / loader | [scr/datasets/setup_bird.py](scr/datasets/setup_bird.py), [scr/datasets/bird.py](scr/datasets/bird.py) | **KORA-02 Done:** local original SQLite Mini-Dev installation verified (500 questions, 11 DBs, pinned HF source, 400/100 split); read-only schema/SELECT smoke checks passed on all 11 real databases; 11/11 KORA-02 unit tests passed |
 | SQL evaluation | [scr/evaluation/bird.py](scr/evaluation/bird.py), [scr/cli/evaluate_bird.py](scr/cli/evaluate_bird.py) | **KORA-03 Done:** 10/10 scorer tests, 8/8 gold self-check, 7/8 negative control and 16/16 matched selected-case upstream scorer parity; full-split model EX pending |
 | B0 inference and sampled evaluation | [scr/baselines/bird_b0.py](scr/baselines/bird_b0.py), [scr/cli/run_bird_b0_eval.py](scr/cli/run_bird_b0_eval.py), [docs/bird-b0.md](docs/bird-b0.md) | **KORA-05 In Progress:** Prepare / Infer / Score / Visualize implemented; 4/4 dev final SQL and 1/4 strict EX on 1 Nov. Latest full Windows regression and larger frozen sample remain pending |
 | Automated regression tests | [tests/](tests/) | Historical 41/41 Windows run occurred before later B0/v2 changes. Current expanded suite: execution and exact test count not verified in Windows |
-| BIRD official benchmark verification | research/bird-sql.md (not included here), [docs/bird-evaluation.md](docs/bird-evaluation.md) | Original published databases verified locally; pinned upstream EX scorer matched on 16/16 selected comparison cases. Broader parity checks and representative/full-split model evaluation remain pending; a separate 4-question B0 dev smoke scored 1/4 strict EX |
+| BIRD official benchmark verification | [research/bird-sql.md](research/bird-sql.md), [docs/bird-evaluation.md](docs/bird-evaluation.md) | Original published databases verified locally; pinned upstream EX scorer matched on 16/16 selected comparison cases. Broader parity checks and representative/full-split model evaluation remain pending; a separate 4-question B0 dev smoke scored 1/4 strict EX |
 | Graph, planner, router, full KORA | Final proposal only | Not implemented |
 | SQL application and interface | KORA-14–16 **P0** | Not yet verified as an end-to-end user application; ordinary/changed/failure requests must be tested |
 | Synthetic demo/test data generator | KORA-17 **P0** | Deterministic ordinary/changed/failure fixtures remain pending. Existing tiny SQL unit-test fixtures are **not** the complete KORA-17 interactive demo dataset |
-| Dedicated group development repo | [Public group repo](https://github.com/TimLL123456/COMP7608-Large-language-models-Group-Project) | Now includes B0 framework, tests, tutorials and this plan; interactive app and B1–B4 remain planned |
+| Dedicated group development repo | [Public group repo](https://github.com/TimLL123456/COMP7608-Large-language-models-Group-Project) | Shares B0 implementation, 39 tracked files, tests, tutorial docs and v4.4 roadmap; private proposal/RAG files remain separate |
 
-**Repository boundaries:** B0, loader, evaluator, trace viewer and test file links now refer to files in this public repo. Learning experiments and optional RAG were not copied; backend/frontend and KORA-17 full interactive fixtures remain planned.
+**Important boundaries:** Paths in this private HKU file include extra private-only proposal, research and RAG files. The main B0/loader/scorer/trace/test modules are **already shared** with the public repo; do not assume every HKU path has a public counterpart. Preserve [agent-study/](agent-study/README.md) as a learning sandbox. Keep SQL and RAG agents separate. Backend/frontend and synthetic application data are still planned, not implemented.
 
 ### Offline test coverage and verification boundary
 
@@ -256,7 +279,7 @@ The IDs below are **planning labels only**, not confirmed Notion/GitHub ticket r
 - [x] Local annotation/archive/SQLite checksum manifest and `/data/bird/` Git exclusion implemented; real verification checked installed SQLite hashes and annotation SHA-256 `88ceb0710163cae46a256ecea8f0a8c98286599530b60587fda5c3cfe57d45d2`. Archive checksum is recorded locally, not asserted against a separately published official hash.
 - [x] Real Windows setup/verify commands, 11-DB smoke results, pinned annotation checksum and scope limitations are recorded in **Section 2**; existing `docs/bird-setup.md` remains the general tutorial (local-only helper script and results were not committed).
 
-- **Implementation and real-data evidence (29 Oct 2026):** `scr/datasets/{setup_bird.py,bird.py}`, `tests/{test_bird_setup.py,test_bird_loader.py}` and `docs/bird-setup.md` are in this shared group repo. The Windows run reported setup and verify-only `PASS` for 500/11/400/100, 11/11 real DB SELECT checks, the pinned annotation hash and 11/11 KORA-02 tests (included in 21 BIRD / 35 overall). Actual network download/retry behavior is not established by the log. The separate **KORA-03** validation performed real-data SQL scoring diagnostics.
+- **Implementation and real-data evidence (29 Oct 2026):** `scr/datasets/{setup_bird.py,bird.py}`, `tests/{test_bird_setup.py,test_bird_loader.py}` and `docs/bird-setup.md` exist in private HKU `main`. The Windows run reported setup and verify-only `PASS` for 500/11/400/100, 11/11 real DB SELECT checks, the pinned annotation hash and 11/11 KORA-02 tests (included in 21 BIRD / 35 overall). Actual network download/retry behavior is not established by the log. The separate **KORA-03** validation performed real-data SQL scoring diagnostics.
 - **Output:** BIRD SQLite loader/setup, 11 real DB schema/SELECT checks, pinned annotation revision and local integrity manifest, deterministic split and reproducible Windows commands. **Next:** KORA-05 consumes agent-safe questions/schema; optional download-fallback QA remains separate.
 - **Boundary:** KORA-02 prepares data and safe read-only access; official Execution Accuracy scoring, result-set comparison and benchmark reporting remain **KORA-03**. No agent benchmark results are claimed at this stage.
 
@@ -297,7 +320,7 @@ The IDs below are **planning labels only**, not confirmed Notion/GitHub ticket r
 - [x] JSONL/CSV per-question records plus JSON summary and run manifest are generated in synthetic CLI tests, including EX, coverage, difficulty, status and observed usage fields; unobserved usage remains null.
 - [x] Reproducible scorer offline tests passed on Windows (29 Oct 2026); the later small B0 dev result is **not** an official BIRD hidden-test score.
 
-**Implementation and validation evidence (29 October 2026):** This group repository contains `scr/evaluation/bird.py`, `scr/cli/evaluate_bird.py`, `tests/test_bird_evaluator.py`, and `docs/bird-evaluation.md`. User Windows logs show 10/10 KORA-03 evaluator tests (21/21 BIRD; 35/35 full suite), 8/8 real gold-SQL self-check, expected 7/8 real negative control, and **16/16 selected-case parity matches** against upstream `abd11b6db92a1c9f809b32f7564c7c71b34d67f0`. The self-check/negative control **are diagnostic reference-based tests, not model inference**. Full-split B0–B4 EX is not yet measured.
+**Implementation and validation evidence (29 October 2026):** Private HKU `main` contains `scr/evaluation/bird.py`, `scr/cli/evaluate_bird.py`, `tests/test_bird_evaluator.py`, and `docs/bird-evaluation.md`. User Windows logs show 10/10 KORA-03 evaluator tests (21/21 BIRD; 35/35 full suite), 8/8 real gold-SQL self-check, expected 7/8 real negative control, and **16/16 selected-case parity matches** against upstream `abd11b6db92a1c9f809b32f7564c7c71b34d67f0`. The self-check/negative control **are diagnostic reference-based tests, not model inference**. Full-split B0–B4 EX is not yet measured.
 
 - **Boundary:** KORA-03 covers **evaluation**, not SQL generation, KG exploration, routing or a general web application. KORA-02 owns dataset setup; B0–B4 agents deliver saved predictions; KORA-10 owns comparative analysis/ablations.
 - **Output:** Pinned EX protocol, evaluation adapter, reusable B0–B4 CLI, focused tests, reproducibility guide and auditable result schema.
@@ -631,13 +654,17 @@ flowchart LR
 
 ## 9. References
 
-- [Group README](README.md), [B0 beginner tutorial](docs/bird-b0.md), [Developer guide](docs/agent-development.md)
-- [BIRD setup](docs/bird-setup.md), [Execution Accuracy guide](docs/bird-evaluation.md), [B0 code](scr/baselines/bird_b0.py)
-- [Original BIRD Mini-Dev](https://github.com/bird-bench/mini_dev) and [pinned official scorer](https://github.com/bird-bench/mini_dev/blob/abd11b6db92a1c9f809b32f7564c7c71b34d67f0/evaluation/evaluation_ex.py)
-- Proposal and course guideline documents are maintained separately, not included in this code-only public migration.
+- **[Public group repository — shared B0 code and v4.4 roadmap](https://github.com/TimLL123456/COMP7608-Large-language-models-Group-Project)** (public B0, tests, guides and roadmap; private-only HKU files excluded)
+- **[Existing HKU project folder](https://github.com/TimLL123456/HKU/blob/main/2026-2027/Sem1/COMP7608%20-%20Large%20language%20models/Group%20Project/README.md)** (private; code/proposal remain here until separately reviewed)
+
+- [Submitted KORA proposal (editable Markdown)](proposal/KORA/proposal.md) and [submitted PDF](proposal/KORA/KORA_Group9_Proposal.pdf)
+- [Original COMP7608B guideline summary](guidelines/requirements.md) and [original guideline PDF](guidelines/COMP7608B_LLM_Project_Guideline.pdf)
+- [BIRD Mini-Dev study notes](research/bird-sql.md); [official BIRD Mini-Dev repository](https://github.com/bird-bench/mini_dev)
+- [Project README and quick start](README.md); [B0 beginner tutorial](docs/bird-b0.md); [B1–B4 developer guide](docs/agent-development.md)
+- [SQL prototype](scr/baselines/bird_b0.py), [optional RAG prototype](scr/baselines/rag.py), [BIRD EX runner](scr/cli/evaluate_bird.py)
 
 ---
 
-**Document state (3 November 2026):** Shared public v4.4 progress reconciliation. KORA-02/03 foundation complete; KORA-05 and KORA-10 Stage A have a **four-dev-question scored smoke (EX 1/4)** and early error diagnosis. Current Windows suite, representative benchmark, P1 comparisons, working interactive app and all TC-I/TC-R scenario executions remain pending. See canonical tutorials for commands.
+**Document state (3 November 2026):** Private HKU v4.4 progress reconciliation. KORA-02/03 foundation complete; KORA-05 and KORA-10 Stage A have a **four-dev-question scored smoke (EX 1/4)** and early error diagnosis. Current Windows suite, representative benchmark, P1 comparisons, working interactive app and all TC-I/TC-R scenario executions remain pending. See canonical tutorials for commands.
 
-**Maintenance:** Preserve proposal differences as provenance. Prioritize frozen B0 diagnostics, interactive app, recovery tests and submission; public B0 code migration is already complete, whereas private-only files require separate review.
+**Maintenance:** Preserve original proposal and prior validations as provenance. Prioritize B0 diagnostics, interactive SQL, reliability and submission. The approved B0 code/docs have already been shared; any new migration of private-only files remains a separate reviewed task.

@@ -1,0 +1,1164 @@
+{
+  "n_04ba00c2809a791ed539b6df": {
+    "concept_id": "trans_id",
+    "keywords": [
+      "transaction",
+      "trans_id",
+      "primary key",
+      "identifier"
+    ],
+    "note_id": "n_04ba00c2809a791ed539b6df",
+    "note_type": "column",
+    "revision": 4,
+    "sha256": "b851a3e861db0f716401cab397c66482115b1e4a8f2fd41564731574d314c68f",
+    "source_refs": [
+      "schema:trans.trans_id INTEGER PRIMARY KEY"
+    ],
+    "status": "provisional",
+    "summary": "INTEGER primary-key identifier; its use as a requested same-date ordering tie-break does not verify actual chronology.",
+    "table_name": "trans",
+    "title": "Transaction identifier and row key"
+  },
+  "n_052cae0cdfd5d6b5108cee1c": {
+    "concept_id": "amount",
+    "keywords": [
+      "transaction",
+      "amount",
+      "integer",
+      "payment",
+      "unit",
+      "aggregation"
+    ],
+    "note_id": "n_052cae0cdfd5d6b5108cee1c",
+    "note_type": "column",
+    "revision": 8,
+    "sha256": "15d8a897e5e27efb4b91b41df5a3d63cc7c1356f0972d8c58396abcbe38adbd5",
+    "source_refs": [
+      "schema:trans.amount INTEGER NOT NULL",
+      "values:trans amount range on VYDAJ/PREVOD NA UCET with bank and account populated"
+    ],
+    "status": "provisional",
+    "summary": "Required INTEGER transaction amount; observed amounts are positive on complete outgoing transfers, but denomination and unit scale are undocumented.",
+    "table_name": "trans",
+    "title": "Transaction amount"
+  },
+  "n_057af86588063ab1927a82a2": {
+    "concept_id": "A8",
+    "keywords": [
+      "district",
+      "unemployment",
+      "rate",
+      "1995",
+      "a8"
+    ],
+    "note_id": "n_057af86588063ab1927a82a2",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "367c868d20016bac5c8d31bc4e4a4e211c3a0e77aa8f598768540347cf81434b",
+    "source_refs": [
+      "schema:district.A8 (INTEGER, NOT NULL)",
+      "values:district.A8 (observed numeric values 1 and 2)",
+      "description:district.csv:8 (district unemployment rate 1995)"
+    ],
+    "status": "provisional",
+    "summary": "District attribute A8 is the recorded unemployment rate for 1995; numeric values are stored as INTEGER.",
+    "table_name": "district",
+    "title": "District unemployment rate, 1995"
+  },
+  "n_06877cf9cebf756f2235e7a0": {
+    "concept_id": "account_id",
+    "keywords": [
+      "transaction",
+      "account",
+      "foreign key"
+    ],
+    "note_id": "n_06877cf9cebf756f2235e7a0",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "a5f19edd5e2f37ab4823e83090bc9ecb8d126045b58f2fb326333c2a73ce0c2c",
+    "source_refs": [
+      "schema:trans.account_id INTEGER NOT NULL FK account.account_id"
+    ],
+    "status": "provisional",
+    "summary": "Required account link identifying the account whose transaction is recorded.",
+    "table_name": "trans",
+    "title": "Transaction owner account ID"
+  },
+  "n_0a6fb367b850dc4639fff680": {
+    "concept_id": "A2",
+    "keywords": [
+      "district",
+      "name",
+      "a2",
+      "geography"
+    ],
+    "note_id": "n_0a6fb367b850dc4639fff680",
+    "note_type": "column",
+    "revision": 5,
+    "sha256": "51636cd7b0483de02cf613865e220304bb17d7b48941cbd74309089e4e6e4e78",
+    "source_refs": [
+      "schema:district.A2 TEXT NOT NULL",
+      "description:district.csv:2",
+      "values:district.A2 observed Tabor maps to district_id 21"
+    ],
+    "status": "provisional",
+    "summary": "TEXT field A2 stores a district's human-readable name, per district description; observed Tabor is district_id 21.",
+    "table_name": "district",
+    "title": "District name"
+  },
+  "n_14f735147747b9e6af537a88": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "transaction",
+      "account",
+      "date",
+      "operation",
+      "amount",
+      "purpose"
+    ],
+    "note_id": "n_14f735147747b9e6af537a88",
+    "note_type": "table",
+    "revision": 5,
+    "sha256": "6cd98ebb6c506b4e16dd658948957fb6acccb21aa982b252a4572d18c966b41e",
+    "source_refs": [
+      "schema:trans DDL and foreign key",
+      "description:trans.csv fields",
+      "description:trans.csv:5 operation labels",
+      "values:trans grouped by type and operation",
+      "values:trans.k_symbol categories"
+    ],
+    "status": "provisional",
+    "summary": "Each trans_id identifies a dated account transaction row with type, operation, amount, balance and optional purpose and counterparty fields.",
+    "table_name": "trans",
+    "title": "Account transaction records"
+  },
+  "n_1766301153d8a2cd118d2ae1": {
+    "concept_id": "amount",
+    "keywords": [
+      "order",
+      "amount",
+      "payment",
+      "debit",
+      "time basis"
+    ],
+    "note_id": "n_1766301153d8a2cd118d2ae1",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "48212d0f0571d3147f5ea2c17604907b781eca8919698814d751adc85f91ddb9",
+    "source_refs": [
+      "schema:order.amount REAL NOT NULL",
+      "schema:order.account_id foreign key account.account_id",
+      "values:order grouped by k_symbol (blank and coded purpose values observed)"
+    ],
+    "status": "provisional",
+    "summary": "Required REAL amount stored on each order row; no recurrence period or time basis established.",
+    "table_name": "order",
+    "title": "Payment order amount"
+  },
+  "n_1aa2db4ec0397d14e79cf7ea": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "card",
+      "credit card",
+      "disposition",
+      "type",
+      "issued"
+    ],
+    "note_id": "n_1aa2db4ec0397d14e79cf7ea",
+    "note_type": "table",
+    "revision": 3,
+    "sha256": "a78ec9657119150bbdc2387e2f967523a1d31fc272a2fe3f02f4c5745d94e1b0",
+    "source_refs": [
+      "schema:card DDL primary key card_id and foreign key disp_id to disp.disp_id",
+      "description:card.csv:1,3,4"
+    ],
+    "status": "provisional",
+    "summary": "Stores card identifiers, disposition links, type and issue date; connects cards to account-client relationships via disposition.",
+    "table_name": "card",
+    "title": "Credit card records"
+  },
+  "n_1aac83cc33f91aefdebd71a7": {
+    "concept_id": "duration",
+    "keywords": [
+      "loan",
+      "duration",
+      "term",
+      "months",
+      "repayment"
+    ],
+    "note_id": "n_1aac83cc33f91aefdebd71a7",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "3c86389ce9ccb8aac42d570f9261ffe1cacdc64a60fd82bc52ddc8c490a0e913",
+    "source_refs": [
+      "schema:loan.duration (INTEGER NOT NULL)",
+      "description:loan.csv:5 (duration, unit month)",
+      "description:question evidence (term starts approval day, includes last day)"
+    ],
+    "status": "provisional",
+    "summary": "Loan repayment-term duration recorded as an integer number of months.",
+    "table_name": "loan",
+    "title": "Loan duration"
+  },
+  "n_1bb249c7f5641b24ee177371": {
+    "concept_id": "A3",
+    "keywords": [
+      "district",
+      "region",
+      "central bohemia",
+      "a3"
+    ],
+    "note_id": "n_1bb249c7f5641b24ee177371",
+    "note_type": "column",
+    "revision": 7,
+    "sha256": "2d76e72c1089a8865e7f808b5c0d2dcfc1771f79d50dd60315b54a30e16777e7",
+    "source_refs": [
+      "schema:district.A3 TEXT NOT NULL",
+      "values:district.A3 observed distinct region labels"
+    ],
+    "status": "provisional",
+    "summary": "District A3 is a required region text label; observed values include central Bohemia and other Czech regions.",
+    "table_name": "district",
+    "title": "District region label"
+  },
+  "n_21ea092d383aa2c5cc86ca80": {
+    "concept_id": "client_id",
+    "keywords": [
+      "disposition",
+      "client id",
+      "foreign key",
+      "client account association"
+    ],
+    "note_id": "n_21ea092d383aa2c5cc86ca80",
+    "note_type": "column",
+    "revision": 6,
+    "sha256": "addd8a548946d7930b940d1c3afc572f269728cb00d48cb9ecf1b3a4113b5e40",
+    "source_refs": [
+      "schema:disp.client_id INTEGER NOT NULL REFERENCES client.client_id"
+    ],
+    "status": "provisional",
+    "summary": "Required client identifier on a disposition; references client.client_id and associates the client with an account.",
+    "table_name": "disp",
+    "title": "Disposition client ID"
+  },
+  "n_343e6ae81db21657c14dcd2d": {
+    "concept_id": "status",
+    "keywords": [
+      "loan",
+      "status",
+      "repayment",
+      "active",
+      "finished",
+      "code"
+    ],
+    "note_id": "n_343e6ae81db21657c14dcd2d",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "8495f96ee5d15c795fe526bd9465bb39ac052c39df9aebf7bae4fd06ae8a8bc5",
+    "source_refs": [
+      "schema:loan.status (TEXT NOT NULL)",
+      "description:question evidence (definitions of statuses A, B, C, D)"
+    ],
+    "status": "provisional",
+    "summary": "Non-null TEXT code on loan; supplied task evidence identifies C and D as active and A and B as finished.",
+    "table_name": "loan",
+    "title": "Loan status"
+  },
+  "n_351b80b6d689efd5a462cf89": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "disposition",
+      "client",
+      "account",
+      "card",
+      "association"
+    ],
+    "note_id": "n_351b80b6d689efd5a462cf89",
+    "note_type": "table",
+    "revision": 5,
+    "sha256": "0e9db12e75cf40cc5ccdd4dd8bf22e2b00ba533a42b60dc64fbe10c3951835fc",
+    "source_refs": [
+      "schema:disp DDL primary key and foreign keys",
+      "schema:card.disp_id references disp.disp_id",
+      "values:disp.type observed OWNER and DISPONENT"
+    ],
+    "status": "provisional",
+    "summary": "Disposition records link clients and accounts; cards reference dispositions through disp_id.",
+    "table_name": "disp",
+    "title": "Disposition records"
+  },
+  "n_3697589b00d73c4ed0b828f1": {
+    "concept_id": "balance",
+    "keywords": [
+      "transaction",
+      "balance",
+      "account balance",
+      "trans"
+    ],
+    "note_id": "n_3697589b00d73c4ed0b828f1",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "91ae2773d63376fb672c23bbf02dfece7d70f18a9fea5563415f97c993a56b10",
+    "source_refs": [
+      "schema:trans.balance INTEGER NOT NULL",
+      "values:trans.balance observed as integer-valued in transaction rows"
+    ],
+    "status": "provisional",
+    "summary": "Required integer balance stored with each account transaction; it is not verified as end-of-day balance.",
+    "table_name": "trans",
+    "title": "Transaction balance"
+  },
+  "n_433b361cc059b27ffbcea5a9": {
+    "concept_id": "date",
+    "keywords": [
+      "account",
+      "date",
+      "creation",
+      "historical status"
+    ],
+    "note_id": "n_433b361cc059b27ffbcea5a9",
+    "note_type": "column",
+    "revision": 4,
+    "sha256": "ed2b6a4f05b1e40c809eb4c6e3cd2f41eb9e5e3ac5b240b2dc27360517977971",
+    "source_refs": [
+      "schema:account.date",
+      "description:account.csv:4",
+      "values:account.date observed ISO date strings"
+    ],
+    "status": "provisional",
+    "summary": "The account date is described as creation date; it gives no historical closure/status information.",
+    "table_name": "account",
+    "title": "Account creation date"
+  },
+  "n_476e5e8c4eb849e409535328": {
+    "concept_id": "issued",
+    "keywords": [
+      "card",
+      "issued",
+      "issue date",
+      "date"
+    ],
+    "note_id": "n_476e5e8c4eb849e409535328",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "1270c6ecba3f5afb76389d2ad0e23da0f95f8657ff74cf32b6ae6da10c179c88",
+    "source_refs": [
+      "schema:card.issued DATE NOT NULL",
+      "description:card.csv:4"
+    ],
+    "status": "provisional",
+    "summary": "Required DATE recording when the credit card was issued; description specifies YYMMDD date form.",
+    "table_name": "card",
+    "title": "Card issue date"
+  },
+  "n_4bc20fb58d3e4ef1ee0ae2a8": {
+    "concept_id": "gender",
+    "keywords": [
+      "client",
+      "gender",
+      "female",
+      "male"
+    ],
+    "note_id": "n_4bc20fb58d3e4ef1ee0ae2a8",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "b2eb612b579124618faef798c91b54384cb5039b637ba02c00df61e648723762",
+    "source_refs": [
+      "schema:client.gender (TEXT, NOT NULL)",
+      "description:client.csv:2 (F female, M male)"
+    ],
+    "status": "provisional",
+    "summary": "Gender attribute recorded for a client; description maps F to female and M to male.",
+    "table_name": "client",
+    "title": "Client gender"
+  },
+  "n_54a75632197333949fa376e2": {
+    "concept_id": "date",
+    "keywords": [
+      "transaction",
+      "date",
+      "calendar",
+      "trans"
+    ],
+    "note_id": "n_54a75632197333949fa376e2",
+    "note_type": "column",
+    "revision": 5,
+    "sha256": "5781750a2081460519075b0c514dd94fb02fb9af6959a84b48fcc79edc991717",
+    "source_refs": [
+      "schema:trans.date DATE NOT NULL",
+      "values:trans.date stored as YYYY-MM-DD text, observed range 1993-01-01 through 1998-12-31"
+    ],
+    "status": "provisional",
+    "summary": "Required transaction calendar date associated with a recorded transaction; observed values are YYYY-MM-DD text.",
+    "table_name": "trans",
+    "title": "Transaction date"
+  },
+  "n_5d36d6b0bfaab1fb4831be42": {
+    "concept_id": "payments",
+    "keywords": [
+      "loan",
+      "payments",
+      "monthly payment",
+      "installment",
+      "real"
+    ],
+    "note_id": "n_5d36d6b0bfaab1fb4831be42",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "357a867be8e46ee4e545f12426b7d5af9e27c2f5060c826a0a28333b7b22ded8",
+    "source_refs": [
+      "schema:loan.payments REAL NOT NULL",
+      "description:loan.csv:6 (monthly payment)"
+    ],
+    "status": "provisional",
+    "summary": "Loan payments field is documented as monthly payment; REAL stored value, denomination not documented in schema.",
+    "table_name": "loan",
+    "title": "Loan monthly payment amount"
+  },
+  "n_603ff191bcc6423d66bc5aeb": {
+    "concept_id": "type",
+    "keywords": [
+      "disposition",
+      "type",
+      "owner",
+      "disponent"
+    ],
+    "note_id": "n_603ff191bcc6423d66bc5aeb",
+    "note_type": "column",
+    "revision": 4,
+    "sha256": "ee437de4836a61935384cc4d340bdc05f5dc9dad0fdc96390c5edf34205a61d2",
+    "source_refs": [
+      "schema:disp.type",
+      "schema:disp foreign keys to client and account",
+      "values:disp.type observed OWNER and DISPONENT"
+    ],
+    "status": "provisional",
+    "summary": "TEXT disposition role; observed OWNER and DISPONENT values, with OWNER identifying an owner association.",
+    "table_name": "disp",
+    "title": "Disposition type"
+  },
+  "n_61f7adb9c021fee049e9d2af": {
+    "concept_id": "date",
+    "keywords": [
+      "loan",
+      "date",
+      "approval",
+      "granted",
+      "term"
+    ],
+    "note_id": "n_61f7adb9c021fee049e9d2af",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "58fdcf87a8260e69af0ec99f0bd07a7c7c43936ac2f9f2dc28276a26b832af5e",
+    "source_refs": [
+      "schema:loan.date (DATE NOT NULL)",
+      "description:loan.csv:3 (loan approval date)",
+      "description:question evidence (term starts on approval day)"
+    ],
+    "status": "provisional",
+    "summary": "Loan date field is described as the date the loan was granted; stored as non-null DATE.",
+    "table_name": "loan",
+    "title": "Loan approval date"
+  },
+  "n_65a8a031cd6dc9b78a42a11b": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "account",
+      "branch",
+      "district",
+      "disposition",
+      "frequency"
+    ],
+    "note_id": "n_65a8a031cd6dc9b78a42a11b",
+    "note_type": "table",
+    "revision": 7,
+    "sha256": "1d36848e93d153da2ee89e27c275f88e861939597e3fd065a019026edc95d62e",
+    "source_refs": [
+      "schema:account.account_id primary key",
+      "schema:account.district_id foreign key district.district_id",
+      "description:account.csv:2 location of branch"
+    ],
+    "status": "provisional",
+    "summary": "Account rows identify accounts and the district serving as branch location; disposition links clients to accounts.",
+    "table_name": "account",
+    "title": "Account records"
+  },
+  "n_676176de17e1add36d3c8df9": {
+    "concept_id": "account_id",
+    "keywords": [
+      "loan",
+      "account",
+      "foreign key",
+      "account_id"
+    ],
+    "note_id": "n_676176de17e1add36d3c8df9",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "a37f8ecd77e2af7bb0bd672aae2ebb7fa89af8afd217abe8a83b0a94be0ae7ad",
+    "source_refs": [
+      "schema:loan.account_id INTEGER NOT NULL REFERENCES account.account_id"
+    ],
+    "status": "provisional",
+    "summary": "Non-null INTEGER account reference links a loan to its account record.",
+    "table_name": "loan",
+    "title": "Loan account identifier"
+  },
+  "n_67bff7c8e519c191f077c61a": {
+    "concept_id": "A11",
+    "keywords": [
+      "district",
+      "average salary",
+      "a11",
+      "income"
+    ],
+    "note_id": "n_67bff7c8e519c191f077c61a",
+    "note_type": "column",
+    "revision": 9,
+    "sha256": "5d82d8e5e39fa95a6b233963bd751973d655c51df47f77e6c428b4697c9bdaa7",
+    "source_refs": [
+      "schema:district.A11 INTEGER NOT NULL",
+      "description:district.csv:11"
+    ],
+    "status": "provisional",
+    "summary": "District A11 is described as average salary and stored as INTEGER; currency, period, and source method remain unverified.",
+    "table_name": "district",
+    "title": "District average salary"
+  },
+  "n_68f36203814b22e2bd635148": {
+    "concept_id": "district_id",
+    "keywords": [
+      "district",
+      "identifier",
+      "primary key",
+      "foreign key"
+    ],
+    "note_id": "n_68f36203814b22e2bd635148",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "b81cc5a2df474d6edb69d19c821cbdf19ac741bb7fe99a8d661a48efc9d9582a",
+    "source_refs": [
+      "schema:district.district_id",
+      "schema:account.district_id",
+      "schema:client.district_id"
+    ],
+    "status": "provisional",
+    "summary": "Primary-key district identifier referenced by account and client district associations.",
+    "table_name": "district",
+    "title": "District identifier"
+  },
+  "n_6c9f4b2b1a4c7f319ab9a377": {
+    "concept_id": "loan_id",
+    "keywords": [
+      "loan",
+      "identifier",
+      "primary key",
+      "loan_id"
+    ],
+    "note_id": "n_6c9f4b2b1a4c7f319ab9a377",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "56d30ce53890782368280cea24e13f4ba49d60aa815ef1a4594b052981af6ed4",
+    "source_refs": [
+      "schema:loan.loan_id INTEGER NOT NULL PRIMARY KEY",
+      "values:loan lookup for 98832 returned no matching row",
+      "values:loan loan_id range 4959-7308"
+    ],
+    "status": "provisional",
+    "summary": "Non-null INTEGER primary key identifying a loan; current table IDs range from 4959 to 7308, excluding 98832.",
+    "table_name": "loan",
+    "title": "Loan identifier"
+  },
+  "n_74c422395b26f28f6fe79c2a": {
+    "concept_id": "type",
+    "keywords": [
+      "transaction",
+      "type",
+      "prijem",
+      "vydaj",
+      "credit",
+      "debit"
+    ],
+    "note_id": "n_74c422395b26f28f6fe79c2a",
+    "note_type": "column",
+    "revision": 6,
+    "sha256": "ba0e78b9a359eb78f5aef001281b895b86c17a22e63203991a04dfc26ed95cbe",
+    "source_refs": [
+      "schema:trans.type TEXT NOT NULL",
+      "description: supplied task evidence defines PRIJEM as credit and VYDAJ as debit",
+      "values:trans type/operation groups show VYDAJ includes PREVOD NA UCET, VYBER, and VYBER KARTOU"
+    ],
+    "status": "provisional",
+    "summary": "Required TEXT transaction category; PRIJEM denotes credit/received and VYDAJ debit/withdrawn per task evidence; VYDAJ includes transfers and withdrawals.",
+    "table_name": "trans",
+    "title": "Transaction direction/category code"
+  },
+  "n_7ff98cae5a780f6bc1c81d1a": {
+    "concept_id": "bank",
+    "keywords": [
+      "transaction",
+      "bank",
+      "recipient",
+      "transfer",
+      "code",
+      "nullable"
+    ],
+    "note_id": "n_7ff98cae5a780f6bc1c81d1a",
+    "note_type": "column",
+    "revision": 4,
+    "sha256": "bc834bf315c5f4cdd0714f85ceee5e0a158755080fa15ab6a8abe2a9b216af25",
+    "source_refs": [
+      "schema:trans.bank TEXT NULL",
+      "values:trans grouped by type and operation",
+      "values:trans VYDAJ/PREVOD NA UCET bank/account completeness"
+    ],
+    "status": "provisional",
+    "summary": "Nullable bank code on transfer transactions; observed codes pair with recipient account but external-bank classification remains undocumented.",
+    "table_name": "trans",
+    "title": "Transaction bank code"
+  },
+  "n_84c43107aba2b7ee38ce1c83": {
+    "concept_id": "disp_id",
+    "keywords": [
+      "disposition",
+      "identifier",
+      "primary key"
+    ],
+    "note_id": "n_84c43107aba2b7ee38ce1c83",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "aef7cd7e3712b03d13cd9ec95964404d710ebf4449e1cb8fbc22025a7aaf902d",
+    "source_refs": [
+      "schema:disp.disp_id (INTEGER NOT NULL primary key)"
+    ],
+    "status": "provisional",
+    "summary": "Integer primary-key identifier for a disposition record.",
+    "table_name": "disp",
+    "title": "Disposition identifier"
+  },
+  "n_88bd9ed9e9e7647853b197ba": {
+    "concept_id": "disp_id",
+    "keywords": [
+      "card",
+      "disposition",
+      "disp_id",
+      "account link",
+      "foreign key"
+    ],
+    "note_id": "n_88bd9ed9e9e7647853b197ba",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "3969f23a583131870c611626546e1f68c0584f77fcea776a71da62b89c362641",
+    "source_refs": [
+      "schema:card.disp_id INTEGER NOT NULL REFERENCES disp.disp_id",
+      "schema:disp.disp_id INTEGER PRIMARY KEY",
+      "schema:disp.account_id REFERENCES account.account_id"
+    ],
+    "status": "provisional",
+    "summary": "Required INTEGER association from card record to disposition; account association is reached through disp.account_id.",
+    "table_name": "card",
+    "title": "Card disposition identifier"
+  },
+  "n_8c0956ca62028876cf67a301": {
+    "concept_id": "A4",
+    "keywords": [
+      "district",
+      "population",
+      "a4",
+      "inhabitants"
+    ],
+    "note_id": "n_8c0956ca62028876cf67a301",
+    "note_type": "column",
+    "revision": 10,
+    "sha256": "aa6fcc8e26e3d8ece5609a2a6a776c58cdf87cdaca4ccf5fb439654a73a09f9b",
+    "source_refs": [
+      "schema:district.A4 TEXT NOT NULL",
+      "description:district.csv:4 population",
+      "values:district.A4 digit strings observed across 77 records"
+    ],
+    "status": "provisional",
+    "summary": "District A4 is the inhabitant-count field, stored as TEXT; observed values are digit strings across 77 districts.",
+    "table_name": "district",
+    "title": "District population"
+  },
+  "n_8c203af484318fc373037fb6": {
+    "concept_id": "k_symbol",
+    "keywords": [
+      "order",
+      "payment purpose",
+      "code",
+      "k_symbol"
+    ],
+    "note_id": "n_8c203af484318fc373037fb6",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "c38b16ac26013b0aeb53d0e7d9d7c409cacb824ce4ff4755b37f84c6aa5064b4",
+    "source_refs": [
+      "schema:order.k_symbol (TEXT, NOT NULL)",
+      "description:order.csv:6 (documented code meanings)"
+    ],
+    "status": "provisional",
+    "summary": "Recorded classification code describing the purpose of a payment order.",
+    "table_name": "order",
+    "title": "Payment order purpose code"
+  },
+  "n_923293d36dc65499d222d9e3": {
+    "concept_id": "account_id",
+    "keywords": [
+      "account",
+      "account id",
+      "identifier",
+      "primary key"
+    ],
+    "note_id": "n_923293d36dc65499d222d9e3",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "8f09288d5f9c135816a504547bc4190f9b0ac61ba919eb517b165448ecd67604",
+    "source_refs": [
+      "schema:account.account_id (INTEGER, NOT NULL, primary key)",
+      "description:account.csv:1 (account ID)"
+    ],
+    "status": "provisional",
+    "summary": "Integer primary-key identifier for an account record.",
+    "table_name": "account",
+    "title": "Account identifier"
+  },
+  "n_974aca32fb50194ba54ca7af": {
+    "concept_id": "operation",
+    "keywords": [
+      "transaction",
+      "operation",
+      "withdrawal",
+      "transfer",
+      "vyber"
+    ],
+    "note_id": "n_974aca32fb50194ba54ca7af",
+    "note_type": "column",
+    "revision": 8,
+    "sha256": "d51c4a354c999d675eb0981aee48c4499e4b1e3d2611045ad4969299448282ff",
+    "source_refs": [
+      "schema:trans.operation nullable TEXT",
+      "description:trans.csv:5 operation definitions",
+      "values:trans grouped by type and operation",
+      "schema:trans.amount INTEGER NOT NULL",
+      "description:trans.csv amount field"
+    ],
+    "status": "provisional",
+    "summary": "Operation labels VYBER and VYBER KARTOU are documented withdrawal types within VYDAJ; dataset rows also include transfer VYDAJ.",
+    "table_name": "trans",
+    "title": "Transaction operation"
+  },
+  "n_a21f1e714d71ee15bacffb99": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "district",
+      "location",
+      "name",
+      "region",
+      "branch"
+    ],
+    "note_id": "n_a21f1e714d71ee15bacffb99",
+    "note_type": "table",
+    "revision": 13,
+    "sha256": "9da367d8f7b1b997b529f5fb0943e67e0cf9420d765641684cd28d7516919be1",
+    "source_refs": [
+      "schema:district DDL district_id primary key and A2/A3 required columns",
+      "schema:account.district_id foreign key to district.district_id",
+      "description:district.csv:2 name",
+      "values:district.A3 observed region labels"
+    ],
+    "status": "provisional",
+    "summary": "District rows identify a district by district_id and include its name (A2), region label (A3), and other district attributes.",
+    "table_name": "district",
+    "title": "District records"
+  },
+  "n_a3957dfdf89fee9bb93b63d4": {
+    "concept_id": "district_id",
+    "keywords": [
+      "client",
+      "district",
+      "district_id",
+      "foreign key",
+      "branch",
+      "residence"
+    ],
+    "note_id": "n_a3957dfdf89fee9bb93b63d4",
+    "note_type": "column",
+    "revision": 11,
+    "sha256": "25f6cc6fd654179225b3f9b83921d75ccf1c86ba1d0ec9fc9d6ba3a403d89e1c",
+    "source_refs": [
+      "schema:client.district_id INTEGER NOT NULL REFERENCES district.district_id",
+      "description:client.csv:4"
+    ],
+    "status": "provisional",
+    "summary": "Client district_id is a required FK to district; source label describes branch location, so home/residence semantics remain unverified.",
+    "table_name": "client",
+    "title": "Client district identifier"
+  },
+  "n_a3b877062a3eb2adb99dbe22": {
+    "concept_id": "amount",
+    "keywords": [
+      "loan",
+      "amount",
+      "approved",
+      "us dollars",
+      "account"
+    ],
+    "note_id": "n_a3b877062a3eb2adb99dbe22",
+    "note_type": "column",
+    "revision": 6,
+    "sha256": "2c70432347b83d7b17dd154905a8e3cb6562ed33977a6c3ee29ca5faccfdc194",
+    "source_refs": [
+      "schema:loan.amount INTEGER NOT NULL",
+      "schema:loan.account_id references account.account_id",
+      "description:loan.csv:4 approved amount and US dollars"
+    ],
+    "status": "provisional",
+    "summary": "Integer loan amount is described as the approved amount in US dollars; linked to accounts.",
+    "table_name": "loan",
+    "title": "Loan amount"
+  },
+  "n_a3fed1628be11a53dda72fd2": {
+    "concept_id": "account_id",
+    "keywords": [
+      "disposition",
+      "account id",
+      "foreign key",
+      "client account association"
+    ],
+    "note_id": "n_a3fed1628be11a53dda72fd2",
+    "note_type": "column",
+    "revision": 5,
+    "sha256": "64b6ce9ef174e220d8ef5380d857499b076d433d7091dc31c4bc554c68ee5412",
+    "source_refs": [
+      "schema:disp.account_id INTEGER NOT NULL REFERENCES account.account_id"
+    ],
+    "status": "provisional",
+    "summary": "Required account identifier on a disposition; references account.account_id and links clients to accounts.",
+    "table_name": "disp",
+    "title": "Disposition account ID"
+  },
+  "n_a5064ff8e8edf21c0648362e": {
+    "concept_id": "district_id",
+    "keywords": [
+      "account",
+      "district id",
+      "branch",
+      "location",
+      "foreign key"
+    ],
+    "note_id": "n_a5064ff8e8edf21c0648362e",
+    "note_type": "column",
+    "revision": 4,
+    "sha256": "9d7e8fe0f86ef2affbf907a3a162145ffd5c33f5e18f3905a646e247fdcc6823",
+    "source_refs": [
+      "schema:account.district_id INTEGER NOT NULL REFERENCES district.district_id",
+      "description:account.csv:2 branch location"
+    ],
+    "status": "provisional",
+    "summary": "Account district_id identifies its recorded branch district; historical branch assignment is not verified.",
+    "table_name": "account",
+    "title": "Account branch district ID"
+  },
+  "n_aa73ff6d1b7ae469d2c6a3f8": {
+    "concept_id": "client_id",
+    "keywords": [
+      "client",
+      "identifier",
+      "primary key",
+      "disposition"
+    ],
+    "note_id": "n_aa73ff6d1b7ae469d2c6a3f8",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "6e01787c1b02348d4a39a3d5eb93ad5c4223eb93b784eb7a042b0f658bcfbcc6",
+    "source_refs": [
+      "schema:client.client_id primary key",
+      "schema:disp.client_id foreign key references client.client_id"
+    ],
+    "status": "provisional",
+    "summary": "INTEGER primary key for client records; referenced by disposition.client_id.",
+    "table_name": "client",
+    "title": "Client identifier"
+  },
+  "n_afaf8d1d4cf5663fa7965242": {
+    "concept_id": "A6",
+    "keywords": [
+      "district",
+      "crime",
+      "crime count",
+      "1996",
+      "a6"
+    ],
+    "note_id": "n_afaf8d1d4cf5663fa7965242",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "b6ae91c5c81851782dbd476565699d7fb72d3bcbd3b0c6e42bc6defba66c2194",
+    "source_refs": [
+      "schema:district.A6 TEXT NOT NULL",
+      "description:district.csv:6",
+      "values:district.A6 observed digit strings across 77 records"
+    ],
+    "status": "provisional",
+    "summary": "District A6 is documented as number of crimes in 1996; TEXT values are digit strings in observed records.",
+    "table_name": "district",
+    "title": "District crime count, 1996"
+  },
+  "n_b2cbafbf31cf1617c9f44427": {
+    "concept_id": "k_symbol",
+    "keywords": [
+      "transaction",
+      "purpose",
+      "k_symbol",
+      "sipo",
+      "household payment",
+      "null",
+      "blank"
+    ],
+    "note_id": "n_b2cbafbf31cf1617c9f44427",
+    "note_type": "column",
+    "revision": 9,
+    "sha256": "0a90a0ce540f3d05a10f822d436565b33c8e82b7897b27484fc8cc92bfcf4d2b",
+    "source_refs": [
+      "schema:trans.k_symbol nullable TEXT",
+      "description:trans.csv:8",
+      "description:task evidence maps SIPO to household payment and NULL to no tag",
+      "values:trans.k_symbol grouped counts"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT transaction characterization; documented SIPO means household payment; NULL means no recorded tag; blank-space value meaning unresolved.",
+    "table_name": "trans",
+    "title": "Transaction purpose characterization"
+  },
+  "n_c8657d3fd71aa1b7a7c46801": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "loan",
+      "account",
+      "date",
+      "amount",
+      "duration",
+      "payments",
+      "status"
+    ],
+    "note_id": "n_c8657d3fd71aa1b7a7c46801",
+    "note_type": "table",
+    "revision": 4,
+    "sha256": "fd4791e6d83a6723f3e8f90799757da33b1b1f6d1716f6ecf005ca1fee5b02d5",
+    "source_refs": [
+      "schema:loan DDL loan_id primary key and account_id foreign key to account.account_id",
+      "schema:loan date/amount/duration/payments/status columns",
+      "values:loan count 682 and distinct account_id count 682"
+    ],
+    "status": "provisional",
+    "summary": "Loan rows identify a loan tied to an account and include date, principal amount, duration, payments and status.",
+    "table_name": "loan",
+    "title": "Loan records"
+  },
+  "n_c8b211ebc9166aa55575e387": {
+    "concept_id": "type",
+    "keywords": [
+      "card",
+      "type",
+      "credit card",
+      "class",
+      "classic",
+      "gold",
+      "junior"
+    ],
+    "note_id": "n_c8b211ebc9166aa55575e387",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "d4feddec74d76e570de88f090566a68b7029c55453f437dbbb51f4fa8c0e77b9",
+    "source_refs": [
+      "schema:card.type (TEXT NOT NULL)",
+      "description:card.csv:3 (card classes)",
+      "values:card.type distinct observed values classic, gold, junior"
+    ],
+    "status": "provisional",
+    "summary": "Describes credit card class; observed values are classic, gold, and junior.",
+    "table_name": "card",
+    "title": "Card type"
+  },
+  "n_cacf1807f883cd8db3e75e5d": {
+    "concept_id": "A9",
+    "keywords": [
+      "district",
+      "unemployment",
+      "rate",
+      "1996",
+      "a9"
+    ],
+    "note_id": "n_cacf1807f883cd8db3e75e5d",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "366e9ec354683047b40a9194eaff87f6419f29f94d9b662e5b0f6d4f43348e7f",
+    "source_refs": [
+      "schema:district.A9 (INTEGER, NOT NULL)",
+      "values:district.A9 (observed numeric values 1, 5, and 6)",
+      "description:district.csv:9 (district unemployment rate 1996)"
+    ],
+    "status": "provisional",
+    "summary": "District attribute A9 is the recorded unemployment rate for 1996; numeric values are stored as INTEGER.",
+    "table_name": "district",
+    "title": "District unemployment rate, 1996"
+  },
+  "n_dd338674cf105657a17f8476": {
+    "concept_id": "birth_date",
+    "keywords": [
+      "client",
+      "birth date",
+      "date",
+      "demographics",
+      "year"
+    ],
+    "note_id": "n_dd338674cf105657a17f8476",
+    "note_type": "column",
+    "revision": 4,
+    "sha256": "eed2459e259902e24eec4025d8f48dce39bdb3f874e3714ea1bf17c407519796",
+    "source_refs": [
+      "schema:client.birth_date DATE NOT NULL",
+      "values:client.birth_date observed ISO-style date samples"
+    ],
+    "status": "provisional",
+    "summary": "Required DATE recording the client's birth date; observed examples are ISO-style calendar dates.",
+    "table_name": "client",
+    "title": "Client birth date"
+  },
+  "n_ddc16a6092f254423376abc3": {
+    "concept_id": "frequency",
+    "keywords": [
+      "account",
+      "frequency",
+      "statement",
+      "issuance",
+      "monthly",
+      "weekly"
+    ],
+    "note_id": "n_ddc16a6092f254423376abc3",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "89a6bfddeac6b2dbc48d9848ed3846b89cab0a2601b57e6d4ae2378064531d5b",
+    "source_refs": [
+      "schema:account.frequency (TEXT, NOT NULL)",
+      "description:account.csv:3 (frequency values and meanings)",
+      "values:account.frequency (observed categories)"
+    ],
+    "status": "provisional",
+    "summary": "Account frequency field identifies statement issuance cadence; documented monthly, weekly, or after-transaction values.",
+    "table_name": "account",
+    "title": "Account statement issuance frequency"
+  },
+  "n_e914a895434f71b585e1bc14": {
+    "concept_id": "account",
+    "keywords": [
+      "transaction",
+      "recipient",
+      "account number",
+      "transfer"
+    ],
+    "note_id": "n_e914a895434f71b585e1bc14",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "8192f9e6ab5fdae50caa69deb451226e16ceff712a607d8f5f303330e35f5468",
+    "source_refs": [
+      "schema:trans.account INTEGER NULL",
+      "values:trans grouped by type, operation, bank and account",
+      "values:trans VYDAJ transfer recipient completeness"
+    ],
+    "status": "provisional",
+    "summary": "Nullable recipient account number paired with transaction bank code on observed outgoing account transfers.",
+    "table_name": "trans",
+    "title": "Transaction counterparty account number"
+  },
+  "n_f09c13b7ba8e0c495c66aac4": {
+    "concept_id": "A10",
+    "keywords": [
+      "district",
+      "a10",
+      "urban",
+      "inhabitants",
+      "ratio"
+    ],
+    "note_id": "n_f09c13b7ba8e0c495c66aac4",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "0a846083c14c2a5f0b2d20780402c4f53f2110f176bcf4757befb7c35943e607",
+    "source_refs": [
+      "schema:district.A10 REAL NOT NULL",
+      "description:district.csv:10 A10 ratio of urban inhabitants"
+    ],
+    "status": "provisional",
+    "summary": "District A10 is REAL and described as the ratio of urban inhabitants; scale and formula remain undocumented.",
+    "table_name": "district",
+    "title": "District urban-population ratio"
+  },
+  "n_f2a9257bc90d90aa4b4aba94": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "client",
+      "gender",
+      "birth date",
+      "district",
+      "disposition"
+    ],
+    "note_id": "n_f2a9257bc90d90aa4b4aba94",
+    "note_type": "table",
+    "revision": 4,
+    "sha256": "bd0b334035f3cc0d2d8029d8e2d7f6213373f0fd3968ba086080367a78738e7c",
+    "source_refs": [
+      "schema:client DDL primary key client_id and foreign key district_id to district.district_id",
+      "schema:disp foreign key client_id to client.client_id",
+      "description:client.csv:4 district_id location of branch"
+    ],
+    "status": "provisional",
+    "summary": "Client rows record demographic fields and district association; account links are made via dispositions.",
+    "table_name": "client",
+    "title": "Client records"
+  },
+  "n_f382ea13707b6df892bf314c": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "order",
+      "payment",
+      "account",
+      "amount",
+      "purpose"
+    ],
+    "note_id": "n_f382ea13707b6df892bf314c",
+    "note_type": "table",
+    "revision": 4,
+    "sha256": "53cc243ff0fe9b77e7ceb9572fe30223fda974ec4e88fbb0101208d9104207c9",
+    "source_refs": [
+      "schema:order DDL",
+      "schema:order.account_id foreign key",
+      "schema:order.amount REAL and k_symbol TEXT NOT NULL",
+      "values:order grouped by k_symbol including blank purpose"
+    ],
+    "status": "provisional",
+    "summary": "Order rows link a source account to destination, amount and purpose; recurrence/type and amount time basis are not established.",
+    "table_name": "order",
+    "title": "Payment orders"
+  },
+  "n_f3865a5581ef6432cad3c5bd": {
+    "concept_id": "A5",
+    "keywords": [
+      "district",
+      "crime",
+      "count",
+      "1995",
+      "a5"
+    ],
+    "note_id": "n_f3865a5581ef6432cad3c5bd",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "9ee1014873af780c0a2dc64287269883dafe9533434eb2bed4150fa0c1e14511",
+    "source_refs": [
+      "schema:district.A5 TEXT NOT NULL",
+      "description:district.csv:5"
+    ],
+    "status": "provisional",
+    "summary": "District A5 is documented as the number of crimes in 1995 and stored as TEXT.",
+    "table_name": "district",
+    "title": "District crime count, 1995"
+  }
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "question_id": 66,
+    "database": "card_games",
+    "sqlite_compile_error": "no such column: t.translation",
+    "final_sql_matches_observed_execute_sql_arguments": false
+  },
+  {
+    "question_id": 201,
+    "database": "financial",
+    "sqlite_compile_error": "unrecognized token: \"1997.0_total\"",
+    "final_sql_matches_observed_execute_sql_arguments": false
+  },
+  {
+    "question_id": 219,
+    "database": "financial",
+    "sqlite_compile_error": "1st ORDER BY term does not match any column in the result set",
+    "final_sql_matches_observed_execute_sql_arguments": false
+  },
+  {
+    "question_id": 73,
+    "database": "card_games",
+    "sqlite_compile_error": "1st ORDER BY term does not match any column in the result set",
+    "final_sql_matches_observed_execute_sql_arguments": false
+  }
+]

@@ -1,0 +1,18 @@
+[
+  {
+    "split": "dev",
+    "embedded_graphs": 400,
+    "browser_question_options": 400,
+    "browser_metadata": "Q1 \u00b7 california_schools \u00b7 56 model calls \u00b7 74 tool calls \u00b7 385.833 s \u00b7 final_sql_ready \u00b7 traces.jsonl",
+    "browser_exitcode": 0,
+    "html_bytes": 43693853
+  },
+  {
+    "split": "test",
+    "embedded_graphs": 100,
+    "browser_question_options": 100,
+    "browser_metadata": "Q0 \u00b7 california_schools \u00b7 43 model calls \u00b7 59 tool calls \u00b7 217.091 s \u00b7 final_sql_ready \u00b7 traces.jsonl",
+    "browser_exitcode": 0,
+    "html_bytes": 11935693
+  }
+]

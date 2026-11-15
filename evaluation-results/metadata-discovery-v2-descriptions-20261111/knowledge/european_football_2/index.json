@@ -1,0 +1,1227 @@
+{
+  "n_019794d91c2b318f04f5319c": {
+    "concept_id": "season",
+    "keywords": [
+      "match season",
+      "season label"
+    ],
+    "note_id": "n_019794d91c2b318f04f5319c",
+    "note_type": "column",
+    "revision": 4,
+    "sha256": "ef8691c2b2bbd38fb677084f12cb00cd4dec0ecd4fb0c3a0747ebcd1cc16adc5",
+    "source_refs": [
+      "schema:Match.season TEXT",
+      "description:Match.csv:4 identifies it as the season of the match"
+    ],
+    "status": "provisional",
+    "summary": "Text label for the season associated with a match record.",
+    "table_name": "Match",
+    "title": "Match.season definition"
+  },
+  "n_0c2311960b7464a92b398e74": {
+    "concept_id": "chanceCreationPassingClass",
+    "keywords": [
+      "team attributes",
+      "chance creation",
+      "passing class",
+      "risk category"
+    ],
+    "note_id": "n_0c2311960b7464a92b398e74",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "fdf15766198360138f86ca2f736aef0aec7317985ee3f9e5dad03cb7f60cd901",
+    "source_refs": [
+      "schema:Team_Attributes",
+      "description:Team_Attributes.csv:13"
+    ],
+    "status": "provisional",
+    "summary": "Text classification of a team's chance-creation passing risk, recorded in dated team tactical-attribute rows.",
+    "table_name": "Team_Attributes",
+    "title": "Team_Attributes.chanceCreationPassingClass definition"
+  },
+  "n_0e527984872c1b7e46759a69": {
+    "concept_id": "id",
+    "keywords": [
+      "id",
+      "primary key",
+      "attribute record",
+      "record identifier"
+    ],
+    "note_id": "n_0e527984872c1b7e46759a69",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "cf6046c142dc9926c07cd07d0315570d6dfb0e90c460332ac272ed1de5c1fa9f",
+    "source_refs": [
+      "schema:Player_Attributes DDL id INTEGER PRIMARY KEY AUTOINCREMENT"
+    ],
+    "status": "provisional",
+    "summary": "Primary-key integer identifier for an individual player attribute record; automatic increment is declared in schema.",
+    "table_name": "Player_Attributes",
+    "title": "Player_Attributes.id definition"
+  },
+  "n_10718c672e59a0edcd8b1428": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "player attributes",
+      "ratings",
+      "skill attributes",
+      "date",
+      "api id"
+    ],
+    "note_id": "n_10718c672e59a0edcd8b1428",
+    "note_type": "table",
+    "revision": 3,
+    "sha256": "f6ed97db0d040e1a8affda9e83475d2e537a423ef0b2faaeb2895021b9b72aaa",
+    "source_refs": [
+      "schema:Player_Attributes DDL",
+      "values:Player_Attributes COUNT(*), MIN(date), MAX(date) observed"
+    ],
+    "status": "provisional",
+    "summary": "Dated player ratings and skill attributes linked to Player through API identifiers; records may have timestamped dates.",
+    "table_name": "Player_Attributes",
+    "title": "Player_Attributes table definition"
+  },
+  "n_1369b14375c50120c2bf6ee3": {
+    "concept_id": "ball_control",
+    "keywords": [
+      "ball control",
+      "player attribute",
+      "skill score",
+      "dated snapshot"
+    ],
+    "note_id": "n_1369b14375c50120c2bf6ee3",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "edd23ba6ff2adbad6f28ef8537824339b7d79c8799192b30002577095f389e90",
+    "source_refs": [
+      "schema:Player_Attributes DDL (ball_control INTEGER)",
+      "values:Player_Attributes COUNT(*) and COUNT(ball_control) observed"
+    ],
+    "status": "provisional",
+    "summary": "Integer ball-control skill score recorded on dated player attribute rows; exact scale and scoring interpretation are not verified.",
+    "table_name": "Player_Attributes",
+    "title": "Player_Attributes.ball_control definition"
+  },
+  "n_1f824fc0af8e29e01e9881e8": {
+    "concept_id": "volleys",
+    "keywords": [
+      "volleys",
+      "volley score",
+      "player attributes",
+      "fifa",
+      "dated record"
+    ],
+    "note_id": "n_1f824fc0af8e29e01e9881e8",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "bfeecd3a1c218193b8a189f6e4ee15a3b74b4e499e0e03c0a2a2d08b767e838c",
+    "source_refs": [
+      "schema:Player_Attributes.volleys INTEGER",
+      "description:Player_Attributes.csv:14"
+    ],
+    "status": "provisional",
+    "summary": "FIFA-calculated integer volley score on player attribute records; source description gives a 0–100 range.",
+    "table_name": "Player_Attributes",
+    "title": "Player_Attributes.volleys definition"
+  },
+  "n_20b4cc7f88676339b3d23e1b": {
+    "concept_id": "overall_rating",
+    "keywords": [
+      "overall rating",
+      "player",
+      "fifa",
+      "attribute record"
+    ],
+    "note_id": "n_20b4cc7f88676339b3d23e1b",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "797dbb9a13c8af28942a038aa97814f37904bc7e3e5b8b809582c528dec0df8a",
+    "source_refs": [
+      "schema:Player_Attributes DDL overall_rating INTEGER",
+      "description:Player_Attributes.csv:5"
+    ],
+    "status": "provisional",
+    "summary": "FIFA-calculated overall player rating recorded as an integer on dated attribute records; description says higher indicates stronger overall strength.",
+    "table_name": "Player_Attributes",
+    "title": "Player_Attributes.overall_rating definition"
+  },
+  "n_28171d321894b818317c2839": {
+    "concept_id": "country_id",
+    "keywords": [
+      "league",
+      "country identifier",
+      "match attribution"
+    ],
+    "note_id": "n_28171d321894b818317c2839",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "506b1ff537ee6c985fe7a63198bd810b3b2fdd39112759ff8ac3d10dcd680099",
+    "source_refs": [
+      "schema:League.country_id foreign key Country.id",
+      "schema:Match.league_id references League and Match.country_id references Country",
+      "values:Match country_id matched linked League.country_id in all 25,979 rows"
+    ],
+    "status": "provisional",
+    "summary": "Country identifier for a league entry; schema references Country.id, and all observed Match league-country associations agree.",
+    "table_name": "League",
+    "title": "League.country_id definition"
+  },
+  "n_30a1be53ab4aec21c0e5a082": {
+    "concept_id": "buildUpPlayPassing",
+    "keywords": [
+      "build-up play passing",
+      "team tactics",
+      "passing distance",
+      "support",
+      "date"
+    ],
+    "note_id": "n_30a1be53ab4aec21c0e5a082",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "ab5970af31c6974e451014774b2604b8375875a9ca626b081ae11db36f221cbd",
+    "source_refs": [
+      "schema:Team_Attributes",
+      "description:Team_Attributes.csv:9",
+      "values:Team_Attributes 2012 record counts and buildUpPlayPassing range/null count"
+    ],
+    "status": "provisional",
+    "summary": "Integer build-up-play passing attribute; source description relates it to passing distance and teammate support.",
+    "table_name": "Team_Attributes",
+    "title": "Team_Attributes.buildUpPlayPassing definition"
+  },
+  "n_31c0214981e964102a9dc4bc": {
+    "concept_id": "country_id",
+    "keywords": [
+      "match",
+      "country identifier",
+      "league"
+    ],
+    "note_id": "n_31c0214981e964102a9dc4bc",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "58ada5f49e18a93b266182fb6991be9c460c20dcc6200885299d86ecb99fbd3c",
+    "source_refs": [
+      "schema:Match.country_id foreign key reference to Country",
+      "schema:Country.id"
+    ],
+    "status": "provisional",
+    "summary": "Country identifier associated with the match; schema foreign key references Country, while practical match-country interpretation is not verified.",
+    "table_name": "Match",
+    "title": "Match.country_id definition"
+  },
+  "n_31c0eb16e161d87a6b8b245a": {
+    "concept_id": "home_team_api_id",
+    "keywords": [
+      "match",
+      "home team",
+      "team identifier"
+    ],
+    "note_id": "n_31c0eb16e161d87a6b8b245a",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "5d4768271d8212a9769fc14a7221458c250e54c94ece3742b4627fa7e6ac6552",
+    "source_refs": [
+      "schema:Match.home_team_api_id"
+    ],
+    "status": "provisional",
+    "summary": "Team API identifier for the side designated as home in a match record; references Team.team_api_id.",
+    "table_name": "Match",
+    "title": "Match.home_team_api_id definition"
+  },
+  "n_332d291f13ec9d928a6c083c": {
+    "concept_id": "name",
+    "keywords": [
+      "country",
+      "name",
+      "lookup"
+    ],
+    "note_id": "n_332d291f13ec9d928a6c083c",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "caaee5a714b30ef88e945e2e24d63ab16b4fcc96905e2d6b4707d3b7da82da38",
+    "source_refs": [
+      "schema:Country.name TEXT UNIQUE",
+      "description:Country.csv:2 identifies name as country name"
+    ],
+    "status": "provisional",
+    "summary": "Text country name in the Country lookup; declared unique in the schema.",
+    "table_name": "Country",
+    "title": "Country.name definition"
+  },
+  "n_343872c9a77d05c17f0e5df1": {
+    "concept_id": "away_player_3",
+    "keywords": [
+      "match",
+      "away player slot",
+      "player identifier"
+    ],
+    "note_id": "n_343872c9a77d05c17f0e5df1",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "a75ed7c696a5e6dcab43a865b2a9dd2014bc0e0fdd8d5f8e400bb345a65f0e28",
+    "source_refs": [
+      "schema:Match DDL away_player_3 INTEGER references Player.player_api_id"
+    ],
+    "status": "provisional",
+    "summary": "Integer Player API ID in away-side numbered player slot 3; schema declares a Player reference.",
+    "table_name": "Match",
+    "title": "Match.away_player_3 definition"
+  },
+  "n_351e832c7dc800609061523c": {
+    "concept_id": "height",
+    "keywords": [
+      "height",
+      "player",
+      "physical profile",
+      "measurement unit"
+    ],
+    "note_id": "n_351e832c7dc800609061523c",
+    "note_type": "column",
+    "revision": 12,
+    "sha256": "18cfe805a1e68cf4501d2d878a641a795903b38d42c773cb79893f20632dac76",
+    "source_refs": [
+      "schema:Player.height INTEGER",
+      "description:Player.csv height field",
+      "values:Player.height aggregate MIN=157, MAX=208, COUNT=11060, COUNT(height)=11060"
+    ],
+    "status": "provisional",
+    "summary": "Integer player-height profile field; unit remains unverified despite observed values spanning 157–208.",
+    "table_name": "Player",
+    "title": "Player.height definition"
+  },
+  "n_3785ddf4fc1c05f195b5c971": {
+    "concept_id": "away_player_8",
+    "keywords": [
+      "match",
+      "away player slot",
+      "player identifier"
+    ],
+    "note_id": "n_3785ddf4fc1c05f195b5c971",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "7953e9b887253914cf7255bd01e816107f53fcfdd1ff9b808ee7bce205611c2b",
+    "source_refs": [
+      "schema:Match DDL away_player_8 INTEGER references Player.player_api_id"
+    ],
+    "status": "provisional",
+    "summary": "Integer Player API ID in away-side numbered player slot 8; schema declares a Player reference.",
+    "table_name": "Match",
+    "title": "Match.away_player_8 definition"
+  },
+  "n_412f2cd7f96b7eab3a7954fe": {
+    "concept_id": "away_player_10",
+    "keywords": [
+      "match",
+      "away player slot",
+      "player identifier"
+    ],
+    "note_id": "n_412f2cd7f96b7eab3a7954fe",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "bc0443807c3ed8f575e00575276bbe22691de6759b23e9465e37e4affb900741",
+    "source_refs": [
+      "schema:Match DDL away_player_10 INTEGER references Player.player_api_id"
+    ],
+    "status": "provisional",
+    "summary": "Integer Player API ID in away-side numbered player slot 10; schema declares a Player reference.",
+    "table_name": "Match",
+    "title": "Match.away_player_10 definition"
+  },
+  "n_41438aafd5b0516aae102478": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "player",
+      "identity",
+      "birthday",
+      "name",
+      "height",
+      "weight",
+      "api id"
+    ],
+    "note_id": "n_41438aafd5b0516aae102478",
+    "note_type": "table",
+    "revision": 3,
+    "sha256": "a8c864a8770683df7cdec56ede261aeefcb7cd023a6a74bc0e609647a36a3d46",
+    "source_refs": [
+      "schema:Player DDL",
+      "values:Player COUNT(*), COUNT(height) observed",
+      "schema:Match references Player.player_api_id"
+    ],
+    "status": "provisional",
+    "summary": "Player profiles contain API identifiers, name, birthday, height and weight, and link to player IDs in match lineup slots.",
+    "table_name": "Player",
+    "title": "Player table definition"
+  },
+  "n_434328f9d51c91bebb085f90": {
+    "concept_id": "away_team_api_id",
+    "keywords": [
+      "away team",
+      "match",
+      "team identifier"
+    ],
+    "note_id": "n_434328f9d51c91bebb085f90",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "87d7ca5fe99a771aafaa08912b4119449fbfc36d47e66a15f2109e0760da6178",
+    "source_refs": [
+      "schema:Match.away_team_api_id",
+      "schema:Team.team_api_id"
+    ],
+    "status": "provisional",
+    "summary": "API identifier for the team designated as away in a match; references Team.team_api_id.",
+    "table_name": "Match",
+    "title": "Match.away_team_api_id definition"
+  },
+  "n_43461143008ac029d0c2b70f": {
+    "concept_id": "away_player_7",
+    "keywords": [
+      "match",
+      "away player slot",
+      "player identifier"
+    ],
+    "note_id": "n_43461143008ac029d0c2b70f",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "77968ee436d85413d7a192fe609d548d30f5c250b87a283dc20aebfd9e865d3d",
+    "source_refs": [
+      "schema:Match DDL away_player_7 INTEGER references Player.player_api_id"
+    ],
+    "status": "provisional",
+    "summary": "Integer Player API ID in away-side numbered player slot 7; schema declares a Player reference.",
+    "table_name": "Match",
+    "title": "Match.away_player_7 definition"
+  },
+  "n_51f33b30946844d1a62484f1": {
+    "concept_id": "player_api_id",
+    "keywords": [
+      "player api id",
+      "attribute record",
+      "player link",
+      "foreign key"
+    ],
+    "note_id": "n_51f33b30946844d1a62484f1",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "e899f44d6ecc180911f60e4418294642f3881c840a8f75c7442062cf45a68d4a",
+    "source_refs": [
+      "schema:Player_Attributes DDL foreign key player_api_id -> Player.player_api_id",
+      "schema:Player.player_api_id INTEGER UNIQUE"
+    ],
+    "status": "provisional",
+    "summary": "Player API identifier on each attribute record, declared as a foreign key to unique Player.player_api_id.",
+    "table_name": "Player_Attributes",
+    "title": "Player_Attributes.player_api_id definition"
+  },
+  "n_521287354920de47b768754e": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "league",
+      "country",
+      "competition",
+      "name"
+    ],
+    "note_id": "n_521287354920de47b768754e",
+    "note_type": "table",
+    "revision": 1,
+    "sha256": "6f74f96e6b7496ecbc724fbe9ead5b2a1bde83a3ef920900950ce4c80de8cb5b",
+    "source_refs": [
+      "schema:League (DDL columns, primary key, unique name, and country foreign key)",
+      "description:League.csv:1-3"
+    ],
+    "status": "provisional",
+    "summary": "League lookup table associates a league identifier and name with a country identifier.",
+    "table_name": "League",
+    "title": "League table definition"
+  },
+  "n_52e7c4c30b7720c3de6dd7c3": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "team",
+      "team name",
+      "team api id",
+      "identifiers"
+    ],
+    "note_id": "n_52e7c4c30b7720c3de6dd7c3",
+    "note_type": "table",
+    "revision": 2,
+    "sha256": "fad7087ed5c70d3adf7ba89f875f70a3c9fc22c9acc46e84fee8a9271681e0ff",
+    "source_refs": [
+      "schema:Team",
+      "schema:Team_Attributes"
+    ],
+    "status": "provisional",
+    "summary": "Team lookup with API identifiers and long/short name fields; team_api_id is UNIQUE and is used by team attributes and matches.",
+    "table_name": "Team",
+    "title": "Team table definition"
+  },
+  "n_54471159a1a41ed79f40eb92": {
+    "concept_id": "preferred_foot",
+    "keywords": [
+      "preferred foot",
+      "player attributes",
+      "left",
+      "right"
+    ],
+    "note_id": "n_54471159a1a41ed79f40eb92",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "37357bc74d73b6834d3c6d60fd90bd84e1151b93d0881c789ae8076e5daa42ec",
+    "source_refs": [
+      "schema:Player_Attributes DDL",
+      "description:Player_Attributes.csv:7"
+    ],
+    "status": "provisional",
+    "summary": "Preferred attacking foot recorded as text on dated player attribute records; documented values include left and right.",
+    "table_name": "Player_Attributes",
+    "title": "Player_Attributes.preferred_foot definition"
+  },
+  "n_59406ca7602598d22d908fdb": {
+    "concept_id": "away_player_9",
+    "keywords": [
+      "match",
+      "away player slot",
+      "player identifier"
+    ],
+    "note_id": "n_59406ca7602598d22d908fdb",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "7770c53abdd55e2674737baf719d044319433d0816c086efb22b56ade9d3126e",
+    "source_refs": [
+      "schema:Match DDL away_player_9 INTEGER references Player.player_api_id"
+    ],
+    "status": "provisional",
+    "summary": "Integer Player API ID in away-side numbered player slot 9; schema declares a Player reference.",
+    "table_name": "Match",
+    "title": "Match.away_player_9 definition"
+  },
+  "n_597cb0ec8e9ee8173a5d3024": {
+    "concept_id": "team_long_name",
+    "keywords": [
+      "team",
+      "long name",
+      "club name"
+    ],
+    "note_id": "n_597cb0ec8e9ee8173a5d3024",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "2ad7f20d51992d94b0f890a3f5d636802e7fb51f89d5f77096357614e63b5a01",
+    "source_refs": [
+      "schema:Team.team_long_name"
+    ],
+    "status": "provisional",
+    "summary": "Text field storing the team's long name in the Team lookup table.",
+    "table_name": "Team",
+    "title": "Team.team_long_name definition"
+  },
+  "n_5dfea677ee9f8ffd30746d22": {
+    "concept_id": "home_player_2",
+    "keywords": [
+      "match",
+      "home lineup",
+      "player slot",
+      "player identifier"
+    ],
+    "note_id": "n_5dfea677ee9f8ffd30746d22",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "d6570a716ef55c04f3ee16e75a2f44a2088599e67e1309f68b1d7774e1fc8dec",
+    "source_refs": [
+      "schema:Match DDL home_player_2 INTEGER references Player.player_api_id"
+    ],
+    "status": "provisional",
+    "summary": "Player API ID in numbered home-side lineup slot 2 on a match record; FK to Player.player_api_id.",
+    "table_name": "Match",
+    "title": "Match.home_player_2 definition"
+  },
+  "n_5e1766f3d3fbdaec3125ea48": {
+    "concept_id": "crossing",
+    "keywords": [
+      "crossing",
+      "player attribute",
+      "score",
+      "dated record"
+    ],
+    "note_id": "n_5e1766f3d3fbdaec3125ea48",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "3c9720eb699faa0d8a45c4efb01449fe5279a92d2621a7bba8d1b58072f89ba3",
+    "source_refs": [
+      "schema:Player_Attributes DDL (crossing INTEGER)"
+    ],
+    "status": "provisional",
+    "summary": "Integer crossing attribute recorded on player attribute rows; its precise scale and interpretation are not verified.",
+    "table_name": "Player_Attributes",
+    "title": "Player_Attributes.crossing definition"
+  },
+  "n_5e74639dc986914a7b03b0cd": {
+    "concept_id": "away_player_5",
+    "keywords": [
+      "match",
+      "away player slot",
+      "player identifier"
+    ],
+    "note_id": "n_5e74639dc986914a7b03b0cd",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "33af3e64469e6e528731327640c9e2f4df08cc4698a2bfc9bd16cae303f173a7",
+    "source_refs": [
+      "schema:Match DDL away_player_5 INTEGER references Player.player_api_id"
+    ],
+    "status": "provisional",
+    "summary": "Integer Player API ID in away-side numbered player slot 5; schema declares a Player reference.",
+    "table_name": "Match",
+    "title": "Match.away_player_5 definition"
+  },
+  "n_62bf4a8558fe0d1464f3161a": {
+    "concept_id": "away_player_6",
+    "keywords": [
+      "match",
+      "away player slot",
+      "player identifier"
+    ],
+    "note_id": "n_62bf4a8558fe0d1464f3161a",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "3219176dab85956da3558167259487a42308d34cf62fee6b78cba0021f3b2643",
+    "source_refs": [
+      "schema:Match DDL away_player_6 INTEGER references Player.player_api_id"
+    ],
+    "status": "provisional",
+    "summary": "Integer Player API ID in away-side numbered player slot 6; schema declares a Player reference.",
+    "table_name": "Match",
+    "title": "Match.away_player_6 definition"
+  },
+  "n_642394a5d495b53b8408fb8d": {
+    "concept_id": "date",
+    "keywords": [
+      "match",
+      "date",
+      "match chronology"
+    ],
+    "note_id": "n_642394a5d495b53b8408fb8d",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "224002c73c4ecc39faea172e681e68503edc15ab9ad6e95dc2252fa815edfd0f",
+    "source_refs": [
+      "schema:Match.date",
+      "description:Match.csv:6"
+    ],
+    "status": "provisional",
+    "summary": "Text date identifying when the match took place.",
+    "table_name": "Match",
+    "title": "Match.date definition"
+  },
+  "n_6f75e86e94dfb46ef029192c": {
+    "concept_id": "date",
+    "keywords": [
+      "team attributes",
+      "date",
+      "tactical rating",
+      "temporal matching"
+    ],
+    "note_id": "n_6f75e86e94dfb46ef029192c",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "47e1ba323ecbc12bd03e2e7d44e9d09e8d72e92ea1ea128b782dc6edc8c8c5ff",
+    "source_refs": [
+      "schema:Team_Attributes.date"
+    ],
+    "status": "provisional",
+    "summary": "Text date attached to a team's tactical-attribute record; usable to order ratings relative to match dates.",
+    "table_name": "Team_Attributes",
+    "title": "Team_Attributes.date definition"
+  },
+  "n_775c0e3b1cfd92d8c90dc57c": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "country",
+      "name",
+      "identifier"
+    ],
+    "note_id": "n_775c0e3b1cfd92d8c90dc57c",
+    "note_type": "table",
+    "revision": 1,
+    "sha256": "bdc68c4e420a885147dabd9b97b87f3ea3725449422feea21bb683cf63108e0a",
+    "source_refs": [
+      "schema:Country DDL (id primary key, name TEXT UNIQUE)",
+      "schema:League.country_id references Country.id",
+      "schema:Match.country_id references Country"
+    ],
+    "status": "provisional",
+    "summary": "Country lookup holds country identifiers and names; League and Match records contain country identifiers.",
+    "table_name": "Country",
+    "title": "Country table definition"
+  },
+  "n_7975f2f1ce04acdd6a8500a7": {
+    "concept_id": "jumping",
+    "keywords": [
+      "player attributes",
+      "jumping",
+      "fifa score",
+      "fitness"
+    ],
+    "note_id": "n_7975f2f1ce04acdd6a8500a7",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "a19a5f4ea6612122eb8a3f6ca43a4dd945105e10f7e5fc5b3400894d6ad0f9a6",
+    "source_refs": [
+      "schema:Player_Attributes DDL",
+      "description:Player_Attributes.csv:26"
+    ],
+    "status": "provisional",
+    "summary": "FIFA-calculated integer jumping score for a player, described on a 0–100 scale in dated attribute records.",
+    "table_name": "Player_Attributes",
+    "title": "Player_Attributes.jumping definition"
+  },
+  "n_79815a129c663b66cf965572": {
+    "concept_id": "weight",
+    "keywords": [
+      "player weight",
+      "profile",
+      "integer",
+      "unit"
+    ],
+    "note_id": "n_79815a129c663b66cf965572",
+    "note_type": "column",
+    "revision": 7,
+    "sha256": "ec7189081b29be364520b5f0eff2dc662a5253c1095304c0ab5282f18533ecdc",
+    "source_refs": [
+      "schema:Player.weight INTEGER",
+      "description:Player.csv:7",
+      "values:Player.weight non-NULL count, min, max"
+    ],
+    "status": "provisional",
+    "summary": "Integer player-profile weight value; unit is not documented, so pounds remain unverified.",
+    "table_name": "Player",
+    "title": "Player.weight definition"
+  },
+  "n_7b327f513abc791d84b0770a": {
+    "concept_id": "attacking_work_rate",
+    "keywords": [
+      "attacking work rate",
+      "player attributes",
+      "high",
+      "medium",
+      "low",
+      "date"
+    ],
+    "note_id": "n_7b327f513abc791d84b0770a",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "2fe398b07c4db14be09e38dd0818df216163c836d68398ebde3e525bea2c99e8",
+    "source_refs": [
+      "schema:Player_Attributes DDL",
+      "description:Player_Attributes.csv:8",
+      "values:Player_Attributes.attacking_work_rate distinct observed values"
+    ],
+    "status": "provisional",
+    "summary": "Text attacking-work-rate field on dated player attribute records; documented categories include high, medium and low; other observed values are uninterpreted.",
+    "table_name": "Player_Attributes",
+    "title": "Player_Attributes.attacking_work_rate definition"
+  },
+  "n_7e667c42f43bc2e140e8eef0": {
+    "concept_id": "team_short_name",
+    "keywords": [
+      "team",
+      "short name",
+      "display name"
+    ],
+    "note_id": "n_7e667c42f43bc2e140e8eef0",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "3a85ddae484b52f1588fb1007b747cfbe50f25d4a60f9b65a08a5c845c126058",
+    "source_refs": [
+      "schema:Team.team_short_name"
+    ],
+    "status": "provisional",
+    "summary": "Text short-name label for a team; schema does not declare short names unique.",
+    "table_name": "Team",
+    "title": "Team.team_short_name definition"
+  },
+  "n_7f28eb5b85b184145a8f9b3b": {
+    "concept_id": "defensive_work_rate",
+    "keywords": [
+      "defensive work rate",
+      "player attributes",
+      "high",
+      "medium",
+      "low",
+      "rating"
+    ],
+    "note_id": "n_7f28eb5b85b184145a8f9b3b",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "f90fa8139df8b76ffd5a70881d36752ee2ee96e888ca30721f7d007a8b51c25c",
+    "source_refs": [
+      "schema:Player_Attributes.defensive_work_rate TEXT",
+      "schema:Player_Attributes DDL foreign keys",
+      "description:Player_Attributes.csv:9",
+      "values:Player_Attributes defensive_work_rate grouped observed values"
+    ],
+    "status": "provisional",
+    "summary": "Text defensive-work-rate rating; valid documented categories are high, medium, low, while observed malformed fragments also occur.",
+    "table_name": "Player_Attributes",
+    "title": "Player_Attributes.defensive_work_rate definition"
+  },
+  "n_8c16f2149c39c5d28cefddab": {
+    "concept_id": "heading_accuracy",
+    "keywords": [
+      "heading accuracy",
+      "player skill",
+      "attribute rating"
+    ],
+    "note_id": "n_8c16f2149c39c5d28cefddab",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "e634a089208ea1cd2a3c230d374d34f48042a2dd31e1759d7fcd41ab3963bb8c",
+    "source_refs": [
+      "schema:Player_Attributes.heading_accuracy INTEGER",
+      "schema:Player_Attributes DDL foreign keys to Player API identifiers"
+    ],
+    "status": "provisional",
+    "summary": "Recorded integer player heading-accuracy rating in dated player attribute records.",
+    "table_name": "Player_Attributes",
+    "title": "Player_Attributes.heading_accuracy definition"
+  },
+  "n_8d64190c66a6c83229614669": {
+    "concept_id": "chanceCreationPassing",
+    "keywords": [
+      "team attributes",
+      "chance creation",
+      "passing risk",
+      "tactical rating"
+    ],
+    "note_id": "n_8d64190c66a6c83229614669",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "15fe82c2f70c8a9dbbd1e55531cb5bc576eccd28df1acd29bd6834a6542c00f7",
+    "source_refs": [
+      "schema:Team_Attributes",
+      "description:Team_Attributes.csv:12"
+    ],
+    "status": "provisional",
+    "summary": "Integer measure of risk in chance-creation pass decisions and run support, recorded on dated team-attribute rows.",
+    "table_name": "Team_Attributes",
+    "title": "Team_Attributes.chanceCreationPassing definition"
+  },
+  "n_907a18dee7120c6a07102248": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "team attributes",
+      "build-up play",
+      "tactics",
+      "date",
+      "duplicate records"
+    ],
+    "note_id": "n_907a18dee7120c6a07102248",
+    "note_type": "table",
+    "revision": 3,
+    "sha256": "ab75f77adf81c59b7d2d07d08e78642e4f818cdc8156d0b6542c21afbca608e1",
+    "source_refs": [
+      "schema:Team_Attributes",
+      "values:Team_Attributes(team_api_id,date) duplicate-group check"
+    ],
+    "status": "provisional",
+    "summary": "Dated team tactical-attribute records; duplicate team/date records are possible, so team/date is not a reliable unique key.",
+    "table_name": "Team_Attributes",
+    "title": "Team_Attributes table definition"
+  },
+  "n_919924638b82e7f171d4e38d": {
+    "concept_id": "home_player_1",
+    "keywords": [
+      "match",
+      "home lineup",
+      "player slot",
+      "player identifier",
+      "appearance"
+    ],
+    "note_id": "n_919924638b82e7f171d4e38d",
+    "note_type": "column",
+    "revision": 7,
+    "sha256": "56c87b1650fee33d4d3697075f88ea212dc98acdfdbbc7ff55604c6684a5df2f",
+    "source_refs": [
+      "schema:Match DDL home_player_1 INTEGER references Player.player_api_id and numbered home_player_1..11 / away_player_1..11 slots",
+      "description:Match.csv:12-14 home_player_X lineup-position fields",
+      "values:aggregate of non-NULL numbered slot IDs all matched Player.player_api_id"
+    ],
+    "status": "provisional",
+    "summary": "Player API ID recorded in home slot 1; lineup-slot meaning is supported, but actual participation is not verified.",
+    "table_name": "Match",
+    "title": "Match.home_player_1 definition"
+  },
+  "n_930647ce288ecc65f454beef": {
+    "concept_id": "buildUpPlaySpeedClass",
+    "keywords": [
+      "build-up play",
+      "speed class",
+      "team attributes",
+      "tactical rating",
+      "date"
+    ],
+    "note_id": "n_930647ce288ecc65f454beef",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "d50ed4317cebfaacf9b91148b6c05c1f4d898a5f2804462858b889fd9aa24f7b",
+    "source_refs": [
+      "schema:Team_Attributes.buildUpPlaySpeedClass TEXT and team_api_id/date fields",
+      "description:Team_Attributes.csv:6"
+    ],
+    "status": "provisional",
+    "summary": "Stored text classification of a team's build-up-play speed on dated tactical-attribute records; source describes Slow, Balanced and Fast classes.",
+    "table_name": "Team_Attributes",
+    "title": "Team_Attributes.buildUpPlaySpeedClass definition"
+  },
+  "n_a3deb9613fc33b83c76bf94f": {
+    "concept_id": "team_api_id",
+    "keywords": [
+      "team identifier",
+      "api id",
+      "match",
+      "attributes"
+    ],
+    "note_id": "n_a3deb9613fc33b83c76bf94f",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "6c67a7e5b538668540e6241460494734cd36046e96a86fa51a87d6b72a4ccd67",
+    "source_refs": [
+      "schema:Team.team_api_id",
+      "schema:Match.home_team_api_id",
+      "schema:Team_Attributes.team_api_id"
+    ],
+    "status": "provisional",
+    "summary": "Integer API identifier for a team; declared UNIQUE and referenced by match and team-attribute records.",
+    "table_name": "Team",
+    "title": "Team.team_api_id definition"
+  },
+  "n_aa50cbce218b5df941e4bbf9": {
+    "concept_id": "date",
+    "keywords": [
+      "player attributes",
+      "date",
+      "temporal record",
+      "calendar day",
+      "duplicates"
+    ],
+    "note_id": "n_aa50cbce218b5df941e4bbf9",
+    "note_type": "column",
+    "revision": 10,
+    "sha256": "8b5147c1bbb5ea21671064b2d891b07f1eb47e49eadefb1cc5debb4420cfbaa3",
+    "source_refs": [
+      "schema:Player_Attributes.date TEXT",
+      "schema:Player_Attributes.id INTEGER PRIMARY KEY",
+      "values:Player_Attributes records grouped by player and calendar date show one 2013-07-12 row per observed player",
+      "values:Player_Attributes same-player same-date duplicates observed on other dates"
+    ],
+    "status": "provisional",
+    "summary": "Text snapshot timestamp; 2013-07-12 has one record per observed player, while other days may contain same-player duplicate dates.",
+    "table_name": "Player_Attributes",
+    "title": "Player_Attributes.date definition"
+  },
+  "n_af64e2c82db5507e6bf6c252": {
+    "concept_id": "away_player_1",
+    "keywords": [
+      "match",
+      "away player slot",
+      "player identifier",
+      "appearance"
+    ],
+    "note_id": "n_af64e2c82db5507e6bf6c252",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "3835a4dcd04a5839a36f622a9925de0e5c1437481fb9b230e3252dac82c22547",
+    "source_refs": [
+      "schema:Match DDL away_player_1 INTEGER references Player.player_api_id"
+    ],
+    "status": "provisional",
+    "summary": "Player API ID in numbered away-side player slot 1; FK to Player.player_api_id, with appearance meaning not verified.",
+    "table_name": "Match",
+    "title": "Match.away_player_1 definition"
+  },
+  "n_b000712c1513a87011f62c41": {
+    "concept_id": "finishing",
+    "keywords": [
+      "finishing",
+      "player attribute",
+      "fifa",
+      "assessment",
+      "rate"
+    ],
+    "note_id": "n_b000712c1513a87011f62c41",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "aeb72098791f3d69a03bcbf3692252c7edf5e21d3da072e58d40117bdd5be6ef",
+    "source_refs": [
+      "schema:Player_Attributes DDL",
+      "description:Player_Attributes.csv:11",
+      "values:Player_Attributes COUNT(finishing), MIN(finishing), MAX(finishing)"
+    ],
+    "status": "provisional",
+    "summary": "FIFA-calculated integer finishing-rate attribute, described on a 0–100 scale and recorded in dated player assessment rows.",
+    "table_name": "Player_Attributes",
+    "title": "Player_Attributes.finishing definition"
+  },
+  "n_b3a17161ce3cd0adae803541": {
+    "concept_id": "away_player_4",
+    "keywords": [
+      "match",
+      "away player slot",
+      "player identifier"
+    ],
+    "note_id": "n_b3a17161ce3cd0adae803541",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "38469a8052230ffbde81a701c59b10b3e129c9d6e6080f1c1e8192c21427301b",
+    "source_refs": [
+      "schema:Match DDL away_player_4 INTEGER references Player.player_api_id"
+    ],
+    "status": "provisional",
+    "summary": "Integer Player API ID in away-side numbered player slot 4; schema declares a Player reference.",
+    "table_name": "Match",
+    "title": "Match.away_player_4 definition"
+  },
+  "n_c4a12937f7e91857e0034a23": {
+    "concept_id": "home_team_goal",
+    "keywords": [
+      "match",
+      "home team",
+      "goals",
+      "score"
+    ],
+    "note_id": "n_c4a12937f7e91857e0034a23",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "a0982269f85337a14a91a631fd999699e37a380761c69bc270aaf0495c477d5b",
+    "source_refs": [
+      "schema:Match.home_team_goal"
+    ],
+    "status": "provisional",
+    "summary": "Integer count of goals scored by the home side in a match record.",
+    "table_name": "Match",
+    "title": "Match.home_team_goal definition"
+  },
+  "n_c6d33cf9d3198b48eb91ad6b": {
+    "concept_id": "buildUpPlayDribblingClass",
+    "keywords": [
+      "team attributes",
+      "build-up play",
+      "dribbling",
+      "class",
+      "tactics"
+    ],
+    "note_id": "n_c6d33cf9d3198b48eb91ad6b",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "531bef709b93b9b36f61061d233ae39f8b123118647da8c26de664970de9f9a9",
+    "source_refs": [
+      "schema:Team_Attributes.buildUpPlayDribblingClass",
+      "description:Team_Attributes.csv:8"
+    ],
+    "status": "provisional",
+    "summary": "Text category for a team’s build-up-play dribbling attribute; source description lists Little, Normal and Lots bands.",
+    "table_name": "Team_Attributes",
+    "title": "Team_Attributes.buildUpPlayDribblingClass definition"
+  },
+  "n_c83ed96dbff3d2195c2ea316": {
+    "concept_id": "birthday",
+    "keywords": [
+      "player",
+      "birthday",
+      "birth date",
+      "profile"
+    ],
+    "note_id": "n_c83ed96dbff3d2195c2ea316",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "46c70cc08281f21502472a862c30e58a819da34fd4e8b9656a88d702bdbb327f",
+    "source_refs": [
+      "schema:Player.birthday TEXT",
+      "schema:Player DDL"
+    ],
+    "status": "provisional",
+    "summary": "Text birthday field in Player profile; used as player's birth date, with exact date format details not verified.",
+    "table_name": "Player",
+    "title": "Player.birthday definition"
+  },
+  "n_d1afd944bf6e415dbf65bac3": {
+    "concept_id": "name",
+    "keywords": [
+      "league name",
+      "competition"
+    ],
+    "note_id": "n_d1afd944bf6e415dbf65bac3",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "e4ecd319f320bd1e62ae1011d90a9af651e92cde483ff068ec7d1dd447cfdf83",
+    "source_refs": [
+      "schema:League.name",
+      "schema:League.id",
+      "schema:Match.league_id"
+    ],
+    "status": "provisional",
+    "summary": "Text name identifying a league or competition; declared unique in the schema.",
+    "table_name": "League",
+    "title": "League.name definition"
+  },
+  "n_d33665e95b59853d6f267e9d": {
+    "concept_id": "away_player_2",
+    "keywords": [
+      "match",
+      "away lineup",
+      "player slot",
+      "player identifier"
+    ],
+    "note_id": "n_d33665e95b59853d6f267e9d",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "8826e976700b854ba42550622ab56465d933aaf1a1c7fa90ca780a2f43535686",
+    "source_refs": [
+      "schema:Match DDL away_player_2 INTEGER references Player.player_api_id"
+    ],
+    "status": "provisional",
+    "summary": "Player API ID in numbered away-side lineup slot 2 on a match record; FK to Player.player_api_id.",
+    "table_name": "Match",
+    "title": "Match.away_player_2 definition"
+  },
+  "n_d8a59647ba48ebbf8e440161": {
+    "concept_id": "home_player_3",
+    "keywords": [
+      "match",
+      "home lineup",
+      "player slot",
+      "player identifier"
+    ],
+    "note_id": "n_d8a59647ba48ebbf8e440161",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "096d9019bbd6acc22be4f01d4502c99e5debfc9c09a2cac3cbf6600c2009f068",
+    "source_refs": [
+      "schema:Match DDL home_player_3 INTEGER references Player.player_api_id",
+      "values:Match count/home_player_3 nonnull count"
+    ],
+    "status": "provisional",
+    "summary": "Player API ID in numbered home-side lineup slot 3 on a match record; declared reference to Player.player_api_id.",
+    "table_name": "Match",
+    "title": "Match.home_player_3 definition"
+  },
+  "n_dac786c7e5db90fe42150c21": {
+    "concept_id": "team_api_id",
+    "keywords": [
+      "team attributes",
+      "team identifier",
+      "api id"
+    ],
+    "note_id": "n_dac786c7e5db90fe42150c21",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "49614e39017b9e926b4b75aabc2974c5bf2dca01ec9ec2ba8f8a6814e53e9089",
+    "source_refs": [
+      "schema:Team_Attributes.team_api_id"
+    ],
+    "status": "provisional",
+    "summary": "Team API identifier on a dated tactical-attribute record; references Team.team_api_id.",
+    "table_name": "Team_Attributes",
+    "title": "Team_Attributes.team_api_id definition"
+  },
+  "n_dd7d8804bab51430fcced895": {
+    "concept_id": "away_team_goal",
+    "keywords": [
+      "away team",
+      "goals",
+      "match result"
+    ],
+    "note_id": "n_dd7d8804bab51430fcced895",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "38df2d45733c832d41a531cb6be2647d6cf3b85b2ec29f8d123e04463451e29f",
+    "source_refs": [
+      "schema:Match.away_team_goal"
+    ],
+    "status": "provisional",
+    "summary": "Integer goal count recorded for the away team in a match.",
+    "table_name": "Match",
+    "title": "Match.away_team_goal definition"
+  },
+  "n_e455bbd02d8c767b57d368dd": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "match",
+      "season",
+      "lineup",
+      "players",
+      "home",
+      "away",
+      "league"
+    ],
+    "note_id": "n_e455bbd02d8c767b57d368dd",
+    "note_type": "table",
+    "revision": 4,
+    "sha256": "fa3a27a25307481ee0b208303638fbf1e18b8cc76fa777cd50e657a28104943d",
+    "source_refs": [
+      "schema:Match DDL primary key id, unique match_api_id, season TEXT, league_id reference League and numbered home/away player slots references Player.player_api_id"
+    ],
+    "status": "provisional",
+    "summary": "Match records include season, league, teams, and numbered home/away player slots linked to Player.player_api_id.",
+    "table_name": "Match",
+    "title": "Match table definition"
+  },
+  "n_e832f28d7ac8fcbf6f707e5a": {
+    "concept_id": "away_player_11",
+    "keywords": [
+      "match",
+      "away player slot",
+      "player identifier"
+    ],
+    "note_id": "n_e832f28d7ac8fcbf6f707e5a",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "24b1dbc6238d5b2b321a51239ab94a44b9f9cf8d983c366702cb4b4cd786f1f6",
+    "source_refs": [
+      "schema:Match DDL away_player_11 INTEGER references Player.player_api_id"
+    ],
+    "status": "provisional",
+    "summary": "Integer Player API ID in away-side numbered player slot 11; schema declares a Player reference.",
+    "table_name": "Match",
+    "title": "Match.away_player_11 definition"
+  },
+  "n_f1a4bffb9504065dac45cd85": {
+    "concept_id": "player_name",
+    "keywords": [
+      "player name",
+      "identity",
+      "player",
+      "player_api_id"
+    ],
+    "note_id": "n_f1a4bffb9504065dac45cd85",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "b954310b97adfc319d7b51c65e7a71585ea5ad0f0001d8b582135336564f6c59",
+    "source_refs": [
+      "schema:Player.player_name TEXT",
+      "schema:Player DDL foreign key Player_Attributes.player_api_id -> Player.player_api_id",
+      "values:Player exact-name lookup for Ariel Borysiuk and Paulin Puel"
+    ],
+    "status": "provisional",
+    "summary": "Text player-name field in Player; observed exact-name values identify profiles linked to attribute records by player_api_id.",
+    "table_name": "Player",
+    "title": "Player.player_name definition"
+  },
+  "n_f48e41cfccb340a4e4d4c578": {
+    "concept_id": "league_id",
+    "keywords": [
+      "match league",
+      "competition identifier"
+    ],
+    "note_id": "n_f48e41cfccb340a4e4d4c578",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "5ef80f6c6fd210f6300f6e327c521c29f4ff7b487fa5fe2ce94773bc86478c9d",
+    "source_refs": [
+      "schema:Match.league_id",
+      "schema:League.id"
+    ],
+    "status": "provisional",
+    "summary": "League identifier associating a match record with a League record.",
+    "table_name": "Match",
+    "title": "Match.league_id definition"
+  }
+}

@@ -1,0 +1,1271 @@
+{
+  "accuracy": {
+    "dev": {
+      "n": 400,
+      "old_correct": 235,
+      "new_correct": 255,
+      "corrected": 53,
+      "regressed": 33,
+      "net": 20,
+      "delta_pp": 5.0,
+      "mcnemar_exact_p_two_sided": 0.03985362856053516,
+      "paired_stratified_bootstrap95_pp": [
+        0.5,
+        9.5
+      ],
+      "wilson95": [
+        0.5892885151310687,
+        0.6830956039269998
+      ],
+      "bootstrap_repetitions": 20000,
+      "bootstrap_seed": 42
+    },
+    "test": {
+      "n": 100,
+      "old_correct": 59,
+      "new_correct": 64,
+      "corrected": 13,
+      "regressed": 8,
+      "net": 5,
+      "delta_pp": 5.0,
+      "mcnemar_exact_p_two_sided": 0.38331031799316406,
+      "paired_stratified_bootstrap95_pp": [
+        -4.0,
+        14.000000000000002
+      ],
+      "wilson95": [
+        0.5423540245160874,
+        0.7272877959859567
+      ],
+      "bootstrap_repetitions": 20000,
+      "bootstrap_seed": 42
+    },
+    "overall": {
+      "n": 500,
+      "old_correct": 294,
+      "new_correct": 319,
+      "corrected": 66,
+      "regressed": 41,
+      "net": 25,
+      "delta_pp": 5.0,
+      "mcnemar_exact_p_two_sided": 0.01990038025446869,
+      "paired_stratified_bootstrap95_pp": [
+        1.0,
+        9.0
+      ],
+      "wilson95": [
+        0.5949717262107974,
+        0.6789239558218143
+      ],
+      "bootstrap_repetitions": 20000,
+      "bootstrap_seed": 42
+    }
+  },
+  "performance": {
+    "dev": {
+      "input_tokens": {
+        "observed_questions": 400,
+        "sum": 10096060,
+        "mean": 25240.15,
+        "p50": 20966.0,
+        "p95": 50931.74999999997,
+        "max": 110788
+      },
+      "cached_input_tokens": {
+        "observed_questions": 400,
+        "sum": 5493760,
+        "mean": 13734.4,
+        "p50": 12032.0,
+        "p95": 25728.0,
+        "max": 57728
+      },
+      "output_tokens": {
+        "observed_questions": 400,
+        "sum": 185130,
+        "mean": 462.825,
+        "p50": 390.5,
+        "p95": 1027.05,
+        "max": 2756
+      },
+      "reasoning_tokens": {
+        "observed_questions": 400,
+        "sum": 0,
+        "mean": 0,
+        "p50": 0.0,
+        "p95": 0.0,
+        "max": 0
+      },
+      "model_calls": {
+        "observed_questions": 400,
+        "sum": 2418,
+        "mean": 6.045,
+        "p50": 5.0,
+        "p95": 11.0,
+        "max": 19
+      },
+      "tool_calls": {
+        "observed_questions": 400,
+        "sum": 2908,
+        "mean": 7.27,
+        "p50": 7.0,
+        "p95": 13.049999999999955,
+        "max": 21
+      },
+      "sql_calls": {
+        "observed_questions": 400,
+        "sum": 1330,
+        "mean": 3.325,
+        "p50": 3.0,
+        "p95": 8.0,
+        "max": 15
+      },
+      "sql_success_calls": {
+        "observed_questions": 400,
+        "sum": 1292,
+        "mean": 3.23,
+        "p50": 3.0,
+        "p95": 8.0,
+        "max": 15
+      },
+      "sql_error_calls": {
+        "observed_questions": 400,
+        "sum": 38,
+        "mean": 0.095,
+        "p50": 0.0,
+        "p95": 1.0,
+        "max": 6
+      },
+      "sql_truncated_calls": {
+        "observed_questions": 400,
+        "sum": 144,
+        "mean": 0.36,
+        "p50": 0.0,
+        "p95": 2.0,
+        "max": 5
+      },
+      "latency_ms": {
+        "observed_questions": 400,
+        "sum": 9428838.0,
+        "mean": 23572.095,
+        "p50": 19814.0,
+        "p95": 41739.04999999998,
+        "max": 318708.0
+      },
+      "agent_sql_execution_ms": {
+        "observed_questions": 400,
+        "sum": 535774.65,
+        "mean": 1339.436625,
+        "p50": 12.328,
+        "p95": 794.9290499999993,
+        "max": 300151.71300000005
+      },
+      "observed_model_calls": 2418,
+      "tool_results": 2908,
+      "sql_results": 1330
+    },
+    "test": {
+      "input_tokens": {
+        "observed_questions": 100,
+        "sum": 2699083,
+        "mean": 26990.83,
+        "p50": 20507.0,
+        "p95": 53152.24999999997,
+        "max": 203996
+      },
+      "cached_input_tokens": {
+        "observed_questions": 100,
+        "sum": 1229440,
+        "mean": 12294.4,
+        "p50": 10624.0,
+        "p95": 19859.199999999997,
+        "max": 94720
+      },
+      "output_tokens": {
+        "observed_questions": 100,
+        "sum": 48052,
+        "mean": 480.52,
+        "p50": 386.0,
+        "p95": 1010.7999999999997,
+        "max": 2470
+      },
+      "reasoning_tokens": {
+        "observed_questions": 100,
+        "sum": 0,
+        "mean": 0,
+        "p50": 0.0,
+        "p95": 0.0,
+        "max": 0
+      },
+      "model_calls": {
+        "observed_questions": 100,
+        "sum": 625,
+        "mean": 6.25,
+        "p50": 6.0,
+        "p95": 10.049999999999997,
+        "max": 29
+      },
+      "tool_calls": {
+        "observed_questions": 100,
+        "sum": 769,
+        "mean": 7.69,
+        "p50": 7.0,
+        "p95": 13.0,
+        "max": 41
+      },
+      "sql_calls": {
+        "observed_questions": 100,
+        "sum": 359,
+        "mean": 3.59,
+        "p50": 3.0,
+        "p95": 7.099999999999994,
+        "max": 37
+      },
+      "sql_success_calls": {
+        "observed_questions": 100,
+        "sum": 349,
+        "mean": 3.49,
+        "p50": 3.0,
+        "p95": 7.099999999999994,
+        "max": 36
+      },
+      "sql_error_calls": {
+        "observed_questions": 100,
+        "sum": 9,
+        "mean": 0.09,
+        "p50": 0.0,
+        "p95": 1.0,
+        "max": 2
+      },
+      "sql_truncated_calls": {
+        "observed_questions": 100,
+        "sum": 41,
+        "mean": 0.41,
+        "p50": 0.0,
+        "p95": 2.0,
+        "max": 3
+      },
+      "latency_ms": {
+        "observed_questions": 100,
+        "sum": 3170702.0,
+        "mean": 31707.02,
+        "p50": 23871.5,
+        "p95": 59020.24999999997,
+        "max": 329228.0
+      },
+      "agent_sql_execution_ms": {
+        "observed_questions": 100,
+        "sum": 620029.163,
+        "mean": 6200.29163,
+        "p50": 11.901,
+        "p95": 1167.888849999999,
+        "max": 300286.3
+      },
+      "observed_model_calls": 625,
+      "tool_results": 768,
+      "sql_results": 358
+    },
+    "overall": {
+      "input_tokens": {
+        "observed_questions": 500,
+        "sum": 12795143,
+        "mean": 25590.286,
+        "p50": 20846.5,
+        "p95": 51527.849999999955,
+        "max": 203996
+      },
+      "cached_input_tokens": {
+        "observed_questions": 500,
+        "sum": 6723200,
+        "mean": 13446.4,
+        "p50": 11648.0,
+        "p95": 25119.99999999997,
+        "max": 94720
+      },
+      "output_tokens": {
+        "observed_questions": 500,
+        "sum": 233182,
+        "mean": 466.364,
+        "p50": 388.5,
+        "p95": 1027.05,
+        "max": 2756
+      },
+      "reasoning_tokens": {
+        "observed_questions": 500,
+        "sum": 0,
+        "mean": 0,
+        "p50": 0.0,
+        "p95": 0.0,
+        "max": 0
+      },
+      "model_calls": {
+        "observed_questions": 500,
+        "sum": 3043,
+        "mean": 6.086,
+        "p50": 5.0,
+        "p95": 11.0,
+        "max": 29
+      },
+      "tool_calls": {
+        "observed_questions": 500,
+        "sum": 3677,
+        "mean": 7.354,
+        "p50": 7.0,
+        "p95": 13.0,
+        "max": 41
+      },
+      "sql_calls": {
+        "observed_questions": 500,
+        "sum": 1689,
+        "mean": 3.378,
+        "p50": 3.0,
+        "p95": 8.0,
+        "max": 37
+      },
+      "sql_success_calls": {
+        "observed_questions": 500,
+        "sum": 1641,
+        "mean": 3.282,
+        "p50": 3.0,
+        "p95": 8.0,
+        "max": 36
+      },
+      "sql_error_calls": {
+        "observed_questions": 500,
+        "sum": 47,
+        "mean": 0.094,
+        "p50": 0.0,
+        "p95": 1.0,
+        "max": 6
+      },
+      "sql_truncated_calls": {
+        "observed_questions": 500,
+        "sum": 185,
+        "mean": 0.37,
+        "p50": 0.0,
+        "p95": 2.0,
+        "max": 5
+      },
+      "latency_ms": {
+        "observed_questions": 500,
+        "sum": 12599540.0,
+        "mean": 25199.08,
+        "p50": 20483.5,
+        "p95": 44909.64999999997,
+        "max": 329228.0
+      },
+      "agent_sql_execution_ms": {
+        "observed_questions": 500,
+        "sum": 1155803.813,
+        "mean": 2311.607626,
+        "p50": 12.328,
+        "p95": 811.7888999999991,
+        "max": 300286.3
+      },
+      "observed_model_calls": 3043,
+      "tool_results": 3676,
+      "sql_results": 1688
+    },
+    "correct": {
+      "input_tokens": {
+        "observed_questions": 319,
+        "sum": 8042747,
+        "mean": 25212.37304075235,
+        "p50": 21101.0,
+        "p95": 50469.19999999998,
+        "max": 168384
+      },
+      "cached_input_tokens": {
+        "observed_questions": 319,
+        "sum": 4180480,
+        "mean": 13104.952978056426,
+        "p50": 11648.0,
+        "p95": 21401.59999999999,
+        "max": 62848
+      },
+      "output_tokens": {
+        "observed_questions": 319,
+        "sum": 147218,
+        "mean": 461.4984326018809,
+        "p50": 385.0,
+        "p95": 969.4999999999977,
+        "max": 2756
+      },
+      "reasoning_tokens": {
+        "observed_questions": 319,
+        "sum": 0,
+        "mean": 0,
+        "p50": 0.0,
+        "p95": 0.0,
+        "max": 0
+      },
+      "model_calls": {
+        "observed_questions": 319,
+        "sum": 1913,
+        "mean": 5.996865203761756,
+        "p50": 6.0,
+        "p95": 10.0,
+        "max": 22
+      },
+      "tool_calls": {
+        "observed_questions": 319,
+        "sum": 2311,
+        "mean": 7.244514106583072,
+        "p50": 7.0,
+        "p95": 13.0,
+        "max": 23
+      },
+      "sql_calls": {
+        "observed_questions": 319,
+        "sum": 1039,
+        "mean": 3.25705329153605,
+        "p50": 3.0,
+        "p95": 8.0,
+        "max": 19
+      },
+      "sql_success_calls": {
+        "observed_questions": 319,
+        "sum": 1006,
+        "mean": 3.153605015673981,
+        "p50": 3.0,
+        "p95": 7.099999999999966,
+        "max": 18
+      },
+      "sql_error_calls": {
+        "observed_questions": 319,
+        "sum": 33,
+        "mean": 0.10344827586206896,
+        "p50": 0.0,
+        "p95": 1.0,
+        "max": 6
+      },
+      "sql_truncated_calls": {
+        "observed_questions": 319,
+        "sum": 101,
+        "mean": 0.3166144200626959,
+        "p50": 0.0,
+        "p95": 2.0,
+        "max": 5
+      },
+      "latency_ms": {
+        "observed_questions": 319,
+        "sum": 8248291.0,
+        "mean": 25856.711598746082,
+        "p50": 20386.0,
+        "p95": 41001.59999999998,
+        "max": 329228.0
+      },
+      "agent_sql_execution_ms": {
+        "observed_questions": 319,
+        "sum": 1072765.692,
+        "mean": 3362.901855799373,
+        "p50": 12.268,
+        "p95": 981.687699999996,
+        "max": 300286.3
+      },
+      "observed_model_calls": 1913,
+      "tool_results": 2311,
+      "sql_results": 1039
+    },
+    "wrong": {
+      "input_tokens": {
+        "observed_questions": 181,
+        "sum": 4752396,
+        "mean": 26256.331491712706,
+        "p50": 20445.0,
+        "p95": 55493.0,
+        "max": 203996
+      },
+      "cached_input_tokens": {
+        "observed_questions": 181,
+        "sum": 2542720,
+        "mean": 14048.17679558011,
+        "p50": 11648.0,
+        "p95": 28800.0,
+        "max": 94720
+      },
+      "output_tokens": {
+        "observed_questions": 181,
+        "sum": 85964,
+        "mean": 474.939226519337,
+        "p50": 405.0,
+        "p95": 1027.0,
+        "max": 2470
+      },
+      "reasoning_tokens": {
+        "observed_questions": 181,
+        "sum": 0,
+        "mean": 0,
+        "p50": 0.0,
+        "p95": 0.0,
+        "max": 0
+      },
+      "model_calls": {
+        "observed_questions": 181,
+        "sum": 1130,
+        "mean": 6.2430939226519335,
+        "p50": 5.0,
+        "p95": 12.0,
+        "max": 29
+      },
+      "tool_calls": {
+        "observed_questions": 181,
+        "sum": 1366,
+        "mean": 7.54696132596685,
+        "p50": 7.0,
+        "p95": 14.0,
+        "max": 41
+      },
+      "sql_calls": {
+        "observed_questions": 181,
+        "sum": 650,
+        "mean": 3.591160220994475,
+        "p50": 3.0,
+        "p95": 10.0,
+        "max": 37
+      },
+      "sql_success_calls": {
+        "observed_questions": 181,
+        "sum": 635,
+        "mean": 3.5082872928176796,
+        "p50": 3.0,
+        "p95": 9.0,
+        "max": 36
+      },
+      "sql_error_calls": {
+        "observed_questions": 181,
+        "sum": 14,
+        "mean": 0.07734806629834254,
+        "p50": 0.0,
+        "p95": 1.0,
+        "max": 2
+      },
+      "sql_truncated_calls": {
+        "observed_questions": 181,
+        "sum": 84,
+        "mean": 0.46408839779005523,
+        "p50": 0.0,
+        "p95": 2.0,
+        "max": 5
+      },
+      "latency_ms": {
+        "observed_questions": 181,
+        "sum": 4351249.0,
+        "mean": 24040.049723756907,
+        "p50": 20974.0,
+        "p95": 46073.0,
+        "max": 136899.0
+      },
+      "agent_sql_execution_ms": {
+        "observed_questions": 181,
+        "sum": 83038.121,
+        "mean": 458.7741491712707,
+        "p50": 12.861999999999998,
+        "p95": 355.74600000000004,
+        "max": 67085.607
+      },
+      "observed_model_calls": 1130,
+      "tool_results": 1365,
+      "sql_results": 649
+    }
+  },
+  "physical_501_attempt_totals": {
+    "input_tokens": 12806124,
+    "cached_input_tokens": 6727040,
+    "output_tokens": 233367,
+    "reasoning_tokens": 0,
+    "model_calls": 3046,
+    "tool_calls": 3682,
+    "sql_calls": 1690,
+    "sql_success_calls": 1642,
+    "sql_error_calls": 47,
+    "sql_truncated_calls": 185,
+    "latency_ms": 12611246.0,
+    "agent_sql_execution_ms": 1155860.372
+  },
+  "q60_original_attempt": {
+    "question_id": 60,
+    "db_id": "card_games",
+    "predicted_sql": null,
+    "provider": "chatgpt-siwc",
+    "model": "gpt-6-luna",
+    "requested_reasoning_effort": "none",
+    "tool_calls": 5,
+    "input_tokens": 10981,
+    "output_tokens": 185,
+    "total_tokens": 11166,
+    "cached_input_tokens": 3840,
+    "reasoning_tokens": 0,
+    "reasoning_effort": "none",
+    "thinking_level": null,
+    "reasoning_mode": "standard",
+    "input_tokens_observed_calls": 3,
+    "output_tokens_observed_calls": 3,
+    "total_tokens_observed_calls": 3,
+    "cached_input_tokens_observed_calls": 3,
+    "reasoning_tokens_observed_calls": 3,
+    "latency_ms": 11706.0,
+    "model_calls": 3,
+    "sql_calls": 1,
+    "sql_success_calls": 1,
+    "sql_error_calls": 0,
+    "sql_truncated_calls": 0,
+    "agent_sql_execution_ms": 56.559,
+    "cost_usd": null
+  },
+  "observed_coverage": {
+    "input_tokens": {
+      "observed_calls": 3043,
+      "model_calls": 3043
+    },
+    "cached_input_tokens": {
+      "observed_calls": 3043,
+      "model_calls": 3043
+    },
+    "output_tokens": {
+      "observed_calls": 3043,
+      "model_calls": 3043
+    },
+    "reasoning_tokens": {
+      "observed_calls": 3043,
+      "model_calls": 3043
+    }
+  },
+  "by_database": [
+    {
+      "database": "california_schools",
+      "n": 49,
+      "old_correct": 25,
+      "new_correct": 32,
+      "corrected": 9,
+      "regressed": 2,
+      "net": 7,
+      "delta_pp": 14.285714285714286,
+      "mcnemar_exact_p_two_sided": 0.0654296875,
+      "paired_stratified_bootstrap95_pp": [
+        2.0408163265306123,
+        26.53061224489796
+      ],
+      "wilson95": [
+        0.5131119428697273,
+        0.7707560716546102
+      ],
+      "bootstrap_repetitions": 20000,
+      "bootstrap_seed": 42
+    },
+    {
+      "database": "card_games",
+      "n": 69,
+      "old_correct": 39,
+      "new_correct": 44,
+      "corrected": 12,
+      "regressed": 7,
+      "net": 5,
+      "delta_pp": 7.246376811594203,
+      "mcnemar_exact_p_two_sided": 0.359283447265625,
+      "paired_stratified_bootstrap95_pp": [
+        -4.3478260869565215,
+        18.84057971014493
+      ],
+      "wilson95": [
+        0.5197977087380359,
+        0.7410427563983122
+      ],
+      "bootstrap_repetitions": 20000,
+      "bootstrap_seed": 42
+    },
+    {
+      "database": "codebase_community",
+      "n": 31,
+      "old_correct": 19,
+      "new_correct": 17,
+      "corrected": 1,
+      "regressed": 3,
+      "net": -2,
+      "delta_pp": -6.451612903225806,
+      "mcnemar_exact_p_two_sided": 0.625,
+      "paired_stratified_bootstrap95_pp": [
+        -19.35483870967742,
+        6.451612903225806
+      ],
+      "wilson95": [
+        0.37772167637354503,
+        0.7083826401947998
+      ],
+      "bootstrap_repetitions": 20000,
+      "bootstrap_seed": 42
+    },
+    {
+      "database": "debit_card_specializing",
+      "n": 14,
+      "old_correct": 9,
+      "new_correct": 11,
+      "corrected": 2,
+      "regressed": 0,
+      "net": 2,
+      "delta_pp": 14.285714285714286,
+      "mcnemar_exact_p_two_sided": 0.5,
+      "paired_stratified_bootstrap95_pp": [
+        0.0,
+        35.714285714285715
+      ],
+      "wilson95": [
+        0.524107694133997,
+        0.9242861328730683
+      ],
+      "bootstrap_repetitions": 20000,
+      "bootstrap_seed": 42
+    },
+    {
+      "database": "european_football_2",
+      "n": 31,
+      "old_correct": 21,
+      "new_correct": 20,
+      "corrected": 1,
+      "regressed": 2,
+      "net": -1,
+      "delta_pp": -3.225806451612903,
+      "mcnemar_exact_p_two_sided": 1,
+      "paired_stratified_bootstrap95_pp": [
+        -12.903225806451612,
+        6.451612903225806
+      ],
+      "wilson95": [
+        0.46947954064368874,
+        0.788833409061346
+      ],
+      "bootstrap_repetitions": 20000,
+      "bootstrap_seed": 42
+    },
+    {
+      "database": "financial",
+      "n": 46,
+      "old_correct": 22,
+      "new_correct": 25,
+      "corrected": 6,
+      "regressed": 3,
+      "net": 3,
+      "delta_pp": 6.521739130434782,
+      "mcnemar_exact_p_two_sided": 0.5078125,
+      "paired_stratified_bootstrap95_pp": [
+        -6.521739130434782,
+        19.565217391304348
+      ],
+      "wilson95": [
+        0.4018018105980127,
+        0.6784526621771542
+      ],
+      "bootstrap_repetitions": 20000,
+      "bootstrap_seed": 42
+    },
+    {
+      "database": "formula_1",
+      "n": 55,
+      "old_correct": 39,
+      "new_correct": 42,
+      "corrected": 7,
+      "regressed": 4,
+      "net": 3,
+      "delta_pp": 5.454545454545454,
+      "mcnemar_exact_p_two_sided": 0.548828125,
+      "paired_stratified_bootstrap95_pp": [
+        -5.454545454545454,
+        16.363636363636363
+      ],
+      "wilson95": [
+        0.6365163381083228,
+        0.8563334413026682
+      ],
+      "bootstrap_repetitions": 20000,
+      "bootstrap_seed": 42
+    },
+    {
+      "database": "student_club",
+      "n": 37,
+      "old_correct": 27,
+      "new_correct": 27,
+      "corrected": 6,
+      "regressed": 6,
+      "net": 0,
+      "delta_pp": 0.0,
+      "mcnemar_exact_p_two_sided": 1,
+      "paired_stratified_bootstrap95_pp": [
+        -18.91891891891892,
+        18.91891891891892
+      ],
+      "wilson95": [
+        0.5702183167528573,
+        0.8460253848895091
+      ],
+      "bootstrap_repetitions": 20000,
+      "bootstrap_seed": 42
+    },
+    {
+      "database": "superhero",
+      "n": 50,
+      "old_correct": 11,
+      "new_correct": 20,
+      "corrected": 9,
+      "regressed": 0,
+      "net": 9,
+      "delta_pp": 18.0,
+      "mcnemar_exact_p_two_sided": 0.00390625,
+      "paired_stratified_bootstrap95_pp": [
+        8.0,
+        28.000000000000004
+      ],
+      "wilson95": [
+        0.27608389730256544,
+        0.5381856225241064
+      ],
+      "bootstrap_repetitions": 20000,
+      "bootstrap_seed": 42
+    },
+    {
+      "database": "thrombosis_prediction",
+      "n": 86,
+      "old_correct": 63,
+      "new_correct": 59,
+      "corrected": 7,
+      "regressed": 11,
+      "net": -4,
+      "delta_pp": -4.651162790697675,
+      "mcnemar_exact_p_two_sided": 0.480682373046875,
+      "paired_stratified_bootstrap95_pp": [
+        -13.953488372093023,
+        4.651162790697675
+      ],
+      "wilson95": [
+        0.5817959683851581,
+        0.7743870279736356
+      ],
+      "bootstrap_repetitions": 20000,
+      "bootstrap_seed": 42
+    },
+    {
+      "database": "toxicology",
+      "n": 32,
+      "old_correct": 19,
+      "new_correct": 22,
+      "corrected": 6,
+      "regressed": 3,
+      "net": 3,
+      "delta_pp": 9.375,
+      "mcnemar_exact_p_two_sided": 0.5078125,
+      "paired_stratified_bootstrap95_pp": [
+        -6.25,
+        25.0
+      ],
+      "wilson95": [
+        0.5143332169904459,
+        0.8204745836639026
+      ],
+      "bootstrap_repetitions": 20000,
+      "bootstrap_seed": 42
+    }
+  ],
+  "by_query_category": [
+    {
+      "category": "aggregation",
+      "n": 442,
+      "old_correct": 250,
+      "new_correct": 275,
+      "corrected": 60,
+      "regressed": 35,
+      "net": 25,
+      "delta_pp": 5.656108597285068,
+      "mcnemar_exact_p_two_sided": 0.01337870302600394,
+      "paired_stratified_bootstrap95_pp": [
+        1.3574660633484164,
+        9.95475113122172
+      ],
+      "wilson95": [
+        0.5761020396939558,
+        0.666136536067198
+      ],
+      "bootstrap_repetitions": 20000,
+      "bootstrap_seed": 42
+    },
+    {
+      "category": "cte",
+      "n": 150,
+      "old_correct": 87,
+      "new_correct": 91,
+      "corrected": 22,
+      "regressed": 18,
+      "net": 4,
+      "delta_pp": 2.6666666666666665,
+      "mcnemar_exact_p_two_sided": 0.6358280026288412,
+      "paired_stratified_bootstrap95_pp": [
+        -5.333333333333334,
+        10.666666666666668
+      ],
+      "wilson95": [
+        0.5267662048449178,
+        0.681240143023226
+      ],
+      "bootstrap_repetitions": 20000,
+      "bootstrap_seed": 42
+    },
+    {
+      "category": "date_or_age",
+      "n": 93,
+      "old_correct": 57,
+      "new_correct": 57,
+      "corrected": 8,
+      "regressed": 8,
+      "net": 0,
+      "delta_pp": 0.0,
+      "mcnemar_exact_p_two_sided": 1,
+      "paired_stratified_bootstrap95_pp": [
+        -8.60215053763441,
+        8.60215053763441
+      ],
+      "wilson95": [
+        0.5113098270830408,
+        0.7055394465207608
+      ],
+      "bootstrap_repetitions": 20000,
+      "bootstrap_seed": 42
+    },
+    {
+      "category": "distinct",
+      "n": 181,
+      "old_correct": 106,
+      "new_correct": 118,
+      "corrected": 29,
+      "regressed": 17,
+      "net": 12,
+      "delta_pp": 6.629834254143646,
+      "mcnemar_exact_p_two_sided": 0.10380535550410741,
+      "paired_stratified_bootstrap95_pp": [
+        -0.5524861878453038,
+        13.812154696132598
+      ],
+      "wilson95": [
+        0.5800313705905201,
+        0.7175209228771097
+      ],
+      "bootstrap_repetitions": 20000,
+      "bootstrap_seed": 42
+    },
+    {
+      "category": "exists_or_antijoin",
+      "n": 52,
+      "old_correct": 31,
+      "new_correct": 28,
+      "corrected": 5,
+      "regressed": 8,
+      "net": -3,
+      "delta_pp": -5.769230769230769,
+      "mcnemar_exact_p_two_sided": 0.5810546875,
+      "paired_stratified_bootstrap95_pp": [
+        -19.230769230769234,
+        7.6923076923076925
+      ],
+      "wilson95": [
+        0.4050361132695787,
+        0.6665952531824317
+      ],
+      "bootstrap_repetitions": 20000,
+      "bootstrap_seed": 42
+    },
+    {
+      "category": "grouping",
+      "n": 174,
+      "old_correct": 94,
+      "new_correct": 107,
+      "corrected": 28,
+      "regressed": 15,
+      "net": 13,
+      "delta_pp": 7.471264367816092,
+      "mcnemar_exact_p_two_sided": 0.0659940344557981,
+      "paired_stratified_bootstrap95_pp": [
+        0.0,
+        14.942528735632186
+      ],
+      "wilson95": [
+        0.5408992472417806,
+        0.6840201852980152
+      ],
+      "bootstrap_repetitions": 20000,
+      "bootstrap_seed": 42
+    },
+    {
+      "category": "join",
+      "n": 388,
+      "old_correct": 228,
+      "new_correct": 256,
+      "corrected": 55,
+      "regressed": 27,
+      "net": 28,
+      "delta_pp": 7.216494845360825,
+      "mcnemar_exact_p_two_sided": 0.0026424928957725436,
+      "paired_stratified_bootstrap95_pp": [
+        2.8350515463917527,
+        11.855670103092782
+      ],
+      "wilson95": [
+        0.6112908185925564,
+        0.7051636994495024
+      ],
+      "bootstrap_repetitions": 20000,
+      "bootstrap_seed": 42
+    },
+    {
+      "category": "ordering_or_topk",
+      "n": 184,
+      "old_correct": 109,
+      "new_correct": 118,
+      "corrected": 25,
+      "regressed": 16,
+      "net": 9,
+      "delta_pp": 4.891304347826087,
+      "mcnemar_exact_p_two_sided": 0.21102359760880063,
+      "paired_stratified_bootstrap95_pp": [
+        -1.6304347826086956,
+        11.956521739130435
+      ],
+      "wilson95": [
+        0.5697658482280896,
+        0.7070633476611794
+      ],
+      "bootstrap_repetitions": 20000,
+      "bootstrap_seed": 42
+    },
+    {
+      "category": "ratio_or_percentage",
+      "n": 99,
+      "old_correct": 62,
+      "new_correct": 68,
+      "corrected": 13,
+      "regressed": 7,
+      "net": 6,
+      "delta_pp": 6.0606060606060606,
+      "mcnemar_exact_p_two_sided": 0.26317596435546875,
+      "paired_stratified_bootstrap95_pp": [
+        -2.0202020202020203,
+        15.151515151515152
+      ],
+      "wilson95": [
+        0.5899849550902321,
+        0.7697921272682566
+      ],
+      "bootstrap_repetitions": 20000,
+      "bootstrap_seed": 42
+    },
+    {
+      "category": "recursive_cte",
+      "n": 9,
+      "old_correct": 4,
+      "new_correct": 3,
+      "corrected": 1,
+      "regressed": 2,
+      "net": -1,
+      "delta_pp": -11.11111111111111,
+      "mcnemar_exact_p_two_sided": 1,
+      "paired_stratified_bootstrap95_pp": [
+        -44.44444444444444,
+        22.22222222222222
+      ],
+      "wilson95": [
+        0.1205838183869109,
+        0.6457978644196036
+      ],
+      "bootstrap_repetitions": 20000,
+      "bootstrap_seed": 42
+    },
+    {
+      "category": "window_function",
+      "n": 25,
+      "old_correct": 17,
+      "new_correct": 14,
+      "corrected": 2,
+      "regressed": 5,
+      "net": -3,
+      "delta_pp": -12.0,
+      "mcnemar_exact_p_two_sided": 0.453125,
+      "paired_stratified_bootstrap95_pp": [
+        -32.0,
+        8.0
+      ],
+      "wilson95": [
+        0.3706733186979878,
+        0.7333436111893266
+      ],
+      "bootstrap_repetitions": 20000,
+      "bootstrap_seed": 42
+    }
+  ],
+  "failure_primary_candidate_counts": {
+    "R7": 27,
+    "R4": 20,
+    "R2": 30,
+    "R1": 55,
+    "R3": 23,
+    "R6": 10,
+    "R5": 9,
+    "QA": 2,
+    "R8": 4,
+    "BUDGET": 1
+  },
+  "corrected_candidate_counts": {
+    "R1": 20,
+    "R4": 8,
+    "R2": 6,
+    "R8": 4,
+    "R7": 13,
+    "R3": 8,
+    "R6": 4,
+    "R5": 3
+  },
+  "regressed_candidate_counts": {
+    "R7": 6,
+    "R4": 7,
+    "R3": 7,
+    "R1": 9,
+    "R6": 3,
+    "R2": 6,
+    "R8": 2,
+    "R5": 1
+  },
+  "status_counts": {
+    "correct": 319,
+    "incorrect_result": 177,
+    "sql_error": 2,
+    "missing_sql": 2
+  },
+  "historical_performance": {
+    "dev": {
+      "input_tokens": {
+        "observed_questions": 400,
+        "sum": 8286371,
+        "mean": 20715.9275
+      },
+      "cached_input_tokens": {
+        "observed_questions": 400,
+        "sum": 4419328,
+        "mean": 11048.32
+      },
+      "output_tokens": {
+        "observed_questions": 400,
+        "sum": 173370,
+        "mean": 433.425
+      },
+      "reasoning_tokens": {
+        "observed_questions": 400,
+        "sum": 0,
+        "mean": 0
+      },
+      "model_calls": {
+        "observed_questions": 400,
+        "sum": 2255,
+        "mean": 5.6375
+      },
+      "tool_calls": {
+        "observed_questions": 400,
+        "sum": 2549,
+        "mean": 6.3725
+      },
+      "sql_calls": {
+        "observed_questions": 400,
+        "sum": 1021,
+        "mean": 2.5525
+      },
+      "latency_ms": {
+        "observed_questions": 400,
+        "sum": 8775741.0,
+        "mean": 21939.3525
+      }
+    },
+    "test": {
+      "input_tokens": {
+        "observed_questions": 100,
+        "sum": 2200441,
+        "mean": 22004.41
+      },
+      "cached_input_tokens": {
+        "observed_questions": 100,
+        "sum": 1136768,
+        "mean": 11367.68
+      },
+      "output_tokens": {
+        "observed_questions": 100,
+        "sum": 46151,
+        "mean": 461.51
+      },
+      "reasoning_tokens": {
+        "observed_questions": 100,
+        "sum": 0,
+        "mean": 0
+      },
+      "model_calls": {
+        "observed_questions": 100,
+        "sum": 587,
+        "mean": 5.87
+      },
+      "tool_calls": {
+        "observed_questions": 100,
+        "sum": 678,
+        "mean": 6.78
+      },
+      "sql_calls": {
+        "observed_questions": 100,
+        "sum": 280,
+        "mean": 2.8
+      },
+      "latency_ms": {
+        "observed_questions": 100,
+        "sum": 3271796.0,
+        "mean": 32717.96
+      }
+    },
+    "overall": {
+      "input_tokens": {
+        "observed_questions": 500,
+        "sum": 10486812,
+        "mean": 20973.624
+      },
+      "cached_input_tokens": {
+        "observed_questions": 500,
+        "sum": 5556096,
+        "mean": 11112.192
+      },
+      "output_tokens": {
+        "observed_questions": 500,
+        "sum": 219521,
+        "mean": 439.042
+      },
+      "reasoning_tokens": {
+        "observed_questions": 500,
+        "sum": 0,
+        "mean": 0
+      },
+      "model_calls": {
+        "observed_questions": 500,
+        "sum": 2842,
+        "mean": 5.684
+      },
+      "tool_calls": {
+        "observed_questions": 500,
+        "sum": 3227,
+        "mean": 6.454
+      },
+      "sql_calls": {
+        "observed_questions": 500,
+        "sum": 1301,
+        "mean": 2.602
+      },
+      "latency_ms": {
+        "observed_questions": 500,
+        "sum": 12047537.0,
+        "mean": 24095.074
+      }
+    }
+  },
+  "trace_observations": {
+    "attempted_tools": 3677,
+    "completed_tool_results": 3676,
+    "exact_final_sql_previously_called_questions": 33,
+    "identical_sql_repeats": 8
+  }
+}

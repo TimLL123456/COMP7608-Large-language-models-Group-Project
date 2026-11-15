@@ -1,153 +1,181 @@
-# KORA — COMP7608B Group 9 Text-to-SQL Agent
+> **Completed Metadata Discovery V2 evaluation with restored descriptions:** 340/500 EX (68.00%): Dev 272/400, local Test 68/100. Historical generalized-v1 B0 comparison is +4.20 percentage points with 9.11× observed input tokens and 5.86× inference time; descriptions and resource-budget effects are not separately established. [Results, evidence and reproduction](evaluation-results/metadata-discovery-v2-descriptions-20261111/README.md).
 
-**HKU MSc Computer Science · Large Language Models · Semester 1, 2026–2027**
+# KORA — COMP7608B Group Project
 
-> **Start here:** This repository contains a working B0 Text-to-SQL agent, the original BIRD Mini-Dev loader, strict EX evaluator, trace viewer, offline tests and beginner tutorials. The interactive application (follow-up questions, session context and reliable user-facing recovery) is **planned, not finished**.
 
-## 1. Project goal — what does KORA solve?
+## Research status — 15 November 2026
 
-Data analysts and business users often know what they want to ask but do not know the database schema or how to write SQL. **KORA** aims to turn natural-language questions into safe read-only SQL by exploring the schema, executing SQL tools, observing real database results/errors and deciding whether to fix the query or stop safely.
+**This repository is the canonical shared home for the KORA group project.** Use [BIRD Mini-Dev 2026](docs/bird-dataset-versions.md) for current studies (400 local Dev / 100 local Test, not the official hidden test).
 
-**Current executable path:** BIRD question → B0 Deep Agent → schema/SQL tools → SQLite → final SQL → **independent EX scoring**. This existing command-line benchmark pipeline is not yet the final live interactive app.
+| Research variant | Completed local strict EX | Implementation and results |
+| --- | ---: | --- |
+| B0 generalized-v1 | **319/500 (63.80%)** | [B0 CLI](scr/cli/run_bird_b0_eval.py) · [evaluation](evaluation-results/b0-generalized-v1-gpt6-luna-none-40calls-minidev2026-20261110/README.md) |
+| [Metadata v1](scr/agents/metadata_agent.py) | No archived full run | Original metadata workflow |
+| **MetadataDiscoveryV2** | **340/500 (68.00%)** | [A1/B1/C1 design and commands](docs/metadata-discovery-v2.md) · [implementation](scr/agents/metadata_discovery_v2.py) · `--workflow metadata-discovery-v2` · [evaluation](evaluation-results/metadata-discovery-v2-descriptions-20261111/README.md) |
+| Self Reflection Agent | **350/500 (70.00%)** | [agent guide](docs/self-reflection-agent.md) · [evaluation](evaluation-results/self-reflection-full-20261113/README.md) |
+| Rubric Self Reflection | **326/500 (65.20%)** | [agent guide](docs/rubric-self-reflection-agent.md) · [evaluation](evaluation-results/rubric-self-reflection-full-20261115/README.md) |
+| Role-Specialized Self Reflection | **Not yet benchmarked** | [Luna/Terra roles and two-shard parallel workflow](docs/role-specialized-self-reflection-agent.md) |
 
-## 2. Progress and what is next (3 November 2026 · v4.4)
+The six preserved [experiment archives](evaluation-results/) also include two historical B0 runs: [**299/500 (59.8%)** on the original Mini-Dev](evaluation-results/b0-gpt6-luna-40calls-20261108/README.md) and [**294/500 (58.8%)** on Mini-Dev 2026](evaluation-results/b0-gpt6-luna-none-40calls-minidev2026-20261108/README.md) with mixed recorded SQL-call budgets. **These experiments do not all share the same compute budget, retry policy, dataset version or execution context; differences in EX are descriptive rather than causal claims.** Some runs include repaired transport/DNS failures; read each archive's provenance. Metadata v1 remains distinct from MetadataDiscoveryV2. The interactive KORA application, reliability scenarios and final integration are not established by these offline SQL benchmarks.
 
-| Workstream | Status | Evidence / next step |
-| --- | --- | --- |
-| KORA-02 · Original BIRD Mini-Dev data | **Done** | 500 questions, 11 SQLite databases, local 400-dev/100-test split previously verified |
-| KORA-03 · Execution Accuracy scorer | **Done** | Selected-case upstream scorer parity **16/16**, not comprehensive parity |
-| KORA-05 · B0 Text-to-SQL agent | **In progress** | Implemented; initial 4-dev-question smoke: **4/4 final SQL, 1/4 strict EX = 25%** |
-| KORA-10 · Evaluation and diagnostics | **In progress** | Analyze Q672/Q963 aggregation and Q1037 join/temporal discrepancies; expand frozen dev sample |
-| KORA-06–09 · B1–B4 improvements | **Planned / conditional** | KG, explicit planner, router and optional integration based on measured B0 weaknesses |
-| KORA-14–17 · Working agent application | **Planned, P0** | Backend/controller, interactive UI, reliability tests and independent fictional demo data |
-| KORA-11–12 · Submission and demo | **Planned** | Final report, runnable source ZIP, pitch and live demo |
+Current implementations are under [`scr/`](scr/), regression tests under [`tests/`](tests/), and methods/reproducibility in [developer docs](docs/agent-development.md). Historical November 3 v4.4 material is retained below as a dated snapshot.
 
-**Important:** 25% EX is only **1 of 4 development questions**, not a representative model accuracy estimate; this was a user-reported local smoke run. Successful SQL execution is not the same as a correct answer. The earlier submitted proposal included fixed S0/S1 metrics; the **B0-only baseline working plan** does not modify the submitted proposal and requires team agreement and honest final-report disclosure. A latest full Windows regression and larger frozen dev run remain pending.
+> **Completed generalized-v1 evaluation:** 319/500 EX (63.80%), with full RCA and performance review: [results and report](evaluation-results/b0-generalized-v1-gpt6-luna-none-40calls-minidev2026-20261110/README.md). Historical comparison is descriptive; see budget and retry caveats.
 
-**3 November tracking update:** Eight active P0 KORA tasks (05, 10, 11, 12, 14–17) now have private Notion execution records. KORA-02/03 completion remains documented in the shared roadmap. The prior BENCH-03 BIRD research ticket is Done; broader BENCH-04 three-dataset planning is still Backlog. The public repo already contains B0 code/tests/docs; private-only proposals, RAG work and raw benchmarks remain excluded.
 
-## 3. Quick Start — Windows PowerShell
+> **Archived B0 evaluation (10 November 2026):** Ran only `generalized-v1` on all 500 Mini-Dev 2026 questions (400 Dev / 100 local Test), with **40 model calls / 40 total tool calls / 40 SQL executions**. SQL executions share the total-tool budget. No new original-baseline inference is requested. Previous Mini-Dev 2026 B0 configuration metadata also lists 40/40/40; its preserved execution history still documents the original 20-SQL cases and two 40-SQL reruns. Historical scores are descriptive comparisons, not a newly matched control. See [B0 workflow](docs/bird-b0.md).
 
-**Prerequisites:** Git, Python **3.11–3.14**, [uv](https://docs.astral.sh/uv/getting-started/installation/) and network access to download the original BIRD dataset. A private NVIDIA API key is needed only for hosted **Infer**. All commands below run from the repository root containing `pyproject.toml`.
+> **Dataset update — 8 November 2026:** Use **Mini-Dev 2026** for new harness experiments. The original Mini-Dev instructions and archived 59.8% EX remain historical reproduction evidence. See [dataset versions and migration](docs/bird-dataset-versions.md) for the Docker-free download command, changed IDs, and fresh evaluation workflow. Full Dev 20251106 is a separate optional benchmark.
 
-### Step 1 — Clone and install project dependencies
+**Group 9 · 2026–2027 Semester 1** · Research status updated 15 November 2026; v4.4 snapshot dated 3 November 2026
 
-**Why:** Obtain the scripts, then install Python packages into a managed local environment.
+KORA is a Text-to-SQL research project with multiple implemented agent variants and preserved local BIRD Mini-Dev 2026 evaluations. The B0 Deep Agent and read-only SQLite/evaluation utilities remain reusable. The historical B1–B4 roadmap does not by itself describe all current experiments; the interactive API/UI and end-to-end demo remain separate planned work.
+
+**Start with the tutorials.** You do not need to read the long research plan before running your first B0 test.
+
+
+## Historical B0 evaluation archive — BIRD Mini-Dev 2026 (9 November 2026)
+
+The archived Luna B0 run on **Mini-Dev 2026** scored **294/500 = 58.8% execution accuracy** (Development 235/400; local Test 59/100). This historical B0 analysis used matching pinned official Gold SQL, scores, and observable agent traces to investigate failure patterns by **database, query category, table/column semantics, SQL grain, and agent tool behavior**. It proposed E1–E5 follow-up experiments at that time; later independently archived agent experiments are listed in the current status table above. This historical analysis was not itself a fresh model inference. The follow-up RCA now compares **all 165 Development failures** against matching pinned 2026 Gold/final Agent SQL: **153 provisional candidate categories and 12 unresolved**, with no fresh database re-execution.
+
+| Read | Purpose |
+| --- | --- |
+| **[繁體中文完整分析](evaluation-results/b0-gpt6-luna-none-40calls-minidev2026-20261108/analysis-report/baseline-analysis-zh-HK.md)** | Updated 12-section report with 165-failure RCA breakdown, trace findings, evidence tiers and next experiments |
+| **[English analysis](evaluation-results/b0-gpt6-luna-none-40calls-minidev2026-20261108/analysis-report/baseline-analysis-en.md)** | Equivalent updated English RCA and baseline findings for project collaboration |
+| **[Gold vs Agent SQL case studies](evaluation-results/b0-gpt6-luna-none-40calls-minidev2026-20261108/analysis-report/case-studies.md)** | 114 documented SQL/trace case studies (97 original + 17 added); offline research only |
+| **[165 Development failures — CSV](evaluation-results/b0-gpt6-luna-none-40calls-minidev2026-20261108/analysis-report/failure-inventory.csv)** | All 165 Dev failures reviewed with candidate primary cause, per-case evidence, review basis and counterfactual status |
+
+**Dataset/version and reproducibility:** These reports apply only to the [Mini-Dev 2026 frozen run](evaluation-results/b0-gpt6-luna-none-40calls-minidev2026-20261108/reproduce.md), not the [historical Original Mini-Dev baseline](evaluation-results/b0-gpt6-luna-40calls-20261108/analysis-report/baseline-analysis-zh-CN.md). Gold SQL excerpts are **offline research/evaluator-only**; exclude the analysis files from agent prompts or retrieval corpora. The frozen run README, prediction/trace/score files and `checksums.sha256` remain untouched to preserve checksum verification. RCA categories are **not verified fixes**; Gold-derived research material must not be ingested by the agent.
+
+## Start here — beginner workflow
+
+| Read in this order | What you will learn |
+| --- | --- |
+| **[1. Install BIRD dataset](docs/bird-setup.md)** | Download and verify Mini-Dev 2026 without Docker |
+| **[2. Run B0: Prepare → Infer → Score → Visualize](docs/bird-b0.md)** | Execute a small agent test, inspect predictions and create a trace graph |
+| **[3. Understand EX accuracy](docs/bird-evaluation.md)** | Compare the final SQL result to gold reference results |
+| **[4. Extend B0 to B1–B4](docs/agent-development.md)** | Find shared modules and experiment contracts (developers) |
+| **[5. Roadmap and tickets](progress-planning.md)** | Current status, acceptance criteria, milestones and unresolved scope decisions |
+
+> **Required** instructions come first in each tutorial. Manual downloads, custom sampling, low-level scoring and live visualization are marked **Optional** or **Advanced**.
+
+## Additional B0 providers (API key and ChatGPT sign-in)
+
+B0 inference now supports `--provider` and `--model` while keeping the original
+NVIDIA default. The existing Ollama, Gemini and DeepSeek model factory is reusable
+from B0; OpenAI Responses API accepts `OPENAI_API_KEY`. The experimental
+`chatgpt-siwc` provider uses a locally authorized ChatGPT account, NOT an API
+key or an automatic fallback. It depends on available model permissions and may
+have different tool/sampling capabilities. Sign in explicitly:
+
+```powershell
+uv run python -m scr.baselines.siwc_auth
+uv run python -m scr.baselines.chatgpt_siwc  # list visible model slugs
+```
+
+For usage examples and provider-specific evaluation caveats, see
+[the B0 tutorial](docs/bird-b0.md#optional-other-model-providers).
+
+## Original Mini-Dev Quick Start — Windows PowerShell
+
+For new Mini-Dev 2026 experiments on Linux or Windows, use the [current setup tutorial](docs/bird-setup.md). The commands below retain the original dataset workflow for historical reproduction.
+
+Clone the repository and run the setup commands from its root. Install [BIRD Mini-Dev 2026](docs/bird-setup.md) and configure [model authentication](docs/bird-b0.md#3-run-b0-inference--required) before inference.
 
 ```powershell
 git clone https://github.com/TimLL123456/COMP7608-Large-language-models-Group-Project.git
 cd COMP7608-Large-language-models-Group-Project
-python --version
-uv --version
 uv sync
-```
-
-**Expected:** Python and uv report versions, and `uv sync` completes without errors. See the detailed [dataset setup tutorial](docs/bird-setup.md) for installation help.
-
-### Step 2 — Run offline unit tests
-
-**Why:** Check the code and small synthetic fixtures without using an API key or downloading BIRD.
-
-```powershell
-uv run python -X utf8 -m unittest discover -s tests -t . -v
-```
-
-**Expected:** Tests pass; JavaScript-specific trace-viewer tests may be skipped if Node.js is unavailable. These tests do **not** demonstrate real BIRD accuracy or live NVIDIA availability.
-
-### Step 3 — Install and verify original BIRD Mini-Dev
-
-**Why:** The agent needs the actual benchmark questions and 11 SQLite databases. The dataset is downloaded separately, never stored in this GitHub repo.
-
-```powershell
 uv run python -m scr.datasets.setup_bird
 uv run python -m scr.datasets.setup_bird --verify-only
 ```
 
-**Expected:** A `PASS` result with **500 questions, 11 databases, 400 dev and 100 local test questions**. This is original **Mini-Dev**, not Mini-Dev V2. Our 100 local-test questions are **not** BIRD's official hidden test.
+**When working from the separate public group repository root, skip `Set-Location`.** Expected dataset result: `PASS`, 500 questions, 11 databases, 400 dev / 100 local-test questions.
 
-### Step 4 — Prepare a five-question smoke sample
-
-**Why:** Choose a small repeatable set before making model calls.
+Set `NVIDIA_API_KEY` in your local terminal before `infer` (secure instructions in [B0 tutorial](docs/bird-b0.md#1-first-time-checks--required)). Inference requires a network connection and may consume model credits.
 
 ```powershell
-uv run python -m scr.cli.run_bird_b0_eval prepare `
-  --total-questions 5 `
-  --dev-ratio 0.8 `
-  --seed 42 `
-  --selection-id sample-001
+# Small repeatable smoke sample: 4 dev questions, 1 local-test question
+uv run python -m scr.cli.run_bird_b0_eval prepare --total-questions 5 --dev-ratio 0.8 --seed 42 --selection-id sample-001
+
+# Calls NVIDIA to generate SQL and traces for the 4 sampled dev questions
+uv run python -m scr.cli.run_bird_b0_eval infer --selection-id sample-001 --split dev --run-id run-001 --preview-rows 20
+
+# Scores saved SQL offline; does not call NVIDIA
+uv run python -m scr.cli.run_bird_b0_eval score --selection-id sample-001 --split dev --run-id run-001
+
+# Optional: create an offline trace-explorer.html
+uv run python -m scr.cli.run_bird_b0_eval visualize --selection-id sample-001 --split dev --run-id run-001
 ```
 
-**Expected:** `dev=4` and `test=1`. `--seed` makes the question *selection* repeatable, not the model's generated SQL. `prepare` makes no NVIDIA API calls.
+**Read your results:** `scr/evaluation/result/sample-001/B0/dev/run-001/scores/report.md`. Inspect `per_question.csv` for EX 0/1, and `traces.jsonl` for model/tool errors. This **five-question selection is a smoke test**, not full BIRD benchmark evidence. Use a **new `--run-id`** for each new inference run.
 
-### Step 5 — Generate SQL using B0 (hosted inference)
+## v4.4 progress snapshot — 3 November 2026
 
-**Why:** The agent inspects relevant tables and executes safe SQL tools before producing a final candidate.
+**Done:** KORA-02 dataset setup and KORA-03 independent EX scorer. **In Progress:** KORA-05 B0 and KORA-10 failure diagnosis. **To Do (P0):** KORA-17 demo data, KORA-14 controller, KORA-15 UI, KORA-16 end-to-end reliability, KORA-11 report/source ZIP and KORA-12 demo. Active P0 tasks are now tracked in [Notion](https://app.notion.com/p/ae1642e8bb734b7183a470de01fb99b2); older BENCH-03 research is Done and the broader BENCH-04 remains Backlog. The four-question smoke EX of 25% is not a representative benchmark, and all TC-I/TC-R scenarios remain unexecuted.
 
-**First:** Set `NVIDIA_API_KEY` securely in your own PowerShell session using [Step 1 of the B0 tutorial](docs/bird-b0.md#1-first-time-checks--required). Inference requires internet access and may incur provider charges. Do not put real keys into `.env.example` or Git.
+## Historical implementation snapshot — 3 November 2026
 
-```powershell
-uv run python -m scr.cli.run_bird_b0_eval infer `
-  --selection-id sample-001 `
-  --split dev `
-  --run-id run-001
-```
-
-**Expected:** `predictions.jsonl`, `traces.jsonl` and `inference_manifest.json` under `scr/evaluation/result/sample-001/B0/dev/run-001/`. A transport timeout may generate `predicted_sql: null`; it is not automatically a SQL reasoning failure.
-
-### Step 6 — Score results without calling an LLM
-
-**Why:** Compare saved final SQL's executed rows with reference SQL's rows. **EX=1** indicates exact result-set equality; **EX=0** indicates mismatch, failure or missing final SQL.
-
-```powershell
-uv run python -m scr.cli.run_bird_b0_eval score `
-  --selection-id sample-001 `
-  --split dev `
-  --run-id run-001
-```
-
-**Expected:** Check `scr/evaluation/result/sample-001/B0/dev/run-001/scores/report.md` for the summary, `per_question.csv` for each error, and `summary.json` for metrics.
-
-### Step 7 — Visualize the agent trace (optional)
-
-**Why:** See the actual model/tool sequence and diagnose why the generated SQL succeeded, failed or timed out.
-
-```powershell
-uv run python -m scr.cli.run_bird_b0_eval visualize `
-  --selection-id sample-001 `
-  --split dev `
-  --run-id run-001
-```
-
-**Expected:** Open `scr/evaluation/result/sample-001/B0/dev/run-001/trace-explorer.html` in Edge or Chrome. No additional NVIDIA call is made. Use a fresh run ID next time rather than overwriting the saved run.
-
-## 4. Documentation — where to start
-
-| Tutorial | Audience / what you will learn |
+| Component | State |
 | --- | --- |
-| [BIRD dataset setup](docs/bird-setup.md) | Beginners: environment prerequisites, downloading and verifying databases, troubleshooting |
-| [B0 step-by-step tutorial](docs/bird-b0.md) | Beginners: `prepare`, `infer`, `score`, `visualize`, key parameters and expected files |
-| [BIRD Evaluation / EX](docs/bird-evaluation.md) | All team members: official-style strict EX, gold SQL, diagnostic limitations and fair comparisons |
-| [Agent development](docs/agent-development.md) | Contributors: extend B0 toward B1 KG, B2 planner and B3 router; reuse the shared evaluator |
-| [Progress planning v4.4](progress-planning.md) | Team: current statuses, dependencies, proposed tickets, milestones and acceptance criteria |
+| Dataset loader and setup (KORA-02) | Implemented; previous Windows validation reported original 500/11 and fixed 400/100 |
+| Independent EX evaluator (KORA-03) | Implemented; prior 16/16 selected-case upstream parity checks, **not full parity** |
+| B0 Text-to-SQL (KORA-05) | Implemented; 1 Nov four-dev-question smoke generated 4/4 final SQL and strict EX 1/4 (25%); a representative scored benchmark and current full Windows regression **not yet verified** |
+| B1 Knowledge Graph / B2 Planner / B3 Router / B4 Integration | **Planned**; see [developer guide](docs/agent-development.md) |
+| Backend/frontend, synthetic demo | **Planned**, not built |
+| Document RAG | **Optional P2** prototype; not part of required BIRD EX |
 
-## 5. Source code map
+**Historical v4.4 B0 configuration:** Nemotron 3.5 Super VL; **300 seconds per NVIDIA model request**, **16,384 output tokens**, documented **262,144-token hosted context budget** (not directly enforced by the client). See [B0 parameters](docs/bird-b0.md#3-run-b0-inference--required). Context, API availability and large output limits can affect latency.
 
-```text
-scr/baselines/      B0 agent, explicit-provider model factory and read-only SQL
-scr/datasets/       Original BIRD dataset setup, loader and local split
-scr/evaluation/     Strict EX evaluation and deterministic question sampling
-scr/cli/            Prepare / Infer / Score / Visualize and independent scorer CLI
-scr/tracing/        Trace graph, HTML viewer and local refresh server
-tests/              Offline regression tests and tests/fixtures/demo_schema.sql
-docs/               Beginner setup, evaluation and development documentation
+**Important research decision:** The original submitted [Group 9 proposal](proposal/KORA/KORA_Group9_Proposal.pdf) includes S0/S1; both private and public v4.4 **working roadmaps** now use **B0 as the sole active baseline** with evidence-gated B1–B4. This is not a revision to the submitted proposal; team/teaching-team alignment and truthful final-report disclosure remain important.
+
+## Where to find source and research files
+
+| Directory | Purpose |
+| --- | --- |
+| `scr/datasets/` | Dataset installer and question/schema loader |
+| `scr/baselines/` | B0 agent, provider factory and safe SQLite adapter |
+| `scr/cli/` | B0 prepare/infer/score/visualize/serve and independent EX scoring |
+| `scr/evaluation/` | Shared EX evaluator and sampled result locations |
+| `scr/tracing/` | Offline/live read-only execution graph |
+| `tests/` | Offline regression tests |
+| `docs/` | Canonical beginner tutorials and framework guide |
+| `progress-planning.md` | Detailed tickets, roadmap and validation evidence |
+| `guidelines/`, `research/`, `proposal/` | Course material, historical studies and submitted proposal |
+
+Offline regression checks (do not replace real-dataset verification):
+
+```powershell
+uv run python -m unittest discover -s tests -t . -v
 ```
 
-**Small database clarification:** `tests/fixtures/demo_schema.sql` contains simple fictional customers/orders used only to check SQL safety. It is **not** original BIRD Mini-Dev, gold reference data or the planned KORA-17 application/demo fixture set.
+## Sharing boundaries
 
-## 6. Team contribution and safety
+Review new files for credentials, local configuration, downloaded data and unreviewed traces before opening a pull request. See the [developer guide](docs/agent-development.md).
 
-Start by running the existing offline tests, reading [agent development](docs/agent-development.md) and checking [remaining tickets](progress-planning.md). Create a feature branch; keep agent improvements small and testable; use the same question IDs and evaluation conditions when comparing them with B0; open a Pull Request containing commands run, observed results and limitations.
+Never commit API keys, original BIRD database archives, gold SQL/reference datasets, or unreviewed inference traces. Earlier unit/smoke tests and selected-case scorer parity are **not** model benchmark accuracy.
 
-**Never commit:** API credentials, real `.env` files, downloaded BIRD SQLite databases/annotations, evaluator-only reference answers, raw traces or private data. `.env.example` contains variable **names**, not credentials, and is **not auto-loaded**. The B0 evaluation CLI currently uses NVIDIA `nvidia/nemotron-3.5-super-vl-120b-a12b`; optional Ollama/Gemini/DeepSeek support in `common.py` is not a `--provider` flag of this CLI.
+<details>
+<summary><strong>Historical progress log (Optional — dated records)</strong></summary>
 
-**Planned delivery:** The working roadmap lists final report PDF + runnable code ZIP submission on **25 November 2026 at 23:59 HKT**, followed by a live demo on **1 or 8 December** (session assignment pending). Consult official course announcements for authoritative requirements.
+| Date | Progress |
+| --- | --- |
+| 2026-10-04 | Organized dataset research covering 34 resources across 11 domains; established the project documentation structure; included the original guideline and requirements summary. Topic, dataset and baseline remain undecided. |
+| 2026-10-04 | Checked reference answer availability across all 34 resources; recorded public answer/solution formats, split restrictions and outcome-based task references. Updated the research links. Topic, dataset and baseline remain undecided. |
+| 2026-10-05 | Added a BrowseComp-Plus deep dive covering the fixed-corpus design, dataset schema, worked cases, failure modes and a concrete retriever-vs-agent evaluation direction. |
+| 2026-10-05 | Added a HotpotQA deep dive covering multi-hop question types, worked comparison and bridge cases, distractor/fullwiki settings, supporting-fact evaluation and an iterative retrieval experiment direction. |
+| 2026-10-05 | Added a MuSiQue deep dive covering connected 2–4 hop construction, a worked decomposition example, MuSiQue-Ans/Full evaluation, leakage controls and a decomposition-plus-iterative-retrieval experiment direction. |
+| 2026-10-05 | Added a ToolSandbox deep dive covering stateful tool execution, world-state dependencies, milestone/minefield scoring, the official messaging example and a prerequisite-checking experiment direction. |
+| 2026-10-05 | Added a BIRD-SQL / BIRD Mini-Dev deep dive covering the original 500-example setting, dataset fields, a worked SQL case, schema/value inspection, execution-feedback repair, evaluation metrics and an ablation-based SQL-agent experiment direction. |
+| 2026-10-06 | Saved concise BIRD Mini-Dev and MuSiQue proposal drafts with text workflow charts for team review. The final topic has not been selected. |
+| 2026-10-06 | Added two-page PDF versions of the BIRD Mini-Dev and MuSiQue proposal drafts, preserving their text workflow charts. Linked both PDFs from the file index. |
+| 2026-10-10 (HKT) | Submitted KORA proposal PDF was added to GitHub (commit `a11d199`); the chosen benchmark is original BIRD Mini-Dev. |
+| 2026-10-25 | Aligned documentation with the final proposal and marked earlier topic research/drafts as historical; no files removed or relocated. |
+| 2026-10-28 | Prepared `progress-planning.md` for Group 9 review; updated the README to reflect existing prototype scaffolds and the proposed combined S0/S1 fixed baseline. No new model runs, tickets or application code changes. |
+| 2026-10-28 | Updated planning to v3.1 and documented [public group repository](https://github.com/TimLL123456/COMP7608-Large-language-models-Group-Project) as canonical source; added SQL-only API/UI, optional progress-gated RAG and KORA-17 synthetic demo fixtures. Documentation-only, no code migration or scoring. |
+| 2026-10-29 | HKU-only B0–B4 research-plan revision: retired KORA-04, revised RQs, metrics, diagrams and dependencies, and preserved KORA-02 dataset details. Submitted proposal and public group planning remain unchanged. Historical entries above describe earlier plans. |
+| 2026-10-29 | Cleaned the HKU-only planning ticket list, added the detailed KORA-03 evaluation-harness execution plan, and removed the obsolete toy SQL evaluator and its test/documentation references. No BIRD harness implementation or scores claimed. |
+| 2026-10-29 | Merged explicit multi-provider planning into KORA-05 and updated KORA-08's dependency, preserving SQL/RAG provider usage and existing model-factory tests. Documentation-only; no external repo or code modifications. |
+| 2026-10-29 | KORA-02 implemented original SQLite Mini-Dev setup/loader, pinned HF annotation source, metadata/splits, ZIP safety, 11 passing synthetic-fixture tests and a PowerShell tutorial. Real official dataset validation still pending because download access was unavailable. |
+
+</details>

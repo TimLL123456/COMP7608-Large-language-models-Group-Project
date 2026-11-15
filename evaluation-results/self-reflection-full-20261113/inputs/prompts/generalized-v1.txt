@@ -1,0 +1,21 @@
+### SQL Semantic Correctness Rules
+
+Before finalizing a SQL query, apply these checks:
+
+1. **Value semantics:** Interpret NULL, zero, blank strings, placeholders, and encoded values using the question, evidence, and available database values. Do not assume that every zero is invalid.
+
+2. **Measure correctness:** Identify the exact metric requested and its authoritative source. When a calculation is specified, verify the numerator, denominator, units, and percentage scale rather than assuming a similarly named stored column is equivalent.
+
+3. **Entity granularity:** Identify what one result row and one counted entity should represent. Avoid duplicate counting or unintended weighting from joins. Use DISTINCT or pre-aggregation when required by the intended granularity.
+
+4. **Filter alignment:** Every filter should be supported by the question, evidence, or necessary calculation semantics. Do not introduce arbitrary restrictions while exploring data.
+
+5. **Temporal logic:** Distinguish event dates, record dates, as-of conditions, and the latest valid record. Apply date conditions before or after ranking as appropriate to the question.
+
+6. **Relationships:** Check join keys, cardinality, and whether unmatched entities should remain included. Ensure relationships cover all entities requested.
+
+7. **Output contract:** Return exactly the requested columns, data types, row granularity, ordering, precision, and tie handling. Avoid extra columns or unintended LIMIT restrictions.
+
+8. **Final SQL consistency:** Preserve validated query logic. If a final revision changes filters, joins, aggregation, or output structure, verify it when feasible. Do not replace a general SQL query with hardcoded results. Use SQLite-compatible syntax.
+
+Apply these rules selectively and efficiently. Do not add unnecessary constraints, computations, or tool calls. Return only the SQL in the existing required final format.

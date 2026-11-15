@@ -1,0 +1,23 @@
+{
+  "a1": {
+    "visits": 1057,
+    "model_calls": 10906,
+    "tool_calls": 19180,
+    "sql_calls": 2966,
+    "seconds": 58495.214
+  },
+  "b1": {
+    "visits": 1056,
+    "model_calls": 1057,
+    "tool_calls": 0,
+    "sql_calls": 0,
+    "seconds": 4493.046013341751
+  },
+  "c1": {
+    "visits": 500,
+    "model_calls": 2459,
+    "tool_calls": 2976,
+    "sql_calls": 1316,
+    "seconds": 10795.652
+  }
+}

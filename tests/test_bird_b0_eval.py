@@ -52,6 +52,11 @@ class PipelineTests(unittest.TestCase):
                              "--dev-simple", "1", "--dev-moderate", "1", "--dev-challenging", "1",
                              "--test-simple", "1", "--seed", "42"])
 
+    def test_scoring_timeout_default_and_override(self):
+        base = ["score", "--selection-id", "fixture", "--split", "dev", "--run-id", "one"]
+        self.assertEqual(cli.build_parser().parse_args(base).timeout_seconds, 300.0)
+        self.assertEqual(cli.build_parser().parse_args(base + ["--timeout-seconds", "600"]).timeout_seconds, 600.0)
+
     def test_prepare_and_refuse_overwrite(self):
         self.assertEqual(self.prepare(), 0)
         path = self.results / "fixture"
@@ -113,9 +118,14 @@ class PipelineTests(unittest.TestCase):
             MAX_CONTEXT_TOKENS = 262_144
             MAX_OUTPUT_TOKENS = 16_384
             REQUEST_TIMEOUT = 300
-            MAX_MODEL_CALLS = MAX_TOTAL_TOOL_CALLS = MAX_SQL_EXECUTIONS = 20
+            MAX_MODEL_CALLS = MAX_TOTAL_TOOL_CALLS = MAX_SQL_EXECUTIONS = 40
             RECURSION_LIMIT = 100
             OUTPUT_FORMAT_VERSION = "final-sql-query-v2"
+            @staticmethod
+            def system_prompt_for_variant(variant="baseline"):
+                if variant != "baseline":
+                    raise ValueError("Unexpected variant for this fake")
+                return "faithful-baseline-fake-prompt"
             @staticmethod
             def make_agent(store):
                 return store
@@ -129,6 +139,11 @@ class PipelineTests(unittest.TestCase):
                 return {"final_sql": "SELECT n FROM t", "graph_completed": True,
                         "model_calls": 2, "tool_calls": 1, "sql_calls": 1,
                         "input_tokens": 50, "output_tokens": 9, "usage_observed": True,
+                        "total_tokens": 59, "cached_input_tokens": 20, "reasoning_tokens": 6,
+                        "reasoning_effort": "high", "thinking_level": "deep",
+                        "reasoning_mode": "standard",
+                        "cached_input_tokens_observed_calls": 1,
+                        "reasoning_tokens_observed_calls": 1,
                         "seconds": 0.25, "stop_reason": "final_sql_ready", "error": None}
         import sys
         import types
@@ -144,6 +159,9 @@ class PipelineTests(unittest.TestCase):
         run_dir = self.results / "fixture" / "B0" / "dev" / "one"
         manifest = json.loads((run_dir / "inference_manifest.json").read_text())
         self.assertEqual(manifest["request_timeout_seconds"], 300)
+        self.assertEqual(manifest["prompt_variant"], "baseline")
+        self.assertEqual(len(manifest["system_prompt_sha256"]), 64)
+        self.assertEqual(manifest["agent_sql_timeout_seconds"], 300.0)
         self.assertEqual(manifest["max_output_tokens"], 16_384)
         self.assertEqual(manifest["max_context_tokens"], 262_144)
         self.assertIs(manifest["context_budget_enforced"], False)
@@ -152,6 +170,15 @@ class PipelineTests(unittest.TestCase):
         self.assertIsNone(preds[1]["predicted_sql"])
         self.assertIsNone(preds[1]["input_tokens"])
         self.assertEqual(preds[0]["latency_ms"], 250)
+        self.assertEqual(preds[0]["cached_input_tokens"], 20)
+        self.assertEqual(preds[0]["reasoning_tokens"], 6)
+        self.assertEqual(preds[0]["total_tokens"], 59)
+        self.assertEqual(preds[0]["reasoning_effort"], "high")
+        self.assertEqual(preds[0]["thinking_level"], "deep")
+        self.assertEqual(preds[0]["reasoning_mode"], "standard")
+        self.assertEqual(preds[0]["cached_input_tokens_observed_calls"], 1)
+        self.assertIsNone(preds[1]["reasoning_tokens"])
+        self.assertIsNone(preds[1]["reasoning_effort"])
         self.assertEqual(len((run_dir / "traces.jsonl").read_text().splitlines()), 3)
         entries = [json.loads(row) for row in (run_dir / "traces.jsonl").read_text().splitlines()]
         self.assertEqual(entries[0]["structured_events"][0]["kind"], "model")
@@ -210,6 +237,102 @@ class PipelineTests(unittest.TestCase):
         args = cli.build_parser().parse_args(["score", *self.common, "--split", "dev", "--run-id", "one"])
         with patch.object(cli, "BirdDataset", return_value=self.dataset), self.assertRaises(ValueError):
             cli.score(args)
+
+
+    def test_prompt_variant_parser_and_fingerprint(self):
+        from hashlib import sha256
+        from scr.baselines import bird_b0 as b0
+
+        base = ["infer", *self.common, "--split", "dev", "--run-id", "variant-run"]
+        self.assertEqual(cli.build_parser().parse_args(base).prompt_variant, "baseline")
+        self.assertEqual(cli.build_parser().parse_args(
+            base + ["--prompt-variant", "generalized-v1"]
+        ).prompt_variant, "generalized-v1")
+        with self.assertRaises(SystemExit):
+            cli.build_parser().parse_args(base + ["--prompt-variant", "../unsafe"])
+
+        self.prepare()
+        result = {"final_sql": "SELECT 1", "graph_completed": True,
+                  "model_calls": 1, "tool_calls": 0, "sql_calls": 0,
+                  "seconds": 0.1, "usage_observed": False,
+                  "stop_reason": "final_sql_ready"}
+        with patch.object(cli, "BirdDataset", return_value=self.dataset), \
+             patch.dict(os.environ, {"NVIDIA_API_KEY": "fake"}), \
+             patch.object(b0, "make_agent", return_value=object()) as make, \
+             patch.object(b0, "run_one", return_value=result):
+            self.assertEqual(cli.main(base + ["--prompt-variant", "generalized-v1"]), 0)
+        self.assertEqual(make.call_count, 3)
+        self.assertTrue(all(call.kwargs.get("prompt_variant") == "generalized-v1"
+                            for call in make.call_args_list))
+        path = self.results / "fixture" / "B0" / "dev" / "variant-run"
+        manifest = json.loads((path / "inference_manifest.json").read_text())
+        self.assertEqual(manifest["prompt_variant"], "generalized-v1")
+        self.assertEqual(manifest["system_prompt_sha256"],
+                         sha256(b0.system_prompt_for_variant("generalized-v1").encode()).hexdigest())
+        self.assertNotIn("prompt_variant", json.loads((path / "predictions.jsonl").read_text().splitlines()[0]))
+        self.assertNotEqual(manifest["system_prompt_sha256"],
+                            sha256(b0.system_prompt_for_variant("baseline").encode()).hexdigest())
+
+    def test_openai_provider_is_injected_and_recorded(self):
+        self.prepare()
+        import sys
+        import types
+        class FakeB0:
+            MODEL = "nvidia/old"
+            TEMPERATURE = 1
+            TOP_P = 0.95
+            MAX_CONTEXT_TOKENS = 262144
+            MAX_OUTPUT_TOKENS = 16384
+            REQUEST_TIMEOUT = 300
+            MAX_MODEL_CALLS = MAX_TOTAL_TOOL_CALLS = MAX_SQL_EXECUTIONS = 40
+            RECURSION_LIMIT = 100
+            OUTPUT_FORMAT_VERSION = "final-sql-query-v2"
+            @staticmethod
+            def system_prompt_for_variant(variant="baseline"):
+                if variant != "baseline":
+                    raise ValueError("Unexpected variant for this fake")
+                return "faithful-baseline-fake-prompt"
+
+            @staticmethod
+            def make_agent(store, model=None):
+                assert model is injected
+                return store
+
+            @staticmethod
+            def run_one(question, agent, log, trace_events=None):
+                return {"final_sql": "SELECT 1", "graph_completed": True,
+                        "model_calls": 1, "tool_calls": 0, "sql_calls": 0,
+                        "seconds": 0.1, "usage_observed": False,
+                        "stop_reason": "final_sql_ready"}
+
+        injected = object()
+        fake_b0 = types.ModuleType("scr.baselines.bird_b0")
+        for name in dir(FakeB0):
+            if not name.startswith("__"):
+                setattr(fake_b0, name, getattr(FakeB0, name))
+        argv = ["infer", *self.common, "--split", "dev", "--run-id", "openai-run",
+                "--provider", "openai", "--model", "test-model"]
+        with patch.dict(sys.modules, {"scr.baselines.bird_b0": fake_b0}), \
+             patch("scr.baselines.bird_b0", fake_b0, create=True), \
+             patch.object(cli, "BirdDataset", return_value=self.dataset), \
+             patch.object(cli, "build_model", return_value=injected) as factory:
+            self.assertEqual(cli.main(argv), 0)
+            self.assertEqual(factory.call_args.kwargs["provider"], "openai")
+        run_dir = self.results / "fixture" / "B0" / "dev" / "openai-run"
+        manifest = json.loads((run_dir / "inference_manifest.json").read_text())
+        self.assertEqual(manifest["provider"], "openai")
+        self.assertEqual(manifest["model"], "test-model")
+        self.assertIsNone(manifest["temperature"])
+        self.assertIsNone(manifest["max_context_tokens"])
+        rows = [json.loads(x) for x in (run_dir / "predictions.jsonl").read_text().splitlines()]
+        self.assertTrue(all(row["provider"] == "openai" and row["model"] == "test-model"
+                            for row in rows))
+        with patch.object(cli, "BirdDataset", return_value=self.dataset), \
+             patch("scr.cli.evaluate_bird.run", return_value=1):
+            # A nonzero mocked scorer return still proves the generalized
+            # manifest/provider validation accepted the OpenAI run.
+            self.assertEqual(cli.main(["score", *self.common,
+                                       "--split", "dev", "--run-id", "openai-run"]), 1)
 
 
 if __name__ == "__main__":

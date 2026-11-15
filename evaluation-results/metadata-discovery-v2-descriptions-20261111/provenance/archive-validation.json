@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "predictions": 500,
+  "scores": 500,
+  "correct": 340,
+  "failure_inventory": 160,
+  "knowledge_notes": 572,
+  "source_copy_receipts_verified": 639,
+  "original_knowledge_snapshot_matches": true,
+  "credential_pattern_scan": "no matches; no credential files read",
+  "excluded_files_absent": true,
+  "max_file_bytes": 2812183,
+  "archive_files_before_checksum": 646
+}

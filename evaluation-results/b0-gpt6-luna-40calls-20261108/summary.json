@@ -1,0 +1,64 @@
+{
+  "variant": "B0",
+  "model": "gpt-6-luna",
+  "provider": "chatgpt-siwc",
+  "reasoning_effort_requested": "none",
+  "splits": {
+    "dev": {
+      "correct": 236,
+      "total": 400,
+      "execution_accuracy": 0.59,
+      "covers_full_local_split": true,
+      "by_difficulty": {
+        "challenging": {
+          "correct": 42,
+          "total": 83,
+          "ex": 0.5060240963855421
+        },
+        "moderate": {
+          "correct": 107,
+          "total": 200,
+          "ex": 0.535
+        },
+        "simple": {
+          "correct": 87,
+          "total": 117,
+          "ex": 0.7435897435897436
+        }
+      }
+    },
+    "test": {
+      "correct": 63,
+      "total": 100,
+      "execution_accuracy": 0.63,
+      "covers_full_local_split": true,
+      "by_difficulty": {
+        "challenging": {
+          "correct": 8,
+          "total": 19,
+          "ex": 0.42105263157894735
+        },
+        "moderate": {
+          "correct": 32,
+          "total": 50,
+          "ex": 0.64
+        },
+        "simple": {
+          "correct": 23,
+          "total": 31,
+          "ex": 0.7419354838709677
+        }
+      }
+    }
+  },
+  "overall": {
+    "correct": 299,
+    "total": 500,
+    "execution_accuracy": 0.598
+  },
+  "inference_failures": 0,
+  "scoring_timeout_seconds": 600,
+  "started_utc": "2026-11-08T03:59:35.973118+00:00",
+  "completed_utc": "2026-11-08T06:32:14.664029+00:00",
+  "note": "Full original public BIRD Mini-Dev local split; not the official hidden benchmark. Raw scorer subset labels are retained unchanged."
+}

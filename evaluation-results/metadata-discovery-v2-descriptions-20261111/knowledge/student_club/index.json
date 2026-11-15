@@ -1,0 +1,953 @@
+{
+  "n_061e952bdfc9ca4c623856e1": {
+    "concept_id": "expense_description",
+    "keywords": [
+      "expense",
+      "description",
+      "food",
+      "purchases",
+      "text",
+      "items"
+    ],
+    "note_id": "n_061e952bdfc9ca4c623856e1",
+    "note_type": "column",
+    "revision": 15,
+    "sha256": "ec62346c4242eed27bc6ce1cb41492e539717fbf55035e66f28fd07a08d900fa",
+    "source_refs": [
+      "schema:expense.expense_description TEXT",
+      "description:Expense.csv:2",
+      "values:food-linked expense_description values"
+    ],
+    "status": "provisional",
+    "summary": "Text purpose field; food-linked descriptions include multi-item phrases, but item boundaries and normalization are undocumented.",
+    "table_name": "expense",
+    "title": "Expense description"
+  },
+  "n_0c6c17692db4e0575755f8ef": {
+    "concept_id": "type",
+    "keywords": [
+      "event",
+      "type",
+      "category"
+    ],
+    "note_id": "n_0c6c17692db4e0575755f8ef",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "d37def11b10e3f0a332ae25f95f93c5dfee8e9a9659dda32082af826de9b2e68",
+    "source_refs": [
+      "schema:event.type TEXT",
+      "values:SELECT DISTINCT type FROM event"
+    ],
+    "status": "provisional",
+    "summary": "Text category for an event; observed values include Meeting, Social, Game, and other categories, but no formal taxonomy is documented.",
+    "table_name": "event",
+    "title": "Event type"
+  },
+  "n_11388bc8e5e50ba58cbcecad": {
+    "concept_id": "source",
+    "keywords": [
+      "income",
+      "source",
+      "category",
+      "dues",
+      "fundraising"
+    ],
+    "note_id": "n_11388bc8e5e50ba58cbcecad",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "197843804afec77953df13f7850a5274c7998768d9376b9590387d1d1ba0aa33",
+    "source_refs": [
+      "schema:income DDL source TEXT",
+      "values:income distinct source labels observed"
+    ],
+    "status": "provisional",
+    "summary": "Text label categorizing the source of an income record; observed labels include Dues and Fundraising.",
+    "table_name": "income",
+    "title": "Income source"
+  },
+  "n_12889db04648f8c28619df0d": {
+    "concept_id": "remaining",
+    "keywords": [
+      "budget",
+      "remaining",
+      "amount",
+      "spent",
+      "dollar",
+      "overspend"
+    ],
+    "note_id": "n_12889db04648f8c28619df0d",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "154bd446123a774d01ec4045edde1780bf7e3ab59dddbc09e27de7b80e1da6d9",
+    "source_refs": [
+      "schema:budget.remaining REAL",
+      "schema:expense.link_to_budget references budget.budget_id",
+      "description:Budget.csv:4",
+      "description:Budget.csv:5"
+    ],
+    "status": "provisional",
+    "summary": "Recorded dollar balance for a budget category/event, documented as budgeted amount less spending; negative means overspend.",
+    "table_name": "budget",
+    "title": "Budget remaining amount"
+  },
+  "n_14366a4523c27a6d92e6e459": {
+    "concept_id": "approved",
+    "keywords": [
+      "expense",
+      "approved",
+      "approval",
+      "marker",
+      "value"
+    ],
+    "note_id": "n_14366a4523c27a6d92e6e459",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "88733f7f60c73aac6bf40c95fc1b4d82099bc7c785d3dfd74bb92e0e2563311d",
+    "source_refs": [
+      "schema:expense.approved TEXT",
+      "values:SELECT DISTINCT approved FROM expense ORDER BY approved"
+    ],
+    "status": "provisional",
+    "summary": "TEXT approval-related marker; observed values are true and NULL, with no other marker verified.",
+    "table_name": "expense",
+    "title": "Expense approval value"
+  },
+  "n_15bfedc3e49a434f49eddb5d": {
+    "concept_id": "spent",
+    "keywords": [
+      "budget",
+      "spent",
+      "expense",
+      "amount",
+      "dollar",
+      "event"
+    ],
+    "note_id": "n_15bfedc3e49a434f49eddb5d",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "3777f2ee42ec324858629dc9ef9767cf69bd52f5d01d37c1829debbfaca37f37",
+    "source_refs": [
+      "schema:budget.spent REAL",
+      "schema:budget.link_to_event REFERENCES event(event_id)",
+      "schema:expense.link_to_budget REFERENCES budget(budget_id)",
+      "description:Budget.csv:3",
+      "values:budget 52 rows spent non-NULL across 23 events",
+      "values:per-event budget.spent sums matched linked expense.cost sums for all observed expense-present groups, 12 event groups without linked expense records"
+    ],
+    "status": "provisional",
+    "summary": "REAL amount spent in a budget category, documented as expense spending summarized per event category; entries aggregate to events.",
+    "table_name": "budget",
+    "title": "Budget entry spent amount"
+  },
+  "n_162d89eac7d327c72cae1a0f": {
+    "concept_id": "link_to_member",
+    "keywords": [
+      "income",
+      "member",
+      "reference",
+      "receipt"
+    ],
+    "note_id": "n_162d89eac7d327c72cae1a0f",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "07b23a3becb97b9ec5bc219ee26dcb14f60bbabe4f84b674e6a5e9c313584ef6",
+    "source_refs": [
+      "schema:income DDL foreign key link_to_member references member.member_id",
+      "description:Income.csv:6"
+    ],
+    "status": "provisional",
+    "summary": "Optional member identifier associated with an income receipt; references member.member_id.",
+    "table_name": "income",
+    "title": "Income member reference"
+  },
+  "n_28b61de3872740168f4133fe": {
+    "concept_id": "position",
+    "keywords": [
+      "member",
+      "position",
+      "role",
+      "membership status"
+    ],
+    "note_id": "n_28b61de3872740168f4133fe",
+    "note_type": "column",
+    "revision": 4,
+    "sha256": "463076713dbcb936c8c849c508c3be9334e7d3218077e135799851d78429d30c",
+    "source_refs": [
+      "schema:member.position TEXT",
+      "values:member grouped position counts"
+    ],
+    "status": "provisional",
+    "summary": "Text position label on a member row; observed labels include Member, officer titles, and Inactive, whose roster status is unverified.",
+    "table_name": "member",
+    "title": "Member position"
+  },
+  "n_2c1824550ff3d35968a54953": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "expense",
+      "cost",
+      "date",
+      "member",
+      "budget",
+      "event"
+    ],
+    "note_id": "n_2c1824550ff3d35968a54953",
+    "note_type": "table",
+    "revision": 3,
+    "sha256": "7cfb99a1525c8a25af395242191e403a404bf915348545365ec0c2382667041b",
+    "source_refs": [
+      "schema:expense DDL and foreign keys",
+      "description:Expense.csv:2",
+      "description:Budget.csv:3"
+    ],
+    "status": "provisional",
+    "summary": "Expense records store description, date, cost, approval and member/budget references; expense ID is primary key.",
+    "table_name": "expense",
+    "title": "Expense table definition"
+  },
+  "n_2e833c17fc8cde57e61fb660": {
+    "concept_id": "event_status",
+    "keywords": [
+      "budget",
+      "status",
+      "event",
+      "closed",
+      "open",
+      "planning"
+    ],
+    "note_id": "n_2e833c17fc8cde57e61fb660",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "1270c5a2b21d0c898ddec7aa404b5a49822638bff03a1e05fe85849bc1509973",
+    "source_refs": [
+      "schema:budget.event_status TEXT",
+      "schema:budget.link_to_event REFERENCES event(event_id)",
+      "schema:event.status TEXT",
+      "values:budget JOIN event on link_to_event=event_id, 52 matching status rows and 0 differing rows",
+      "values:budget 52 rows grouped to 23 events, no status variance per linked event"
+    ],
+    "status": "provisional",
+    "summary": "Text status stored on budget entries; observed values align with linked event.status for all joined rows, though source linkage is undocumented.",
+    "table_name": "budget",
+    "title": "Budget entry event status"
+  },
+  "n_383b21ef20ee82fb8faabf93": {
+    "concept_id": "link_to_event",
+    "keywords": [
+      "attendance",
+      "event",
+      "reference",
+      "identifier"
+    ],
+    "note_id": "n_383b21ef20ee82fb8faabf93",
+    "note_type": "column",
+    "revision": 5,
+    "sha256": "a337fcdcea3a1b9a0e27de26a737878939163f0209418940f61c8e2078833bbf",
+    "source_refs": [
+      "schema:attendance.link_to_event TEXT REFERENCES event(event_id)",
+      "description:Attendance.csv:1"
+    ],
+    "status": "provisional",
+    "summary": "Event identifier on an attendance record; references event.event_id and forms the attendance member-event pair.",
+    "table_name": "attendance",
+    "title": "Attendance event reference"
+  },
+  "n_3c3d8ae6c762881a55d1e7ba": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "event",
+      "name",
+      "date",
+      "status",
+      "history",
+      "club"
+    ],
+    "note_id": "n_3c3d8ae6c762881a55d1e7ba",
+    "note_type": "table",
+    "revision": 8,
+    "sha256": "423a949b3b613b92504fccee215e8d881e93f3cf90bd4734c34a9bc1925a40df",
+    "source_refs": [
+      "schema:event DDL",
+      "schema:budget.link_to_event REFERENCES event(event_id)",
+      "values:event COUNT(*)=42, 18 status Closed, observed date range 2019-09-01 through 2020-05-05",
+      "values:event DISTINCT status"
+    ],
+    "status": "provisional",
+    "summary": "Event records store identifiers, date/time text, category, notes, location and status; event_id is the primary key; no club qualifier is present.",
+    "table_name": "event",
+    "title": "Event table definition"
+  },
+  "n_4b1f87db83a315a64af795f2": {
+    "concept_id": "location",
+    "keywords": [
+      "event",
+      "location",
+      "venue"
+    ],
+    "note_id": "n_4b1f87db83a315a64af795f2",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "b501b4ee1b39f99f01bb7a29ce738ee87f85e5ca8b71fb740da146662d69729a",
+    "source_refs": [
+      "schema:event.location TEXT"
+    ],
+    "status": "provisional",
+    "summary": "Text location recorded for an event.",
+    "table_name": "event",
+    "title": "Event location"
+  },
+  "n_58eb754c1b420c5a6e2b7c28": {
+    "concept_id": "link_to_member",
+    "keywords": [
+      "attendance",
+      "member",
+      "event",
+      "reference",
+      "identifier"
+    ],
+    "note_id": "n_58eb754c1b420c5a6e2b7c28",
+    "note_type": "column",
+    "revision": 5,
+    "sha256": "ebe6647de4c852497ef40f38b62527dddcf54de396ba5a7283aa405356de220c",
+    "source_refs": [
+      "schema:attendance DDL",
+      "description:Attendance.csv:2"
+    ],
+    "status": "provisional",
+    "summary": "Member ID associated with an event attendance record; schema encodes recorded member-event pairs, not attendance completeness.",
+    "table_name": "attendance",
+    "title": "Attendance member reference"
+  },
+  "n_58f2114ed5c22c2cd0bed3a1": {
+    "concept_id": "link_to_event",
+    "keywords": [
+      "budget",
+      "event",
+      "foreign-key",
+      "link",
+      "reference"
+    ],
+    "note_id": "n_58f2114ed5c22c2cd0bed3a1",
+    "note_type": "column",
+    "revision": 5,
+    "sha256": "9d00450073ea92e5dc0619c0ffaedb974b30cc47be791ef5cef884ef7e641e73",
+    "source_refs": [
+      "schema:budget.link_to_event TEXT REFERENCES event(event_id)",
+      "values:budget COUNT(*)=52 and COUNT(DISTINCT link_to_event)=23"
+    ],
+    "status": "provisional",
+    "summary": "TEXT foreign key linking a budget entry to event.event_id; observed budget records all link to 23 events.",
+    "table_name": "budget",
+    "title": "Budget event reference"
+  },
+  "n_64139d1ede22b3bed04855a1": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "major",
+      "department",
+      "college",
+      "major_id",
+      "member reference"
+    ],
+    "note_id": "n_64139d1ede22b3bed04855a1",
+    "note_type": "table",
+    "revision": 2,
+    "sha256": "5003f7f7928cb2cc6a971596b1849b6d09e86a8a72f70be1117dae73bdab633c",
+    "source_refs": [
+      "schema:major DDL columns and primary key",
+      "schema:member foreign key link_to_major references major.major_id",
+      "values:major observed college/department labels and row count"
+    ],
+    "status": "provisional",
+    "summary": "Major records map major IDs to name, department, and college text; member records reference them.",
+    "table_name": "major",
+    "title": "Major and department table definition"
+  },
+  "n_6a4511f405866bdb6412b4c7": {
+    "concept_id": "status",
+    "keywords": [
+      "event",
+      "status",
+      "closed",
+      "open",
+      "planning"
+    ],
+    "note_id": "n_6a4511f405866bdb6412b4c7",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "a8dc3a9c23cb1f7ed8da4960514a9b23691fb056115fbe9d60ec591a6b61efd2",
+    "source_refs": [
+      "schema:event.status TEXT",
+      "values:event DISTINCT status observed Closed, Open, Planning"
+    ],
+    "status": "provisional",
+    "summary": "Text status recorded for an event; observed values include Closed, Open, and Planning.",
+    "table_name": "event",
+    "title": "Event status"
+  },
+  "n_6d5a5ef62eb663226a9f176c": {
+    "concept_id": "link_to_budget",
+    "keywords": [
+      "expense",
+      "budget",
+      "reference",
+      "event",
+      "identifier"
+    ],
+    "note_id": "n_6d5a5ef62eb663226a9f176c",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "1650261f8863dceef2c1adf2b61e8e21d9fb4b3535c1d48d59b8a75d0057b5c9",
+    "source_refs": [
+      "schema:expense.link_to_budget REFERENCES budget(budget_id)",
+      "schema:budget.link_to_event REFERENCES event(event_id)"
+    ],
+    "status": "provisional",
+    "summary": "Expense field references budget.budget_id, allowing expenses to associate with budget entries and their events.",
+    "table_name": "expense",
+    "title": "Expense budget reference"
+  },
+  "n_6fb5ca3e8fca59e51bcd6e03": {
+    "concept_id": "major_id",
+    "keywords": [
+      "major",
+      "major_id",
+      "identifier",
+      "member reference"
+    ],
+    "note_id": "n_6fb5ca3e8fca59e51bcd6e03",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "3a8521dcc466d3eddb718a4d9ee5b8002eaa83a9b5ab8806837cb10bc5eccf5a",
+    "source_refs": [
+      "schema:major DDL major_id TEXT primary key",
+      "schema:member DDL link_to_major foreign key references major.major_id"
+    ],
+    "status": "provisional",
+    "summary": "TEXT primary-key identifier for records in major; referenced by member.link_to_major.",
+    "table_name": "major",
+    "title": "Major identifier"
+  },
+  "n_7428471f6ebc2adf5962b280": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "member",
+      "identity",
+      "membership",
+      "position",
+      "major reference",
+      "roster"
+    ],
+    "note_id": "n_7428471f6ebc2adf5962b280",
+    "note_type": "table",
+    "revision": 6,
+    "sha256": "4ca81ade5e61b42d107807189fd14514359679e4cfc215e76d28cb37b9826154",
+    "source_refs": [
+      "schema:member DDL and foreign keys",
+      "values:member grouped position counts and major-reference counts"
+    ],
+    "status": "provisional",
+    "summary": "Member rows contain identifiers, contact attributes, position labels, and major references; roster status for Inactive rows is unverified.",
+    "table_name": "member",
+    "title": "Member table definition"
+  },
+  "n_7a3f1e82a372b4b405c98d86": {
+    "concept_id": "expense_id",
+    "keywords": [
+      "expense",
+      "identifier",
+      "primary key",
+      "record",
+      "occurrence"
+    ],
+    "note_id": "n_7a3f1e82a372b4b405c98d86",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "89795db763912a2dc1ca5b514a94e51447756160420a314896a2cee24d542bcd",
+    "source_refs": [
+      "schema:expense DDL and columns",
+      "schema:expense.expense_id TEXT primary key"
+    ],
+    "status": "provisional",
+    "summary": "Declared TEXT primary key for an expense record; identifies records, not a verified count of items purchased.",
+    "table_name": "expense",
+    "title": "Expense identifier"
+  },
+  "n_7c3067c8555083b22fb40a67": {
+    "concept_id": "department",
+    "keywords": [
+      "major",
+      "department",
+      "college",
+      "affiliation"
+    ],
+    "note_id": "n_7c3067c8555083b22fb40a67",
+    "note_type": "column",
+    "revision": 4,
+    "sha256": "a057fcdf0fc3ec3676010641d52e60f3b5eb48475cd4e1836f1dec1d62213a1b",
+    "source_refs": [
+      "schema:major.department TEXT",
+      "schema:member.link_to_major references major.major_id",
+      "values:major department non-null and college-associated examples"
+    ],
+    "status": "provisional",
+    "summary": "Department text on a major record, usable to group its majors and associated members; independent department entity semantics are unverified.",
+    "table_name": "major",
+    "title": "Major department"
+  },
+  "n_87e77511759958b8711e34cd": {
+    "concept_id": "phone",
+    "keywords": [
+      "member",
+      "phone",
+      "contact"
+    ],
+    "note_id": "n_87e77511759958b8711e34cd",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "8e3dd7be00b5991a2d946e073bce64b01b0ab987966aaa5f13081822e2ef1709",
+    "source_refs": [
+      "schema:member.phone TEXT"
+    ],
+    "status": "provisional",
+    "summary": "Phone contact attribute stored on a member record as text.",
+    "table_name": "member",
+    "title": "Member phone"
+  },
+  "n_95359ae7d58f4cf67ac4ea80": {
+    "concept_id": "category",
+    "keywords": [
+      "budget",
+      "category",
+      "allocation",
+      "food",
+      "entry"
+    ],
+    "note_id": "n_95359ae7d58f4cf67ac4ea80",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "c6ca602e3e258acbd4d4809bab5dd50829b6b512b564b565d88829261e7ceac2",
+    "source_refs": [
+      "schema:budget.category TEXT",
+      "schema:budget.link_to_event REFERENCES event(event_id)",
+      "description:Budget.csv:2",
+      "values:budget distinct category values"
+    ],
+    "status": "provisional",
+    "summary": "Text category label for a budget allocation; documentation examples and observed values include food and other classifications.",
+    "table_name": "budget",
+    "title": "Budget entry category"
+  },
+  "n_aedfceb1bedfafb6b02d9d09": {
+    "concept_id": "event_id",
+    "keywords": [
+      "event",
+      "identifier",
+      "primary key",
+      "budget reference"
+    ],
+    "note_id": "n_aedfceb1bedfafb6b02d9d09",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "30f161593b2363436483e8342b5f860a3cce17e28b1a642ee943875088b14578",
+    "source_refs": [
+      "schema:event.event_id TEXT PRIMARY KEY",
+      "schema:budget.link_to_event TEXT REFERENCES event(event_id)",
+      "schema:attendance.link_to_event REFERENCES event(event_id)"
+    ],
+    "status": "provisional",
+    "summary": "Declared TEXT primary key identifying an event record; budget.link_to_event references it.",
+    "table_name": "event",
+    "title": "Event identifier"
+  },
+  "n_b8c44700c9c2e268eeaf982c": {
+    "concept_id": "college",
+    "keywords": [
+      "major",
+      "college",
+      "department",
+      "affiliation"
+    ],
+    "note_id": "n_b8c44700c9c2e268eeaf982c",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "515b741053b829d4df5261dccb3c65624b06272aecadd0b1d1a061f85978ab6e",
+    "source_refs": [
+      "schema:major.college TEXT",
+      "schema:member.link_to_major references major.major_id",
+      "values:major observed college labels"
+    ],
+    "status": "provisional",
+    "summary": "College text associated with a major; member major references can be grouped by this recorded college value.",
+    "table_name": "major",
+    "title": "Major college"
+  },
+  "n_b93bba668242dd79d98d0315": {
+    "concept_id": "date_received",
+    "keywords": [
+      "income",
+      "receipt",
+      "date",
+      "text"
+    ],
+    "note_id": "n_b93bba668242dd79d98d0315",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "2c93dd18aa69f9154d84ed102ba607891871c45c286efbe55e0709c3d435742e",
+    "source_refs": [
+      "schema:income DDL date_received TEXT"
+    ],
+    "status": "provisional",
+    "summary": "Text date recorded for an income receipt; date format and temporal semantics are not verified.",
+    "table_name": "income",
+    "title": "Income receipt date"
+  },
+  "n_bba539b0ace2fe4295e525ce": {
+    "concept_id": "link_to_member",
+    "keywords": [
+      "expense",
+      "member",
+      "reference",
+      "identifier",
+      "responsibility"
+    ],
+    "note_id": "n_bba539b0ace2fe4295e525ce",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "9fdc4b70dd8d0a6c7b6706fcfb1dd73b7db34b1f579be23940cc5100251b229c",
+    "source_refs": [
+      "schema:expense.link_to_member TEXT REFERENCES member(member_id)"
+    ],
+    "status": "provisional",
+    "summary": "Member identifier associated with an expense record and referencing member.member_id; its role as purchaser remains unverified.",
+    "table_name": "expense",
+    "title": "Expense member reference"
+  },
+  "n_c3c17a6a7cdebc99f1939555": {
+    "concept_id": "budget_id",
+    "keywords": [
+      "budget",
+      "identifier",
+      "primary key"
+    ],
+    "note_id": "n_c3c17a6a7cdebc99f1939555",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "174bf75f45812772c23d507d31da7ece7042d375c2329ad44cb1a2f9bb7862d0",
+    "source_refs": [
+      "schema:budget.budget_id TEXT PRIMARY KEY",
+      "schema:expense.link_to_budget REFERENCES budget.budget_id"
+    ],
+    "status": "provisional",
+    "summary": "Primary-key identifier for a budget entry.",
+    "table_name": "budget",
+    "title": "Budget entry identifier"
+  },
+  "n_c932881140bba43796c2852d": {
+    "concept_id": "major_name",
+    "keywords": [
+      "major",
+      "major_name",
+      "program"
+    ],
+    "note_id": "n_c932881140bba43796c2852d",
+    "note_type": "column",
+    "revision": 5,
+    "sha256": "e9b53971a866203e23bac4645ce4dcdbc72d2df6f192767392ac7aecdb151ee7",
+    "source_refs": [
+      "schema:major.major_name TEXT",
+      "schema:major.major_id TEXT primary key",
+      "schema:member.link_to_major foreign key references major.major_id",
+      "values:major 113 rows, all names populated and distinct"
+    ],
+    "status": "provisional",
+    "summary": "Name text identifying a major record; associated with a TEXT major_id, which member records can reference.",
+    "table_name": "major",
+    "title": "Major name"
+  },
+  "n_d056d8242613a741a16f942c": {
+    "concept_id": "event_name",
+    "keywords": [
+      "event",
+      "name",
+      "label",
+      "identifier",
+      "disambiguation"
+    ],
+    "note_id": "n_d056d8242613a741a16f942c",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "b4cee516bf313aa1e11f64c52442e96ab237c3774292300791f9402be04fe155",
+    "source_refs": [
+      "schema:event.event_name TEXT and event_id primary key",
+      "values:event two Football game rows have distinct IDs and dates"
+    ],
+    "status": "provisional",
+    "summary": "Text event label; identical names may refer to distinct event records, so use event_id or other criteria to disambiguate.",
+    "table_name": "event",
+    "title": "Event name"
+  },
+  "n_d70cdef83ed9f3c08514a427": {
+    "concept_id": "cost",
+    "keywords": [
+      "expense",
+      "cost",
+      "amount",
+      "dollar",
+      "money"
+    ],
+    "note_id": "n_d70cdef83ed9f3c08514a427",
+    "note_type": "column",
+    "revision": 7,
+    "sha256": "0583ed013c6e5f5fb02832f2b402bd976f2eb55f695204d9c2d12eda39ad5a82",
+    "source_refs": [
+      "schema:expense.cost REAL",
+      "description:Budget.csv:3"
+    ],
+    "status": "provisional",
+    "summary": "REAL amount on an expense record; budget documentation says spending summarized from expenses is in dollars, indirectly supporting dollar units.",
+    "table_name": "expense",
+    "title": "Expense cost"
+  },
+  "n_d866fc695f42cca362809c97": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "attendance",
+      "member",
+      "event",
+      "association",
+      "composite key"
+    ],
+    "note_id": "n_d866fc695f42cca362809c97",
+    "note_type": "table",
+    "revision": 2,
+    "sha256": "08d3fdd2f7b9b0dfc1a99e4946e60e9dc5479b152932eaf47b9f89758159a059",
+    "source_refs": [
+      "schema:attendance DDL and foreign keys",
+      "description:Attendance.csv:1",
+      "description:Attendance.csv:2"
+    ],
+    "status": "provisional",
+    "summary": "Associates member IDs with event IDs; composite primary key models one recorded row per member-event pair.",
+    "table_name": "attendance",
+    "title": "Attendance table definition"
+  },
+  "n_e09151948e23f5205d313979": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "income",
+      "receipt",
+      "amount",
+      "source",
+      "notes",
+      "member"
+    ],
+    "note_id": "n_e09151948e23f5205d313979",
+    "note_type": "table",
+    "revision": 1,
+    "sha256": "277cce1e88e74fcbfdc865fc5f0f9bf521d1dbc726740fe499de55c9d72f56bc",
+    "source_refs": [
+      "schema:income DDL columns, primary key, and foreign key."
+    ],
+    "status": "provisional",
+    "summary": "Income records capture receipt date, amount, source, notes, and an optional member reference.",
+    "table_name": "income",
+    "title": "Income table definition"
+  },
+  "n_e0f97b777b14c59b206a9429": {
+    "concept_id": "amount",
+    "keywords": [
+      "income",
+      "amount",
+      "receipt",
+      "integer",
+      "currency"
+    ],
+    "note_id": "n_e0f97b777b14c59b206a9429",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "7d2cb03eaf9264dc5e67c98c91783657f6cb5d7eac2e1fafd4728812ba3b8f78",
+    "source_refs": [
+      "schema:income DDL amount INTEGER",
+      "description:Budget.csv:3 dollar unit applies to Budget.spent, not income.amount"
+    ],
+    "status": "provisional",
+    "summary": "Integer amount recorded for an income receipt; income currency/unit is not established by schema or observed values.",
+    "table_name": "income",
+    "title": "Income amount"
+  },
+  "n_e22a0861708e74f16f17e6b9": {
+    "concept_id": "link_to_major",
+    "keywords": [
+      "member",
+      "major",
+      "reference",
+      "major_id",
+      "null"
+    ],
+    "note_id": "n_e22a0861708e74f16f17e6b9",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "8ff8f54d56948eaa7d6669fa8fc8f665542a79377fb29cfc82da3b2a8171dbd3",
+    "source_refs": [
+      "schema:member.link_to_major foreign key references major.major_id",
+      "values:member major-reference null/unmatched check"
+    ],
+    "status": "provisional",
+    "summary": "TEXT major identifier on a member record; references major.major_id and may be NULL in observed records.",
+    "table_name": "member",
+    "title": "Member major reference"
+  },
+  "n_e3850a4a1060f99a0036e3a7": {
+    "concept_id": "first_name",
+    "keywords": [
+      "member",
+      "first_name",
+      "name"
+    ],
+    "note_id": "n_e3850a4a1060f99a0036e3a7",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "751819a925f224345320d71651eb853bb6222524d199c1013374a2186d46266b",
+    "source_refs": [
+      "schema:member.first_name TEXT"
+    ],
+    "status": "provisional",
+    "summary": "Text first-name attribute associated with a member record.",
+    "table_name": "member",
+    "title": "Member first name"
+  },
+  "n_edcef255d69a7bae52c1eabd": {
+    "concept_id": "expense_date",
+    "keywords": [
+      "expense",
+      "date",
+      "day"
+    ],
+    "note_id": "n_edcef255d69a7bae52c1eabd",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "f63219ea61fd3c9c14c3455244f938f66cf3bf8ba22dadddc7444c1161803114",
+    "source_refs": [
+      "schema:expense.expense_date TEXT",
+      "values:expense.expense_date observed YYYY-MM-DD examples including October-November 2019"
+    ],
+    "status": "provisional",
+    "summary": "Text date associated with an expense record; observed October-November 2019 values use YYYY-MM-DD.",
+    "table_name": "expense",
+    "title": "Expense date"
+  },
+  "n_ef6d92fc7687da5e3a987a84": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "budget",
+      "event",
+      "category",
+      "amount",
+      "spent",
+      "expense",
+      "entry"
+    ],
+    "note_id": "n_ef6d92fc7687da5e3a987a84",
+    "note_type": "table",
+    "revision": 7,
+    "sha256": "efcedf7e8d3954afc9b734662329f673e446e84595717c9a0124697748ddd577",
+    "source_refs": [
+      "schema:budget DDL",
+      "schema:budget.link_to_event REFERENCES event(event_id)",
+      "schema:expense.link_to_budget REFERENCES budget(budget_id)",
+      "description:Budget.csv:3",
+      "values:budget 52 rows, 23 event IDs",
+      "values:expense descriptions containing chips linked to Food budget entries"
+    ],
+    "status": "provisional",
+    "summary": "Budget rows are category-level entries linked to events; expenses reference entries, and amount is per entry, not verified as event total.",
+    "table_name": "budget",
+    "title": "Budget table definition"
+  },
+  "n_f6085d2f8efcb8a25407ee49": {
+    "concept_id": "amount",
+    "keywords": [
+      "budget",
+      "amount",
+      "allocated",
+      "planned",
+      "event",
+      "dollars"
+    ],
+    "note_id": "n_f6085d2f8efcb8a25407ee49",
+    "note_type": "column",
+    "revision": 6,
+    "sha256": "8a10df1140f475833476ffbe81021a0156c2ea9d807c2350ec2193d1b24b91b8",
+    "source_refs": [
+      "schema:budget.amount INTEGER",
+      "schema:budget.link_to_event REFERENCES event(event_id)",
+      "description:Budget.csv:5"
+    ],
+    "status": "provisional",
+    "summary": "INTEGER amount on a budget row; described as amount budgeted in dollars; entries reference events.",
+    "table_name": "budget",
+    "title": "Budget entry allocated amount"
+  },
+  "n_f65e0d3f10790ca60e2b5a40": {
+    "concept_id": "member_id",
+    "keywords": [
+      "member",
+      "member_id",
+      "identifier",
+      "primary key"
+    ],
+    "note_id": "n_f65e0d3f10790ca60e2b5a40",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "f4baf08ba1c76a9640798dd72ce89ccf9c51efd6840ba8121a5a35e019279d8e",
+    "source_refs": [
+      "schema:member DDL member_id TEXT primary key"
+    ],
+    "status": "provisional",
+    "summary": "TEXT primary-key identifier for a member record.",
+    "table_name": "member",
+    "title": "Member identifier"
+  },
+  "n_f7226a916fd7476709cc9805": {
+    "concept_id": "last_name",
+    "keywords": [
+      "member",
+      "last_name",
+      "name"
+    ],
+    "note_id": "n_f7226a916fd7476709cc9805",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "e7063b2b23744ddbd6f0aef71e89f47676705edab2c0e4a53a3c19d09282814e",
+    "source_refs": [
+      "schema:member.last_name TEXT"
+    ],
+    "status": "provisional",
+    "summary": "Text last-name attribute associated with a member record.",
+    "table_name": "member",
+    "title": "Member last name"
+  },
+  "n_fe51f11906bcbed3d182105f": {
+    "concept_id": "event_date",
+    "keywords": [
+      "event",
+      "date",
+      "time",
+      "timestamp",
+      "name disambiguation"
+    ],
+    "note_id": "n_fe51f11906bcbed3d182105f",
+    "note_type": "column",
+    "revision": 5,
+    "sha256": "049a90f28a72a09467852e668ec669bbd938178feeb82dadb1b164337c28e3f6",
+    "source_refs": [
+      "schema:event.event_date TEXT",
+      "values:event records named Football game have distinct event_date values"
+    ],
+    "status": "provisional",
+    "summary": "Text event date/time; observed Football game entries illustrate distinct dates for identically named events, timezone semantics unverified.",
+    "table_name": "event",
+    "title": "Event date"
+  }
+}

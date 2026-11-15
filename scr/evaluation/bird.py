@@ -15,10 +15,21 @@ import sqlite3
 import time
 from typing import Any
 
+from scr.baselines.sqlite_readonly import DEFAULT_SQL_TIMEOUT_SECONDS
 from scr.datasets.bird import BirdDataset, BirdEvaluationReferences, read_only_connection
 
-VARIANTS = {"B0", "B1", "B2", "B3", "B4"}
-USAGE_FIELDS = ("provider", "model", "tool_calls", "input_tokens", "output_tokens", "latency_ms", "cost_usd", "model_calls", "sql_calls", "sql_success_calls", "sql_error_calls", "sql_truncated_calls", "agent_sql_execution_ms")
+VARIANTS = {"B0", "B1", "B2", "B3", "B4", "Metadata", "MetadataDiscoveryV2", "SelfReflection", "RubricSelfReflection", "RoleSpecializedSelfReflection"}
+USAGE_FIELDS = (
+    "provider", "model", "reasoning_effort", "thinking_level", "reasoning_mode",
+    "tool_calls", "model_calls", "sql_calls", "sql_success_calls",
+    "sql_error_calls", "sql_truncated_calls", "agent_sql_execution_ms",
+    "input_tokens", "output_tokens", "total_tokens",
+    "cached_input_tokens", "reasoning_tokens",
+    "input_tokens_observed_calls", "output_tokens_observed_calls",
+    "total_tokens_observed_calls", "cached_input_tokens_observed_calls",
+    "reasoning_tokens_observed_calls",
+    "latency_ms", "cost_usd",
+)
 DENIED_ACTIONS = {
     getattr(sqlite3, name)
     for name in (
@@ -72,7 +83,8 @@ def validate_predictions(predictions: list[dict[str, Any]], questions: list[dict
             value = item.get(field)
             if value is None:
                 continue
-            if field in ("model", "provider"):
+            if field in ("model", "provider", "reasoning_effort",
+                         "thinking_level", "reasoning_mode"):
                 if not isinstance(value, str):
                     raise ValueError(f"{field} for question_id {qid} must be a string")
             elif type(value) not in (int, float) or not math.isfinite(value) or value < 0:
@@ -81,7 +93,7 @@ def validate_predictions(predictions: list[dict[str, Any]], questions: list[dict
     return seen
 
 
-def execute_bounded_sql(db_path: Path, sql: str, *, timeout_seconds: float = 30.0,
+def execute_bounded_sql(db_path: Path, sql: str, *, timeout_seconds: float = DEFAULT_SQL_TIMEOUT_SECONDS,
                         max_result_rows: int = 100_000) -> tuple[str, list[tuple] | None, float]:
     """Read-only SQLite query with VM-level time and fetched-row limits.
 
@@ -134,11 +146,11 @@ def execute_bounded_sql(db_path: Path, sql: str, *, timeout_seconds: float = 30.
 
 def evaluate_predictions(dataset: BirdDataset, references: BirdEvaluationReferences,
                          questions: list[dict], predictions: list[dict], *, variant: str,
-                         timeout_seconds: float = 30.0,
+                         timeout_seconds: float = DEFAULT_SQL_TIMEOUT_SECONDS,
                          max_result_rows: int = 100_000) -> tuple[list[dict], dict]:
     """Score a declared question set. Missing predictions stay in denominator."""
     if variant not in VARIANTS:
-        raise ValueError(f"Unknown variant {variant!r}; choose B0 to B4")
+        raise ValueError(f"Unknown variant {variant!r}; choose B0 to B4 or Metadata")
     if not questions:
         raise ValueError("Question set must not be empty")
     if timeout_seconds <= 0 or max_result_rows < 1:
@@ -188,7 +200,8 @@ def evaluate_predictions(dataset: BirdDataset, references: BirdEvaluationReferen
         "missing_predictions": len(records) - len(matched),
         "status_counts": dict(sorted(counts.items())), "by_difficulty": difficulties,
     }
-    for field in ("tool_calls", "input_tokens", "output_tokens", "latency_ms", "cost_usd"):
+    for field in ("tool_calls", "input_tokens", "output_tokens", "total_tokens",
+                  "cached_input_tokens", "reasoning_tokens", "latency_ms", "cost_usd"):
         observed = [row[field] for row in records if row.get(field) is not None]
         summary[f"mean_{field}"] = sum(observed) / len(observed) if observed else None
         summary[f"observed_{field}"] = len(observed)
@@ -196,7 +209,11 @@ def evaluate_predictions(dataset: BirdDataset, references: BirdEvaluationReferen
     performance = {}
     for field in ("tool_calls", "model_calls", "sql_calls", "sql_success_calls",
                   "sql_error_calls", "sql_truncated_calls", "input_tokens",
-                  "output_tokens", "latency_ms", "sql_execution_ms",
+                  "output_tokens", "total_tokens", "cached_input_tokens",
+                  "reasoning_tokens", "input_tokens_observed_calls",
+                  "output_tokens_observed_calls", "total_tokens_observed_calls",
+                  "cached_input_tokens_observed_calls", "reasoning_tokens_observed_calls",
+                  "latency_ms", "sql_execution_ms",
                   "gold_sql_execution_ms", "agent_sql_execution_ms"):
         vals = sorted(row[field] for row in records if type(row.get(field)) in (int, float))
         performance[field] = {"observed": len(vals),

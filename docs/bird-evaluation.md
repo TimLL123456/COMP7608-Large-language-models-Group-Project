@@ -1,10 +1,48 @@
 # KORA-03 — BIRD Execution Accuracy (EX) Guide
 
-> **Beginner scoring policy:** This is original BIRD Mini-Dev with a *local* 400-dev/100-test split, not the hidden leaderboard. Strict EX compares executed result sets with no numeric tolerance. Prior 16/16 *selected-case* official scorer parity is not full parity. Extra safety/timeout/row limits can make edge cases differ. Keep disputed gold semantics and numeric gaps as **separate diagnostics**; do not change gold SQL or EX.
+> **Dataset update — 8 November 2026:** Use **Mini-Dev 2026** for new harness experiments. The original Mini-Dev instructions and archived 59.8% EX remain historical reproduction evidence. See [dataset versions and migration](bird-dataset-versions.md) for the Docker-free download command, changed IDs, and fresh evaluation workflow. Full Dev 20251106 is a separate optional benchmark.
 
 **Goal:** Understand how KORA checks whether generated Text-to-SQL answers are correct. The evaluator reads **saved predictions**; it does **not** call an LLM.
 
 **Normal B0 workflow:** Follow [Prepare → Infer → Score](bird-b0.md). You **do not need** to run the low-level evaluator separately.
+
+## Mini-Dev 2026: B0 scoring
+
+The B0 runner saves its full `inference_manifest.json` automatically. Use the [current 2026 walkthrough](bird-b0.md#mini-dev-2026-current-workflow), passing `--dataset-root data/bird/mini-dev-2026` to prepare, infer and score. The original examples below retain their old defaults.
+
+## Mini-Dev 2026: independent predictions
+
+For independent B1–B4 generators, the scorer additionally requires `inference_manifest.json` beside `predictions.jsonl`, with a `dataset_manifest` equal to the installed dataset manifest. Record it when starting generation against that dataset; it is not a way to relabel old predictions. B0 has a richer manifest and should continue using its runner rather than this minimal example.
+
+Illustrative Python integration for a new independent B1 run (paths are examples):
+
+```python
+import json
+from pathlib import Path
+from scr.datasets.bird import BirdDataset
+
+bird = BirdDataset("data/bird/mini-dev-2026")
+output = Path("results/minidev2026/B1/run-001")
+output.mkdir(parents=True, exist_ok=False)  # refuse to reuse a run
+with (output / "inference_manifest.json").open("x", encoding="utf-8") as stream:
+    json.dump({"dataset_manifest": bird.manifest}, stream, indent=2)
+# Your generator now uses bird.get_split("dev") / bird.get_agent_input(qid),
+# and writes predictions.jsonl in this output directory.
+# Each line needs question_id, db_id and predicted_sql (string or null).
+# Never pass Gold SQL/reference files to the model.
+```
+
+After your generator has produced the predictions, score them without model calls:
+
+```bash
+uv run python -m scr.cli.evaluate_bird --dataset-root data/bird/mini-dev-2026 --variant B1 --split dev --predictions results/minidev2026/B1/run-001/predictions.jsonl --output-dir results/minidev2026/B1/scores --run-id run-001
+```
+
+The example does not generate predictions itself. Use a new output directory for each run. For B2–B4 substitute the variant and paths. Missing/wrong dataset provenance is rejected before scoring. Missing individual predictions score zero; use `--question-ids` for an explicitly labelled smoke subset. Do not attach a new manifest to predictions generated for another release.
+
+## Original-release examples and shared EX rules
+
+The remaining command examples retain original Mini-Dev defaults. The EX definition and safety rules apply to both supported releases; manual 2026 scoring additionally requires the provenance described above.
 
 ## 1. What is EX?
 
@@ -105,7 +143,7 @@ The **low-level** scorer allows missing predictions and marks them EX=0; the **B
 **Before comparing B0–B4:** Keep the annotation/database version, dev/test membership, question IDs, evidence policy, evaluator settings and SQL safety the same. Record changes to models, prompts, tool limits, tokens, and timeouts in each experiment manifest. Tune only on `dev` and freeze choices before using local `test`.
 
 - This project's **original BIRD Mini-Dev** has 500 questions and 11 SQLite databases, split locally into 400 dev and 100 test questions. Local `test` is **not** BIRD's official hidden leaderboard test and may share database schemas with dev.
-- SQL is executed **read-only** (SQLite authorizer), with default scorer timeout **30 seconds** and maximum **100,000 result rows**. This is **different** from the agent's `infer --preview-rows`.
+- SQL is executed **read-only** (SQLite authorizer), with default scorer timeout **300 seconds (5 minutes)** and maximum **100,000 result rows**. This is **different** from the agent's `infer --preview-rows`.
 - Gold references are used **only by the evaluator**, never sent to an agent, router, planner or repair tool. This is a **code convention**, not an operating-system security boundary.
 - The scorer validates question IDs and database IDs. Its output also includes full-difficulty EX, per-question status, available token/tool metrics and scorer provenance.
 - The reported **16/16 matched selected-case** upstream EX comparisons are diagnostic evidence, **not** verified full-dataset parity or a B0 model accuracy score.
