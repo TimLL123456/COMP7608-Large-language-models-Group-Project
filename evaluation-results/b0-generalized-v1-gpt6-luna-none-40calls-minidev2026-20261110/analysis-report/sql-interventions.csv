@@ -1,0 +1,1024 @@
+﻿question_id,label,sql,status,row_count,columns,sample,types,ms,matches_reference
+4,school_level_filter,"SELECT s.MailStreet, s.School
+FROM satscores AS ss
+JOIN schools AS s ON s.CDSCode = ss.cds
+WHERE ss.rtype='S' AND ss.AvgScrMath IS NOT NULL
+ORDER BY ss.AvgScrMath DESC
+LIMIT 1 OFFSET 6;",ok,1,,"[[""5172 Orange Avenue"", ""Oxford Academy""]]","[[""str"", ""str""]]",1.42,1
+7,swap_output_columns,"SELECT
+    f.""Free Meal Count (K-12)"" * 100.0 / f.""Enrollment (K-12)"" AS ""Percent (%) Eligible Free (K-12)"", f.""District Code""
+FROM schools AS s
+JOIN frpm AS f ON f.CDSCode = s.CDSCode
+WHERE s.AdmFName1 = 'Alusine';",ok,1,,"[[70.15113350125945, 64857]]","[[""float"", ""int""]]",6.295,1
+30,school_name_nonnull,"WITH eligible AS (
+    SELECT
+        s.School,
+        s.District,
+        s.County,
+        t.AvgScrWrite,
+        DENSE_RANK() OVER (ORDER BY t.AvgScrWrite DESC) AS score_rank
+    FROM schools AS s
+    JOIN satscores AS t
+        ON t.cds = s.CDSCode
+    WHERE s.StatusType = 'Closed' AND t.sname IS NOT NULL
+      AND t.AvgScrWrite IS NOT NULL
+)
+SELECT School, District, County, AvgScrWrite
+FROM eligible
+WHERE score_rank = 2
+ORDER BY School;",ok,1,,"[[""FAME Public Charter"", ""Alameda County Office of Education"", ""Alameda"", 505]]","[[""str"", ""str"", ""str"", ""int""]]",5.507,1
+36,numeric_round_instead_of_text_printf,"SELECT
+    s.School AS school_name,
+    ROUND(f.""Free Meal Count (K-12)"" * 1.0 / f.""Enrollment (K-12)"",4) AS free_meal_rate,
+    CASE
+        WHEN s.Charter = 1 THEN 'Yes'
+        WHEN s.Charter = 0 THEN 'No'
+        ELSE 'Unknown'
+    END AS charter_school,
+    s.GSserved AS grades_served,
+    CASE
+        WHEN sat.AvgScrRead IS NULL OR sat.AvgScrMath IS NULL OR sat.AvgScrWrite IS NULL THEN 'No SAT Data'
+        WHEN sat.AvgScrRead + sat.AvgScrMath + sat.AvgScrWrite < 1200 THEN 'Below Average'
+        WHEN sat.AvgScrRead + sat.AvgScrMath + sat.AvgScrWrite <= 1500 THEN 'Average'
+        ELSE 'Above Average'
+    END AS sat_performance_level
+FROM schools AS s
+JOIN frpm AS f ON f.CDSCode = s.CDSCode
+LEFT JOIN satscores AS sat ON sat.cds = s.CDSCode
+WHERE s.County = 'Alameda'
+  AND (s.GSserved LIKE '%-12' OR s.GSserved = '12')
+  AND f.""Enrollment (K-12)"" > 0
+  AND f.""Free Meal Count (K-12)"" * 1.0 / f.""Enrollment (K-12)"" = (
+      SELECT MAX(f2.""Free Meal Count (K-12)"" * 1.0 / f2.""Enrollment (K-12)"")
+      FROM schools AS s2
+      JOIN frpm AS f2 ON f2.CDSCode = s2.CDSCode
+      WHERE s2.County = 'Alameda'
+        AND (s2.GSserved LIKE '%-12' OR s2.GSserved = '12')
+        AND f2.""Enrollment (K-12)"" > 0
+  );",ok,1,,"[[""California School for the Blind"", 0.9833, ""No"", ""K-12"", ""No SAT Data""]]","[[""str"", ""float"", ""str"", ""str"", ""str""]]",10.16,1
+52,normalize_newline,"SELECT DISTINCT REPLACE(text,CHAR(10),' ')
+FROM cards
+WHERE name = 'Benalish Knight';",ok,1,,"[[""Flash (You may cast this spell any time you could cast an instant.) First strike (This creature deals combat damage before creatures without first strike.)""]]","[[""str""]]",40.255,1
+59,require_actual_translation,"SELECT COUNT(DISTINCT s.code)
+FROM sets AS s
+JOIN set_translations AS st ON st.setCode = s.code
+WHERE s.block = 'Ice Age'
+  AND st.language = 'Italian' AND st.translation IS NOT NULL;",ok,1,,[[1]],"[[""int""]]",0.658,1
+69,numeric_frame_max,"WITH newest_version AS (
+    SELECT MAX(CAST(frameVersion AS REAL)) AS frameVersion
+    FROM cards
+    WHERE convertedManaCost = 0
+)
+SELECT c.frameVersion, COUNT(*) AS card_count
+FROM cards AS c
+JOIN newest_version AS n ON c.frameVersion = n.frameVersion
+GROUP BY c.frameVersion;",ok,0,,[],[],76.412,0
+69,refined_targeted_diagnostic,"WITH newest_version AS (
+    SELECT MAX(CAST(frameVersion AS REAL)) AS frameVersion
+    FROM cards
+    WHERE convertedManaCost = 0
+)
+SELECT c.frameVersion, COUNT(*) AS card_count
+FROM cards AS c
+JOIN newest_version AS n ON CAST(c.frameVersion AS REAL) = n.frameVersion
+GROUP BY c.frameVersion;",ok,1,,"[[""2015"", 25500]]",,84.68683005776256,1
+78,require_actual_translation,"SELECT
+    s.name,
+    s.keyruneCode,
+    COUNT(DISTINCT st.language) AS language_count
+FROM sets AS s
+LEFT JOIN set_translations AS st
+    ON st.setCode = s.code AND st.translation IS NOT NULL
+WHERE s.releaseDate >= '2020-01-01'
+  AND s.releaseDate < '2021-01-01'
+GROUP BY s.id, s.name, s.keyruneCode
+ORDER BY s.releaseDate, s.name;",ok,34,,"[[""Judge Gift Cards 2020"", ""PMEI"", 0], [""MagicFest 2020"", ""PMEI"", 0], [""Theros Beyond Death"", ""THB"", 1], [""Theros Beyond Death Promos"", ""THB"", 0]]","[[""str"", ""str"", ""int""], [""str"", ""str"", ""int""]]",1.389,1
+81,remove_name_deduplication,"WITH eligible AS (
+    SELECT name, artist
+    FROM cards
+    WHERE borderColor = 'black'
+      AND availability LIKE '%arena%'
+      AND power GLOB '[0-9]*'
+      AND CAST(power AS INTEGER) >= 10
+),
+counts AS (
+    SELECT artist, COUNT(*) AS card_count
+    FROM eligible
+    GROUP BY artist
+)
+SELECT artist, card_count
+FROM counts
+WHERE card_count = (SELECT MAX(card_count) FROM counts)
+ORDER BY artist;",ok,3,,"[[""Chase Stone"", 2], [""Jonathan Kuo"", 2], [""Zoltan Boros"", 2]]","[[""str"", ""int""], [""str"", ""int""]]",35.549,1
+92,alphabetical_not_integer_id,"SELECT cardKingdomFoilId, cardKingdomId
+FROM cards
+WHERE types LIKE '%Creature%'
+  AND cardKingdomFoilId IS NOT NULL
+  AND cardKingdomFoilId <> ''
+  AND cardKingdomId IS NOT NULL
+  AND cardKingdomId <> ''
+ORDER BY cardKingdomFoilId, cardKingdomId
+LIMIT 3;",ok,3,,"[[""110505"", ""110335""], [""110506"", ""110336""], [""110507"", ""110337""]]","[[""str"", ""str""], [""str"", ""str""]]",42.451,1
+103,require_actual_translation,"SELECT s.code, s.releaseDate
+FROM sets AS s
+WHERE s.releaseDate >= '2020-01-01'
+  AND s.releaseDate < '2021-01-01'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM set_translations AS t
+      WHERE t.setCode = s.code
+        AND t.language = 'Spanish' AND t.translation IS NOT NULL
+  )
+ORDER BY s.releaseDate, s.code;",ok,34,,"[[""J20"", ""2020-01-01""], [""PF20"", ""2020-01-01""], [""PTHB"", ""2020-01-24""], [""THB"", ""2020-01-24""]]","[[""str"", ""str""], [""str"", ""str""]]",2.451,1
+105,require_actual_translation,"SELECT ROUND(AVG(language_count), 2) AS average_languages
+FROM (
+    SELECT s.id, COUNT(DISTINCT st.language) AS language_count
+    FROM sets AS s
+    LEFT JOIN set_translations AS st ON st.setCode = s.code AND st.translation IS NOT NULL AND TRIM(st.translation)<>''
+    WHERE s.releaseDate >= '2016-01-01'
+      AND s.releaseDate < '2017-01-01'
+    GROUP BY s.id
+);",ok,1,,[[4.74]],"[[""float""]]",0.987,1
+136,country_inside_location,"WITH german_user_badge_counts AS (
+    SELECT u.Id, u.DisplayName, COUNT(b.Id) AS badge_total
+    FROM users AS u
+    LEFT JOIN badges AS b ON b.UserId = u.Id
+    WHERE u.Location LIKE '%Germany%'
+    GROUP BY u.Id, u.DisplayName
+),
+ranked_totals AS (
+    SELECT badge_total,
+           DENSE_RANK() OVER (ORDER BY badge_total DESC) AS total_rank
+    FROM (SELECT DISTINCT badge_total FROM german_user_badge_counts)
+)
+SELECT g.DisplayName, g.badge_total
+FROM german_user_badge_counts AS g
+JOIN ranked_totals AS r ON r.badge_total = g.badge_total
+WHERE r.total_rank = 2
+ORDER BY g.DisplayName;",ok,1,,"[[""Bernd Weiss"", 49]]","[[""str"", ""int""]]",44.095,1
+139,country_inside_location,"SELECT COUNT(DISTINCT b.UserId) AS user_count
+FROM badges AS b
+JOIN users AS u ON u.Id = b.UserId
+WHERE b.Name = 'Yearling'
+  AND u.Location LIKE '%India%'
+  AND b.Date < '2014-01-01';",ok,1,,[[6]],"[[""int""]]",7.135,1
+140,exclude_NaN_placeholder,"SELECT COUNT(DISTINCT u.DisplayName) AS display_name_count
+FROM badges AS b
+JOIN users AS u ON u.Id = b.UserId
+WHERE u.DisplayName<>'NaN' AND b.Name = 'Supporter'
+  AND u.Age BETWEEN 19 AND 65;",ok,1,,[[2939]],"[[""int""]]",17.746,1
+173,valid_grade_domain,"SELECT ROUND(
+    100.0 * COUNT(DISTINCT CASE WHEN a.defensive_work_rate = 'high' THEN p.player_api_id END)
+    / COUNT(DISTINCT p.player_api_id),
+    2
+) AS percentage
+FROM Player AS p
+JOIN Player_Attributes AS a
+    ON a.player_api_id = p.player_api_id
+WHERE p.birthday >= '1991-01-01'
+  AND a.defensive_work_rate IN ('low','medium','high');",ok,1,,[[17.41]],"[[""float""]]",109.33,1
+175,valid_grade_domain,"WITH ranked AS (
+    SELECT
+        player_api_id,
+        defensive_work_rate,
+        ROW_NUMBER() OVER (
+            PARTITION BY player_api_id
+            ORDER BY date DESC, id DESC
+        ) AS rn
+    FROM Player_Attributes
+)
+SELECT ROUND(AVG(p.height), 2) AS average_height_cm
+FROM Player p
+JOIN ranked r ON r.player_api_id = p.player_api_id
+WHERE r.rn = 1
+  AND r.defensive_work_rate IN ('low','high');",ok,1,,[[180.95]],"[[""float""]]",260.166,1
+177,filter_valid_defensive_before_rank,"WITH ranked_attributes AS (
+    SELECT
+        player_api_id,
+        defensive_work_rate,
+        ROW_NUMBER() OVER (
+            PARTITION BY player_api_id
+            ORDER BY date DESC, id DESC
+        ) AS rn
+    FROM Player_Attributes
+    WHERE defensive_work_rate IN ('low','medium','high')
+)
+SELECT ROUND(AVG(p.height), 2) AS average_height_cm
+FROM Player AS p
+JOIN ranked_attributes AS a
+    ON a.player_api_id = p.player_api_id
+WHERE a.rn = 1
+  AND a.defensive_work_rate = 'medium'
+  AND CAST(strftime('%Y', p.birthday) AS INTEGER) BETWEEN 1990 AND 1995
+  AND p.height IS NOT NULL;",ok,1,,[[180.85]],"[[""float""]]",236.733,1
+191,inclusive_entire_last_day,"SELECT COUNT(DISTINCT player_api_id) AS player_count
+FROM Player_Attributes
+WHERE date >= '2007-02-22'
+  AND date < '2007-08-31'
+  AND jumping >= 80;",ok,1,,[[654]],"[[""int""]]",47.329,1
+194,salary_A11_not_A12,"WITH lowest_salary_district AS (
+    SELECT district_id
+    FROM district
+    WHERE A11 = (SELECT MIN(A11) FROM district)
+),
+oldest_female_clients AS (
+    SELECT client_id
+    FROM client
+    WHERE gender = 'F'
+      AND district_id IN (SELECT district_id FROM lowest_salary_district)
+      AND birth_date = (
+          SELECT MIN(c.birth_date)
+          FROM client c
+          WHERE c.gender = 'F'
+            AND c.district_id IN (SELECT district_id FROM lowest_salary_district)
+      )
+)
+SELECT dp.account_id,
+       (SELECT MAX(A11) - MIN(A11) FROM district) AS salary_difference
+FROM oldest_female_clients o
+JOIN disp dp ON dp.client_id = o.client_id;",ok,1,,"[[3214, 4431]]","[[""int"", ""int""]]",1.729,1
+201,owner_relationship,"WITH male_accounts AS (
+    SELECT DISTINCT d.account_id
+    FROM disp AS d
+    JOIN client AS c ON c.client_id = d.client_id
+    WHERE c.gender = 'M' AND d.type='OWNER'
+),
+yearly_totals AS (
+    SELECT
+        CAST(strftime('%Y', l.date) AS INTEGER) AS year,
+        SUM(l.amount) AS total_amount
+    FROM loan AS l
+    JOIN male_accounts AS ma ON ma.account_id = l.account_id
+    WHERE l.date >= '1996-01-01'
+      AND l.date < '1998-01-01'
+    GROUP BY year
+)
+SELECT
+    100.0 * (
+        SUM(CASE WHEN year = 1997 THEN total_amount END)
+        - SUM(CASE WHEN year = 1996 THEN total_amount END)
+    ) / SUM(CASE WHEN year = 1996 THEN total_amount END) AS percentage_growth
+FROM yearly_totals;",ok,1,,[[25.300191222790616]],"[[""float""]]",2.344,1
+206,region_A3_not_A2,"WITH regional_totals AS (
+    SELECT d.A3 AS region, SUM(l.amount) AS total_approved_amount
+    FROM loan AS l
+    JOIN account AS a ON a.account_id = l.account_id
+    JOIN district AS d ON d.district_id = a.district_id
+    WHERE date(l.date) <= date('1995-12-31')
+      AND date(l.date, '+' || l.duration || ' months') >= date('1995-12-31')
+    GROUP BY d.A3
+)
+SELECT region, total_approved_amount
+FROM regional_totals
+WHERE total_approved_amount = (SELECT MAX(total_approved_amount) FROM regional_totals);",ok,1,,"[[""Prague"", 4760472]]","[[""str"", ""int""]]",0.949,1
+216,population_A4_not_A8,"WITH eligible_districts AS (
+    SELECT DISTINCT
+        d.A3 AS region,
+        d.district_id,
+        d.A11 AS salary,
+        d.A13 AS unemployment_1996,
+        d.A2 AS district_name,
+        d.A4 AS inhabitants
+    FROM client AS c
+    JOIN disp AS dp
+        ON dp.client_id = c.client_id
+       AND dp.type = 'OWNER'
+    JOIN account AS a
+        ON a.account_id = dp.account_id
+    JOIN district AS d
+        ON d.district_id = c.district_id
+    WHERE c.gender = 'F'
+      AND EXISTS (
+          SELECT 1
+          FROM card AS ca
+          WHERE ca.disp_id = dp.disp_id
+      )
+      AND EXISTS (
+          SELECT 1
+          FROM loan AS l
+          WHERE l.account_id = a.account_id
+      )
+),
+ranked_districts AS (
+    SELECT
+        region,
+        district_name,
+        ROW_NUMBER() OVER (
+            PARTITION BY region
+            ORDER BY inhabitants DESC, district_name ASC
+        ) AS district_rank
+    FROM eligible_districts
+)
+SELECT
+    e.region,
+    ROUND(AVG(e.salary), 2) AS average_district_salary,
+    ROUND(AVG(e.unemployment_1996), 2) AS average_1996_district_unemployment_rate,
+    MAX(CASE WHEN r.district_rank = 1 THEN r.district_name END) AS most_populous_district
+FROM eligible_districts AS e
+JOIN ranked_districts AS r
+    ON r.region = e.region
+   AND r.district_name = e.district_name
+GROUP BY e.region
+ORDER BY e.region;",ok,8,,"[[""Prague"", 12541.0, 0.43, ""Hl.m. Praha""], [""central Bohemia"", 9318.3, 3.18, ""Kolin""], [""east Bohemia"", 8614.25, 3.27, ""Pardubice""], [""north Bohemia"", 9386.11, 6.37, ""Louny""]]","[[""str"", ""float"", ""float"", ""str""], [""str"", ""float"", ""float"", ""str""]]",2.089,0
+216,refined_targeted_diagnostic,"WITH eligible_districts AS (
+    SELECT DISTINCT
+        d.A3 AS region,
+        d.district_id,
+        d.A11 AS salary,
+        d.A13 AS unemployment_1996,
+        d.A2 AS district_name,
+        CAST(d.A4 AS INTEGER) AS inhabitants
+    FROM client AS c
+    JOIN disp AS dp
+        ON dp.client_id = c.client_id
+       AND dp.type = 'OWNER'
+    JOIN account AS a
+        ON a.account_id = dp.account_id
+    JOIN district AS d
+        ON d.district_id = c.district_id
+    WHERE c.gender = 'F'
+      AND EXISTS (
+          SELECT 1
+          FROM card AS ca
+          WHERE ca.disp_id = dp.disp_id
+      )
+      AND EXISTS (
+          SELECT 1
+          FROM loan AS l
+          WHERE l.account_id = a.account_id
+      )
+),
+ranked_districts AS (
+    SELECT
+        region,
+        district_name,
+        ROW_NUMBER() OVER (
+            PARTITION BY region
+            ORDER BY inhabitants DESC, district_name ASC
+        ) AS district_rank
+    FROM eligible_districts
+)
+SELECT
+    e.region,
+    ROUND(AVG(e.salary), 2) AS average_district_salary,
+    ROUND(AVG(e.unemployment_1996), 2) AS average_1996_district_unemployment_rate,
+    MAX(CASE WHEN r.district_rank = 1 THEN r.district_name END) AS most_populous_district
+FROM eligible_districts AS e
+JOIN ranked_districts AS r
+    ON r.region = e.region
+   AND r.district_name = e.district_name
+GROUP BY e.region
+ORDER BY e.region;",ok,8,,"[[""Prague"", 12541.0, 0.43, ""Hl.m. Praha""], [""central Bohemia"", 9318.3, 3.18, ""Kladno""], [""east Bohemia"", 8614.25, 3.27, ""Pardubice""], [""north Bohemia"", 9386.11, 6.37, ""Liberec""]]",,2.683427999727428,1
+218,population_A4_not_A8,"WITH markets AS (
+    SELECT DISTINCT
+        c.type,
+        d.district_id,
+        d.A2 AS district,
+        CAST(d.A4 AS INTEGER) AS inhabitants
+    FROM card AS c
+    JOIN disp AS p ON p.disp_id = c.disp_id
+    JOIN client AS cl ON cl.client_id = p.client_id
+    JOIN district AS d ON d.district_id = cl.district_id
+    WHERE c.type IN ('gold', 'classic', 'junior')
+)
+SELECT type, district, inhabitants
+FROM (
+    SELECT
+        type,
+        district,
+        inhabitants,
+        MIN(inhabitants) OVER (PARTITION BY type) AS min_inhabitants
+    FROM markets
+)
+WHERE inhabitants = min_inhabitants
+ORDER BY type, district;",ok,3,,"[[""classic"", ""Jesenik"", 42821], [""gold"", ""Jesenik"", 42821], [""junior"", ""Jesenik"", 42821]]","[[""str"", ""str"", ""int""], [""str"", ""str"", ""int""]]",1.391,1
+226,null_or_blank_purpose,"SELECT d.A2 AS branch_name, COUNT(*) AS transaction_count
+FROM trans AS t
+JOIN account AS a ON a.account_id = t.account_id
+JOIN district AS d ON d.district_id = a.district_id
+WHERE d.A3 = 'north Moravia'
+  AND t.date <= '1998-10-14'
+  AND (t.k_symbol IS NULL OR TRIM(t.k_symbol)='')
+GROUP BY d.district_id, d.A2
+ORDER BY transaction_count DESC, branch_name ASC
+LIMIT 3;",ok,3,,"[[""Karvina"", 16820], [""Ostrava - mesto"", 16748], [""Olomouc"", 9928]]","[[""str"", ""int""], [""str"", ""int""]]",215.49,1
+228,remove_extra_loan_date_filter,"SELECT COUNT(DISTINCT a.account_id)
+FROM account AS a
+JOIN loan AS l ON l.account_id = a.account_id
+WHERE a.district_id = 1
+  AND a.date <= '1995-12-31'
+  AND l.status IN ('C', 'D');",ok,1,,[[13]],"[[""int""]]",0.541,1
+231,account_date_not_loan_date,"WITH qualifying_districts AS (
+    SELECT
+        d.district_id,
+        d.A3 AS region_name,
+        CAST(d.A4 AS INTEGER) AS population,
+        COUNT(l.loan_id) AS account_count
+    FROM district AS d
+    JOIN account AS a
+        ON a.district_id = d.district_id
+    JOIN loan AS l
+        ON l.account_id = a.account_id
+    WHERE l.duration > 24
+      AND a.date < '1997-01-01'
+    GROUP BY d.district_id, d.A3, d.A4
+),
+region_totals AS (
+    SELECT
+        region_name,
+        COUNT(*) AS district_count,
+        SUM(population) AS combined_population,
+        SUM(account_count) AS account_count
+    FROM qualifying_districts
+    GROUP BY region_name
+)
+SELECT
+    region_name,
+    district_count,
+    combined_population,
+    account_count
+FROM region_totals
+ORDER BY combined_population DESC, region_name ASC
+LIMIT 1;",ok,1,,"[[""south Moravia"", 14, 2054989, 68]]","[[""str"", ""int"", ""int"", ""int""]]",0.867,1
+238,salary_A11_not_A10,"SELECT ROUND(AVG(d.A11), 2) AS avg_district_salary
+FROM (
+    SELECT DISTINCT a.district_id
+    FROM loan AS l
+    JOIN account AS a ON a.account_id = l.account_id
+    WHERE l.amount < 100000
+      AND l.status = 'C'
+) AS loan_districts
+JOIN district AS d ON d.district_id = loan_districts.district_id;",ok,1,,[[9101.53]],"[[""float""]]",0.518,1
+252,empty_q3_is_missing,"SELECT
+    d.forename,
+    d.surname,
+    d.url,
+    d.dob,
+    COUNT(NULLIF(q.q3,'')) AS q3_times
+FROM drivers AS d
+LEFT JOIN qualifying AS q
+    ON q.driverId = d.driverId
+WHERE d.nationality = 'German'
+  AND d.dob BETWEEN '1971-01-01' AND '1985-12-31'
+GROUP BY d.driverId
+ORDER BY q3_times DESC, d.dob ASC;",ok,7,,"[[""Nico"", ""Rosberg"", ""http://en.wikipedia.org/wiki/Nico_Rosberg"", ""1985-06-27"", 149], [""Nick"", ""Heidfeld"", ""http://en.wikipedia.org/wiki/Nick_Heidfeld"", ""1977-05-10"", 44], [""Adrian"", ""Sutil"", ""http://en.wikipedia.org/wiki/Adrian_Sutil"", ""1983-01-11"", 19], [""Ralf"", ""Schumacher"", ""http://en.wikipedia.org/wiki/Ralf_Schumacher"", ""1975-06-30"", 15]]","[[""str"", ""str"", ""str"", ""str"", ""int""], [""str"", ""str"", ""str"", ""str"", ""int""]]",3.964,1
+259,supported_fractional_seconds_modifier,"SELECT
+    d.forename,
+    d.surname,
+    time(
+        r.time,
+        printf('+%d seconds', res.milliseconds / 1000),
+        printf('+%.3f seconds', (res.milliseconds % 1000)/1000.0)
+    ) || '.' || printf('%03d', res.milliseconds % 1000) AS finish_local_time,
+    d.url
+FROM races AS r
+JOIN results AS res ON res.raceId = r.raceId
+JOIN drivers AS d ON d.driverId = res.driverId
+WHERE r.year = 2017
+  AND r.name = 'Azerbaijan Grand Prix'
+  AND res.positionOrder = 1;",ok,1,,"[[""Daniel"", ""Ricciardo"", ""15:03:55.573"", ""http://en.wikipedia.org/wiki/Daniel_Ricciardo""]]","[[""str"", ""str"", ""str"", ""str""]]",2.354,1
+279,distinct_race_ids,"WITH eligible AS (
+    SELECT d.driverId, d.forename, d.surname, d.nationality, d.dob
+    FROM drivers AS d
+    WHERE EXISTS (
+        SELECT 1
+        FROM results AS r
+        WHERE r.driverId = d.driverId
+          AND r.position = 1
+    )
+),
+chosen AS (
+    SELECT *
+    FROM eligible
+    ORDER BY dob ASC, (forename || ' ' || surname) COLLATE NOCASE ASC
+    LIMIT 1
+),
+first_win AS (
+    SELECT ra.name, ra.date
+    FROM results AS r
+    JOIN races AS ra ON ra.raceId = r.raceId
+    WHERE r.driverId = (SELECT driverId FROM chosen)
+      AND r.position = 1
+    ORDER BY ra.date ASC, ra.name COLLATE NOCASE ASC
+    LIMIT 1
+)
+SELECT
+    c.forename || ' ' || c.surname AS full_name,
+    c.nationality,
+    fw.name AS first_win_race,
+    fw.date AS first_win_date,
+    (
+        SELECT COUNT(DISTINCT r.raceId)
+        FROM results AS r
+        JOIN races AS ra ON ra.raceId = r.raceId
+        WHERE r.driverId = c.driverId
+    ) AS races_started
+FROM chosen AS c
+CROSS JOIN first_win AS fw;",ok,1,,"[[""Luigi Fagioli"", ""Italian"", ""French Grand Prix"", ""1951-07-01"", 7]]","[[""str"", ""str"", ""str"", ""str"", ""int""]]",4.59,1
+306,restrict_member_budget_to_qualifying_purchases,"WITH qualifying_members AS (
+    SELECT DISTINCT link_to_member
+    FROM expense
+    WHERE cost > 50
+),
+member_budget_lines AS (
+    SELECT DISTINCT e.link_to_member, e.link_to_budget
+    FROM expense e
+    JOIN qualifying_members q ON q.link_to_member = e.link_to_member
+    WHERE e.link_to_budget IS NOT NULL AND e.cost>50
+)
+SELECT
+    m.first_name,
+    m.last_name,
+    ROUND(SUM(COALESCE(b.amount, 0) - COALESCE(b.spent, 0)), 2) AS total_remaining
+FROM qualifying_members q
+JOIN member m ON m.member_id = q.link_to_member
+JOIN member_budget_lines mb ON mb.link_to_member = q.link_to_member
+JOIN budget b ON b.budget_id = mb.link_to_budget
+GROUP BY m.member_id, m.first_name, m.last_name
+ORDER BY total_remaining DESC, m.last_name ASC, m.first_name ASC;",ok,3,,"[[""Phillip"", ""Cullen"", 107.5], [""Sacha"", ""Harrison"", 19.01], [""Elijah"", ""Allen"", 4.75]]","[[""str"", ""str"", ""float""], [""str"", ""str"", ""float""]]",0.437,1
+328,sum_missing_budget_zero,"SELECT
+    e.event_name,
+    e.event_date,
+    (SELECT COALESCE(SUM(b.amount),0)
+     FROM budget AS b
+     WHERE b.link_to_event = e.event_id) AS total_budgeted,
+    (SELECT COUNT(DISTINCT a.link_to_member)
+     FROM attendance AS a
+     WHERE a.link_to_event = e.event_id) AS members_attended
+FROM event AS e
+ORDER BY e.event_name ASC, e.event_date ASC;",ok,42,,"[[""April Meeting"", ""2020-04-07T12:00:00"", 205, 0], [""April Speaker"", ""2020-04-21T12:00:00"", 260, 0], [""Baseball game"", ""2020-02-15T06:00:00"", 0, 0], [""Community Theater"", ""2019-10-12T06:00:00"", 0, 17]]","[[""str"", ""str"", ""int"", ""int""], [""str"", ""str"", ""int"", ""int""]]",0.493,1
+338,known_name_excludes_dash,"SELECT DISTINCT s.full_name
+FROM superhero AS s
+JOIN hero_attribute AS ha ON ha.hero_id = s.id
+JOIN attribute AS a ON a.id = ha.attribute_id
+WHERE lower(a.attribute_name) = 'strength'
+  AND ha.attribute_value = (
+    SELECT MAX(ha2.attribute_value)
+    FROM hero_attribute AS ha2
+    JOIN attribute AS a2 ON a2.id = ha2.attribute_id
+    WHERE lower(a2.attribute_name) = 'strength'
+  )
+  AND s.full_name IS NOT NULL
+  AND trim(s.full_name) <> '' AND s.full_name<>'-'
+ORDER BY s.full_name;",ok,35,,"[[""Abraxas""], [""Barbara Ann Minerva""], [""Barda Free""], [""Benjamin Kirby Tennyson""]]","[[""str""], [""str""]]",1.18,1
+343,exclude_zero_measurements,"WITH dc_powers AS (
+  SELECT DISTINCT hp.power_id
+  FROM hero_power AS hp
+  JOIN superhero AS h ON h.id = hp.hero_id
+  JOIN publisher AS p ON p.id = h.publisher_id
+  WHERE p.publisher_name = 'DC Comics'
+),
+marvel_characters AS (
+  SELECT DISTINCT h.id, h.height_cm
+  FROM superhero AS h
+  JOIN publisher AS p ON p.id = h.publisher_id
+  JOIN hero_power AS hp ON hp.hero_id = h.id
+  WHERE p.publisher_name = 'Marvel Comics'
+    AND h.height_cm > 0
+    AND NOT EXISTS (
+      SELECT 1
+      FROM dc_powers AS d
+      WHERE d.power_id = hp.power_id
+    )
+)
+SELECT AVG(height_cm)
+FROM marvel_characters;",ok,1,,[[202.6153846153846]],"[[""float""]]",3.387,1
+345,exclude_zero_measurements,"SELECT ROUND(AVG(s.weight_kg), 1)
+FROM superhero AS s
+JOIN colour AS c ON c.id = s.skin_colour_id
+WHERE c.colour = 'Green'
+  AND s.weight_kg > 0;",ok,1,,[[1354.6]],"[[""float""]]",0.502,1
+346,retain_missing_alignment,"SELECT COUNT(*)
+FROM superhero AS s
+LEFT JOIN alignment AS a ON a.id = s.alignment_id
+WHERE LOWER(a.alignment) NOT IN ('good', 'bad')
+   OR a.alignment IS NULL;",ok,1,,[[34]],"[[""int""]]",0.599,1
+348,AVG_exclude_zero,"SELECT ROUND(AVG(NULLIF(s.weight_kg,0)), 2) AS average_weight_kg
+FROM superhero AS s
+JOIN hero_attribute AS ha ON ha.hero_id = s.id
+JOIN attribute AS a ON a.id = ha.attribute_id
+WHERE a.attribute_name = 'Intelligence'
+  AND ha.attribute_value = (
+      SELECT ha2.attribute_value
+      FROM superhero AS s2
+      JOIN hero_attribute AS ha2 ON ha2.hero_id = s2.id
+      JOIN attribute AS a2 ON a2.id = ha2.attribute_id
+      WHERE s2.superhero_name = 'Abomination'
+        AND a2.attribute_name = 'Intelligence'
+  );",ok,1,,[[103.6]],"[[""float""]]",1.95,1
+350,exclude_zero_measurements,"SELECT CAST(ROUND(AVG(s.weight_kg)) AS INTEGER) AS average_weight_kg
+FROM superhero AS s
+JOIN hero_attribute AS ha ON ha.hero_id = s.id
+JOIN attribute AS a ON a.id = ha.attribute_id
+WHERE a.attribute_name = 'Strength'
+  AND ha.attribute_value = (
+      SELECT hha.attribute_value
+      FROM superhero AS h
+      JOIN hero_attribute AS hha ON hha.hero_id = h.id
+      JOIN attribute AS ha_attr ON ha_attr.id = hha.attribute_id
+      WHERE h.superhero_name = 'Hulk'
+        AND ha_attr.attribute_name = 'Strength'
+  )
+  AND s.weight_kg > 0;",ok,1,,[[2106589]],"[[""int""]]",2.243,1
+352,no_race_includes_dash,"SELECT COUNT(*) AS count
+FROM superhero
+WHERE publisher_id = (
+    SELECT publisher_id
+    FROM superhero
+    WHERE superhero_name = 'A-Bomb'
+)
+AND (race_id IS NULL OR race_id=(SELECT id FROM race WHERE race='-'));",ok,1,,[[171]],"[[""int""]]",0.429,1
+353,exact_race,"SELECT ROUND(AVG(power_count), 2)
+FROM (
+    SELECT s.id, COUNT(hp.power_id) AS power_count
+    FROM superhero AS s
+    JOIN race AS r ON r.id = s.race_id
+    JOIN gender AS g ON g.id = s.gender_id
+    LEFT JOIN hero_power AS hp ON hp.hero_id = s.id
+    WHERE r.race = 'God / Eternal'
+      AND g.gender = 'Male'
+    GROUP BY s.id
+);",ok,1,,[[16.18]],"[[""float""]]",1.549,1
+355,exclude_zero_measurements,"SELECT ROUND(AVG(dc.weight_kg)) AS average_weight_kg
+FROM superhero AS dc
+JOIN publisher AS dp ON dp.id = dc.publisher_id
+JOIN colour AS eye ON eye.id = dc.eye_colour_id
+WHERE dp.publisher_name = 'DC Comics'
+  AND dc.weight_kg > 0
+  AND EXISTS (
+    SELECT 1
+    FROM superhero AS marvel
+    JOIN publisher AS mp ON mp.id = marvel.publisher_id
+    JOIN colour AS marvel_eye ON marvel_eye.id = marvel.eye_colour_id
+    WHERE mp.publisher_name = 'Marvel Comics'
+      AND marvel_eye.colour = eye.colour
+  );",ok,1,,[[102.0]],"[[""float""]]",2.857,1
+356,exclude_zero_measurements,"SELECT ROUND(AVG(height_cm), 1)
+FROM superhero
+WHERE race_id = (SELECT race_id FROM superhero WHERE superhero_name = 'A-Bomb')
+  AND height_cm > 0;",ok,1,,[[181.2]],"[[""float""]]",0.487,1
+357,exclude_zero_measurements,"WITH eligible_races AS (
+    SELECT s.race_id
+    FROM superhero AS s
+    JOIN gender AS g ON g.id = s.gender_id
+    WHERE s.race_id IS NOT NULL
+    GROUP BY s.race_id
+    HAVING SUM(CASE WHEN g.gender = 'Female' THEN 1 ELSE 0 END) = 0
+)
+SELECT AVG(s.weight_kg) AS average_weight_kg
+FROM superhero AS s
+JOIN eligible_races AS er ON er.race_id = s.race_id
+WHERE s.weight_kg > 0;",ok,1,,[[156709.08620689655]],"[[""float""]]",0.619,1
+360,exclude_zero_measurements,"SELECT ROUND(AVG(s.weight_kg), 1) AS average_weight_kg,
+       COUNT(*) AS superhero_count
+FROM superhero AS s
+JOIN publisher AS p ON p.id = s.publisher_id
+WHERE p.publisher_name = 'DC Comics'
+  AND s.weight_kg > 0;",ok,1,,"[[101.9, 156]]","[[""float"", ""int""]]",0.437,1
+363,exclude_zero_measurements,"SELECT ROUND(AVG(weight_kg), 2)
+FROM superhero
+WHERE gender_id = 2
+  AND weight_kg > 0;",ok,1,,[[78.51]],"[[""float""]]",0.338,1
+366,AVG_exclude_zero,"SELECT
+    ROUND(AVG(NULLIF(s.height_cm,0)), 2) AS average_height_cm,
+    ROUND(AVG(NULLIF(s.weight_kg,0)), 2) AS average_weight_kg
+FROM superhero AS s
+JOIN alignment AS a ON s.alignment_id = a.id
+JOIN colour AS c ON s.skin_colour_id = c.id
+WHERE a.alignment = 'Bad'
+  AND c.colour = 'Green';",ok,1,,"[[194.2, 161.75]]","[[""float"", ""float""]]",0.364,1
+368,exclude_zero_measurements,"SELECT ROUND(AVG(s.height_cm), 1) AS average_height_cm
+FROM superhero AS s
+WHERE s.id <> (
+    SELECT id
+    FROM superhero
+    WHERE superhero_name = '3-D Man'
+)
+  AND s.height_cm > 0
+  AND EXISTS (
+      SELECT 1
+      FROM hero_power AS hp
+      WHERE hp.hero_id = s.id
+        AND hp.power_id IN (
+            SELECT hp3.power_id
+            FROM hero_power AS hp3
+            WHERE hp3.hero_id = (
+                SELECT id
+                FROM superhero
+                WHERE superhero_name = '3-D Man'
+            )
+        )
+  );",ok,1,,[[339.5]],"[[""float""]]",2.167,1
+369,exclude_zero_measurements,"SELECT ROUND(AVG(s.weight_kg)) AS average_weight_kg
+FROM superhero AS s
+JOIN alignment AS a ON a.id = s.alignment_id
+JOIN colour AS c ON c.id = s.skin_colour_id
+JOIN hero_power AS hp ON hp.hero_id = s.id
+JOIN superpower AS p ON p.id = hp.power_id
+WHERE a.alignment = 'Bad'
+  AND c.colour = 'Green'
+  AND p.power_name = 'Flight'
+  AND s.weight_kg > 0;",ok,1,,[[121.0]],"[[""float""]]",1.016,1
+370,exclude_zero_measurements,"SELECT ROUND(AVG(s.weight_kg), 2)
+FROM superhero AS s
+JOIN publisher AS p ON p.id = s.publisher_id
+WHERE p.publisher_name = 'George Lucas'
+  AND s.weight_kg > 0
+  AND EXISTS (
+      SELECT 1
+      FROM hero_power AS hp
+      WHERE hp.hero_id = s.id
+  );",ok,1,,[[77.4]],"[[""float""]]",1.429,1
+371,exclude_zero_measurements,"SELECT ROUND(AVG(CAST(s.weight_kg AS REAL)), 2) AS average_weight_kg
+FROM superhero AS s
+JOIN gender AS g ON s.gender_id = g.id
+JOIN alignment AS a ON s.alignment_id = a.id
+WHERE g.gender = 'Female'
+  AND a.alignment = 'Good'
+  AND s.weight_kg > 0;",ok,1,,[[70.76]],"[[""float""]]",0.384,1
+372,exclude_zero_measurements,"SELECT COUNT(DISTINCT hp.power_id)
+FROM superhero AS s
+JOIN gender AS g ON g.id = s.gender_id
+JOIN hero_power AS hp ON hp.hero_id = s.id
+WHERE g.gender = 'Male'
+  AND s.weight_kg < 70
+  AND s.weight_kg > 0;",ok,1,,[[102]],"[[""int""]]",0.985,1
+373,exclude_zero_measurements,"SELECT c.colour
+FROM superhero AS s
+LEFT JOIN colour AS c ON c.id = s.hair_colour_id
+WHERE s.height_cm = (
+    SELECT MIN(height_cm)
+    FROM superhero
+    WHERE height_cm > 0
+);",ok,1,,"[[""No Colour""]]","[[""str""]]",0.398,0
+374,exclude_zero_measurements,"WITH lightest_weight AS (
+    SELECT MIN(weight_kg) AS weight_kg
+    FROM superhero
+    WHERE weight_kg > 0
+),
+hero_power_counts AS (
+    SELECT h.id, COUNT(DISTINCT hp.power_id) AS power_count
+    FROM superhero AS h
+    JOIN lightest_weight AS lw ON h.weight_kg = lw.weight_kg
+    LEFT JOIN hero_power AS hp ON hp.hero_id = h.id
+    GROUP BY h.id
+)
+SELECT MAX(power_count)
+FROM hero_power_counts;",ok,1,,[[18]],"[[""int""]]",35.348,1
+379,retain_missing_alignment,"SELECT ROUND(
+    100.0 * COUNT(DISTINCT CASE WHEN a.alignment = 'Good' THEN s.id END)
+    / COUNT(DISTINCT s.id),
+    2
+) AS percentage
+FROM superhero AS s
+JOIN publisher AS p ON p.id = s.publisher_id
+JOIN hero_power AS hp ON hp.hero_id = s.id
+LEFT JOIN alignment AS a ON a.id = s.alignment_id
+WHERE p.publisher_name = 'Marvel Comics';",ok,1,,[[64.39]],"[[""float""]]",1.236,1
+380,exclude_zero_measurements,"WITH target_powers AS (
+    SELECT power_id
+    FROM hero_power
+    WHERE hero_id = (SELECT id FROM superhero WHERE superhero_name = '3-D Man')
+),
+qualifying_heroes AS (
+    SELECT DISTINCT hp.hero_id
+    FROM hero_power AS hp
+    JOIN target_powers AS tp ON tp.power_id = hp.power_id
+    WHERE hp.hero_id <> (SELECT id FROM superhero WHERE superhero_name = '3-D Man')
+)
+SELECT ROUND(AVG(s.weight_kg), 2)
+FROM qualifying_heroes AS q
+JOIN superhero AS s ON s.id = q.hero_id
+WHERE s.weight_kg > 0;",ok,1,,[[282411.79]],"[[""float""]]",3.113,1
+381,unknown_weight_includes_zero,"SELECT
+  SUM(CASE WHEN c.colour = 'No Colour' THEN 1 ELSE 0 END)
+  - SUM(CASE WHEN c.colour = 'Blue' THEN 1 ELSE 0 END)
+FROM superhero AS s
+JOIN colour AS c ON c.id = s.eye_colour_id
+WHERE (s.weight_kg IS NULL OR s.weight_kg=0)
+  AND c.colour IN ('No Colour', 'Blue');",ok,1,,[[122]],"[[""int""]]",0.448,1
+393,preserve_RNP_text_representation,"WITH eligible_patients AS (
+    SELECT DISTINCT l.ID
+    FROM Laboratory AS l
+    JOIN Patient AS p ON p.ID = l.ID
+    WHERE p.Admission = '-'
+      AND l.SSA IS NOT NULL
+      AND LOWER(TRIM(l.SSA)) NOT IN ('negative', '0', '')
+),
+patient_titers AS (
+    SELECT l.ID, MAX(l.RNP) AS rnp_titer
+    FROM Laboratory AS l
+    JOIN eligible_patients AS e ON e.ID = l.ID
+    WHERE l.RNP IS NOT NULL
+      AND LOWER(TRIM(l.RNP)) NOT IN ('negative', '')
+    GROUP BY l.ID
+)
+SELECT ID, rnp_titer
+FROM patient_titers
+WHERE rnp_titer = (SELECT MAX(rnp_titer) FROM patient_titers);",ok,1,,"[[4840422, ""64""]]","[[""int"", ""str""]]",6.196,0
+393,refined_targeted_diagnostic,"WITH eligible_patients AS (
+    SELECT DISTINCT l.ID
+    FROM Laboratory AS l
+    JOIN Patient AS p ON p.ID = l.ID
+    WHERE p.Admission = '-'
+      AND l.SSA IS NOT NULL
+      AND LOWER(TRIM(l.SSA)) NOT IN ('negative', '0', '')
+),
+patient_titers AS (
+    SELECT l.ID, MAX(CAST(l.RNP AS INTEGER)) AS rnp_titer
+    FROM Laboratory AS l
+    JOIN eligible_patients AS e ON e.ID = l.ID
+    WHERE l.RNP IS NOT NULL
+      AND LOWER(TRIM(l.RNP)) NOT IN ('negative', '')
+    GROUP BY l.ID
+)
+SELECT ID, CAST(rnp_titer AS TEXT) AS rnp_titer
+FROM patient_titers
+WHERE rnp_titer = (SELECT MAX(rnp_titer) FROM patient_titers);",ok,1,,"[[4915498, ""256""]]",,6.361179985105991,1
+398,outpatient_cohort,"SELECT COUNT(*) AS patient_count
+FROM Patient AS p
+WHERE p.Admission='-' AND EXISTS (
+    SELECT 1
+    FROM Laboratory AS l
+    WHERE l.ID = p.ID
+      AND l.HCT IS NOT NULL
+      AND (l.HCT <= 29 OR l.HCT >= 52)
+)
+AND EXISTS (
+    SELECT 1
+    FROM Laboratory AS l
+    WHERE l.ID = p.ID
+      AND CAST(l.RNP AS REAL) > 16
+);",ok,1,,[[2]],"[[""int""]]",2.491,1
+418,preserve_RNP_text_representation,"WITH patient_levels AS (
+    SELECT p.ID, MAX(l.RNP) AS anti_RNP_level
+    FROM Patient AS p
+    JOIN Laboratory AS l ON l.ID = p.ID
+    WHERE p.""First Date"" >= '1991-01-01'
+      AND p.""First Date"" < '1992-01-01'
+      AND l.RNP IS NOT NULL
+      AND l.RNP <> 'negative'
+    GROUP BY p.ID
+)
+SELECT ID, anti_RNP_level
+FROM patient_levels
+WHERE anti_RNP_level = (SELECT MAX(anti_RNP_level) FROM patient_levels)
+ORDER BY ID;",ok,1,,"[[4643816, ""64""]]","[[""int"", ""str""]]",0.951,0
+418,refined_targeted_diagnostic,"WITH patient_levels AS (
+    SELECT p.ID, MAX(CAST(l.RNP AS INTEGER)) AS anti_RNP_level
+    FROM Patient AS p
+    JOIN Laboratory AS l ON l.ID = p.ID
+    WHERE p.""First Date"" >= '1991-01-01'
+      AND p.""First Date"" < '1992-01-01'
+      AND l.RNP IS NOT NULL
+      AND l.RNP <> 'negative'
+    GROUP BY p.ID
+)
+SELECT ID, CAST(anti_RNP_level AS TEXT) AS anti_RNP_level
+FROM patient_levels
+WHERE anti_RNP_level = (SELECT MAX(anti_RNP_level) FROM patient_levels)
+ORDER BY ID;",ok,3,,"[[912147, ""256""], [4632548, ""256""], [4649885, ""256""]]",,1.2711479794234037,1
+442,exact_label_case,"WITH eligible AS (
+    SELECT ID,
+           CASE Admission
+               WHEN '+' THEN 'admitted to the hospital'
+               WHEN '-' THEN 'followed at the outpatient clinic'
+           END AS care_setting
+    FROM Patient
+    WHERE SEX = 'F'
+      AND date(Birthday, '+50 years') <= '2026-10-09'
+      AND Admission IN ('+', '-')
+),
+patient_results AS (
+    SELECT e.ID,
+           e.care_setting,
+           MAX(CASE WHEN CAST(l.RNP AS REAL) >= 4 THEN 1 ELSE 0 END) AS has_elevated_rnp
+    FROM eligible e
+    LEFT JOIN Laboratory l ON l.ID = e.ID
+    GROUP BY e.ID, e.care_setting
+)
+SELECT care_setting,
+       SUM(has_elevated_rnp) AS patients_with_at_least_one_result_at_least_4,
+       COUNT(*) - SUM(has_elevated_rnp) AS patients_with_no_such_result
+FROM patient_results
+GROUP BY care_setting
+ORDER BY care_setting;",ok,2,,"[[""admitted to the hospital"", 10, 328], [""followed at the outpatient clinic"", 11, 532]]","[[""str"", ""int"", ""int""], [""str"", ""int"", ""int""]]",5.566,1
+443,latest_available_IGG,"WITH latest AS (
+    SELECT ID, IGG, ROW_NUMBER() OVER (PARTITION BY ID ORDER BY Date DESC) AS rn
+    FROM Laboratory WHERE IGG IS NOT NULL
+)
+SELECT COUNT(*)
+FROM Patient AS p
+JOIN latest AS l ON l.ID = p.ID AND l.rn = 1
+WHERE p.Admission = '-'
+  AND l.IGG >= 2000;",ok,1,,[[41]],"[[""int""]]",4.995,1
+448,exclude_only_suspected_SLE,"SELECT
+    COUNT(DISTINCT CASE WHEN Admission = '+' THEN ID END) AS inpatients,
+    COUNT(DISTINCT CASE WHEN Admission = '-' THEN ID END) AS outpatient_clinic,
+    ROUND(
+        100.0 * COUNT(DISTINCT CASE WHEN Admission = '+' THEN ID END) /
+        NULLIF(COUNT(DISTINCT CASE WHEN Admission IN ('+', '-') THEN ID END), 0),
+        2
+    ) AS inpatient_percentage
+FROM Patient
+WHERE Diagnosis LIKE '%SLE%'
+  AND Diagnosis NOT LIKE '%SLE susp%';",ok,1,,"[[164, 113, 59.21]]","[[""int"", ""int"", ""float""]]",0.644,1
+452,youngest_birthday_desc,"SELECT e.Symptoms, p.Diagnosis
+FROM Patient AS p
+JOIN Examination AS e ON e.ID = p.ID
+WHERE e.Diagnosis LIKE '%SLE%'
+  AND e.Diagnosis NOT LIKE '%susp%'
+  AND e.Symptoms IS NOT NULL
+  AND TRIM(e.Symptoms) <> ''
+ORDER BY p.Birthday DESC, p.ID ASC, e.`Examination Date` DESC
+LIMIT 1;",ok,1,,"[[""CNS susp"", ""SLE""]]","[[""str"", ""str""]]",0.337,0
+452,refined_targeted_diagnostic,"SELECT e.Symptoms, p.Diagnosis
+FROM Patient AS p
+JOIN Examination AS e ON e.ID = p.ID
+WHERE e.Diagnosis LIKE '%SLE%'
+  AND e.Diagnosis NOT LIKE '%SLE susp%'
+  AND e.Symptoms IS NOT NULL
+  AND TRIM(e.Symptoms) <> ''
+ORDER BY p.Birthday DESC, p.ID ASC, e.`Examination Date` DESC
+LIMIT 1;",ok,1,,"[[""CNS susp"", ""SLE""]]",,0.4412030102685094,0
+456,preserve_sex_codes,"SELECT
+  SEX AS sex,
+  COUNT(*) AS patient_count
+FROM Patient AS p
+WHERE SEX IN ('M', 'F')
+  AND NOT EXISTS (
+    SELECT 1
+    FROM Laboratory AS l
+    WHERE l.ID = p.ID
+      AND l.GPT >= 60
+  )
+GROUP BY SEX
+ORDER BY CASE SEX WHEN 'M' THEN 1 WHEN 'F' THEN 2 END;",ok,2,,"[[""M"", 178], [""F"", 956]]","[[""str"", ""int""], [""str"", ""int""]]",2.906,1
+458,preserve_sex_codes,"SELECT
+    SEX AS sex,
+    COUNT(DISTINCT Patient.ID) AS number_of_patients
+FROM Patient
+WHERE SEX IN ('F', 'M')
+  AND EXISTS (
+      SELECT 1
+      FROM Laboratory
+      WHERE Laboratory.ID = Patient.ID
+  )
+GROUP BY SEX
+ORDER BY CASE SEX WHEN 'F' THEN 1 WHEN 'M' THEN 2 END;",ok,2,,"[[""F"", 252], [""M"", 47]]","[[""str"", ""int""], [""str"", ""int""]]",0.899,1
+466,quote_free_alias,"WITH eligible_patients AS (
+    SELECT p.ID, p.SEX
+    FROM Patient AS p
+    WHERE p.Birthday >= '1936-01-01'
+      AND p.Birthday < '1957-01-01'
+      AND p.SEX IN ('F', 'M')
+      AND NOT EXISTS (
+          SELECT 1
+          FROM Laboratory AS l
+          WHERE l.ID = p.ID
+            AND l.CPK >= 250
+      )
+)
+SELECT ROUND(
+    100.0 * SUM(CASE WHEN SEX = 'F' THEN 1 ELSE 0 END) / COUNT(*),
+    1
+) AS women_percentage
+FROM eligible_patients;",ok,1,,[[85.3]],"[[""float""]]",2.486,1
+467,remove_extra_nonnegative_age,"SELECT COUNT(DISTINCT p.ID)
+FROM Patient AS p
+JOIN Laboratory AS l ON l.ID = p.ID
+WHERE l.Date BETWEEN '1981-01-01' AND '1986-12-31'
+  AND l.PLT BETWEEN 100 AND 400
+  AND l.""U-PRO"" IS NOT NULL
+  AND TRIM(l.""U-PRO"") NOT IN ('-', '0')
+  AND p.Birthday IS NOT NULL
+  AND CAST(strftime('%Y', l.Date) AS INTEGER)
+      - CAST(strftime('%Y', p.Birthday) AS INTEGER)
+      - (strftime('%m-%d', l.Date) < strftime('%m-%d', p.Birthday))
+      < 50;",ok,1,,[[73]],"[[""int""]]",10.192,1
+474,element_case_and_output_contract,"SELECT DISTINCT b.bond_id
+FROM bond AS b
+JOIN connected AS c ON c.bond_id = b.bond_id
+JOIN atom AS a1 ON a1.atom_id = c.atom_id
+JOIN atom AS a2 ON a2.atom_id = c.atom_id2
+WHERE (a1.element = 'p' AND a2.element = 'n')
+   OR (a1.element = 'n' AND a2.element = 'p');",ok,6,,"[[""TR032_2_3""], [""TR032_3_5""], [""TR058_1_3""], [""TR058_1_4""]]","[[""str""], [""str""]]",14.912,1
+494,unambiguous_group_by,"WITH bonds_by_element AS (
+    SELECT
+        CASE
+            WHEN a.element = 'c' THEN a2.element
+            ELSE a.element
+        END AS element,
+        COUNT(DISTINCT b.bond_id) AS bond_count
+    FROM connected AS c
+    JOIN atom AS a ON a.atom_id = c.atom_id
+    JOIN atom AS a2 ON a2.atom_id = c.atom_id2
+    JOIN bond AS b ON b.bond_id = c.bond_id
+    JOIN molecule AS m ON m.molecule_id = b.molecule_id
+    WHERE m.label = '-'
+      AND b.bond_type IN ('=', '#')
+      AND (a.element = 'c' OR a2.element = 'c')
+    GROUP BY 1
+)
+SELECT element, bond_count
+FROM bonds_by_element;",ok,4,,"[[""c"", 553], [""n"", 27], [""o"", 103], [""s"", 11]]","[[""str"", ""int""], [""str"", ""int""]]",18.004,1

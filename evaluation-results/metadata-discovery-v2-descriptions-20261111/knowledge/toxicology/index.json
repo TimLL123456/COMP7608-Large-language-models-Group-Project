@@ -1,0 +1,341 @@
+{
+  "n_04d664ab05dbe30e30a8aa8a": {
+    "concept_id": "bond_id",
+    "keywords": [
+      "bond",
+      "bond_id",
+      "identifier",
+      "endpoints",
+      "atom"
+    ],
+    "note_id": "n_04d664ab05dbe30e30a8aa8a",
+    "note_type": "column",
+    "revision": 5,
+    "sha256": "558b718595d93a1eae34fcab8ca7a0c339d0884df3e8665c3528d80004765096",
+    "source_refs": [
+      "schema:bond DDL",
+      "description:bond.csv:1",
+      "values:SELECT bond_id FROM bond ORDER BY bond_id LIMIT 5"
+    ],
+    "status": "provisional",
+    "summary": "Bond identifier; source format encodes molecule and two atom endpoint indices, supporting retrieval of the endpoint element records.",
+    "table_name": "bond",
+    "title": "bond.bond_id"
+  },
+  "n_183d09424f2c3c1e805fedcf": {
+    "concept_id": "atom_id2",
+    "keywords": [
+      "connected",
+      "atom_id2",
+      "atom endpoint",
+      "foreign key",
+      "connectivity"
+    ],
+    "note_id": "n_183d09424f2c3c1e805fedcf",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "3ef4fda673459983001be096bfcefdbf70a972d2732f9caaa9ce0510dc28d4c1",
+    "source_refs": [
+      "schema:connected.atom_id2 TEXT NOT NULL foreign key references atom.atom_id",
+      "values:SELECT COUNT(*), COUNT(DISTINCT bond_id), SUM(bond_id IS NULL) FROM connected",
+      "values:SELECT bond_id, atom_id, atom_id2 FROM connected LIMIT 12"
+    ],
+    "status": "provisional",
+    "summary": "Second atom endpoint identifier; FK to atom.atom_id; observed connectivity rows contain both endpoint orientations per bond.",
+    "table_name": "connected",
+    "title": "connected.atom_id2"
+  },
+  "n_1b74925151a91a53cc861af6": {
+    "concept_id": "molecule_id",
+    "keywords": [
+      "bond",
+      "molecule_id",
+      "association",
+      "foreign key"
+    ],
+    "note_id": "n_1b74925151a91a53cc861af6",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "2c2fe5cd26975ab630a523816f509557079226f1acbf2787031aa7c5dfe0648a",
+    "source_refs": [
+      "schema:bond.molecule_id TEXT DEFAULT NULL",
+      "schema:bond foreign key to molecule.molecule_id",
+      "description:bond.csv:2"
+    ],
+    "status": "provisional",
+    "summary": "Nullable text molecule identifier associates a bond record with its molecule; foreign key to molecule.molecule_id.",
+    "table_name": "bond",
+    "title": "bond.molecule_id"
+  },
+  "n_3d63991bb53033a0abbe7c5f": {
+    "concept_id": "element",
+    "keywords": [
+      "atom",
+      "element",
+      "code",
+      "chemical element"
+    ],
+    "note_id": "n_3d63991bb53033a0abbe7c5f",
+    "note_type": "column",
+    "revision": 13,
+    "sha256": "0535f476aad5fb4cc4e12b26be83174bc69b68af357a60a137c9af4a199f6ab2",
+    "source_refs": [
+      "schema:atom.element TEXT DEFAULT NULL",
+      "description:atom.csv:3"
+    ],
+    "status": "provisional",
+    "summary": "Nullable source-coded chemical element for an atom; documented codes include cl, c, h, o, s, n, p and others.",
+    "table_name": "atom",
+    "title": "atom.element"
+  },
+  "n_45a437298a525380e00bdb3c": {
+    "concept_id": "label",
+    "keywords": [
+      "molecule",
+      "label",
+      "carcinogenicity",
+      "classification"
+    ],
+    "note_id": "n_45a437298a525380e00bdb3c",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "ce9a05ea9709b3a777af2595a6121bfee4750ee3a3d62959606a5abeba6ce55c",
+    "source_refs": [
+      "schema:molecule.label TEXT DEFAULT NULL",
+      "values:SELECT label, COUNT(*) AS n FROM molecule GROUP BY label",
+      "description:question evidence specifies '+' as carcinogenic",
+      "description:existing note evidence identifies '-' as non-carcinogenic"
+    ],
+    "status": "provisional",
+    "summary": "Optional molecule label; observed '+' denotes carcinogenic per supplied evidence, and '-' is identified as non-carcinogenic.",
+    "table_name": "molecule",
+    "title": "molecule.label"
+  },
+  "n_4e62ae4c277abc403263cb6e": {
+    "concept_id": "atom_id",
+    "keywords": [
+      "connected",
+      "atom_id",
+      "endpoint",
+      "foreign key",
+      "atom"
+    ],
+    "note_id": "n_4e62ae4c277abc403263cb6e",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "fa5606c4f12783e028239f492b2925628b34a20eb594b379b12ead358cf0d9fd",
+    "source_refs": [
+      "schema:connected.atom_id TEXT NOT NULL foreign key references atom.atom_id",
+      "values:SELECT c.atom_id, c.atom_id2, c.bond_id FROM connected c JOIN atom a1 ON a1.atom_id=c.atom_id JOIN atom a2 ON a2.atom_id=c.atom_id2 WHERE a1.molecule_id='TR397' LIMIT 12"
+    ],
+    "status": "provisional",
+    "summary": "First atom endpoint identifier in a connectivity pair; required text FK to atom.atom_id.",
+    "table_name": "connected",
+    "title": "connected.atom_id"
+  },
+  "n_6c346cf1d9d48811fbaeb0db": {
+    "concept_id": "molecule_id",
+    "keywords": [
+      "atom",
+      "molecule_id",
+      "association",
+      "foreign key"
+    ],
+    "note_id": "n_6c346cf1d9d48811fbaeb0db",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "432ba901246513bef9e3788dda6508d89a5f90e311f04ab73db592a63a3e3b6d",
+    "source_refs": [
+      "schema:atom.molecule_id TEXT DEFAULT NULL",
+      "schema:atom foreign key to molecule.molecule_id",
+      "description:atom.csv:2"
+    ],
+    "status": "provisional",
+    "summary": "Optional text molecule identifier associates atom records with the molecule they belong to; foreign key to molecule.molecule_id.",
+    "table_name": "atom",
+    "title": "atom.molecule_id"
+  },
+  "n_6c5623a6564806c72dd65052": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "bond",
+      "molecule",
+      "bond_id",
+      "bond_type",
+      "granularity",
+      "triple bond"
+    ],
+    "note_id": "n_6c5623a6564806c72dd65052",
+    "note_type": "table",
+    "revision": 4,
+    "sha256": "c75f809c394f5f2e237130608c0c373c2cd5bf594835e9118a752f50de628cee",
+    "source_refs": [
+      "schema:bond DDL: bond_id TEXT NOT NULL PRIMARY KEY",
+      "schema:bond.molecule_id TEXT DEFAULT NULL",
+      "description:bond.csv:3",
+      "values:SELECT bond_type, COUNT(*) FROM bond GROUP BY bond_type"
+    ],
+    "status": "provisional",
+    "summary": "Bond rows carry a bond ID, optional molecule association and optional type code; source describes # as triple bond.",
+    "table_name": "bond",
+    "title": "Molecule bond records"
+  },
+  "n_789d8d710315ad878797c97e": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "connected",
+      "atom",
+      "endpoint",
+      "bond",
+      "connectivity"
+    ],
+    "note_id": "n_789d8d710315ad878797c97e",
+    "note_type": "table",
+    "revision": 13,
+    "sha256": "a19bb32ad96fad1416894543aab2a1556ed6fee1640ce91e97cf1e6840cf263f",
+    "source_refs": [
+      "schema:connected DDL composite primary key and foreign keys",
+      "values:SELECT COUNT(*), COUNT(DISTINCT bond_id), SUM(bond_id IS NULL) FROM connected",
+      "values:SELECT bond_id, atom_id, atom_id2 FROM connected ORDER BY bond_id, atom_id, atom_id2 LIMIT 10",
+      "values:SELECT bond_id, COUNT(*) FROM connected GROUP BY bond_id HAVING COUNT(*) <> 2"
+    ],
+    "status": "provisional",
+    "summary": "Stores ordered atom endpoint pairs with optional bond IDs; endpoints link to atom records and bond IDs to bond records.",
+    "table_name": "connected",
+    "title": "Atom connectivity records"
+  },
+  "n_b021cb6ea9f35233d6e7a121": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "atom",
+      "atom_id",
+      "molecule",
+      "element",
+      "granularity"
+    ],
+    "note_id": "n_b021cb6ea9f35233d6e7a121",
+    "note_type": "table",
+    "revision": 5,
+    "sha256": "236c73cb8bd2455d8c2ca15cce6f124901603886425a5c070bd7ed59cb4d1ca1",
+    "source_refs": [
+      "schema:atom DDL: atom_id TEXT NOT NULL PRIMARY KEY",
+      "description:atom.csv:2",
+      "description:atom.csv:3",
+      "values:SELECT COUNT(*), COUNT(DISTINCT atom_id), SUM(molecule_id IS NULL) FROM atom"
+    ],
+    "status": "provisional",
+    "summary": "Atom records have a declared unique atom_id, nullable molecule association, and nullable source-coded element.",
+    "table_name": "atom",
+    "title": "Atom records"
+  },
+  "n_bb452b28f27ad563075e2118": {
+    "concept_id": "bond_type",
+    "keywords": [
+      "bond",
+      "bond_type",
+      "single",
+      "double",
+      "triple",
+      "code"
+    ],
+    "note_id": "n_bb452b28f27ad563075e2118",
+    "note_type": "column",
+    "revision": 6,
+    "sha256": "e022f73a64e2259852785d613ae056a43f7a81878627ffd57105ed93392546f4",
+    "source_refs": [
+      "schema:bond.bond_type TEXT DEFAULT NULL",
+      "description:bond.csv:3",
+      "values:SELECT COUNT(*) AS bond_rows, SUM(bond_type IS NULL) AS null_types FROM bond"
+    ],
+    "status": "provisional",
+    "summary": "Nullable text bond-type code; source maps '-' to single, '=' to double, '#' to triple; no NULL values observed.",
+    "table_name": "bond",
+    "title": "bond.bond_type"
+  },
+  "n_c7fcac018575d7757e99d456": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "element",
+      "element_id",
+      "element_name",
+      "reference"
+    ],
+    "note_id": "n_c7fcac018575d7757e99d456",
+    "note_type": "table",
+    "revision": 1,
+    "sha256": "b863267eac1642eaf25a5fbc790c84dd436d9dc902edf9d74e435ff5ebaefb21",
+    "source_refs": [
+      "schema:element DDL",
+      "values:SELECT * FROM element LIMIT 10"
+    ],
+    "status": "provisional",
+    "summary": "Element reference table declares element IDs and names; it has no rows in the current database.",
+    "table_name": "element",
+    "title": "Element reference records"
+  },
+  "n_e3a25d2ac8854d1f2b14f357": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "molecule",
+      "molecule_id",
+      "label",
+      "atom",
+      "bond",
+      "primary key"
+    ],
+    "note_id": "n_e3a25d2ac8854d1f2b14f357",
+    "note_type": "table",
+    "revision": 5,
+    "sha256": "a9a60a41c9711c4ae015d8a083e47378748f6eeed55b2dfafaef3bef4efe756a",
+    "source_refs": [
+      "schema:molecule DDL: molecule_id TEXT NOT NULL PRIMARY KEY and nullable label",
+      "schema:atom.molecule_id and schema:bond.molecule_id foreign keys"
+    ],
+    "status": "provisional",
+    "summary": "Molecule records contain a declared primary-key ID and optional classification label, and relate to atom and bond records.",
+    "table_name": "molecule",
+    "title": "Molecule records"
+  },
+  "n_f2c2f9911e7a96f8957b6941": {
+    "concept_id": "atom_id",
+    "keywords": [
+      "atom",
+      "atom_id",
+      "identifier"
+    ],
+    "note_id": "n_f2c2f9911e7a96f8957b6941",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "0a2854a989dbde804b4f20c153dcc20d051bc4183d0e7781b466475136fd861d",
+    "source_refs": [
+      "schema:atom.atom_id TEXT NOT NULL PRIMARY KEY",
+      "description:atom.csv:1"
+    ],
+    "status": "provisional",
+    "summary": "Text identifier for an atom record; declared primary key in atom schema.",
+    "table_name": "atom",
+    "title": "atom.atom_id"
+  },
+  "n_fa4224942812e3e3e79cde3a": {
+    "concept_id": "bond_id",
+    "keywords": [
+      "connected",
+      "bond_id",
+      "bond",
+      "endpoint pair",
+      "foreign key"
+    ],
+    "note_id": "n_fa4224942812e3e3e79cde3a",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "764234975d110b0b1559bd59836aa563b6fcd0857ed675643e85469ad92504eb",
+    "source_refs": [
+      "schema:connected.bond_id TEXT DEFAULT NULL FOREIGN KEY references bond.bond_id",
+      "values:TR397 connectivity rows counted by atom endpoint and bond_id showed 178 rows, 89 distinct bond IDs and 0 null bond IDs"
+    ],
+    "status": "provisional",
+    "summary": "Optional bond identifier for an atom pair; FK to bond.bond_id. Connectivity data can contain both endpoint orientations for a bond.",
+    "table_name": "connected",
+    "title": "connected.bond_id"
+  }
+}

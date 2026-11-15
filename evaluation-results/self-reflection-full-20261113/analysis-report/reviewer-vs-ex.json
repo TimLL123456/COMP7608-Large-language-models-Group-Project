@@ -1,0 +1,21 @@
+{
+  "PASS": {
+    "correct": 264,
+    "incorrect_result": 93
+  },
+  "UNCERTAIN": {
+    "correct": 70,
+    "incorrect_result": 39,
+    "missing_sql": 1
+  },
+  "FAIL": {
+    "incorrect_result": 16,
+    "correct": 12
+  },
+  "ERROR": {
+    "correct": 4
+  },
+  "unverified": {
+    "missing_sql": 1
+  }
+}

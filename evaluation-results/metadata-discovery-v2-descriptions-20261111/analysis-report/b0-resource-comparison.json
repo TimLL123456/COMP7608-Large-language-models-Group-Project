@@ -1,0 +1,66 @@
+[
+  {
+    "measure": "model_calls",
+    "b0_total": 3043,
+    "graph_v2_total": 14422,
+    "b0_n": 500,
+    "graph_v2_n": 500,
+    "ratio": 4.739401906013802
+  },
+  {
+    "measure": "tool_calls",
+    "b0_total": 3677,
+    "graph_v2_total": 22156,
+    "b0_n": 500,
+    "graph_v2_n": 500,
+    "ratio": 6.025564318738102
+  },
+  {
+    "measure": "sql_calls",
+    "b0_total": 1689,
+    "graph_v2_total": 4282,
+    "b0_n": 500,
+    "graph_v2_n": 500,
+    "ratio": 2.535227945529899
+  },
+  {
+    "measure": "input_tokens",
+    "b0_total": 12795143,
+    "graph_v2_total": 116588268,
+    "b0_n": 500,
+    "graph_v2_n": 500,
+    "ratio": 9.111915982494295
+  },
+  {
+    "measure": "output_tokens",
+    "b0_total": 233182,
+    "graph_v2_total": 1997321,
+    "b0_n": 500,
+    "graph_v2_n": 500,
+    "ratio": 8.565502483039
+  },
+  {
+    "measure": "cached_input_tokens",
+    "b0_total": 6723200,
+    "graph_v2_total": 37872128,
+    "b0_n": 500,
+    "graph_v2_n": 500,
+    "ratio": 5.633050928129462
+  },
+  {
+    "measure": "reasoning_tokens",
+    "b0_total": 0,
+    "graph_v2_total": 0,
+    "b0_n": 500,
+    "graph_v2_n": 500,
+    "ratio": null
+  },
+  {
+    "measure": "latency_ms",
+    "b0_total": 12599540.0,
+    "graph_v2_total": 73864826.0,
+    "b0_n": 500,
+    "graph_v2_n": 500,
+    "ratio": 5.862501805621475
+  }
+]

@@ -1,0 +1,1206 @@
+{
+  "n_07966865ae78a33ab5be66be": {
+    "concept_id": "Description",
+    "keywords": [
+      "patient",
+      "description",
+      "date",
+      "null",
+      "profile"
+    ],
+    "note_id": "n_07966865ae78a33ab5be66be",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "689498f9b24a2f87f7de870aff2f8409642b2f8de078e33adeed809ca2a6f3b4",
+    "source_refs": [
+      "schema:Patient DDL column Description DATE nullable",
+      "values:SELECT COUNT(*), SUM(CASE WHEN Description IS NULL THEN 1 ELSE 0 END) FROM Patient (observed 1,238 rows, 216 NULL)"
+    ],
+    "status": "provisional",
+    "summary": "Nullable DATE profile attribute; 216 of 1,238 patient rows have NULL Description in the inspected database; meaning unverified.",
+    "table_name": "Patient",
+    "title": "Patient.Description definition"
+  },
+  "n_0829d2f2c108a1e4bb3e3ae4": {
+    "concept_id": "Thrombosis",
+    "keywords": [
+      "thrombosis",
+      "examination",
+      "degree",
+      "patient records",
+      "codes"
+    ],
+    "note_id": "n_0829d2f2c108a1e4bb3e3ae4",
+    "note_type": "column",
+    "revision": 15,
+    "sha256": "88b208a70f0da6c963aa31e623c653fa8b6f905067d144fe75d00fe920ea92bf",
+    "source_refs": [
+      "schema:Examination DDL Thrombosis nullable INTEGER",
+      "description:Examination.csv:13 codes 0-3",
+      "values:SELECT Thrombosis, COUNT(*) FROM Examination GROUP BY Thrombosis"
+    ],
+    "status": "provisional",
+    "summary": "Nullable INTEGER row-level thrombosis degree; 0 means no thrombosis and 1–3 positive degrees per source description.",
+    "table_name": "Examination",
+    "title": "Examination.Thrombosis definition"
+  },
+  "n_0ba2a8ff53a3f6f0f415e880": {
+    "concept_id": "LAC",
+    "keywords": [
+      "lac",
+      "coagulation",
+      "examination",
+      "positive",
+      "negative"
+    ],
+    "note_id": "n_0ba2a8ff53a3f6f0f415e880",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "ee6c0e17d6a88703941832677b1aebd0463fb47fefe015a552d4d49dcf5510b6",
+    "source_refs": [
+      "schema:Examination DDL LAC TEXT nullable",
+      "description:Examination.csv:11 describes measure of degree of coagulation and + positive, - negative"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT examination field for degree of coagulation; source describes + as positive and - as negative.",
+    "table_name": "Examination",
+    "title": "Examination.LAC definition"
+  },
+  "n_0c5343c1f5020d67f1b0d7e6": {
+    "concept_id": "PLT",
+    "keywords": [
+      "plt",
+      "laboratory",
+      "platelet",
+      "measurement",
+      "normal range"
+    ],
+    "note_id": "n_0c5343c1f5020d67f1b0d7e6",
+    "note_type": "column",
+    "revision": 4,
+    "sha256": "e4408435d6f9a887e41d411614a5ac0168840d90aaa8102dd157c6721068f7f1",
+    "source_refs": [
+      "schema:Laboratory DDL PLT INTEGER nullable",
+      "description:Laboratory.csv:21 platelet integer and normal range 100 < N < 400"
+    ],
+    "status": "provisional",
+    "summary": "PLT is nullable INTEGER platelet measurement; its source-description normal-range hint is strict (100 < N < 400).",
+    "table_name": "Laboratory",
+    "title": "Laboratory.PLT definition"
+  },
+  "n_0ec20f35c6e9c2694aca0465": {
+    "concept_id": "KCT",
+    "keywords": [
+      "kct",
+      "coagulation",
+      "examination",
+      "positive",
+      "negative"
+    ],
+    "note_id": "n_0ec20f35c6e9c2694aca0465",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "b54f2aed091cb9551bff7614e07f6df57ccd5e3cfd7cf48acfd1b6607bd68b4e",
+    "source_refs": [
+      "schema:Examination DDL KCT TEXT nullable",
+      "description:Examination.csv:9 describes measure of degree of coagulation and + positive, - negative"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT examination field for degree of coagulation; source describes + as positive and - as negative.",
+    "table_name": "Examination",
+    "title": "Examination.KCT definition"
+  },
+  "n_136d33f62550d2c43013c9f9": {
+    "concept_id": "ID",
+    "keywords": [
+      "examination",
+      "patient identifier",
+      "foreign key"
+    ],
+    "note_id": "n_136d33f62550d2c43013c9f9",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "102b9da0b123c7dbe41717489de48f669b4b12ff8d7edaa73679eb4e467d9c8f",
+    "source_refs": [
+      "schema:Examination DDL nullable ID INTEGER",
+      "schema:Examination foreign key ID references Patient.ID"
+    ],
+    "status": "provisional",
+    "summary": "Nullable INTEGER patient identifier linking examination rows to Patient.ID; no key or uniqueness is declared.",
+    "table_name": "Examination",
+    "title": "Examination.ID definition"
+  },
+  "n_17ded076fc4ca02360c6e0ce": {
+    "concept_id": "HCT",
+    "keywords": [
+      "hct",
+      "hematocrit",
+      "hematoclit",
+      "laboratory",
+      "measurement",
+      "normal range"
+    ],
+    "note_id": "n_17ded076fc4ca02360c6e0ce",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "a4006c6b3e4c2d83f73377ffe8a331818d88377b209f94167dc909b1a1650312",
+    "source_refs": [
+      "schema:Laboratory DDL HCT REAL nullable",
+      "description:Laboratory.csv:20 HCT Hematoclit Hematoclit, normal range 29 < N < 52",
+      "values:SELECT HCT, RNP, COUNT(*) FROM Laboratory GROUP BY HCT, RNP"
+    ],
+    "status": "provisional",
+    "summary": "Nullable REAL hematocrit laboratory measurement; source describes normal range strictly 29 < N < 52.",
+    "table_name": "Laboratory",
+    "title": "Laboratory.HCT definition"
+  },
+  "n_1a747ceb819de747bac8afe8": {
+    "concept_id": "ALB",
+    "keywords": [
+      "alb",
+      "albumin",
+      "laboratory",
+      "measurement",
+      "nullable"
+    ],
+    "note_id": "n_1a747ceb819de747bac8afe8",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "623cf6809837099d8c41ae32f95aa8b2d384779e76e9da36d90356bd4f3b843f",
+    "source_refs": [
+      "schema:Laboratory.ALB REAL nullable",
+      "description:Laboratory.csv ALB field identification"
+    ],
+    "status": "provisional",
+    "summary": "Nullable REAL laboratory field; source description identifies ALB as albumin, while units and calibration are not specified.",
+    "table_name": "Laboratory",
+    "title": "Laboratory.ALB definition"
+  },
+  "n_1abeccf8cf5d277ba4e533a7": {
+    "concept_id": "GOT",
+    "keywords": [
+      "got",
+      "ast",
+      "glutamic oxaloacetic transaminase",
+      "laboratory",
+      "range"
+    ],
+    "note_id": "n_1abeccf8cf5d277ba4e533a7",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "3963d132189279e24a1e3eec8ba82b39d0e8e54850a72037cb03605bc9531d9d",
+    "source_refs": [
+      "schema:Laboratory DDL GOT nullable INTEGER",
+      "description:Laboratory.csv:3 AST glutamic oxaloacetic transaminase, normal range N < 60"
+    ],
+    "status": "provisional",
+    "summary": "Nullable INTEGER AST glutamic oxaloacetic transaminase laboratory result; source describes normal range below 60.",
+    "table_name": "Laboratory",
+    "title": "Laboratory.GOT definition"
+  },
+  "n_1ace956fcb6088290fbf0c52": {
+    "concept_id": "IGG",
+    "keywords": [
+      "igg",
+      "immunoglobulin g",
+      "laboratory",
+      "normal range",
+      "latest result"
+    ],
+    "note_id": "n_1ace956fcb6088290fbf0c52",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "7c08ac8497a5b85bc8becefee4800fbfa29f1df7dee7523147666ce311201d9a",
+    "source_refs": [
+      "schema:Laboratory DDL IGG INTEGER nullable",
+      "description:Laboratory.csv:29 identifies Ig G and states normal range 900 < N < 2000"
+    ],
+    "status": "provisional",
+    "summary": "Nullable INTEGER field identified as IgG; source states normal range 900 < N < 2000; units unverified.",
+    "table_name": "Laboratory",
+    "title": "Laboratory.IGG definition"
+  },
+  "n_1d8f5ccb83d1b5e5942ce69f": {
+    "concept_id": "Diagnosis",
+    "keywords": [
+      "diagnosis",
+      "examination",
+      "disease names",
+      "sle",
+      "suspected"
+    ],
+    "note_id": "n_1d8f5ccb83d1b5e5942ce69f",
+    "note_type": "column",
+    "revision": 13,
+    "sha256": "76debde6af3a72369e4a521c0b18d1a7a1d4d0616bdb2eec3e5248614361a8f2",
+    "source_refs": [
+      "schema:Examination DDL defines nullable TEXT Diagnosis",
+      "description:Examination.csv:8 describes disease names",
+      "values:observed Diagnosis labels include SLE and SLE+Psy"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT disease-name field; observed SjS and SLE disease labels, including compounds and susp-marked forms.",
+    "table_name": "Examination",
+    "title": "Examination.Diagnosis definition"
+  },
+  "n_320b099fe632dd8661fefd3e": {
+    "concept_id": "CRE",
+    "keywords": [
+      "creatinine",
+      "cre",
+      "laboratory",
+      "renal function",
+      "normal range"
+    ],
+    "note_id": "n_320b099fe632dd8661fefd3e",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "d82529252f7885ee379c0d7da09e9c80369d490f986008daec573615eac778bc",
+    "source_refs": [
+      "schema:Laboratory.CRE REAL nullable",
+      "description:Laboratory.csv:11 (CRE creatinine, normal range N < 1.5)"
+    ],
+    "status": "provisional",
+    "summary": "Nullable REAL laboratory field identified as creatinine; source description gives normal range N < 1.5.",
+    "table_name": "Laboratory",
+    "title": "Laboratory.CRE definition"
+  },
+  "n_392ee868a81367256914be2e": {
+    "concept_id": "RBC",
+    "keywords": [
+      "rbc",
+      "red blood cell",
+      "laboratory",
+      "result",
+      "normal interval"
+    ],
+    "note_id": "n_392ee868a81367256914be2e",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "49d8c6a26ecfde6ef59e3046768440f5ca812a5c7b9eb1624b06a32e18316de2",
+    "source_refs": [
+      "schema:Laboratory DDL RBC REAL nullable",
+      "description:Laboratory.csv RBC entry gives normal range 3.5 < N < 6.0"
+    ],
+    "status": "provisional",
+    "summary": "Nullable REAL red-blood-cell result; source defines normal strictly as 3.5 < N < 6.0; units unverified.",
+    "table_name": "Laboratory",
+    "title": "Laboratory.RBC definition"
+  },
+  "n_44de5fbfd455537c3a4af7b8": {
+    "concept_id": "DNA-II",
+    "keywords": [
+      "dna-ii",
+      "anti-dna",
+      "laboratory",
+      "antibody",
+      "normal range",
+      "empty"
+    ],
+    "note_id": "n_44de5fbfd455537c3a4af7b8",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "08039afd94a519c5ebb4d92ef34e6b97be1e755662866d520c31baab42b96b86",
+    "source_refs": [
+      "schema:Laboratory DDL DNA-II INTEGER nullable",
+      "description:Laboratory.csv:44 anti-DNA and normal range N < 8",
+      "values:SELECT COUNT(*) FROM Laboratory WHERE \"DNA-II\" IS NOT NULL returned 0"
+    ],
+    "status": "provisional",
+    "summary": "Nullable INTEGER anti-DNA result field; no non-null values were found in the inspected database; relationship to DNA is unverified.",
+    "table_name": "Laboratory",
+    "title": "Laboratory.DNA-II definition"
+  },
+  "n_4a4fba1335c6df54447740b6": {
+    "concept_id": "GLU",
+    "keywords": [
+      "glu",
+      "glucose",
+      "blood glucose",
+      "laboratory",
+      "result"
+    ],
+    "note_id": "n_4a4fba1335c6df54447740b6",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "4f1c4640eaf773ef66ceab8ce2aaa6fd49627f2cb6bb94ff5c74451eea06d2cd",
+    "source_refs": [
+      "schema:Laboratory DDL GLU INTEGER nullable",
+      "description:Laboratory.csv:16 identifies GLU blood glucose and normal range N < 180"
+    ],
+    "status": "provisional",
+    "summary": "Nullable INTEGER laboratory field described as blood glucose; source's normal-range hint is N < 180; units unverified.",
+    "table_name": "Laboratory",
+    "title": "Laboratory.GLU definition"
+  },
+  "n_5313d6e95ae86215fbcf1691": {
+    "concept_id": "PT",
+    "keywords": [
+      "pt",
+      "prothrombin time",
+      "laboratory",
+      "coagulation",
+      "normal range"
+    ],
+    "note_id": "n_5313d6e95ae86215fbcf1691",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "963228de55b6d45165ed83b27e28601b1a963eeff9621adf05c1d643f5ffbd4d",
+    "source_refs": [
+      "schema:Laboratory DDL PT REAL nullable",
+      "description:Laboratory.csv:22 prothrombin time and normal range N < 14"
+    ],
+    "status": "provisional",
+    "summary": "Nullable REAL prothrombin time laboratory result; source description states normal range N < 14; units unverified.",
+    "table_name": "Laboratory",
+    "title": "Laboratory.PT definition"
+  },
+  "n_559381351e0c6c292e92aca3": {
+    "concept_id": "CPK",
+    "keywords": [
+      "cpk",
+      "laboratory",
+      "creatinine phosphokinase",
+      "measurement",
+      "normal range"
+    ],
+    "note_id": "n_559381351e0c6c292e92aca3",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "d1aea355dc9b466236360c3547c0c269057ec91668921bf097ce9c1c607aa0c6",
+    "source_refs": [
+      "schema:Laboratory DDL CPK INTEGER nullable",
+      "description:Laboratory.csv:15 identifies creatinine phosphokinase and states normal range N < 250"
+    ],
+    "status": "provisional",
+    "summary": "Nullable INTEGER CPK lab result; source identifies it as creatinine phosphokinase and states normal range N < 250.",
+    "table_name": "Laboratory",
+    "title": "Laboratory.CPK definition"
+  },
+  "n_58a7177ab089e58db0d82ce3": {
+    "concept_id": "ALP",
+    "keywords": [
+      "alp",
+      "alkaliphosphatase",
+      "alkaline phosphatase",
+      "laboratory",
+      "normal range",
+      "missing values"
+    ],
+    "note_id": "n_58a7177ab089e58db0d82ce3",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "27a00228cf4c9f8fafeef635b8c477b246470c2f55c6d0164af291428dbb211c",
+    "source_refs": [
+      "schema:Laboratory DDL ALP INTEGER nullable",
+      "description:Laboratory.csv:6 ALP alkaliphophatase, normal range N < 300",
+      "values: admitted-patient group inspection showed 368 with no non-null ALP result"
+    ],
+    "status": "provisional",
+    "summary": "Nullable INTEGER alkaliphosphatase result with normal ceiling <300; missing measurements' patient-level interpretation is not established.",
+    "table_name": "Laboratory",
+    "title": "Laboratory.ALP definition"
+  },
+  "n_61e166515fb4b7a817143886": {
+    "concept_id": "HGB",
+    "keywords": [
+      "hgb",
+      "hemoglobin",
+      "laboratory",
+      "blood count",
+      "result"
+    ],
+    "note_id": "n_61e166515fb4b7a817143886",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "f67e1f7d574b14c7202daed00e154305c47c71ee58938d4b846f8a68a4c17f52",
+    "source_refs": [
+      "schema:Laboratory.HGB REAL nullable",
+      "description:Laboratory.csv:19 identifies HGB as Hemoglobin and states normal range 10 < N < 17"
+    ],
+    "status": "provisional",
+    "summary": "Nullable REAL hemoglobin laboratory result; source describes a normal range of 10 < N < 17, with units and coding beyond this unverified.",
+    "table_name": "Laboratory",
+    "title": "Laboratory.HGB definition"
+  },
+  "n_67381a1cf03ba5f205a32d7e": {
+    "concept_id": "CRP",
+    "keywords": [
+      "crp",
+      "c-reactive protein",
+      "laboratory",
+      "result",
+      "positive"
+    ],
+    "note_id": "n_67381a1cf03ba5f205a32d7e",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "ba3fe0d500606e5fd011f7abec0f1ab8b4d7f9d9e69afda7ece8ce0036dcaece",
+    "source_refs": [
+      "schema:Laboratory DDL CRP TEXT nullable",
+      "description:Laboratory.csv:32 CRP C-reactive protein and normal range hint",
+      "values:SELECT CRP, COUNT(*) FROM Laboratory WHERE CRP IS NOT NULL GROUP BY CRP (observed plus and other tokens)"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT C-reactive protein result; source description lists -, +-, and values below 1.0 as normal; plus is positive.",
+    "table_name": "Laboratory",
+    "title": "Laboratory.CRP definition"
+  },
+  "n_6bd47ca33934b0926fa5dd10": {
+    "concept_id": "Examination Date",
+    "keywords": [
+      "examination",
+      "date",
+      "first examination",
+      "visit"
+    ],
+    "note_id": "n_6bd47ca33934b0926fa5dd10",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "1739425b911ea8fc1e397a85703c6c49cbb588e79f99e36a4cc411d01886d8e9",
+    "source_refs": [
+      "schema:Examination DDL `Examination Date` DATE nullable",
+      "values:SELECT typeof(`Examination Date`), `Examination Date`, COUNT(*) FROM Examination GROUP BY typeof(`Examination Date`), `Examination Date` ORDER BY `Examination Date` LIMIT 10",
+      "schema:Examination foreign key ID to Patient.ID"
+    ],
+    "status": "provisional",
+    "summary": "Nullable DATE for an Examination row; patient-level minimum is derivable as earliest recorded exam, though completeness/clinical meaning are unverified.",
+    "table_name": "Examination",
+    "title": "Examination.Examination Date definition"
+  },
+  "n_6c6efeb0b205e0fa142ea5c1": {
+    "concept_id": "Diagnosis",
+    "keywords": [
+      "diagnosis",
+      "patient",
+      "disease names",
+      "psoriatic arthritis",
+      "comma-delimited"
+    ],
+    "note_id": "n_6c6efeb0b205e0fa142ea5c1",
+    "note_type": "column",
+    "revision": 26,
+    "sha256": "c15f302c879079aadab15c69caf424c49b87d171e90c6a87eab3d583a238412e",
+    "source_refs": [
+      "schema:Patient DDL Diagnosis TEXT nullable",
+      "description:Patient.csv:7 labels Diagnosis as disease names",
+      "values:observed Patient.Diagnosis labels include capitalization variants and suspicion-marked labels"
+    ],
+    "status": "provisional",
+    "summary": "Nullable patient disease-name TEXT; values include comma-separated diagnoses and capitalization or suspicion variants.",
+    "table_name": "Patient",
+    "title": "Patient.Diagnosis definition"
+  },
+  "n_6ca86746007f8b5ed3513d78": {
+    "concept_id": "WBC",
+    "keywords": [
+      "wbc",
+      "laboratory",
+      "white blood cell",
+      "count",
+      "result",
+      "normal range"
+    ],
+    "note_id": "n_6ca86746007f8b5ed3513d78",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "b78ac811c9bc1d8b12dfcca88cecf8d7dc57489d3cbeaa9ddbc12bef2ab9445a",
+    "source_refs": [
+      "schema:Laboratory DDL WBC REAL nullable",
+      "description:Laboratory.csv:17 identifies WBC as White blood cell and states normal range 3.5 < N < 9.0"
+    ],
+    "status": "provisional",
+    "summary": "Nullable REAL Laboratory field identified as white blood cell result; source states normal range 3.5 < N < 9.0; units unverified.",
+    "table_name": "Laboratory",
+    "title": "Laboratory.WBC definition"
+  },
+  "n_7b792a855d02f39a01bc6fc2": {
+    "concept_id": "U-PRO",
+    "keywords": [
+      "u-pro",
+      "proteinuria",
+      "laboratory",
+      "urine",
+      "mg/dl",
+      "dipstick",
+      "lower bound"
+    ],
+    "note_id": "n_7b792a855d02f39a01bc6fc2",
+    "note_type": "column",
+    "revision": 16,
+    "sha256": "c09367a55b02a67c66c89f6b9ce260e0923214dd0b5bc6ac0ee298719caa42ae",
+    "source_refs": [
+      "schema:Laboratory DDL U-PRO nullable TEXT",
+      "description:Laboratory.csv:28 proteinuria and normal range 0 < N < 30",
+      "values:SELECT U-PRO, COUNT(*) FROM Laboratory GROUP BY U-PRO (observed encodings)",
+      "description:provided evidence explains quantified dipstick/lower-bound forms and nonquantified markers"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT proteinuria result; numeric, dipstick concentration, and lower-bound forms observed; nonquantified markers are not concentrations.",
+    "table_name": "Laboratory",
+    "title": "Laboratory.U-PRO definition"
+  },
+  "n_821ea294bc86f3d67ee6776e": {
+    "concept_id": "UN",
+    "keywords": [
+      "un",
+      "urea nitrogen",
+      "laboratory",
+      "normal index",
+      "measurement"
+    ],
+    "note_id": "n_821ea294bc86f3d67ee6776e",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "e03a48fc2d1f2293a2d00bb34aeec1c0c3aa329eee27fbf36fe45a4c1fdf0a04",
+    "source_refs": [
+      "schema:Laboratory DDL UN INTEGER nullable",
+      "description:Laboratory.csv:10 urea nitrogen and normal range N < 30"
+    ],
+    "status": "provisional",
+    "summary": "Nullable INTEGER laboratory field identified as urea nitrogen; source description gives normal-index hint UN < 30.",
+    "table_name": "Laboratory",
+    "title": "Laboratory.UN definition"
+  },
+  "n_87ff0ea843bbcc740699c654": {
+    "concept_id": "Admission",
+    "keywords": [
+      "patient",
+      "admission",
+      "hospital",
+      "outpatient",
+      "plus",
+      "minus"
+    ],
+    "note_id": "n_87ff0ea843bbcc740699c654",
+    "note_type": "column",
+    "revision": 18,
+    "sha256": "4aa2545235b8e51228ecbed087ab695e01df0a6200dcd44fbf0311b5a6557033",
+    "source_refs": [
+      "schema:Patient DDL Admission TEXT nullable",
+      "values:Patient observed Admission values include +, -, +(, and blank",
+      "description:Supplied evidence on admission marker meaning"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT patient care-setting marker; `+` denotes hospital admission and `-` outpatient follow-up, per supplied evidence.",
+    "table_name": "Patient",
+    "title": "Patient.Admission definition"
+  },
+  "n_8a27b70ab74660ad78e4de58": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "laboratory",
+      "patient",
+      "date",
+      "records",
+      "result fields",
+      "nullable",
+      "empty panel"
+    ],
+    "note_id": "n_8a27b70ab74660ad78e4de58",
+    "note_type": "table",
+    "revision": 11,
+    "sha256": "d5d8d389fb7ae42873a67f69cb48706ba931f9545b9a99beba97ac39a589786e",
+    "source_refs": [
+      "schema:Laboratory DDL primary key (ID, Date), foreign key ID to Patient.ID and nullable result columns",
+      "description:Laboratory.csv:1-2 identifies patient ID and date",
+      "values:SELECT COUNT(*) AS total_laboratory_rows, SUM(CASE WHEN any listed result field IS NOT NULL THEN 1 ELSE 0 END) FROM Laboratory"
+    ],
+    "status": "provisional",
+    "summary": "Patient-linked dated laboratory records keyed by patient ID and date, with nullable result fields; some records have no result values.",
+    "table_name": "Laboratory",
+    "title": "Laboratory table definition"
+  },
+  "n_8b931d48d7ea360f715415b0": {
+    "concept_id": "SC170",
+    "keywords": [
+      "sc170",
+      "anti-scl-70",
+      "laboratory",
+      "serology",
+      "result values"
+    ],
+    "note_id": "n_8b931d48d7ea360f715415b0",
+    "note_type": "column",
+    "revision": 4,
+    "sha256": "c800cba689c15f9509979ec3965d7358b9088a3c6895f2fbb08be061c675867c",
+    "source_refs": [
+      "schema:Laboratory.SC170 TEXT nullable",
+      "description:Laboratory.csv:39",
+      "values:SELECT SC170, COUNT(*) FROM Laboratory GROUP BY SC170",
+      "values:SELECT SC170, COUNT(*) FROM Laboratory WHERE SC170 IN ('negative','0') GROUP BY SC170"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT anti-Scl-70 result field; source normal codes differ from observed negative/0 values, whose clinical mapping is unverified.",
+    "table_name": "Laboratory",
+    "title": "Laboratory.SC170 definition"
+  },
+  "n_8bead593487f76bcae5e4617": {
+    "concept_id": "DNA",
+    "keywords": [
+      "dna",
+      "anti-dna",
+      "laboratory",
+      "text",
+      "result",
+      "numeric conversion"
+    ],
+    "note_id": "n_8bead593487f76bcae5e4617",
+    "note_type": "column",
+    "revision": 5,
+    "sha256": "9b0d0f105942b683eb977ad8998832e7326a62aad3cdaaeab809f46fb504860d",
+    "source_refs": [
+      "schema:Laboratory DDL DNA TEXT nullable",
+      "description:Laboratory.csv:43 anti-DNA Normal range N < 8",
+      "values:SELECT DNA, typeof(DNA), COUNT(*) FROM Laboratory WHERE DNA IS NOT NULL GROUP BY typeof(DNA), DNA showed non-null numeric-looking TEXT values"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT anti-DNA result; source states normal range N < 8; inspected values are numeric-looking text and require numeric conversion for ordering.",
+    "table_name": "Laboratory",
+    "title": "Laboratory.DNA definition"
+  },
+  "n_93b5e288839ef54172a373f9": {
+    "concept_id": "RNP",
+    "keywords": [
+      "rnp",
+      "anti-ribonuclear protein",
+      "laboratory",
+      "result",
+      "normal codes",
+      "numeric text"
+    ],
+    "note_id": "n_93b5e288839ef54172a373f9",
+    "note_type": "column",
+    "revision": 44,
+    "sha256": "3f161f2c7002ef58bc23945fe8d119cb0d10d40ee0a9defef6e81a453de41cd5",
+    "source_refs": [
+      "schema:Laboratory DDL RNP TEXT nullable",
+      "description:Laboratory.csv:37 identifies anti-ribonuclear protein and documents normal codes `-`, `+-`",
+      "values:SELECT RNP, quote(RNP), typeof(RNP), COUNT(*) FROM Laboratory WHERE RNP IS NOT NULL GROUP BY RNP, typeof(RNP)"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT anti-RNP result; `-` and `+-` documented normal; observed numeric-looking strings and `negative` have unverified meanings.",
+    "table_name": "Laboratory",
+    "title": "Laboratory.RNP definition"
+  },
+  "n_95f58762ca4032a00f8d9a0d": {
+    "concept_id": "GPT",
+    "keywords": [
+      "gpt",
+      "alt",
+      "liver enzyme",
+      "laboratory",
+      "normal range"
+    ],
+    "note_id": "n_95f58762ca4032a00f8d9a0d",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "db023cf9206c9fc16a1171b73591a1701e3953c7e5ff0b6872a62a07fbe530de",
+    "source_refs": [
+      "schema:Laboratory DDL GPT INTEGER nullable",
+      "description:Laboratory.csv:4 GPT ALT glutamic pyruvic transaminase and normal range N < 60",
+      "schema:Laboratory foreign key ID references Patient.ID"
+    ],
+    "status": "provisional",
+    "summary": "Nullable INTEGER GPT/ALT (glutamic pyruvic transaminase) laboratory result; source description specifies normal range N < 60.",
+    "table_name": "Laboratory",
+    "title": "Laboratory.GPT definition"
+  },
+  "n_a50331654a28fe31d1f52154": {
+    "concept_id": "ANA Pattern",
+    "keywords": [
+      "ana",
+      "pattern",
+      "examination",
+      "antibody"
+    ],
+    "note_id": "n_a50331654a28fe31d1f52154",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "241e3771ebecad5726cd5c5bee55656b961f85988dfc1bcc213407c834fca222",
+    "source_refs": [
+      "schema:Examination DDL ANA Pattern TEXT nullable",
+      "description:Examination.csv:6",
+      "values:SELECT \"ANA Pattern\", COUNT(*) FROM Examination GROUP BY \"ANA Pattern\""
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT field describing pattern observed in an ANA examination; values include single patterns and comma-separated combinations.",
+    "table_name": "Examination",
+    "title": "Examination.ANA Pattern definition"
+  },
+  "n_a52565ad2b65a0084660c7a6": {
+    "concept_id": "TG",
+    "keywords": [
+      "tg",
+      "triglyceride",
+      "laboratory",
+      "measurement",
+      "range"
+    ],
+    "note_id": "n_a52565ad2b65a0084660c7a6",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "c2fd74f195e62f34eeccf1156558425a9435c7017b2b19994fbbddfe7d171854",
+    "source_refs": [
+      "schema:Laboratory DDL (TG INTEGER NULL)",
+      "description:Laboratory.csv:14"
+    ],
+    "status": "provisional",
+    "summary": "TG is a nullable INTEGER laboratory field; description identifies it as triglyceride with stated normal range below 200.",
+    "table_name": "Laboratory",
+    "title": "Laboratory.TG definition"
+  },
+  "n_a5803136e5a0dab442658166": {
+    "concept_id": "T-BIL",
+    "keywords": [
+      "t-bil",
+      "total bilirubin",
+      "laboratory",
+      "chemistry",
+      "result"
+    ],
+    "note_id": "n_a5803136e5a0dab442658166",
+    "note_type": "column",
+    "revision": 7,
+    "sha256": "4f3255500381ffb331af1d8eab29bf385197eb019a1620e1b0a16cf305a680d8",
+    "source_refs": [
+      "schema:Laboratory DDL T-BIL REAL nullable",
+      "description:Laboratory.csv:12 total bilirubin and normal range N < 2.0"
+    ],
+    "status": "provisional",
+    "summary": "Nullable REAL total bilirubin laboratory result; source describes normal as below 2.0 (units unverified).",
+    "table_name": "Laboratory",
+    "title": "Laboratory.T-BIL definition"
+  },
+  "n_aa232738f55f4a3949d44c5c": {
+    "concept_id": "T-CHO",
+    "keywords": [
+      "t-cho",
+      "total cholesterol",
+      "laboratory",
+      "cholesterol",
+      "result"
+    ],
+    "note_id": "n_aa232738f55f4a3949d44c5c",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "f12f3d6598fbabb982e370c2475714ded1f6ee7e1f646e316f4bf58f223d4bc2",
+    "source_refs": [
+      "schema:Laboratory DDL T-CHO INTEGER nullable",
+      "description:Laboratory.csv:13 T-CHO total cholesterol integer, normal range N < 250"
+    ],
+    "status": "provisional",
+    "summary": "Nullable INTEGER laboratory field identified as total cholesterol; source describes normal range N < 250, units and exceptional values unverified.",
+    "table_name": "Laboratory",
+    "title": "Laboratory.T-CHO definition"
+  },
+  "n_ae8ba818e5c40c505d5e855c": {
+    "concept_id": "FG",
+    "keywords": [
+      "fg",
+      "fibrinogen",
+      "laboratory",
+      "coagulation",
+      "normal range"
+    ],
+    "note_id": "n_ae8ba818e5c40c505d5e855c",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "700367f65e57183b31f1ea874c41b8cd4651d3fa30b5130bd0f4f462cb362adf",
+    "source_refs": [
+      "schema:Laboratory DDL FG REAL nullable",
+      "description:Laboratory.csv:24 fibrinogen normal range 150 < N < 450"
+    ],
+    "status": "provisional",
+    "summary": "Nullable REAL fibrinogen result; source describes normal range as 150 < N < 450; clinical interpretation beyond this is unverified.",
+    "table_name": "Laboratory",
+    "title": "Laboratory.FG definition"
+  },
+  "n_b2bfcb5023b5b5b7510c8653": {
+    "concept_id": "RVVT",
+    "keywords": [
+      "rvvt",
+      "coagulation",
+      "examination",
+      "positive",
+      "negative"
+    ],
+    "note_id": "n_b2bfcb5023b5b5b7510c8653",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "c283bdb630e0af72ce9499a41a2fae2243857420659597ee340a2de93d9ec8d9",
+    "source_refs": [
+      "schema:Examination DDL RVVT TEXT nullable",
+      "description:Examination.csv:10 describes measure of degree of coagulation and + positive, - negative"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT examination field for degree of coagulation; source describes + as positive and - as negative.",
+    "table_name": "Examination",
+    "title": "Examination.RVVT definition"
+  },
+  "n_b6df1c861db16c08870ad8c3": {
+    "concept_id": "SSA",
+    "keywords": [
+      "ssa",
+      "anti-ssa",
+      "laboratory",
+      "serology",
+      "result values"
+    ],
+    "note_id": "n_b6df1c861db16c08870ad8c3",
+    "note_type": "column",
+    "revision": 4,
+    "sha256": "2e3b4ad54d2f4a2690c33b1077a4c65da94b81af6ab795ee2f7ccc517f317159",
+    "source_refs": [
+      "schema:Laboratory DDL SSA nullable TEXT",
+      "description:Laboratory.csv:40 anti-SSA and normal range N= -, +-",
+      "values:SELECT SSA, COUNT(*) AS n FROM Laboratory WHERE SSA IS NOT NULL GROUP BY SSA"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT anti-SSA result; source identifies normal `-` and `+-`, while numeric codes and `negative` lack confirmed interpretation.",
+    "table_name": "Laboratory",
+    "title": "Laboratory.SSA definition"
+  },
+  "n_bab80ea05dfb98d993d009bd": {
+    "concept_id": "ID",
+    "keywords": [
+      "laboratory",
+      "patient identifier",
+      "foreign key",
+      "primary key"
+    ],
+    "note_id": "n_bab80ea05dfb98d993d009bd",
+    "note_type": "column",
+    "revision": 5,
+    "sha256": "38492e6f112a6b622662fe6d7695dfe86ecb212adc3294040f8e7c58b9575597",
+    "source_refs": [
+      "schema:Laboratory DDL ID INTEGER NOT NULL, composite primary key (ID, Date), foreign key ID references Patient.ID",
+      "description:Laboratory.csv:1 ID identification of patient"
+    ],
+    "status": "provisional",
+    "summary": "Non-null patient identifier; part of Laboratory composite primary key and references Patient.ID.",
+    "table_name": "Laboratory",
+    "title": "Laboratory.ID definition"
+  },
+  "n_bb238752ceb3e6de7cf29514": {
+    "concept_id": "LDH",
+    "keywords": [
+      "ldh",
+      "lactate dehydrogenase",
+      "laboratory",
+      "measurement",
+      "normal range"
+    ],
+    "note_id": "n_bb238752ceb3e6de7cf29514",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "110771413ce6c7363ed506cc3aef3fb4fb88c02b00dccca932b5bda11f1892d1",
+    "source_refs": [
+      "schema:Laboratory DDL LDH INTEGER nullable",
+      "description:Laboratory.csv:5 LDH lactate dehydrogenase and normal range N < 500"
+    ],
+    "status": "provisional",
+    "summary": "Nullable INTEGER lactate dehydrogenase result; source says normal range N < 500; units are unverified.",
+    "table_name": "Laboratory",
+    "title": "Laboratory.LDH definition"
+  },
+  "n_bc4e7e27b108e5d1c56f07ab": {
+    "concept_id": "RA",
+    "keywords": [
+      "ra",
+      "rheumatoid factor",
+      "laboratory",
+      "text result",
+      "normal range"
+    ],
+    "note_id": "n_bc4e7e27b108e5d1c56f07ab",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "b01be46d9a5a89e31a4a7026da82f9e235a5d5f4790c22ea33ef59d86a346d04",
+    "source_refs": [
+      "schema:Laboratory DDL RA TEXT nullable",
+      "description:Laboratory.csv:33 Rheumatoid Factor and normal range N= -, +-"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT laboratory field described as rheumatoid factor; source notes normal values '-' and '+-'.",
+    "table_name": "Laboratory",
+    "title": "Laboratory.RA definition"
+  },
+  "n_c130e419182040900712fdd6": {
+    "concept_id": "Symptoms",
+    "keywords": [
+      "examination",
+      "symptoms",
+      "observed",
+      "text",
+      "values"
+    ],
+    "note_id": "n_c130e419182040900712fdd6",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "3fc062f44fb565ee01478b07cadc98f28538ead93bb9bb8ebb1246b3d2c8fb83",
+    "source_refs": [
+      "schema:Examination DDL Symptoms TEXT nullable",
+      "description:Examination.csv:12",
+      "values:SELECT Symptoms, COUNT(*) FROM Examination WHERE Symptoms IS NOT NULL GROUP BY Symptoms"
+    ],
+    "status": "provisional",
+    "summary": "Nullable symptom TEXT; standalone and comma-separated examples exist, but delimiters and episode grain are unverified.",
+    "table_name": "Examination",
+    "title": "Examination.Symptoms definition"
+  },
+  "n_cd7adc429c248a65dff7d7f2": {
+    "concept_id": "SM",
+    "keywords": [
+      "sm",
+      "anti-sm",
+      "laboratory",
+      "antibody",
+      "result"
+    ],
+    "note_id": "n_cd7adc429c248a65dff7d7f2",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "16e41f301efbc8d75febafc90a6fdc1bb864429c298c9b89802d9fb1629c1fa1",
+    "source_refs": [
+      "schema:Laboratory DDL SM TEXT nullable",
+      "values:SELECT `SM`, COUNT(*) AS n FROM Laboratory GROUP BY `SM` ORDER BY `SM`"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT anti-SM result field; observed codes include 0, 1, 2, 8 and negative; clinical mapping is not fully verified.",
+    "table_name": "Laboratory",
+    "title": "Laboratory.SM definition"
+  },
+  "n_cf636b5658991c3143a2bf21": {
+    "concept_id": "aCL IgM",
+    "keywords": [
+      "acl igm",
+      "anti-cardiolipin",
+      "igm",
+      "concentration",
+      "examination",
+      "non-detection"
+    ],
+    "note_id": "n_cf636b5658991c3143a2bf21",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "b1b27e2421a69ea45aa5b426a793e1fccf7a93a1049ac665cac9d9d6d0f4d1fe",
+    "source_refs": [
+      "schema:Examination DDL defines nullable REAL `aCL IgM`",
+      "description:Examination.csv:4 describes anti-Cardiolipin antibody (IgM) concentration",
+      "values:SELECT COUNT(*) and zero/positive counts from Examination `aCL IgM` values"
+    ],
+    "status": "provisional",
+    "summary": "Nullable REAL examination-level anti-cardiolipin IgM concentration; units and interpretation of zero are undocumented.",
+    "table_name": "Examination",
+    "title": "Examination.aCL IgM definition"
+  },
+  "n_d89e9db7393bc691b87795cd": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "patient",
+      "profile",
+      "sex",
+      "admission",
+      "diagnosis",
+      "cohort"
+    ],
+    "note_id": "n_d89e9db7393bc691b87795cd",
+    "note_type": "table",
+    "revision": 9,
+    "sha256": "8ed35c6539f067d89ab3f8f7ae96e759b986831e69bef10a3df23fef5ed7e851",
+    "source_refs": [
+      "schema:Patient DDL primary key ID and nullable profile columns",
+      "schema:Laboratory foreign key ID references Patient.ID",
+      "schema:Examination foreign key ID references Patient.ID",
+      "values:Patient has 1,238 rows and distinct IDs"
+    ],
+    "status": "provisional",
+    "summary": "Patient profile table with 1,238 observed rows and declared ID primary key; cohort scope is unverified.",
+    "table_name": "Patient",
+    "title": "Patient table definition"
+  },
+  "n_dab20bc6d260ef80f62fae2e": {
+    "concept_id": "ID",
+    "keywords": [
+      "patient",
+      "id",
+      "identifier",
+      "primary key",
+      "laboratory",
+      "examination"
+    ],
+    "note_id": "n_dab20bc6d260ef80f62fae2e",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "3d00c4c0abaeee9b16fd95df938f30065effcde7154683b9b497c745d77576bb",
+    "source_refs": [
+      "schema:Patient DDL ID INTEGER NOT NULL PRIMARY KEY",
+      "description:Patient.csv:1 ID identification of the patient",
+      "schema:Laboratory foreign key ID references Patient.ID",
+      "schema:Examination foreign key ID references Patient.ID"
+    ],
+    "status": "provisional",
+    "summary": "Non-null INTEGER patient identifier and declared primary key; referenced by Laboratory and Examination records.",
+    "table_name": "Patient",
+    "title": "Patient.ID definition"
+  },
+  "n_dc554ace2fd381b54df4a8d1": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "examination",
+      "patient",
+      "repeated records",
+      "diagnosis",
+      "date",
+      "symptoms"
+    ],
+    "note_id": "n_dc554ace2fd381b54df4a8d1",
+    "note_type": "table",
+    "revision": 8,
+    "sha256": "c2d758a470053210056d0c307e7c0ffa87b56d549216eabfc3b4bdd2e18f8861",
+    "source_refs": [
+      "schema:Examination DDL has nullable ID/date/results, no declared primary key, and foreign key ID to Patient.ID",
+      "values:patients occur on multiple Examination rows",
+      "description:Examination.csv:1-2 documents ID and examination date"
+    ],
+    "status": "provisional",
+    "summary": "Patient-linked examination rows include date, symptoms and diagnosis; repeated patient records occur and no row key or cohort definition is declared.",
+    "table_name": "Examination",
+    "title": "Examination table definition"
+  },
+  "n_dccf81e51d8e15c35b930057": {
+    "concept_id": "Date",
+    "keywords": [
+      "laboratory",
+      "date",
+      "test date",
+      "record key"
+    ],
+    "note_id": "n_dccf81e51d8e15c35b930057",
+    "note_type": "column",
+    "revision": 7,
+    "sha256": "2b9a9a117794dd167b30bd5fe6c2b5969fdb819429846495c4d7c5b11d52a17f",
+    "source_refs": [
+      "schema:Laboratory DDL Date DATE NOT NULL DEFAULT '0000-00-00', composite primary key (ID, Date)",
+      "description:Laboratory.csv:2 Date of the laboratory tests (YYMMDD)"
+    ],
+    "status": "provisional",
+    "summary": "Non-null DATE lab-test date, part of (ID, Date) primary key; source documentation specifies YYMMDD format.",
+    "table_name": "Laboratory",
+    "title": "Laboratory.Date definition"
+  },
+  "n_dd59624fa5e7427dea6a1fe2": {
+    "concept_id": "First Date",
+    "keywords": [
+      "patient",
+      "date",
+      "first date",
+      "hospital visit",
+      "presentation"
+    ],
+    "note_id": "n_dd59624fa5e7427dea6a1fe2",
+    "note_type": "column",
+    "revision": 7,
+    "sha256": "a726384e925671ce7630758c2c5b2027b8e7af615fa145ae04e45ecb147f9f7a",
+    "source_refs": [
+      "schema:Patient DDL column `First Date` DATE nullable",
+      "description:Patient.csv First Date description",
+      "values:Patient First Date observed YYYY-MM-DD values"
+    ],
+    "status": "provisional",
+    "summary": "Nullable DATE patient attribute; source identifies this as the date of first visit to hospital, stored YYYY-MM-DD.",
+    "table_name": "Patient",
+    "title": "Patient.First Date definition"
+  },
+  "n_e223b8e2055befea67fd7b03": {
+    "concept_id": "TP",
+    "keywords": [
+      "tp",
+      "total protein",
+      "laboratory",
+      "result",
+      "normal range"
+    ],
+    "note_id": "n_e223b8e2055befea67fd7b03",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "1370eb2ad1d331d5e35142c84c31d71ba2f3c6319ca825c7b93c654b3a6c99e1",
+    "source_refs": [
+      "schema:Laboratory DDL TP REAL nullable",
+      "description:Laboratory.csv:7 total protein and normal range 6.0 < N < 8.5"
+    ],
+    "status": "provisional",
+    "summary": "Nullable REAL total-protein laboratory result; source describes normal interval 6.0 < N < 8.5.",
+    "table_name": "Laboratory",
+    "title": "Laboratory.TP definition"
+  },
+  "n_e507e1a085d7b89ad3a24354": {
+    "concept_id": "SEX",
+    "keywords": [
+      "patient",
+      "sex",
+      "female",
+      "male",
+      "blank"
+    ],
+    "note_id": "n_e507e1a085d7b89ad3a24354",
+    "note_type": "column",
+    "revision": 13,
+    "sha256": "9c5629a07d8885a3d0dad100edb20bacd903f5972a4db117e9ce2715aa00b06a",
+    "source_refs": [
+      "schema:Patient.SEX TEXT nullable",
+      "description:Patient.csv SEX description",
+      "values:Patient SEX observed categories include blank, F, M"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT recorded patient sex; source defines F=female and M=male; empty values are not a recorded sex category.",
+    "table_name": "Patient",
+    "title": "Patient.SEX definition"
+  },
+  "n_e8e869f2930a70e30108f5b4": {
+    "concept_id": "UA",
+    "keywords": [
+      "ua",
+      "uric acid",
+      "laboratory",
+      "sex-specific",
+      "normal limit"
+    ],
+    "note_id": "n_e8e869f2930a70e30108f5b4",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "a197a198b3fa1ebb3ac5e062dec49ae44f6be87eed04305049eae95f8ea0609b",
+    "source_refs": [
+      "schema:Laboratory.UA REAL nullable",
+      "schema:Laboratory primary key (ID, Date) and foreign key ID to Patient.ID",
+      "description:Laboratory.csv:9"
+    ],
+    "status": "provisional",
+    "summary": "Nullable REAL laboratory field identified as uric acid; source description ambiguously gives male 8.0 and female 6.5 normal-range notation.",
+    "table_name": "Laboratory",
+    "title": "Laboratory.UA definition"
+  },
+  "n_f1d209cf4ff5f4db3d67810b": {
+    "concept_id": "Birthday",
+    "keywords": [
+      "birthday",
+      "birth date",
+      "patient",
+      "age",
+      "date"
+    ],
+    "note_id": "n_f1d209cf4ff5f4db3d67810b",
+    "note_type": "column",
+    "revision": 12,
+    "sha256": "bde18d3d6e394b60f76f8dded4d05e8b2e1ddb17a95641d4a690b23413b5cfcd",
+    "source_refs": [
+      "schema:Patient DDL Birthday DATE nullable",
+      "description:Patient.csv Birthday birth date"
+    ],
+    "status": "provisional",
+    "summary": "Nullable DATE documented as patient birth date; age is derivable relative to a reference date, while source does not specify a completed-years convention.",
+    "table_name": "Patient",
+    "title": "Patient.Birthday definition"
+  }
+}

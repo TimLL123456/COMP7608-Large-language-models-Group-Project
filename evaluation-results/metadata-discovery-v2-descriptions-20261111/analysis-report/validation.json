@@ -1,0 +1,20 @@
+[
+  {
+    "split": "dev",
+    "expected": 400,
+    "predictions": 400,
+    "traces": 400,
+    "scores": 400,
+    "exact_ordered_prefix": true,
+    "complete": true
+  },
+  {
+    "split": "test",
+    "expected": 100,
+    "predictions": 100,
+    "traces": 100,
+    "scores": 100,
+    "exact_ordered_prefix": true,
+    "complete": true
+  }
+]

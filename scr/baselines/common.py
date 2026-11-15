@@ -17,12 +17,15 @@ DEFAULT_MODELS = {
     "gemini": "gemini-2.5-flash",
     "deepseek": "deepseek-chat",
     "nvidia": NVIDIA_MODELS[0],
+    "openai": None,  # Explicit model ID, no entitlement assumption.
+    "chatgpt-siwc": None,  # Account-specific model selection.
+
 }
 
 
 def build_model(
     model_name=None, num_ctx=8192, *, provider="ollama",
-    temperature=0, max_tokens=512, timeout=60, top_p=None,
+    temperature=0, max_tokens=512, timeout=60, top_p=None, reasoning_effort=None,
 ):
     """Build a selected chat model; keep older build_model(name, ctx) calls working.
 
@@ -30,22 +33,53 @@ def build_model(
     environment, never persisted or logged. Ollama remains the default.
     """
     if not isinstance(provider, str) or provider.lower().strip() not in DEFAULT_MODELS:
-        raise ValueError(f"Unsupported model provider: {provider!r}. Choose ollama, gemini, deepseek, or nvidia.")
+        raise ValueError(f"Unsupported model provider: {provider!r}. Choose: {', '.join(DEFAULT_MODELS)}")
     provider = provider.lower().strip()
     if model_name is None:
         model_name = DEFAULT_MODELS[provider]
     if not isinstance(model_name, str) or not model_name.strip():
-        raise ValueError("model_name must be a non-empty string")
+        raise ValueError(
+            f"An explicit --model is required for provider {provider!r}"
+            if DEFAULT_MODELS[provider] is None else "model_name must be a non-empty string"
+        )
     if not isinstance(num_ctx, int) or num_ctx < 1:
         raise ValueError("num_ctx must be a positive integer")
     if not isinstance(max_tokens, int) or max_tokens < 1:
         raise ValueError("max_tokens must be a positive integer")
-    if not isinstance(temperature, (float, int)) or not 0 <= temperature <= 2:
+    if temperature is not None and (
+        not isinstance(temperature, (float, int)) or not 0 <= temperature <= 2
+    ):
         raise ValueError("temperature must be between 0 and 2")
     if not isinstance(timeout, (float, int)) or timeout <= 0:
         raise ValueError("timeout must be positive")
     if top_p is not None and (not isinstance(top_p, (int, float)) or not 0 < top_p <= 1):
         raise ValueError("top_p must be in (0, 1]")
+
+    if reasoning_effort is not None:
+        if provider != "chatgpt-siwc":
+            raise ValueError("Explicit reasoning_effort currently requires chatgpt-siwc")
+        if reasoning_effort not in ("none", "low", "medium", "high", "xhigh", "max"):
+            raise ValueError("Unsupported reasoning_effort")
+
+    if provider == "openai":
+        if not os.environ.get("OPENAI_API_KEY"):
+            raise ValueError("OpenAI requires OPENAI_API_KEY in the environment")
+        from langchain_openai import ChatOpenAI
+
+        return ChatOpenAI(
+            model=model_name, use_responses_api=True,
+            temperature=temperature, max_tokens=max_tokens,
+            timeout=timeout, max_retries=0,
+            **({"top_p": top_p} if top_p is not None else {}),
+        )
+
+    if provider == "chatgpt-siwc":
+        if top_p is not None or temperature not in (None, 0):
+            raise ValueError("SIWC does not support temperature or top_p sampling controls")
+        from scr.baselines.chatgpt_siwc import ChatGPTSIWC
+
+        # SIWC forbids sampling and output-cap parameters on its preview route.
+        return ChatGPTSIWC(model=model_name, timeout=timeout, reasoning_effort=reasoning_effort)
 
     if provider == "ollama":
         from langchain_ollama import ChatOllama
@@ -100,7 +134,7 @@ def build_model(
 
 def redact_credentials(message: str) -> str:
     """Remove configured API keys from provider errors before persisting traces."""
-    for key in ("NVIDIA_API_KEY", "DEEPSEEK_API_KEY", "GOOGLE_API_KEY", "GEMINI_API_KEY"):
+    for key in ("NVIDIA_API_KEY", "DEEPSEEK_API_KEY", "GOOGLE_API_KEY", "GEMINI_API_KEY", "OPENAI_API_KEY"):
         value = os.environ.get(key)
         if value:
             message = message.replace(value, "[REDACTED]")

@@ -11,7 +11,7 @@ class StreamAgent:
         self.error = error
 
     def stream(self, inputs, config, stream_mode):
-        assert config["recursion_limit"] == 100
+        assert config["recursion_limit"] == 200
         assert stream_mode == "values"
         for snapshot in self.snapshots:
             yield {"messages": snapshot}
@@ -80,6 +80,79 @@ class B0Tests(unittest.TestCase):
         self.assertEqual(report["sql_calls"], 1)
         self.assertEqual(report["model_calls"], 2)
 
+    def test_optional_usage_is_recorded_per_model_call_without_guessing(self):
+        first = AIMessage(
+            content="",
+            usage_metadata={
+                "input_tokens": 100, "output_tokens": 40, "total_tokens": 140,
+                "input_token_details": {"cache_read": 60},
+                "output_token_details": {"reasoning": 32},
+            },
+            response_metadata={
+                "reasoning_effort": "medium", "thinking_level": "advanced",
+                "reasoning_mode": "standard",
+            },
+        )
+        second = AIMessage(content=self.final)  # No usage details or effort.
+        events = []
+        report = b0.run_one(
+            self.q, StreamAgent([[first], [first, second]]),
+            log=lambda _: None, trace_events=events,
+        )
+        self.assertEqual(report["final_sql"], "SELECT SUM(cost) FROM expense")
+        self.assertEqual(report["input_tokens"], 100)
+        self.assertEqual(report["output_tokens"], 40)
+        self.assertEqual(report["total_tokens"], 140)
+        self.assertEqual(report["cached_input_tokens"], 60)
+        self.assertEqual(report["reasoning_tokens"], 32)
+        self.assertEqual(report["cached_input_tokens_observed_calls"], 1)
+        self.assertEqual(report["reasoning_tokens_observed_calls"], 1)
+        self.assertEqual(report["model_calls"], 2)
+        self.assertEqual(report["reasoning_effort"], "medium")
+        self.assertEqual(report["thinking_level"], "advanced")
+        self.assertEqual(report["reasoning_mode"], "standard")
+        self.assertEqual(events[0]["reasoning_tokens"], 32)
+        self.assertEqual(events[0]["reasoning_effort"], "medium")
+        self.assertIsNone(events[1]["cached_input_tokens"])
+        self.assertIsNone(events[1]["reasoning_effort"])
+
+    def test_optional_usage_fallback_and_missing_values(self):
+        first = AIMessage(
+            content="",
+            response_metadata={"token_usage": {
+                "prompt_tokens": 80, "completion_tokens": 40,
+                "prompt_tokens_details": {"cached_tokens": 25},
+                "completion_tokens_details": {"reasoning_tokens": 15},
+            }},
+        )
+        second = AIMessage(content=self.final, response_metadata={
+            "reasoning_effort": "high",
+            "token_usage": {"prompt_tokens_details": {"cached_tokens": "bad"}},
+        })
+        report = b0.run_one(
+            self.q, StreamAgent([[first], [first, second]]),
+            log=lambda _: None,
+        )
+        self.assertTrue(report["graph_completed"])
+        self.assertEqual(report["cached_input_tokens"], 25)
+        self.assertEqual(report["reasoning_tokens"], 15)
+        self.assertEqual(report["input_tokens"], 80)
+        self.assertEqual(report["output_tokens"], 40)
+        self.assertIsNone(report["total_tokens"])
+        self.assertEqual(report["reasoning_effort"], "high")
+        self.assertEqual(report["reasoning_tokens_observed_calls"], 1)
+        self.assertEqual(report["input_tokens_observed_calls"], 1)
+
+    def test_no_optional_usage_returns_null_not_zero(self):
+        report = b0.run_one(
+            self.q, StreamAgent([[AIMessage(content=self.final)]]), log=lambda _: None,
+        )
+        self.assertIsNone(report["cached_input_tokens"])
+        self.assertIsNone(report["reasoning_tokens"])
+        self.assertIsNone(report["reasoning_effort"])
+        self.assertEqual(report["cached_input_tokens_observed_calls"], 0)
+        self.assertFalse(report["usage_observed"])
+
     def test_q1409_recursion_keeps_observation_not_prediction(self):
         agent = StreamAgent([[AIMessage(content=self.final)]],
                             RuntimeError("recursion limit reached"))
@@ -128,17 +201,49 @@ class B0Tests(unittest.TestCase):
         self.assertIsNone(r["final_sql"])
         self.assertEqual(r["stop_reason"], "invalid_final_answer")
 
+    def test_opt_in_generalized_prompt_preserves_baseline(self):
+        baseline = b0.system_prompt_for_variant()
+        self.assertEqual(baseline, b0.BASELINE_SYSTEM_PROMPT)
+        self.assertEqual(
+            baseline,
+            "You are a BIRD Text-to-SQL agent. Query the provided SQLite database "
+            "using the custom read-only SQL tools. You can use Deep Agents' default "
+            "planning, virtual filesystem, and subagent features when they help. "
+            "Output only Final SQL Query: with SQL between two lines of triple double quotes; "
+            "avoid unnecessary tool calls.",
+        )
+        improved = b0.system_prompt_for_variant("generalized-v1")
+        self.assertTrue(improved.startswith(baseline + "\n\n"))
+        self.assertIn("Value semantics", improved)
+        self.assertIn("Entity granularity", improved)
+        self.assertIn("Final SQL consistency", improved)
+        for leaked in ("Q345", "superhero", "Gold SQL", "SELECT 519.0 / 12"):
+            self.assertNotIn(leaked, improved)
+        with self.assertRaises(ValueError):
+            b0.system_prompt_for_variant("unknown")
+
+    def test_generalized_variant_changes_only_system_prompt(self):
+        store = MagicMock()
+        with patch("deepagents.create_deep_agent") as constructor:
+            b0.make_agent(store, model=MagicMock(), prompt_variant="generalized-v1")
+        opts = constructor.call_args.kwargs
+        self.assertEqual(opts["system_prompt"], b0.system_prompt_for_variant("generalized-v1"))
+        self.assertEqual({t.name for t in opts["tools"]},
+                         {"list_tables", "inspect_table", "execute_sql"})
+        self.assertEqual([m.run_limit for m in opts["middleware"]], [40, 40, 40])
+
     def test_settings(self):
         self.assertEqual((b0.MAX_MODEL_CALLS, b0.MAX_TOTAL_TOOL_CALLS,
-                          b0.MAX_SQL_EXECUTIONS), (20, 20, 20))
+                          b0.MAX_SQL_EXECUTIONS), (40, 40, 40))
         self.assertEqual(b0.MODEL, "nvidia/nemotron-3.5-super-vl-120b-a12b")
-        self.assertEqual(b0.RECURSION_LIMIT, 100)
+        self.assertEqual(b0.RECURSION_LIMIT, 200)
 
     def test_deep_agent_tool_budgets_and_default_harness(self):
         store = MagicMock()
         with patch("deepagents.create_deep_agent") as create:
             b0.make_agent(store, model=MagicMock())
         options = create.call_args.kwargs
+        self.assertEqual(options["system_prompt"], b0.system_prompt_for_variant("baseline"))
         self.assertEqual(
             {t.name for t in options["tools"]},
             {"list_tables", "inspect_table", "execute_sql"},
@@ -146,7 +251,7 @@ class B0Tests(unittest.TestCase):
         self.assertNotIn("backend", options)
         self.assertNotIn("subagents", options)
         self.assertEqual(len(options["middleware"]), 3)
-        self.assertEqual([m.run_limit for m in options["middleware"]], [20, 20, 20])
+        self.assertEqual([m.run_limit for m in options["middleware"]], [40, 40, 40])
         self.assertEqual(
             [m.exit_behavior for m in options["middleware"]],
             ["error", "error", "error"],

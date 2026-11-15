@@ -1,0 +1,18 @@
+{
+  "data/bird/mini-dev-2026/dataset_manifest.json": "6d62ee72afba8254a5a9e7744cc772d29f33acb28a223d17aabd7e29a94d59b9",
+  "data/bird/mini-dev-2026/annotations.source.jsonl": "926af2a0d1b47e5d0d15a7aa8a34d4721007f4550a881555b6a89496b54a2606",
+  "data/bird/mini-dev-2026/annotations.json": "65500531300316e6a6e65d4b982460d73bafafd2497ee882f96a9f6f06bf8a29",
+  "data/bird/mini-dev-2026/package/financial/financial.sqlite": "d15d89cdb068a202b6f2b99342af44dffc1d52545b39ceaf62efdc0ba570101e",
+  "data/bird/mini-dev-2026/package/codebase_community/codebase_community.sqlite": "92101be6d2a9f6adceea59d38f6d1c556087f9eea1432432a21268cb1348036d",
+  "data/bird/mini-dev-2026/package/card_games/card_games.sqlite-shm": "fd4c9fda9cd3f9ae7c962b0ddf37232294d55580e1aa165aa06129b8549389eb",
+  "data/bird/mini-dev-2026/package/card_games/card_games.sqlite": "c98bdb57fe7474da798b407785544b9af0daaad5d61fd21e2a73309493bc1227",
+  "data/bird/mini-dev-2026/package/card_games/card_games.sqlite-wal": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "data/bird/mini-dev-2026/package/debit_card_specializing/debit_card_specializing.sqlite": "b3d149ad05746dbbe5116e229e17e18f09c39db43cf117d9ef3441753608b691",
+  "data/bird/mini-dev-2026/package/superhero/superhero.sqlite": "75e94a2c3236ee3bb2c01fb97a1c4b4c1c269bcefd4eab1d04be323d2d0825b1",
+  "data/bird/mini-dev-2026/package/student_club/student_club.sqlite": "eb89bcfe97eefa386a27904ec5aa15159811a7eac894ec659a36e48fa9f76b77",
+  "data/bird/mini-dev-2026/package/european_football_2/european_football_2.sqlite": "f72f5c9b990371417288a67b27a02e601ef904d45525c2c9f7931fb01001c536",
+  "data/bird/mini-dev-2026/package/formula_1/formula_1.sqlite": "79770caf966707e35516fa566e24b40ae515c74ec1ec4631235245645b87b24d",
+  "data/bird/mini-dev-2026/package/toxicology/toxicology.sqlite": "4df4094208e0799d5e5f0e2b5bc5c415cf87b1208ebaf8f4c14c7af445b682c5",
+  "data/bird/mini-dev-2026/package/thrombosis_prediction/thrombosis_prediction.sqlite": "87583183c3dc472fba04de702965560a9d7c0a548836613f242317e0eeb83f00",
+  "data/bird/mini-dev-2026/package/california_schools/california_schools.sqlite": "c0903eec662e63068fd1d14403d3d6c1d473287fc10c4356333ea58f878db983"
+}

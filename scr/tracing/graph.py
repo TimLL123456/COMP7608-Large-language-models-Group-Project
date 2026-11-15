@@ -73,7 +73,10 @@ def build_graph(record):
             if any(n["id"] == node_id for n in nodes):
                 continue
             detail = {key: event.get(key) for key in (
-                "finish", "content", "input_tokens", "output_tokens", "observed_at_ms")}
+                "finish", "content", "input_tokens", "output_tokens",
+                "total_tokens", "cached_input_tokens", "reasoning_tokens",
+                "reasoning_effort", "thinking_level", "reasoning_mode",
+                "observed_at_ms")}
             nodes.append(dict(id=node_id, kind="model", title=f"Model #{number}", detail=detail))
             edges.append(dict(source=previous, target=node_id, kind="sequence"))
             current = previous = node_id

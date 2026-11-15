@@ -1,0 +1,1796 @@
+{
+  "n_0179c61d244cb1eb49953521": {
+    "concept_id": "rarity",
+    "keywords": [
+      "rarity",
+      "printing",
+      "common",
+      "uncommon",
+      "card"
+    ],
+    "note_id": "n_0179c61d244cb1eb49953521",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "daacd3283219ef778596cdb67e35a46f091d9a0863ef5497ebfcb12742a7b669",
+    "source_refs": [
+      "schema:cards DDL rarity TEXT",
+      "description:cards.csv:59 describes rarity as the card printing rarity",
+      "values:cards grouped rarity counts observed common, rare, uncommon, mythic"
+    ],
+    "status": "provisional",
+    "summary": "Text field for the card printing's rarity; description identifies the field as printing rarity, and observed values include common, uncommon, rare, mythic.",
+    "table_name": "cards",
+    "title": "Card printing rarity"
+  },
+  "n_025a548befad28f9375ddd4c": {
+    "concept_id": "name",
+    "keywords": [
+      "set name",
+      "catalog",
+      "localization",
+      "translation"
+    ],
+    "note_id": "n_025a548befad28f9375ddd4c",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "fcc6e192bc0d2c923db87ebdc8e504e4fe116f8fe456f8baa5e9228e74b35085",
+    "source_refs": [
+      "schema:sets DDL name TEXT",
+      "schema:set_translations DDL translation TEXT and setCode references sets.code"
+    ],
+    "status": "provisional",
+    "summary": "Text name on a sets catalog record; localization is represented separately in set_translations, and name language is not determined by its text.",
+    "table_name": "sets",
+    "title": "Set name"
+  },
+  "n_038db9567d5239adda0bea68": {
+    "concept_id": "format",
+    "keywords": [
+      "format",
+      "legalities",
+      "play format"
+    ],
+    "note_id": "n_038db9567d5239adda0bea68",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "1516e0cfbcd837d8bc94a8b70d95c2ff75d35893187b75768378e3ad3c415eea",
+    "source_refs": [
+      "schema:legalities DDL format TEXT",
+      "description:legalities.csv:2 says format of play and values refer to different rules to play"
+    ],
+    "status": "provisional",
+    "summary": "Text field indicating the play format whose rules apply to the associated legality record.",
+    "table_name": "legalities",
+    "title": "Legality play format"
+  },
+  "n_062657762a72ec9c6b2185f3": {
+    "concept_id": "types",
+    "keywords": [
+      "types",
+      "artifact",
+      "creature",
+      "card category"
+    ],
+    "note_id": "n_062657762a72ec9c6b2185f3",
+    "note_type": "column",
+    "revision": 7,
+    "sha256": "88d176990ce5e052e2ba1bdc909b53d211da39b9a745d74483900bcc20370a63",
+    "source_refs": [
+      "schema:cards.types TEXT",
+      "values:cards.types observed Artifact and Artifact,Creature"
+    ],
+    "status": "provisional",
+    "summary": "TEXT field for card type categories; observed values include Artifact and Artifact,Creature, allowing combined-type classification.",
+    "table_name": "cards",
+    "title": "Card type categories"
+  },
+  "n_069813746c0dff42e98593dd": {
+    "concept_id": "originalType",
+    "keywords": [
+      "originaltype",
+      "type line",
+      "supertypes",
+      "subtypes",
+      "card type"
+    ],
+    "note_id": "n_069813746c0dff42e98593dd",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "974c638767889c3eabdd165f5b357da2489eff652f299a48375f4a53b1aab0af",
+    "source_refs": [
+      "schema:cards DDL originalType TEXT",
+      "description:cards.csv:53",
+      "values:cards observed originalType examples include Creature — Human Knight and Enchantment - Aura"
+    ],
+    "status": "provisional",
+    "summary": "Text type line as originally printed; includes supertypes and subtypes and can preserve source spelling/punctuation.",
+    "table_name": "cards",
+    "title": "Originally printed type line"
+  },
+  "n_0943379ccaceb5424c69ab43": {
+    "concept_id": "keyruneCode",
+    "keywords": [
+      "sets",
+      "keyrune",
+      "icon code"
+    ],
+    "note_id": "n_0943379ccaceb5424c69ab43",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "c94bbf314831588bc24228ab686ba8ea0d3bc6943b4fcbf421e55fc9f2ac7aca",
+    "source_refs": [
+      "schema:sets DDL keyruneCode TEXT"
+    ],
+    "status": "provisional",
+    "summary": "Text field for a set record's Keyrune icon code; exact code conventions are not documented.",
+    "table_name": "sets",
+    "title": "Keyrune icon code"
+  },
+  "n_0a475d555938f5fd65c6ea79": {
+    "concept_id": "type",
+    "keywords": [
+      "set type",
+      "expansion",
+      "core",
+      "promo",
+      "classification"
+    ],
+    "note_id": "n_0a475d555938f5fd65c6ea79",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "4425f11f0cc86ba95d7bebe19485e6de4f23ccf24aec600d24a9cff405c46145",
+    "source_refs": [
+      "schema:sets DDL type TEXT",
+      "values:sets Masques/Mirage rows show expansion/promo labels and promo parentCode links",
+      "values:sets observed core category"
+    ],
+    "status": "provisional",
+    "summary": "Text classification on set records; observed Masques/Mirage expansion and promo labels; broader semantics are not verified.",
+    "table_name": "sets",
+    "title": "Set type"
+  },
+  "n_0d45e42804b448922dd0d7ca": {
+    "concept_id": "name",
+    "keywords": [
+      "foreign data",
+      "card name",
+      "translation",
+      "language",
+      "japanese",
+      "uuid"
+    ],
+    "note_id": "n_0d45e42804b448922dd0d7ca",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "3f0bf129ac8bf801a724d629922af590e21e77d98893900411058fcb51bd9cbd",
+    "source_refs": [
+      "schema:foreign_data.name TEXT",
+      "schema:foreign_data.uuid references cards.uuid",
+      "description:foreign_data.csv:6",
+      "values:foreign_data Japanese-language records include localized names"
+    ],
+    "status": "provisional",
+    "summary": "Localized card name stored on a foreign_data row linked to cards.uuid; observed Japanese names, language coverage per printing unverified.",
+    "table_name": "foreign_data",
+    "title": "Foreign-language card name"
+  },
+  "n_0d532120c2c378644a580b12": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "cards",
+      "record",
+      "uuid",
+      "setcode",
+      "artist",
+      "rarity",
+      "availability",
+      "printing"
+    ],
+    "note_id": "n_0d532120c2c378644a580b12",
+    "note_type": "table",
+    "revision": 13,
+    "sha256": "ef57ee056bac5327158d0444433ffd038647287db0f2bbb176b526fe6794d5a7",
+    "source_refs": [
+      "schema:cards DDL id primary key, uuid unique not null, artist, rarity, availability, setCode",
+      "values:cards total count 56822, 536 distinct setCode and uuid",
+      "values:cards repeated names across different set codes with distinct UUIDs"
+    ],
+    "status": "provisional",
+    "summary": "Card rows have unique UUIDs and set/printing attributes; sampled evidence confirms distinct set records, but dataset completeness remains unverified.",
+    "table_name": "cards",
+    "title": "Card records"
+  },
+  "n_0e85852b8712a658216bc2ec": {
+    "concept_id": "isPromo",
+    "keywords": [
+      "ispromo",
+      "promo",
+      "promotional",
+      "printing",
+      "flag"
+    ],
+    "note_id": "n_0e85852b8712a658216bc2ec",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "ddfda19eb69c9e36e28530c2e33080db06e9a490a7cd8d6a0c7cb0914e180b42",
+    "source_refs": [
+      "schema:cards DDL isPromo INTEGER default 0 not null",
+      "description:cards.csv:29"
+    ],
+    "status": "provisional",
+    "summary": "Integer flag identifies promotional card records (0=no, 1=yes); does not classify official language-release status.",
+    "table_name": "cards",
+    "title": "Promotional printing flag"
+  },
+  "n_1059ec432934d7bb9b539371": {
+    "concept_id": "isReprint",
+    "keywords": [
+      "reprint",
+      "card",
+      "flag",
+      "printing"
+    ],
+    "note_id": "n_1059ec432934d7bb9b539371",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "eaf64d493f63915e8cac9a82c56e33710f6e1e48b4bec186639562691aed1a0e",
+    "source_refs": [
+      "schema:cards DDL isReprint INTEGER default 0 not null",
+      "description:cards.csv:33",
+      "values:cards WHERE name='Tarmogoyf' observed six records across six sets with isReprint values 0 and 1"
+    ],
+    "status": "provisional",
+    "summary": "INTEGER flag marks a card record's reprint status in the data; observed Tarmogoyf has one 0 record and five 1 records across six sets.",
+    "table_name": "cards",
+    "title": "Card reprint flag"
+  },
+  "n_162d327c62cd415f47a76e5c": {
+    "concept_id": "faceName",
+    "keywords": [
+      "facename",
+      "card face",
+      "face name",
+      "layout"
+    ],
+    "note_id": "n_162d327c62cd415f47a76e5c",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "f91cd33240db80939898c25b0dc989d0d8261905998af29e95223da8ce843a0a",
+    "source_refs": [
+      "schema:cards.faceName TEXT",
+      "description:cards.csv faceName definition",
+      "values:cards GROUP BY layout counting nonempty faceName"
+    ],
+    "status": "provisional",
+    "summary": "TEXT field for face name; in observed rows it is populated across seven layouts associated with face details.",
+    "table_name": "cards",
+    "title": "Card face name"
+  },
+  "n_197ae9e7ee5257b8e9672fa8": {
+    "concept_id": "watermark",
+    "keywords": [
+      "watermark",
+      "card",
+      "guild",
+      "label",
+      "boros"
+    ],
+    "note_id": "n_197ae9e7ee5257b8e9672fa8",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "233fe29dc9cfc6a00a3f9200f84e737de58a96133ad62f383eadb579573315d2",
+    "source_refs": [
+      "schema:cards DDL watermark TEXT",
+      "values:cards GROUP BY watermark observed abzan and boros labels"
+    ],
+    "status": "provisional",
+    "summary": "TEXT label associated with a card watermark; observed labels include abzan and boros.",
+    "table_name": "cards",
+    "title": "Card watermark"
+  },
+  "n_1ce28a4678d3664a855a6019": {
+    "concept_id": "keywords",
+    "keywords": [
+      "keywords",
+      "abilities",
+      "flying",
+      "cycling",
+      "card"
+    ],
+    "note_id": "n_1ce28a4678d3664a855a6019",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "b07652759fcc03987d2c8d215148611397e0387ebdf6c1334b821d6d03f89d6a",
+    "source_refs": [
+      "schema:cards DDL keywords TEXT",
+      "description:cards.csv:36",
+      "values:cards grouped keywords values include Flying and Cycling"
+    ],
+    "status": "provisional",
+    "summary": "TEXT field described as a list of keywords found on a card record; observed values include individual ability names.",
+    "table_name": "cards",
+    "title": "Card keyword abilities"
+  },
+  "n_21dc2abe3a2f0b66a3472830": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "foreign data",
+      "card",
+      "translation",
+      "language",
+      "uuid"
+    ],
+    "note_id": "n_21dc2abe3a2f0b66a3472830",
+    "note_type": "table",
+    "revision": 2,
+    "sha256": "f99de07e9162370fd4a12334d8ec282089746a3c70142e203b662aff037d2565",
+    "source_refs": [
+      "schema:foreign_data DDL columns and uuid foreign key to cards.uuid",
+      "description:foreign_data.csv:2-8 field descriptions"
+    ],
+    "status": "provisional",
+    "summary": "Stores language-specific card fields linked to cards by UUID; its schema alone does not verify release-language coverage for each printing.",
+    "table_name": "foreign_data",
+    "title": "Foreign-language card data"
+  },
+  "n_23b308973b82456044bf9628": {
+    "concept_id": "layout",
+    "keywords": [
+      "layout",
+      "card face",
+      "split",
+      "transform",
+      "adventure",
+      "modal_dfc"
+    ],
+    "note_id": "n_23b308973b82456044bf9628",
+    "note_type": "column",
+    "revision": 6,
+    "sha256": "3754abfca556aae204ee9bba2c4169245aa21a9e114ed8e6fcc5f7a8def0a197",
+    "source_refs": [
+      "schema:cards.layout TEXT",
+      "schema:cards.faceName TEXT and otherFaceIds TEXT",
+      "values:cards GROUP BY layout with counts of nonempty faceName and otherFaceIds"
+    ],
+    "status": "provisional",
+    "summary": "TEXT layout category; all observed adventure, aftermath, flip, meld, modal_dfc, split, and transform records have both faceName and otherFaceIds populated.",
+    "table_name": "cards",
+    "title": "Card layout"
+  },
+  "n_286157aee9c03de2f67a1542": {
+    "concept_id": "translation",
+    "keywords": [
+      "localized set name",
+      "translation",
+      "set",
+      "official status"
+    ],
+    "note_id": "n_286157aee9c03de2f67a1542",
+    "note_type": "column",
+    "revision": 11,
+    "sha256": "f4242c62442901fbffc750dae28c9e75828840892a459b4870634b4849b2066d",
+    "source_refs": [
+      "schema:set_translations DDL translation TEXT",
+      "values:set_translations observed NULL/blank translations",
+      "values:set_translations queried block records include nonblank values without official-status evidence"
+    ],
+    "status": "provisional",
+    "summary": "Localized set-name string linked to a set code and language; may be blank or NULL; dataset does not establish official status.",
+    "table_name": "set_translations",
+    "title": "Set name translation string"
+  },
+  "n_28b5e9b312c13123d09da181": {
+    "concept_id": "mtgoCode",
+    "keywords": [
+      "mtgo code",
+      "sets",
+      "online",
+      "identifier"
+    ],
+    "note_id": "n_28b5e9b312c13123d09da181",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "99e4e7250a0c0e90ced0fb252fda628ef675abe45769c3a3dcc4510e4a8208db",
+    "source_refs": [
+      "schema:sets DDL mtgoCode TEXT",
+      "values:sets 2014 releaseDate sample shows non-NULL BNG, DDM and NULL"
+    ],
+    "status": "provisional",
+    "summary": "Text field on a set catalog record for its MTGO code; presence is evidence the catalog carries a code, with exact semantics beyond this not verified.",
+    "table_name": "sets",
+    "title": "Set MTGO code"
+  },
+  "n_2aac62b3121f6679013d8b21": {
+    "concept_id": "colors",
+    "keywords": [
+      "colors",
+      "card",
+      "color codes",
+      "black",
+      "white"
+    ],
+    "note_id": "n_2aac62b3121f6679013d8b21",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "79b9451cd1266ab442d966b84c817bbee08f8e8f794bef7e83d096bfda2e4531",
+    "source_refs": [
+      "schema:cards DDL colors TEXT",
+      "values:cards.colors observed B and W"
+    ],
+    "status": "provisional",
+    "summary": "TEXT field recording color(s) of a card record; observed codes include B and W, and B is black per supplied Magic color notation.",
+    "table_name": "cards",
+    "title": "Card colors"
+  },
+  "n_2cece9be8365d26c910913d6": {
+    "concept_id": "duelDeck",
+    "keywords": [
+      "dueldeck",
+      "duel deck",
+      "membership",
+      "card"
+    ],
+    "note_id": "n_2cece9be8365d26c910913d6",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "593d183d24e77f9f585ae91146c1cfe33b8b35cbb38087ab464b52dd50ebca50",
+    "source_refs": [
+      "schema:cards.duelDeck TEXT",
+      "description:cards.csv:12",
+      "values:cards.duelDeck distinct values and counts observed a=804, b=790"
+    ],
+    "status": "provisional",
+    "summary": "Text field identifying which duel deck the card is in; observed values include a and b.",
+    "table_name": "cards",
+    "title": "Duel deck membership indicator"
+  },
+  "n_2ed55beefa10d1bc642ef1e4": {
+    "concept_id": "multiverseid",
+    "keywords": [
+      "foreign data",
+      "multiverseid",
+      "printing",
+      "language",
+      "identifier"
+    ],
+    "note_id": "n_2ed55beefa10d1bc642ef1e4",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "9c8b3fb4a943070b5386432d6dbfb516c2adb16006669f74e64fd2c779236059",
+    "source_refs": [
+      "schema:foreign_data.multiverseid INTEGER"
+    ],
+    "status": "provisional",
+    "summary": "INTEGER identifier on foreign_data rows; whether it denotes a specific printing in this dataset is unverified.",
+    "table_name": "foreign_data",
+    "title": "Foreign-data printing identifier"
+  },
+  "n_2fcba42c8430ed3a87eda4d2": {
+    "concept_id": "convertedManaCost",
+    "keywords": [
+      "converted mana cost",
+      "mana value",
+      "cost"
+    ],
+    "note_id": "n_2fcba42c8430ed3a87eda4d2",
+    "note_type": "column",
+    "revision": 6,
+    "sha256": "d8166c03b0ed52e375a6d9ec7746bfd6beff7776f78306abe9c3d4227828478d",
+    "source_refs": [
+      "schema:cards.convertedManaCost REAL",
+      "description:cards.csv:11 describes converted mana cost and states Use the manaValue property"
+    ],
+    "status": "provisional",
+    "summary": "REAL field described as converted mana cost; documentation directs to manaValue, but equivalence and edge-case handling remain unverified.",
+    "table_name": "cards",
+    "title": "Converted mana cost"
+  },
+  "n_30f829bf905bc716bd9e40aa": {
+    "concept_id": "parentCode",
+    "keywords": [
+      "parent code",
+      "set",
+      "promo",
+      "supplemental"
+    ],
+    "note_id": "n_30f829bf905bc716bd9e40aa",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "ef5fde99f5404ae9a8276fbc486d1a0e206d307f2c1ed9cc8b989899eb9ca387",
+    "source_refs": [
+      "schema:sets DDL parentCode TEXT",
+      "values:sets observed parentCode on promo records and corresponding codes"
+    ],
+    "status": "provisional",
+    "summary": "Optional parent-set code; promo records observed linking to related expansion records.",
+    "table_name": "sets",
+    "title": "Parent set code"
+  },
+  "n_325c02432634936a66502c80": {
+    "concept_id": "uuid",
+    "keywords": [
+      "uuid card identifier rulings printing"
+    ],
+    "note_id": "n_325c02432634936a66502c80",
+    "note_type": "column",
+    "revision": 4,
+    "sha256": "11a760b1f6b039e7c637e64869dcb7d305de9f6439cde7aa1bd8b3ddd5d61b7d",
+    "source_refs": [
+      "schema:cards DDL uuid TEXT NOT NULL UNIQUE",
+      "schema:legalities DDL uuid references cards(uuid)",
+      "schema:foreign_data DDL uuid references cards.uuid",
+      "schema:rulings DDL uuid references cards(uuid)"
+    ],
+    "status": "provisional",
+    "summary": "Unique, non-NULL text UUID identifies a stored card row and is referenced by ruling rows; identity across printings is not established.",
+    "table_name": "cards",
+    "title": "Card record UUID"
+  },
+  "n_3ab70ffb0bcef1b4af9bb1d8": {
+    "concept_id": "date",
+    "keywords": [
+      "ruling",
+      "date",
+      "calendar"
+    ],
+    "note_id": "n_3ab70ffb0bcef1b4af9bb1d8",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "eb38c90d7109dc87e890a01a0f9d8800c6dee4b4c9ae79a53e8821b28faa91e7",
+    "source_refs": [
+      "schema:rulings DDL date DATE"
+    ],
+    "status": "provisional",
+    "summary": "Calendar date stored for a ruling record; the column is declared DATE, but nullability and source coverage are not documented.",
+    "table_name": "rulings",
+    "title": "Ruling issue date"
+  },
+  "n_3b18c5d004c8ceda364b9c6e": {
+    "concept_id": "artist",
+    "keywords": [
+      "artist",
+      "illustrator",
+      "card art",
+      "record"
+    ],
+    "note_id": "n_3b18c5d004c8ceda364b9c6e",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "90559789d344e23573841efe4de0407ee9bb84c0f97923c4f909acf8456462c0",
+    "source_refs": [
+      "schema:cards.artist TEXT",
+      "description:cards.csv:2 artist description",
+      "values:cards observed artist populated on card records"
+    ],
+    "status": "provisional",
+    "summary": "Text credited artist for card art, per source description; field is per stored card record.",
+    "table_name": "cards",
+    "title": "Card artist"
+  },
+  "n_3fc7c3493cac6c646efa708a": {
+    "concept_id": "totalSetSize",
+    "keywords": [
+      "total set size",
+      "card count",
+      "promo",
+      "supplemental",
+      "alchemy"
+    ],
+    "note_id": "n_3fc7c3493cac6c646efa708a",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "584c31e151fc134b650f024c6b9cb15f462123b2d6d052eb7ada428cc0820bfd",
+    "source_refs": [
+      "schema:sets DDL totalSetSize INTEGER",
+      "description:sets.csv:20 totalSetSize definition",
+      "values:sets totalSetSize populated for 551 records"
+    ],
+    "status": "provisional",
+    "summary": "Source-documented full set card count, including promotional and related supplemental products but excluding Alchemy modifications.",
+    "table_name": "sets",
+    "title": "Total set size"
+  },
+  "n_4a562e26e97fe52dfc5c30aa": {
+    "concept_id": "cardKingdomId",
+    "keywords": [
+      "card kingdom",
+      "catalog",
+      "regular identifier",
+      "printing"
+    ],
+    "note_id": "n_4a562e26e97fe52dfc5c30aa",
+    "note_type": "column",
+    "revision": 7,
+    "sha256": "8af9f426a4dfab52b965b837f4fff73b5c44f7daafe95a3e83fe5e88c2a7330b",
+    "source_refs": [
+      "schema:cards DDL cardKingdomId TEXT",
+      "values:cards whole-table aggregate null/empty count",
+      "description:cards.csv:6"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT field holding a Card Kingdom regular-product identifier when supplied; NULL means no identifier is recorded, not necessarily no listing.",
+    "table_name": "cards",
+    "title": "Card Kingdom regular catalog identifier"
+  },
+  "n_4a7d74b7c9980225c5d24d86": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "sets",
+      "set catalog",
+      "release date",
+      "type",
+      "size"
+    ],
+    "note_id": "n_4a7d74b7c9980225c5d24d86",
+    "note_type": "table",
+    "revision": 7,
+    "sha256": "8feee512acf2ba54d376e42dd74e202ce96418e530cc669a2f16f4b68afdcc0d",
+    "source_refs": [
+      "schema:sets DDL",
+      "values:sets releaseDate ordering and observed set types",
+      "schema:cards DDL setCode"
+    ],
+    "status": "provisional",
+    "summary": "Catalog records identify coded sets and carry names, release dates, type labels and size attributes.",
+    "table_name": "sets",
+    "title": "Set catalog"
+  },
+  "n_4d3bb381673415c5d9196255": {
+    "concept_id": "otherFaceIds",
+    "keywords": [
+      "otherfaceids",
+      "card faces",
+      "counterpart",
+      "uuid"
+    ],
+    "note_id": "n_4d3bb381673415c5d9196255",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "2210996380917107614e78baad22d6d482a9ff332a7ae3c890bda0e6b10c4504",
+    "source_refs": [
+      "schema:cards.otherFaceIds TEXT",
+      "description:cards.csv:54 defines a list of card UUIDs to counterparts, such as transformed or melded faces",
+      "values:cards GROUP BY layout counting nonempty otherFaceIds"
+    ],
+    "status": "provisional",
+    "summary": "Text field containing counterpart-face UUIDs; populated in observed adventure, aftermath, flip, meld, modal_dfc, split, and transform layouts.",
+    "table_name": "cards",
+    "title": "Other face identifiers"
+  },
+  "n_504c852df031126f26145f61": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "rulings",
+      "date",
+      "text",
+      "card",
+      "uuid"
+    ],
+    "note_id": "n_504c852df031126f26145f61",
+    "note_type": "table",
+    "revision": 4,
+    "sha256": "d0799ed20692879b2ffc82dc205f038dd9f3dc3de58dedd197f2c996f9f2f12f",
+    "source_refs": [
+      "schema:rulings DDL id primary key and uuid foreign key to cards.uuid",
+      "values:rulings count 87769 and distinct id count 87769",
+      "values:rulings zero repeated uuid/date/text groups"
+    ],
+    "status": "provisional",
+    "summary": "Stores ruling rows keyed by integer ID and linked to card UUIDs; dataset completeness and source coverage are not verified.",
+    "table_name": "rulings",
+    "title": "Card rulings"
+  },
+  "n_55fb5c677abfdaea43da5cc4": {
+    "concept_id": "id",
+    "keywords": [
+      "id",
+      "card",
+      "primary key",
+      "identifier",
+      "autoincrement"
+    ],
+    "note_id": "n_55fb5c677abfdaea43da5cc4",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "16f6eef68445b195cf1788862a43b11d52b346e4cbd66ea3ccf332b81cc1d46d",
+    "source_refs": [
+      "schema:cards DDL id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT",
+      "description:cards.csv:1"
+    ],
+    "status": "provisional",
+    "summary": "Integer primary-key identifier for a stored card row; schema declares autoincrement and separates it from the UUID.",
+    "table_name": "cards",
+    "title": "Card row ID"
+  },
+  "n_586086307de04a526a6c816e": {
+    "concept_id": "name",
+    "keywords": [
+      "card",
+      "name",
+      "identity",
+      "printing",
+      "set"
+    ],
+    "note_id": "n_586086307de04a526a6c816e",
+    "note_type": "column",
+    "revision": 9,
+    "sha256": "d19a9eabfb268ab57f47c175dad436a7094d74b53ede0eb8d58524e92fb21e50",
+    "source_refs": [
+      "schema:cards.name TEXT",
+      "description:cards.csv:41 name, The name of the card",
+      "values:cards WHERE name='Swamp' COUNT(*)=659, COUNT(DISTINCT uuid)=659 and COUNT(DISTINCT setCode)=174"
+    ],
+    "status": "provisional",
+    "summary": "Text field represents the name associated with a card record; Swamp matches span 659 UUIDs across 174 set codes in this dataset.",
+    "table_name": "cards",
+    "title": "Card name"
+  },
+  "n_63a895c28d32b8d145c7220d": {
+    "concept_id": "id",
+    "keywords": [
+      "sets",
+      "row id",
+      "primary key",
+      "identifier"
+    ],
+    "note_id": "n_63a895c28d32b8d145c7220d",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "4aa829bcb266ac2d019755968c4de399ac062b7a81decc0439a8cd0b08e7045d",
+    "source_refs": [
+      "schema:sets DDL id INTEGER primary key autoincrement"
+    ],
+    "status": "provisional",
+    "summary": "Integer primary key identifying a set catalog row; not interchangeable with its unique set code.",
+    "table_name": "sets",
+    "title": "Set catalog row ID"
+  },
+  "n_65e60523c057ec29966f2c5c": {
+    "concept_id": "frameVersion",
+    "keywords": [
+      "frame version",
+      "frame style",
+      "printing",
+      "future",
+      "timeshifted"
+    ],
+    "note_id": "n_65e60523c057ec29966f2c5c",
+    "note_type": "column",
+    "revision": 19,
+    "sha256": "6710fa853f062c46d28717c28ff0afe5d703e57e77db64eab6f90f8dd8a00b30",
+    "source_refs": [
+      "schema:cards.frameVersion TEXT",
+      "description:cards.csv:19",
+      "description:cards.csv:35",
+      "values:cards GROUP BY frameVersion",
+      "values:cards SELECT DISTINCT frameVersion numeric-like ordered numerically"
+    ],
+    "status": "provisional",
+    "summary": "TEXT frame-style label; numeric year-like labels observed are 1993, 1997, 2003, and 2015; special 'future' is not a verified year.",
+    "table_name": "cards",
+    "title": "Card frame version"
+  },
+  "n_69ca72a81f7eae1050afd461": {
+    "concept_id": "number",
+    "keywords": [
+      "number",
+      "card",
+      "set",
+      "printing",
+      "card number"
+    ],
+    "note_id": "n_69ca72a81f7eae1050afd461",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "fe9b7cf1ae0ca7ff19ab256833e2c08d8f30283d9ab0c442a69a546992c34436",
+    "source_refs": [
+      "schema:cards DDL number TEXT",
+      "description:cards.csv:50 The number of the card",
+      "values:cards WHERE setCode='CSP' has 155 rows and 155 distinct number values and UUIDs"
+    ],
+    "status": "provisional",
+    "summary": "Text-valued card number on a card record; Coldsnap has 155 rows with 155 distinct numbers and UUIDs, but printing identity remains unverified.",
+    "table_name": "cards",
+    "title": "Card number within set"
+  },
+  "n_6a4f30d9357c042a7f847a7b": {
+    "concept_id": "releaseDate",
+    "keywords": [
+      "sets",
+      "release date",
+      "date",
+      "iso 8601"
+    ],
+    "note_id": "n_6a4f30d9357c042a7f847a7b",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "df627425ea2b1c8fcc6952fbea599f9421ee4a3bdfc8fc18885797b3a777b242",
+    "source_refs": [
+      "schema:sets DDL releaseDate DATE",
+      "description:sets.csv:18 releaseDate is release date in ISO 8601 format",
+      "values:sets releaseDate observed YYYY-MM-DD"
+    ],
+    "status": "provisional",
+    "summary": "DATE field documented as the set's ISO 8601 release date; observed values support calendar-year filtering.",
+    "table_name": "sets",
+    "title": "Set release date"
+  },
+  "n_6a9081bcd57dbeb892f2bd6f": {
+    "concept_id": "type",
+    "keywords": [
+      "foreign data",
+      "localized type",
+      "card type",
+      "language",
+      "uuid"
+    ],
+    "note_id": "n_6a9081bcd57dbeb892f2bd6f",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "ccc8795ba9b4ae2f6dd1ae009a988b3195b4ccea287e6aa5325f22ab70da65de",
+    "source_refs": [
+      "schema:foreign_data.type TEXT",
+      "schema:foreign_data.uuid references cards.uuid",
+      "description:foreign_data.csv:7"
+    ],
+    "status": "provisional",
+    "summary": "Localized card type line stored on foreign_data rows linked to cards by UUID; dataset meaning beyond the field label is unverified.",
+    "table_name": "foreign_data",
+    "title": "Foreign-language type line"
+  },
+  "n_6d21edfe691e08af0a966081": {
+    "concept_id": "toughness",
+    "keywords": [
+      "toughness",
+      "card",
+      "numeric",
+      "variable",
+      "value"
+    ],
+    "note_id": "n_6d21edfe691e08af0a966081",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "93382fbe7b7ce857620cc780824774e6589909d8402a9f9a18ad2cbab9983bba",
+    "source_refs": [
+      "schema:cards DDL toughness TEXT",
+      "description:cards.csv:69",
+      "values:cards UMA creature power/toughness forms include numeric strings, `*`, `1+*`"
+    ],
+    "status": "provisional",
+    "summary": "TEXT toughness attribute on card records; numeric strings and variable/symbolic values occur, and parsing scope is unverified.",
+    "table_name": "cards",
+    "title": "Card toughness value"
+  },
+  "n_6dbf0e43823dd2efa2b56c6d": {
+    "concept_id": "text",
+    "keywords": [
+      "text",
+      "rules text",
+      "card text",
+      "card ability",
+      "text box"
+    ],
+    "note_id": "n_6dbf0e43823dd2efa2b56c6d",
+    "note_type": "column",
+    "revision": 4,
+    "sha256": "bbf0167f056f4e99613bc8bae789e8ff7d6b4a212500b3a1c5b9595991128166",
+    "source_refs": [
+      "schema:cards.text TEXT",
+      "values:cards frameVersion 2015 grouped by isTextless and nonblank text: textless=1 had 13 nonblank of 13, textless=0 had 25,205 nonblank of 25,487"
+    ],
+    "status": "provisional",
+    "summary": "TEXT field containing rules text; nonempty text is observable but not verified as an exact indicator of having a text box.",
+    "table_name": "cards",
+    "title": "Card rules text"
+  },
+  "n_6e6909fc6a992d6848254837": {
+    "concept_id": "id",
+    "keywords": [
+      "set translations",
+      "id",
+      "primary key"
+    ],
+    "note_id": "n_6e6909fc6a992d6848254837",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "01265495015acd9a926d0f15ed9c352e63bb195bdf873536ec512673823fbaf6",
+    "source_refs": [
+      "schema:set_translations DDL id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT"
+    ],
+    "status": "provisional",
+    "summary": "Integer primary key identifying a stored set translation record.",
+    "table_name": "set_translations",
+    "title": "Set translation record identifier"
+  },
+  "n_75c3bcbcce2da2577b13ec73": {
+    "concept_id": "uuid",
+    "keywords": [
+      "foreign data",
+      "card uuid",
+      "link",
+      "translation"
+    ],
+    "note_id": "n_75c3bcbcce2da2577b13ec73",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "b0bc59444665d665b1ff2b497f7575ccaf0ff550da911a9680bdfdeb48136596",
+    "source_refs": [
+      "schema:foreign_data.uuid references cards.uuid"
+    ],
+    "status": "provisional",
+    "summary": "UUID linking a language-specific card-data row to the corresponding cards.uuid; foreign key is declared in schema.",
+    "table_name": "foreign_data",
+    "title": "Foreign card-data card UUID"
+  },
+  "n_7c811253d0988c65420a174d": {
+    "concept_id": "cardKingdomFoilId",
+    "keywords": [
+      "card kingdom",
+      "foil catalog",
+      "identifier",
+      "card printing"
+    ],
+    "note_id": "n_7c811253d0988c65420a174d",
+    "note_type": "column",
+    "revision": 7,
+    "sha256": "1f085ae0259eb001472fb6aa12064d2bdf507c296118df9dabfda830c6fe59fe",
+    "source_refs": [
+      "schema:cards DDL cardKingdomFoilId TEXT",
+      "values:cards whole-table aggregate null/empty count"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT field holding a Card Kingdom foil-product identifier when supplied; NULL means no identifier is recorded, not necessarily no listing.",
+    "table_name": "cards",
+    "title": "Card Kingdom foil catalog identifier"
+  },
+  "n_82f8feb20d65c4bead9bb017": {
+    "concept_id": "type",
+    "keywords": [
+      "type",
+      "creature",
+      "type line",
+      "card"
+    ],
+    "note_id": "n_82f8feb20d65c4bead9bb017",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "299b931e080e3cfc7cc37f358e7bef0c404b19162af1bc3fd8a79e274e4bb07d",
+    "source_refs": [
+      "schema:cards DDL type TEXT",
+      "description:cards.csv:70"
+    ],
+    "status": "provisional",
+    "summary": "Text field describing card types as visible, including supertypes and subtypes, per the source description.",
+    "table_name": "cards",
+    "title": "Card type line"
+  },
+  "n_86f865514b2b78345768f1ae": {
+    "concept_id": "faceConvertedManaCost",
+    "keywords": [
+      "face converted mana cost mana value"
+    ],
+    "note_id": "n_86f865514b2b78345768f1ae",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "87cfd994c21ff5f4a94e490986f53d43222390e064f27370f681f7f6f7af1ca9",
+    "source_refs": [
+      "schema:cards DDL faceConvertedManaCost REAL"
+    ],
+    "status": "provisional",
+    "summary": "REAL field attached to a card record's face; calculation and relationship to whole-card mana value are unverified.",
+    "table_name": "cards",
+    "title": "Face converted mana cost"
+  },
+  "n_90c52fd9c0339cf457dd0203": {
+    "concept_id": "hasContentWarning",
+    "keywords": [
+      "hascontentwarning",
+      "content warning",
+      "sensitive content",
+      "flag"
+    ],
+    "note_id": "n_90c52fd9c0339cf457dd0203",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "a159fb8944f139a730218682b0a821b2951338580d0d3701133e8677c3bea307",
+    "source_refs": [
+      "schema:cards DDL hasContentWarning INTEGER NOT NULL DEFAULT 0",
+      "description:cards.csv:22 hasContentWarning definition and 0/1 meanings"
+    ],
+    "status": "provisional",
+    "summary": "Integer flag for whether the card record has a Wizards of the Coast content warning; documented 0 means none and 1 means sensitive content warning.",
+    "table_name": "cards",
+    "title": "Content warning flag"
+  },
+  "n_912cd27a90a6ba253748e70f": {
+    "concept_id": "language",
+    "keywords": [
+      "language",
+      "foreign",
+      "card translation",
+      "uuid",
+      "french",
+      "japanese"
+    ],
+    "note_id": "n_912cd27a90a6ba253748e70f",
+    "note_type": "column",
+    "revision": 11,
+    "sha256": "159fc1ff5ea1508ae10d299cd93784ee79c5d13b827d579a7240f7248cef4325",
+    "source_refs": [
+      "schema:foreign_data.language TEXT",
+      "schema:foreign_data.uuid references cards.uuid",
+      "schema:foreign_data.multiverseid INTEGER",
+      "description:foreign_data.csv:3",
+      "values:foreign_data.language French and Japanese observed"
+    ],
+    "status": "provisional",
+    "summary": "Language label on foreign_data rows linked to cards by UUID; observed labels include French and Japanese, with language coverage per printing unverified.",
+    "table_name": "foreign_data",
+    "title": "Foreign card-data language"
+  },
+  "n_994a0e55981594562d6f950a": {
+    "concept_id": "hasFoil",
+    "keywords": [
+      "hasfoil",
+      "foil",
+      "availability",
+      "printing",
+      "flag"
+    ],
+    "note_id": "n_994a0e55981594562d6f950a",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "d71395366a53694c37fff83639a82f76bae8e844b858015b15d37a4f9936e91f",
+    "source_refs": [
+      "schema:cards.hasFoil INTEGER default 0 not null",
+      "description:cards.csv:23"
+    ],
+    "status": "provisional",
+    "summary": "Integer flag indicates whether a card can be found in foil; source documents 0=no and 1=yes.",
+    "table_name": "cards",
+    "title": "Foil availability flag"
+  },
+  "n_a541e7a7cb3ce5d8fc089ff3": {
+    "concept_id": "flavorText",
+    "keywords": [
+      "foreign data",
+      "flavor text",
+      "language",
+      "translation",
+      "uuid"
+    ],
+    "note_id": "n_a541e7a7cb3ce5d8fc089ff3",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "900894343ff61e632c0ff2ea8a5b5e06fc2f6e663fadb7a6488506119f188f7e",
+    "source_refs": [
+      "schema:foreign_data.flavorText TEXT and uuid references cards.uuid",
+      "description:foreign_data.csv:2 foreign flavor text field"
+    ],
+    "status": "provisional",
+    "summary": "TEXT field on foreign_data for language-specific flavor text; row joins to cards by UUID, not directly to a printing.",
+    "table_name": "foreign_data",
+    "title": "Foreign flavor text"
+  },
+  "n_a556964a94a02fc52aa88fcb": {
+    "concept_id": "originalReleaseDate",
+    "keywords": [
+      "originalreleasedate",
+      "original release",
+      "promotional date"
+    ],
+    "note_id": "n_a556964a94a02fc52aa88fcb",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "644a8d460f18b6a3b745fed3b45de1dd428124b4e05dc38aec5922899853fd98",
+    "source_refs": [
+      "schema:cards DDL originalReleaseDate TEXT",
+      "description:cards.csv:51 originalReleaseDate described as ISO 8601 original release date for promotional card printed outside cycle window"
+    ],
+    "status": "provisional",
+    "summary": "TEXT field documented for original release date of certain promotional cards outside a cycle window; not the same as set releaseDate.",
+    "table_name": "cards",
+    "title": "Original release date"
+  },
+  "n_a5bf15bf88caa0baf3c3cd31": {
+    "concept_id": "isOnlineOnly",
+    "keywords": [
+      "online-only",
+      "isonlineonly",
+      "card",
+      "printing",
+      "flag"
+    ],
+    "note_id": "n_a5bf15bf88caa0baf3c3cd31",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "025a22afa6af672e8d018723e4c7f980dae011c01baea311e6b75f3bf5e72b4e",
+    "source_refs": [
+      "schema:cards DDL isOnlineOnly INTEGER default 0 not null"
+    ],
+    "status": "provisional",
+    "summary": "INTEGER flag indicating whether the card record is associated with an online-only set/printing; detailed values require description verification.",
+    "table_name": "cards",
+    "title": "Online-only card flag"
+  },
+  "n_a825583488fac116fc500d21": {
+    "concept_id": "mtgoId",
+    "keywords": [
+      "mtgoid",
+      "mtgo",
+      "identifier"
+    ],
+    "note_id": "n_a825583488fac116fc500d21",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "a8f0b74f36ad9c8fe2be63322217c8164e2a0f488e611bea75b90db7a87fb787",
+    "source_refs": [
+      "schema:cards DDL mtgoId TEXT",
+      "description:cards.csv:47 labels mtgoId \"NOT USEFUL\""
+    ],
+    "status": "provisional",
+    "summary": "Text field described as not useful; schema presence alone does not establish MTGO availability.",
+    "table_name": "cards",
+    "title": "MTGO card identifier"
+  },
+  "n_a860bdd44156ec2983fbce1c": {
+    "concept_id": "text",
+    "keywords": [
+      "foreign card",
+      "rules text",
+      "text",
+      "language",
+      "translation"
+    ],
+    "note_id": "n_a860bdd44156ec2983fbce1c",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "1fe75d59e27efedeb063fef3003b6c09dec5d8e27edc7e3eee92a310cbf031f2",
+    "source_refs": [
+      "schema:foreign_data DDL text TEXT",
+      "schema:foreign_data uuid references cards.uuid",
+      "description:foreign_data.csv:5 field description"
+    ],
+    "status": "provisional",
+    "summary": "TEXT field in language-specific card data for the foreign card's rules text; row links to cards by UUID.",
+    "table_name": "foreign_data",
+    "title": "Foreign card rules text"
+  },
+  "n_a93b15e5f1ce00a27e000e18": {
+    "concept_id": "scryfallId",
+    "keywords": [
+      "scryfall id",
+      "card identifier",
+      "cards"
+    ],
+    "note_id": "n_a93b15e5f1ce00a27e000e18",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "fdf2ff865022a38607bb4c5f3d7f0bbd0613b71964cec3817808c3691cf8e51c",
+    "source_refs": [
+      "schema:cards DDL scryfallId TEXT",
+      "values:cards 56,822 rows, 56,144 distinct scryfallId values, zero NULL"
+    ],
+    "status": "provisional",
+    "summary": "Text-valued Scryfall identifier field; observed present for all card rows and distinct values are fewer than records.",
+    "table_name": "cards",
+    "title": "Scryfall card identifier"
+  },
+  "n_ac8efea9d4c10e50e14180c6": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "legalities",
+      "format",
+      "status",
+      "card uuid",
+      "banned"
+    ],
+    "note_id": "n_ac8efea9d4c10e50e14180c6",
+    "note_type": "table",
+    "revision": 4,
+    "sha256": "5aba438d06350208204948316a96c12b1a778655c8494f00404c1726fc2c0e18",
+    "source_refs": [
+      "schema:legalities DDL id primary key, format TEXT, status TEXT, uuid references cards.uuid",
+      "description:legalities.csv:2 format of play",
+      "description:legalities.csv:3 statuses",
+      "values:legalities distinct format/status samples include pauper, Legal"
+    ],
+    "status": "provisional",
+    "summary": "Rows associate card UUIDs with play formats and statuses; UUID foreign key links each row to cards.",
+    "table_name": "legalities",
+    "title": "Card format legality records"
+  },
+  "n_b268f17418f7562b623043cb": {
+    "concept_id": "borderColor",
+    "keywords": [
+      "bordercolor",
+      "card border",
+      "white",
+      "borderless"
+    ],
+    "note_id": "n_b268f17418f7562b623043cb",
+    "note_type": "column",
+    "revision": 5,
+    "sha256": "d9e3ea90434753df0fcf9042ce29836344df52a3487f803368f2fee5fe90e5e3",
+    "source_refs": [
+      "schema:cards.borderColor TEXT",
+      "description:cards.csv:5"
+    ],
+    "status": "provisional",
+    "summary": "Text classification of a card record's border; source-listed values include black, borderless, gold, silver and white.",
+    "table_name": "cards",
+    "title": "Card border color"
+  },
+  "n_b3207827d83cb663d88f67cc": {
+    "concept_id": "edhrecRank",
+    "keywords": [
+      "edhrec rank popularity card printing"
+    ],
+    "note_id": "n_b3207827d83cb663d88f67cc",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "d43fb7daf4a983af260a9d78bd3e52529396859c3b12ab49d74ea11fbcca41f0",
+    "source_refs": [
+      "schema:cards DDL edhrecRank INTEGER",
+      "description:cards.csv:13",
+      "values:cards repeated-name records observed with consistent ranks"
+    ],
+    "status": "provisional",
+    "summary": "Integer EDHRec rank on card records; repeated-name rank consistency observed, identity-level deduplication remains unverified.",
+    "table_name": "cards",
+    "title": "EDHRec rank"
+  },
+  "n_b3c3dd528d5e8f89bd3e4378": {
+    "concept_id": "block",
+    "keywords": [
+      "set block",
+      "grouping",
+      "sets"
+    ],
+    "note_id": "n_b3c3dd528d5e8f89bd3e4378",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "95b4865e90c5f372e155c7af66d75863d4aaaff40ec81cbf3c0ca0e790fd86bb",
+    "source_refs": [
+      "schema:sets DDL block TEXT",
+      "values:sets observed Masques and Mirage block labels"
+    ],
+    "status": "provisional",
+    "summary": "Text label grouping sets into a named block; exact grouping rules and completeness are not verified.",
+    "table_name": "sets",
+    "title": "Set block label"
+  },
+  "n_b7f98060ea9fa13abc1f9bb9": {
+    "concept_id": "scryfallOracleId",
+    "keywords": [
+      "scryfalloracleid",
+      "card identity",
+      "oracle",
+      "printing",
+      "identifier"
+    ],
+    "note_id": "n_b7f98060ea9fa13abc1f9bb9",
+    "note_type": "column",
+    "revision": 9,
+    "sha256": "8484c52b8da008626a2e673fab1580b8b5dd5d0cb62a383313c1e8f52c3518eb",
+    "source_refs": [
+      "schema:cards.scryfallOracleId TEXT",
+      "values:cards records grouped by frameVersion 2015/future show differing distinct name, scryfallOracleId, scryfallId, and uuid counts"
+    ],
+    "status": "provisional",
+    "summary": "TEXT identifier shared across card records; observed matching-name reprints share identifiers, but universal distinct-card semantics remain unverified.",
+    "table_name": "cards",
+    "title": "Scryfall Oracle identifier"
+  },
+  "n_bb81065fc31a27d2062fcb09": {
+    "concept_id": "uuid",
+    "keywords": [
+      "ruling",
+      "uuid",
+      "card",
+      "reference"
+    ],
+    "note_id": "n_bb81065fc31a27d2062fcb09",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "4867f50f001a2b830ed4f821698b721a2d09710c55cfcffc18a108a02f296342",
+    "source_refs": [
+      "schema:rulings DDL uuid TEXT references cards.uuid"
+    ],
+    "status": "provisional",
+    "summary": "Card-record UUID on each ruling row; declared as a foreign key to cards.uuid.",
+    "table_name": "rulings",
+    "title": "Ruling card UUID reference"
+  },
+  "n_bdfd73cf3376634529ea2684": {
+    "concept_id": "id",
+    "keywords": [
+      "ruling",
+      "id",
+      "primary key",
+      "record"
+    ],
+    "note_id": "n_bdfd73cf3376634529ea2684",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "07136b08d9c3e89d764b692a93108654d9d0411f7a77256f6e03ced91f10a4e4",
+    "source_refs": [
+      "schema:rulings DDL id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT"
+    ],
+    "status": "provisional",
+    "summary": "Integer primary-key identifier for a stored ruling row.",
+    "table_name": "rulings",
+    "title": "Ruling record identifier"
+  },
+  "n_bf4ea0dd858e22ddca5b5dad": {
+    "concept_id": "availability",
+    "keywords": [
+      "availability",
+      "arena",
+      "mtgo",
+      "paper",
+      "platforms",
+      "card"
+    ],
+    "note_id": "n_bf4ea0dd858e22ddca5b5dad",
+    "note_type": "column",
+    "revision": 5,
+    "sha256": "713464fcdf2ed6273be154af6831d4ac6115c514a90c71c66da8a3dbf11c5c4a",
+    "source_refs": [
+      "schema:cards.availability TEXT",
+      "description:cards.csv:4 availability is a list of available printing types with examples arena, mtgo, paper, dreamcast, shandalar",
+      "values:cards grouped observed combinations and NULL"
+    ],
+    "status": "provisional",
+    "summary": "Comma-separated platform/printing-type values on card records; documentation lists paper and digital platforms, not localized releases.",
+    "table_name": "cards",
+    "title": "Card availability platforms"
+  },
+  "n_c72bf9901f9b784d8baea474": {
+    "concept_id": "setCode",
+    "keywords": [
+      "set code",
+      "card",
+      "set",
+      "printing record",
+      "identifier"
+    ],
+    "note_id": "n_c72bf9901f9b784d8baea474",
+    "note_type": "column",
+    "revision": 6,
+    "sha256": "688434f2dc292198bf0b37d7d9ae42fed0e0d431d1f3bd65b39ec0f3fa9edf33",
+    "source_refs": [
+      "schema:cards.setCode TEXT",
+      "schema:cards.uuid UNIQUE NOT NULL",
+      "schema:sets.code TEXT NOT NULL UNIQUE",
+      "values:cards aggregate found no null or unmatched setCode values"
+    ],
+    "status": "provisional",
+    "summary": "Text set identifier on a cards row; unique UUID supports record counts, but official language-specific printing coverage is not represented here.",
+    "table_name": "cards",
+    "title": "Card set code"
+  },
+  "n_c7aa4b275c74897f612c13b0": {
+    "concept_id": "setCode",
+    "keywords": [
+      "set translation",
+      "set code",
+      "foreign key"
+    ],
+    "note_id": "n_c7aa4b275c74897f612c13b0",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "37d120985af7e584dfea940c9060aadf53107f8e0f1a51a0140a6130ab773033",
+    "source_refs": [
+      "schema:set_translations DDL setCode TEXT references sets(code)",
+      "schema:sets DDL code TEXT UNIQUE NOT NULL"
+    ],
+    "status": "provisional",
+    "summary": "Set-code text identifying which set a localized set-name translation belongs to; references sets.code.",
+    "table_name": "set_translations",
+    "title": "Translation set reference"
+  },
+  "n_c9386630e916bcaec53e4235": {
+    "concept_id": "leadershipSkills",
+    "keywords": [
+      "leadershipskills",
+      "commander",
+      "brawl",
+      "legality",
+      "format"
+    ],
+    "note_id": "n_c9386630e916bcaec53e4235",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "34a2a7456a2a17d6dccdf5964c1de400f7c7cfc622a5da69dae4cd11773b952a",
+    "source_refs": [
+      "schema:cards DDL leadershipSkills TEXT",
+      "description:cards.csv:38"
+    ],
+    "status": "provisional",
+    "summary": "Text field listing format-specific commander legality; source description defines it as formats a card is legal to be a commander in.",
+    "table_name": "cards",
+    "title": "Commander format eligibility"
+  },
+  "n_cbb2b94aa37376cd180dc220": {
+    "concept_id": "frameEffects",
+    "keywords": [
+      "frame effects",
+      "card frame",
+      "treatment",
+      "extended art"
+    ],
+    "note_id": "n_cbb2b94aa37376cd180dc220",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "af4f6ab6fd55cee76c14bd931df9162f527d3425481c00b7a1debd2034905f49",
+    "source_refs": [
+      "schema:cards DDL frameEffects TEXT",
+      "values:cards.frameEffects observed NULL and extendedart for Tarmogoyf rows"
+    ],
+    "status": "provisional",
+    "summary": "TEXT field for frame-effect labels distinct from frameVersion; it may capture treatments such as extended art rather than the frame-style year.",
+    "table_name": "cards",
+    "title": "Card frame effects"
+  },
+  "n_cc99ad19c195dcadbe6e25f6": {
+    "concept_id": "promoTypes",
+    "keywords": [
+      "promotypes",
+      "promotion",
+      "release",
+      "prerelease",
+      "cards"
+    ],
+    "note_id": "n_cc99ad19c195dcadbe6e25f6",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "16b7dc2814ec3c4e5bbc312a397f0f3a8bbe08b6b323395ea346fb51a4eee003",
+    "source_refs": [
+      "schema:cards DDL promoTypes TEXT",
+      "description:cards.csv:57",
+      "values:cards promoTypes grouped values include release and prerelease"
+    ],
+    "status": "provisional",
+    "summary": "Text field stores one or more comma-separated promotional type labels associated with a card record; examples include prerelease and release.",
+    "table_name": "cards",
+    "title": "Promotional type labels"
+  },
+  "n_cfdcf2fe082c3c8cfda389b5": {
+    "concept_id": "uuid",
+    "keywords": [
+      "uuid",
+      "legalities",
+      "card",
+      "foreign key",
+      "join"
+    ],
+    "note_id": "n_cfdcf2fe082c3c8cfda389b5",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "ecd979f5d0d54888d616c8665baf03be1fee7204c8e68d5d818c301334a1c418",
+    "source_refs": [
+      "schema:legalities DDL uuid references cards.uuid",
+      "schema:cards DDL uuid TEXT NOT NULL UNIQUE"
+    ],
+    "status": "provisional",
+    "summary": "Text UUID linking a legality row to the corresponding card record via cards.uuid foreign key.",
+    "table_name": "legalities",
+    "title": "Legality card UUID"
+  },
+  "n_d0b05abac28d6f0252a5c3ef": {
+    "concept_id": "baseSetSize",
+    "keywords": [
+      "base set size",
+      "card count",
+      "sets"
+    ],
+    "note_id": "n_d0b05abac28d6f0252a5c3ef",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "c3fefb8d6a9b2cb9fe3204e46ccfe6d6a40d024d155b938d412ff34fc8488adf",
+    "source_refs": [
+      "schema:sets DDL baseSetSize INTEGER",
+      "description:sets.csv:2 baseSetSize is number of cards in the set",
+      "values:sets sampled promo records have type promo and baseSetSize 1"
+    ],
+    "status": "provisional",
+    "summary": "Source-documented number of cards in a set; size relates to base-set counts, while set-type exclusion rules require care.",
+    "table_name": "sets",
+    "title": "Base set size"
+  },
+  "n_d0d005913afd9cf96dafb12c": {
+    "concept_id": "power",
+    "keywords": [
+      "power",
+      "numeric",
+      "symbolic",
+      "card"
+    ],
+    "note_id": "n_d0d005913afd9cf96dafb12c",
+    "note_type": "column",
+    "revision": 15,
+    "sha256": "d7c8db76caa8abeed31e54a21f3069c04cee3677db21c8727e11a8e3150cf065",
+    "source_refs": [
+      "schema:cards.power TEXT",
+      "description:cards.csv:55 identifies power and documents null/* as unknown and ∞ as infinite",
+      "values:cards power values include 2+*, *², ?, and ∞"
+    ],
+    "status": "provisional",
+    "summary": "TEXT card-power attribute; numeric values and symbolic expressions occur. Null/* are unknown and ∞ infinite; expression range treatment is unverified.",
+    "table_name": "cards",
+    "title": "Card power value"
+  },
+  "n_d311a7ff77b1ca05f41da5cf": {
+    "concept_id": "language",
+    "keywords": [
+      "translation",
+      "language",
+      "set localized name",
+      "set"
+    ],
+    "note_id": "n_d311a7ff77b1ca05f41da5cf",
+    "note_type": "column",
+    "revision": 9,
+    "sha256": "61e3879b38290db1049bf64f0c9f64ccd2b0895a891765495f213c59c8251f5c",
+    "source_refs": [
+      "schema:set_translations.language TEXT",
+      "schema:set_translations.setCode references sets.code",
+      "values:set_translations.language ten observed labels"
+    ],
+    "status": "provisional",
+    "summary": "Language label attached to stored set-name translation records; dataset does not establish official card-printing status.",
+    "table_name": "set_translations",
+    "title": "Translation language"
+  },
+  "n_d4c53c8c8fe7919ea77c5a49": {
+    "concept_id": "scryfallIllustrationId",
+    "keywords": [
+      "scryfall illustration",
+      "identifier",
+      "cards"
+    ],
+    "note_id": "n_d4c53c8c8fe7919ea77c5a49",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "0b5ea1117945b4a129d261f9e34ad1ef0b2db27015ef68363237d23f5c6717d4",
+    "source_refs": [
+      "schema:cards DDL scryfallIllustrationId TEXT"
+    ],
+    "status": "provisional",
+    "summary": "TEXT identifier associated with illustration-level data on a card record; exact grouping semantics unverified.",
+    "table_name": "cards",
+    "title": "Scryfall illustration identifier"
+  },
+  "n_d583b5627931cb96b4fa2438": {
+    "concept_id": "status",
+    "keywords": [
+      "status legality banned legal restricted"
+    ],
+    "note_id": "n_d583b5627931cb96b4fa2438",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "7d47230532efed7d4d23f26ba0558b8b9592e7a70df52a43dfcb74fe4ea57f9f",
+    "source_refs": [
+      "schema:legalities DDL status TEXT",
+      "description:legalities.csv:3 lists legal, banned, restricted",
+      "values:legalities GROUP BY status observed Banned, Legal, Restricted"
+    ],
+    "status": "provisional",
+    "summary": "Text status for a card's play-format legality; documented and observed values include legal, banned, and restricted.",
+    "table_name": "legalities",
+    "title": "Format legality status"
+  },
+  "n_de0c711ac18afe3b7f0e2e61": {
+    "concept_id": "manaCost",
+    "keywords": [
+      "manacost",
+      "mana cost",
+      "printed cost",
+      "bracketed symbols"
+    ],
+    "note_id": "n_de0c711ac18afe3b7f0e2e61",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "636e47bd109503c1d9ab465eb3cbc18fe9438631fca9fe9f199f6c129d9ee98d",
+    "source_refs": [
+      "schema:cards DDL manaCost TEXT",
+      "description:cards.csv:41 manaCost described as the card's mana cost wrapped in brackets for each value",
+      "values:cards grouped manaCost shows NULL and bracketed cost strings"
+    ],
+    "status": "provisional",
+    "summary": "TEXT field described as the card's mana cost; observed bracketed mana-symbol strings and NULL, with {0} representing a zero cost.",
+    "table_name": "cards",
+    "title": "Printed mana cost"
+  },
+  "n_e04d9800e37d8461860ab40c": {
+    "concept_id": "isStorySpotlight",
+    "keywords": [
+      "story spotlight",
+      "card",
+      "flag",
+      "indicator"
+    ],
+    "note_id": "n_e04d9800e37d8461860ab40c",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "007df035445d8ca6d0f169163d6e35a8adbfa0cd02248487f3e0364b45b4d5c6",
+    "source_refs": [
+      "schema:cards.isStorySpotlight INTEGER NOT NULL DEFAULT 0",
+      "description:cards.csv:33"
+    ],
+    "status": "provisional",
+    "summary": "Integer flag indicating whether a card is a Story Spotlight card; documented domain is 0 (no) and 1 (yes).",
+    "table_name": "cards",
+    "title": "Story Spotlight indicator"
+  },
+  "n_e5ad094d7a28ea45834ecd0d": {
+    "concept_id": "hasNonFoil",
+    "keywords": [
+      "hasnonfoil",
+      "nonfoil",
+      "availability",
+      "printing",
+      "flag"
+    ],
+    "note_id": "n_e5ad094d7a28ea45834ecd0d",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "bcffaeff3511379e9ee0fba7b75ac6749d1ba5822dc00034018c9b87a256c853",
+    "source_refs": [
+      "schema:cards.hasNonFoil INTEGER",
+      "description:cards.csv:24"
+    ],
+    "status": "provisional",
+    "summary": "Integer flag indicating whether a card can be found in non-foil; documented values 0=no and 1=yes.",
+    "table_name": "cards",
+    "title": "Non-foil availability flag"
+  },
+  "n_e6b633d1806250a4a748a5bc": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "set translations",
+      "localized set names",
+      "language",
+      "setcode"
+    ],
+    "note_id": "n_e6b633d1806250a4a748a5bc",
+    "note_type": "table",
+    "revision": 8,
+    "sha256": "16371b3d88349368318d095eb3f69c964c6a0bd48b46f132e38d0e6588e3ee22",
+    "source_refs": [
+      "schema:set_translations DDL id primary key, language TEXT, setCode references sets.code, translation TEXT",
+      "values:set_translations queried block records include NULL/blank and nonblank values without official-status evidence"
+    ],
+    "status": "provisional",
+    "summary": "Stores set-name strings linked to a set code and language; populated values evidence stored localization, not official status.",
+    "table_name": "set_translations",
+    "title": "Set name translations"
+  },
+  "n_ea528a17c0d6977870bd0ac9": {
+    "concept_id": "code",
+    "keywords": [
+      "sets",
+      "set code",
+      "identifier",
+      "card link"
+    ],
+    "note_id": "n_ea528a17c0d6977870bd0ac9",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "2db0fea0553e54151000c64281be3e4b4f1f6bc00f1b351f19819fdeac6a75cb",
+    "source_refs": [
+      "schema:sets DDL code TEXT NOT NULL UNIQUE",
+      "schema:cards DDL setCode TEXT and no declared foreign key",
+      "values:cards all observed non-null setCode values match sets.code"
+    ],
+    "status": "provisional",
+    "summary": "Non-null unique text code identifies a set catalog record; observed card setCode values associate to sets.code.",
+    "table_name": "sets",
+    "title": "Set catalog code"
+  },
+  "n_ee42854cb7a3a343f8c06531": {
+    "concept_id": "isTextless",
+    "keywords": [
+      "textless",
+      "card",
+      "flag",
+      "text box",
+      "printing"
+    ],
+    "note_id": "n_ee42854cb7a3a343f8c06531",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "4cfeeab1b19ea3b3fcff6703e566ec436b46f902b4fe4b0c02bb2ac232f46538",
+    "source_refs": [
+      "schema:cards DDL isTextless INTEGER default 0 not null",
+      "values:cards observed isTextless values 0/1 and both blank/nonblank text among modern-frame records"
+    ],
+    "status": "provisional",
+    "summary": "Boolean-like INTEGER flag on card records; observed values 0 and 1, but text-box semantics and relationship to text content are not fully verified.",
+    "table_name": "cards",
+    "title": "Textless card flag"
+  },
+  "n_f0f42e517501ff34f08f7251": {
+    "concept_id": "colorIdentity",
+    "keywords": [
+      "color identity",
+      "commander",
+      "color",
+      "card"
+    ],
+    "note_id": "n_f0f42e517501ff34f08f7251",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "e542a1fe94078e486981ed611eeb6db24838f38100187a40a8ed07596cca1b99",
+    "source_refs": [
+      "schema:cards DDL colorIdentity TEXT"
+    ],
+    "status": "provisional",
+    "summary": "TEXT field containing color identity information; exact encoding and comprehensive semantics are not verified.",
+    "table_name": "cards",
+    "title": "Card color identity"
+  },
+  "n_f87f47bfd6ec1ac1c596e4af": {
+    "concept_id": "id",
+    "keywords": [
+      "legalities",
+      "record id",
+      "primary key"
+    ],
+    "note_id": "n_f87f47bfd6ec1ac1c596e4af",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "fe3e72dcdf8a42294d018dc96044d1ca5aef674db1273643dc2d3876e22fae79",
+    "source_refs": [
+      "schema:legalities DDL id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT",
+      "schema:legalities DDL uuid references cards(uuid)"
+    ],
+    "status": "provisional",
+    "summary": "Integer primary key identifying an individual stored legality row; generated by autoincrement.",
+    "table_name": "legalities",
+    "title": "Legality record ID"
+  },
+  "n_fede8a4b5ccfe4c514117b3b": {
+    "concept_id": "text",
+    "keywords": [
+      "ruling",
+      "text",
+      "card",
+      "uuid",
+      "content"
+    ],
+    "note_id": "n_fede8a4b5ccfe4c514117b3b",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "426956f22a271941488fc42c144b723581efe13cae67c46894143f2782c2eefb",
+    "source_refs": [
+      "schema:rulings DDL text TEXT",
+      "schema:rulings DDL uuid references cards.uuid"
+    ],
+    "status": "provisional",
+    "summary": "Free-text content of a stored ruling row; associated card is identified through rulings.uuid.",
+    "table_name": "rulings",
+    "title": "Ruling text"
+  },
+  "n_ffce311c4a7ccf7b48c490d4": {
+    "concept_id": "id",
+    "keywords": [
+      "foreign data",
+      "id",
+      "identifier",
+      "primary key"
+    ],
+    "note_id": "n_ffce311c4a7ccf7b48c490d4",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "731e264106dede9b08601a6c1aa085cb42de91cf142f50c88768ec99a2c03995",
+    "source_refs": [
+      "schema:foreign_data DDL id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT"
+    ],
+    "status": "provisional",
+    "summary": "Integer primary-key identifier for a stored foreign-language card-data record.",
+    "table_name": "foreign_data",
+    "title": "Foreign-language record ID"
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "provider": "chatgpt-siwc",
+  "model": "gpt-6-luna",
+  "requested_reasoning_effort": "none",
+  "max_model_calls": 40,
+  "max_total_tool_calls": 40,
+  "max_sql_executions": 40,
+  "recursion_limit": 200,
+  "request_timeout_seconds": 300,
+  "scoring_timeout_seconds": 600,
+  "expected_questions": 500,
+  "run_id": "gpt6-luna-none-40calls-2026-001",
+  "selection_id": "minidev2026-full-20261108",
+  "dataset_release": "mini-dev-2026",
+  "annotation_revision": "5b256b5a9c17478f06ed6912612e9a14d17065c8",
+  "case_overrides": [
+    {
+      "split": "dev",
+      "question_id": 421,
+      "max_total_tool_calls": 40,
+      "max_sql_executions": 40,
+      "max_model_calls": 40
+    },
+    {
+      "split": "test",
+      "question_id": 107,
+      "max_total_tool_calls": 40,
+      "max_sql_executions": 40,
+      "max_model_calls": 40
+    }
+  ],
+  "execution_budget_history": {
+    "original_recorded_limits": {
+      "max_total_tool_calls": 40,
+      "max_sql_executions": 20
+    },
+    "case_overrides": [
+      {
+        "split": "dev",
+        "question_id": 421,
+        "max_total_tool_calls": 40,
+        "max_sql_executions": 40,
+        "max_model_calls": 40
+      },
+      {
+        "split": "test",
+        "question_id": 107,
+        "max_total_tool_calls": 40,
+        "max_sql_executions": 40,
+        "max_model_calls": 40
+      }
+    ],
+    "note": "Historical execution limits; predictions and scores were not regenerated."
+  },
+  "budget_alignment_note": "Budget settings aligned to 40 total tool calls and 40 SQL calls by user request; metadata-only update. See execution_budget_history for limits used to produce existing results."
+}

@@ -1,0 +1,19 @@
+{
+  "selection_id": "q60-20261110T020938Z",
+  "result_root": "/home/devuser/Documents/Codex/2026-11-10/prep-experiement-please-help-me-to/outputs/b0-generalized-v1-40calls-20261110/reruns",
+  "run_id": "q60-retry",
+  "created_utc": "2026-11-10T02:09:38.477732+00:00",
+  "original_prediction_sha256": "c34138c11bfa35d2eeefea653e7e12b67f76727e65432bae54a88047835e9c76",
+  "replacement": "complete; rescored and exports updated",
+  "replaced_utc": "2026-11-10T02:10:26.968727+00:00",
+  "backup": "/home/devuser/Documents/Codex/2026-11-10/prep-experiement-please-help-me-to/outputs/b0-generalized-v1-40calls-20261110/reruns/q60-20261110T020938Z/before-replacement",
+  "final_sql_execution": "success",
+  "new_prediction_sha256": "811d88b5dd448fd63526daab57e177554e11ede8adce3f092375c90ef2203374",
+  "q60_ex": 1,
+  "overall": {
+    "total": 500,
+    "correct": 319,
+    "ex": 0.638
+  },
+  "archive_note": "Original absolute paths identify the local audit backup; raw traces are not in this Git archive."
+}

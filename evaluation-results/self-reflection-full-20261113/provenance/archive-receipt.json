@@ -1,0 +1,805 @@
+{
+  "source_root": "/home/devuser/self-reflection-full-20261113",
+  "inference_source_revision": "cbb8ea4ada492ceb7970692f571b4e36a34b8227",
+  "archive_parent_revision": "dbd4de840648026c7a51a18e4f841e539ac3a71c",
+  "files": [
+    {
+      "source": "/home/devuser/self-reflection-full-20261113/configuration.json",
+      "archive": "configuration.json",
+      "source_sha256": "7cde1461ef0d3f482b99c89e8312ad847f68b00e7870056cfe52813e12fc8516",
+      "archive_sha256": "7cde1461ef0d3f482b99c89e8312ad847f68b00e7870056cfe52813e12fc8516",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/self-reflection-full-20261113/status.json",
+      "archive": "status.json",
+      "source_sha256": "c6e692f960af9e63c880c899b27eb86f5b0aeeeacdcb19d0a299b93504e9acff",
+      "archive_sha256": "c6e692f960af9e63c880c899b27eb86f5b0aeeeacdcb19d0a299b93504e9acff",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/self-reflection-full-20261113/performance-summary.json",
+      "archive": "performance-summary.json",
+      "source_sha256": "5577fee056890d37ba1c5555d6d0c67aeacb979a22d4238822f95b4525146027",
+      "archive_sha256": "5577fee056890d37ba1c5555d6d0c67aeacb979a22d4238822f95b4525146027",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/self-reflection-full-20261113/review.md",
+      "archive": "review.md",
+      "source_sha256": "e73f3016d7fcd861da861c48a890621ab972d76ae8a4ba63915c9ce3f84496ca",
+      "archive_sha256": "e73f3016d7fcd861da861c48a890621ab972d76ae8a4ba63915c9ce3f84496ca",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/self-reflection-full-20261113/run_evaluation.py",
+      "archive": "provenance/original-run-controller.py",
+      "source_sha256": "d244ffd4e66290ee017a0ea5a4d514ad2de0bab042e73f104a5a4d08616b3c7e",
+      "archive_sha256": "d244ffd4e66290ee017a0ea5a4d514ad2de0bab042e73f104a5a4d08616b3c7e",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/self-reflection-full-20261113/test-score.log",
+      "archive": "provenance/logs/test-score.txt",
+      "source_sha256": "ce2b7ad577055379ca82159bd35bdc09dc74462ca74c81a25024241ccb05bc47",
+      "archive_sha256": "ce2b7ad577055379ca82159bd35bdc09dc74462ca74c81a25024241ccb05bc47",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/self-reflection-full-20261113/tests.log",
+      "archive": "provenance/logs/tests.txt",
+      "source_sha256": "9064c0b2ecd7b5b5c1408379260b414b73faa72228d7be2e84bf6a4aeb3c5cf0",
+      "archive_sha256": "23b032f81171429adb197408fd5401aab4c9ba6393918c70dcbfdf16cee1255d",
+      "compression": null,
+      "transformation": "Normalized retired V2 test-label strings only; original test log remains in prior Git history"
+    },
+    {
+      "source": "/home/devuser/self-reflection-full-20261113/test-visualize.log",
+      "archive": "provenance/logs/test-visualize.txt",
+      "source_sha256": "132ece18935e937a21b278f7e37cf83ed906cb94a461918dbf81983b62129126",
+      "archive_sha256": "132ece18935e937a21b278f7e37cf83ed906cb94a461918dbf81983b62129126",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/self-reflection-full-20261113/dev-visualize.log",
+      "archive": "provenance/logs/dev-visualize.txt",
+      "source_sha256": "e844623b8b492e2f4fa031281da1fd59165206c9efed011bb12142d282c269cf",
+      "archive_sha256": "e844623b8b492e2f4fa031281da1fd59165206c9efed011bb12142d282c269cf",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/self-reflection-full-20261113/dev-score.log",
+      "archive": "provenance/logs/dev-score.txt",
+      "source_sha256": "15f6d88e81edfafb4e06fb04be3fccb45ab21218e6561b61ac7dc921c8a7f491",
+      "archive_sha256": "15f6d88e81edfafb4e06fb04be3fccb45ab21218e6561b61ac7dc921c8a7f491",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/self-reflection-full-20261113/dev-infer.log",
+      "archive": "provenance/logs/dev-infer.txt",
+      "source_sha256": "c21b3911b1d7cb40fe13310964d67f7e6a6387bbbbbc6c337e5d2768c733dc7e",
+      "archive_sha256": "c21b3911b1d7cb40fe13310964d67f7e6a6387bbbbbc6c337e5d2768c733dc7e",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/self-reflection-full-20261113/supervisor.log",
+      "archive": "provenance/logs/supervisor.txt",
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "archive_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/self-reflection-full-20261113/test-infer.log",
+      "archive": "provenance/logs/test-infer.txt",
+      "source_sha256": "96bc7e135df57c917b063bb4a2640cae0e630adeacd01b9f2d14114a9f791594",
+      "archive_sha256": "96bc7e135df57c917b063bb4a2640cae0e630adeacd01b9f2d14114a9f791594",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/self-reflection-full-20261113/sr-full-20261113/selection_manifest.json",
+      "archive": "selection_manifest.json",
+      "source_sha256": "d857ae7df29f721c8dff8b32ff9baae2eb60fd4c8aeed0c017ad812f0b271ffd",
+      "archive_sha256": "d857ae7df29f721c8dff8b32ff9baae2eb60fd4c8aeed0c017ad812f0b271ffd",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/dataset_manifest.json",
+      "archive": "inputs/dataset_manifest.json",
+      "source_sha256": "6d62ee72afba8254a5a9e7744cc772d29f33acb28a223d17aabd7e29a94d59b9",
+      "archive_sha256": "6d62ee72afba8254a5a9e7744cc772d29f33acb28a223d17aabd7e29a94d59b9",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/self-reflection-full-20261113/sr-full-20261113/dev.jsonl",
+      "archive": "inputs/dev.jsonl",
+      "source_sha256": "f58a2bdcefaa9b57fc7bb1bd78c5715d1a95dd5b7842a3478e9193cd6fe5c1d6",
+      "archive_sha256": "f58a2bdcefaa9b57fc7bb1bd78c5715d1a95dd5b7842a3478e9193cd6fe5c1d6",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/self-reflection-full-20261113/sr-full-20261113/test.jsonl",
+      "archive": "inputs/test.jsonl",
+      "source_sha256": "b0db5be8f2e8cce59439597c0847444cbb2fff298cb15a0080c1bf96c141f776",
+      "archive_sha256": "b0db5be8f2e8cce59439597c0847444cbb2fff298cb15a0080c1bf96c141f776",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/financial/database_description/card.csv",
+      "archive": "inputs/database-descriptions/financial/database_description/card.csv",
+      "source_sha256": "1dd79bf48c7696a5e6c3fc4835c9994b129f58307ad75c2f874f9cd1078fe300",
+      "archive_sha256": "1dd79bf48c7696a5e6c3fc4835c9994b129f58307ad75c2f874f9cd1078fe300",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/financial/database_description/account.csv",
+      "archive": "inputs/database-descriptions/financial/database_description/account.csv",
+      "source_sha256": "98f9b72619c30593fadc013efc668d081193f34f2bda1353214c48c8013f03b3",
+      "archive_sha256": "98f9b72619c30593fadc013efc668d081193f34f2bda1353214c48c8013f03b3",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/financial/database_description/district.csv",
+      "archive": "inputs/database-descriptions/financial/database_description/district.csv",
+      "source_sha256": "6da804294fe9e7f9f8285759b842e39e0c5c8cb10390a93d5e292c2cb28fdc48",
+      "archive_sha256": "6da804294fe9e7f9f8285759b842e39e0c5c8cb10390a93d5e292c2cb28fdc48",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/financial/database_description/trans.csv",
+      "archive": "inputs/database-descriptions/financial/database_description/trans.csv",
+      "source_sha256": "59efafabbb4347853f29ebfc14fdd18633f724a669e7e26cb7b2ecd628d6c4a2",
+      "archive_sha256": "59efafabbb4347853f29ebfc14fdd18633f724a669e7e26cb7b2ecd628d6c4a2",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/financial/database_description/disp.csv",
+      "archive": "inputs/database-descriptions/financial/database_description/disp.csv",
+      "source_sha256": "3b7ade14650a78e7122fdf4f423c4dae241e923d73039c65e5e85b7ac7919ffe",
+      "archive_sha256": "3b7ade14650a78e7122fdf4f423c4dae241e923d73039c65e5e85b7ac7919ffe",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/financial/database_description/order.csv",
+      "archive": "inputs/database-descriptions/financial/database_description/order.csv",
+      "source_sha256": "d01db89f3121b96a8c5876108d835ad0ab8d8bd5e132d9d823d384ae12706476",
+      "archive_sha256": "d01db89f3121b96a8c5876108d835ad0ab8d8bd5e132d9d823d384ae12706476",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/financial/database_description/loan.csv",
+      "archive": "inputs/database-descriptions/financial/database_description/loan.csv",
+      "source_sha256": "e6f4c7393d3973c9647913206ec4da2b9480bca4a8fb1ed45f4d42c433112756",
+      "archive_sha256": "e6f4c7393d3973c9647913206ec4da2b9480bca4a8fb1ed45f4d42c433112756",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/financial/database_description/client.csv",
+      "archive": "inputs/database-descriptions/financial/database_description/client.csv",
+      "source_sha256": "d1ef6f74b4730737517307c2f3b219496af264d83fe3e34f435c078b368dd800",
+      "archive_sha256": "d1ef6f74b4730737517307c2f3b219496af264d83fe3e34f435c078b368dd800",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/codebase_community/database_description/badges.csv",
+      "archive": "inputs/database-descriptions/codebase_community/database_description/badges.csv",
+      "source_sha256": "a1a7fc9783f11107c6b80adc54d0404a31d7bc162a1f5ae5e246e4852dc41a09",
+      "archive_sha256": "a1a7fc9783f11107c6b80adc54d0404a31d7bc162a1f5ae5e246e4852dc41a09",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/codebase_community/database_description/tags.csv",
+      "archive": "inputs/database-descriptions/codebase_community/database_description/tags.csv",
+      "source_sha256": "27bc5022eeb20e18dc588a1f3cb63ac2c23720670f003fdd776ae9a5aad0a0d7",
+      "archive_sha256": "27bc5022eeb20e18dc588a1f3cb63ac2c23720670f003fdd776ae9a5aad0a0d7",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/codebase_community/database_description/comments.csv",
+      "archive": "inputs/database-descriptions/codebase_community/database_description/comments.csv",
+      "source_sha256": "bd8de09b3eab2b4a1f69d9298460b0f39d919504d5dfb34d00de302b77e520eb",
+      "archive_sha256": "bd8de09b3eab2b4a1f69d9298460b0f39d919504d5dfb34d00de302b77e520eb",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/codebase_community/database_description/postHistory.csv",
+      "archive": "inputs/database-descriptions/codebase_community/database_description/postHistory.csv",
+      "source_sha256": "053779c106b3bc61da71744e918b321a2436180e5c57ad2a706e9c29fef11e94",
+      "archive_sha256": "053779c106b3bc61da71744e918b321a2436180e5c57ad2a706e9c29fef11e94",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/codebase_community/database_description/users.csv",
+      "archive": "inputs/database-descriptions/codebase_community/database_description/users.csv",
+      "source_sha256": "69d3297922932d9b39eb56e673606ba56fb3474a650fe417ea32d4d627160014",
+      "archive_sha256": "69d3297922932d9b39eb56e673606ba56fb3474a650fe417ea32d4d627160014",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/codebase_community/database_description/votes.csv",
+      "archive": "inputs/database-descriptions/codebase_community/database_description/votes.csv",
+      "source_sha256": "9c3856469bc9fd563d86f7062bfb9d632c6e98ae42fd7c52117e0be15e9e7ccf",
+      "archive_sha256": "9c3856469bc9fd563d86f7062bfb9d632c6e98ae42fd7c52117e0be15e9e7ccf",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/codebase_community/database_description/postLinks.csv",
+      "archive": "inputs/database-descriptions/codebase_community/database_description/postLinks.csv",
+      "source_sha256": "789fefbd5b9b8db2653f8079c78325d6e3fd23a2ceff69ed7ee8959674ff014c",
+      "archive_sha256": "789fefbd5b9b8db2653f8079c78325d6e3fd23a2ceff69ed7ee8959674ff014c",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/codebase_community/database_description/posts.csv",
+      "archive": "inputs/database-descriptions/codebase_community/database_description/posts.csv",
+      "source_sha256": "33e6883bbadc4fe77b5f4f593f7f23d74c2bc2bc45c8f2086c328beeefeb28e2",
+      "archive_sha256": "33e6883bbadc4fe77b5f4f593f7f23d74c2bc2bc45c8f2086c328beeefeb28e2",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/card_games/database_description/cards.csv",
+      "archive": "inputs/database-descriptions/card_games/database_description/cards.csv",
+      "source_sha256": "41bc566e91e165f43f7484a1d3d3f17e66094e2c0cc3092829366f6e2f019d23",
+      "archive_sha256": "41bc566e91e165f43f7484a1d3d3f17e66094e2c0cc3092829366f6e2f019d23",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/card_games/database_description/rulings.csv",
+      "archive": "inputs/database-descriptions/card_games/database_description/rulings.csv",
+      "source_sha256": "c50c64dd4d882a17d1a8478cd48b889103a39464c78f3da5dd904fde966bd3d4",
+      "archive_sha256": "c50c64dd4d882a17d1a8478cd48b889103a39464c78f3da5dd904fde966bd3d4",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/card_games/database_description/foreign_data.csv",
+      "archive": "inputs/database-descriptions/card_games/database_description/foreign_data.csv",
+      "source_sha256": "ac254726eeb2d0fd574ec64bac31617ac233842623f692469b7569febe9f3310",
+      "archive_sha256": "ac254726eeb2d0fd574ec64bac31617ac233842623f692469b7569febe9f3310",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/card_games/database_description/sets.csv",
+      "archive": "inputs/database-descriptions/card_games/database_description/sets.csv",
+      "source_sha256": "3679c8051713f1574d40ff6793eaebf590705915d20f086ffe3ee930a4ddbb0e",
+      "archive_sha256": "3679c8051713f1574d40ff6793eaebf590705915d20f086ffe3ee930a4ddbb0e",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/card_games/database_description/legalities.csv",
+      "archive": "inputs/database-descriptions/card_games/database_description/legalities.csv",
+      "source_sha256": "223def1785f0f6f277db07a7881e8938e4314382697da47c080d14b52f1253e9",
+      "archive_sha256": "223def1785f0f6f277db07a7881e8938e4314382697da47c080d14b52f1253e9",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/card_games/database_description/set_translations.csv",
+      "archive": "inputs/database-descriptions/card_games/database_description/set_translations.csv",
+      "source_sha256": "d6f172ff2add8a399176cdb9ef32a5d60c8cf11186363e6142bb48a09debb2ff",
+      "archive_sha256": "d6f172ff2add8a399176cdb9ef32a5d60c8cf11186363e6142bb48a09debb2ff",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/debit_card_specializing/database_description/transactions_1k.csv",
+      "archive": "inputs/database-descriptions/debit_card_specializing/database_description/transactions_1k.csv",
+      "source_sha256": "08bed279bc784952f1e17c97b290cf869ede6f9ea0914641052546408626b0af",
+      "archive_sha256": "08bed279bc784952f1e17c97b290cf869ede6f9ea0914641052546408626b0af",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/debit_card_specializing/database_description/gasstations.csv",
+      "archive": "inputs/database-descriptions/debit_card_specializing/database_description/gasstations.csv",
+      "source_sha256": "4e44804b860c9fe412dd8872a4f53fc0e1094035ecc027fac4d9477d05766199",
+      "archive_sha256": "4e44804b860c9fe412dd8872a4f53fc0e1094035ecc027fac4d9477d05766199",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/debit_card_specializing/database_description/products.csv",
+      "archive": "inputs/database-descriptions/debit_card_specializing/database_description/products.csv",
+      "source_sha256": "b61419d9b6481b170230a302c313fd787b5f0291f9a1a15fb3a55eb6d4f5f538",
+      "archive_sha256": "b61419d9b6481b170230a302c313fd787b5f0291f9a1a15fb3a55eb6d4f5f538",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/debit_card_specializing/database_description/customers.csv",
+      "archive": "inputs/database-descriptions/debit_card_specializing/database_description/customers.csv",
+      "source_sha256": "fd1ff06796da13f6331801dba2a24536fd0aed887cde2a8d08cd03530de88f2d",
+      "archive_sha256": "fd1ff06796da13f6331801dba2a24536fd0aed887cde2a8d08cd03530de88f2d",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/debit_card_specializing/database_description/yearmonth.csv",
+      "archive": "inputs/database-descriptions/debit_card_specializing/database_description/yearmonth.csv",
+      "source_sha256": "7faf48ff08295935610dc07b33596028483f8270dd1ace0c6a512ae65f8a2e16",
+      "archive_sha256": "7faf48ff08295935610dc07b33596028483f8270dd1ace0c6a512ae65f8a2e16",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/superhero/database_description/publisher.csv",
+      "archive": "inputs/database-descriptions/superhero/database_description/publisher.csv",
+      "source_sha256": "232e8656107f426beb3c7a25f1833afb295dbfa2ae3981b2a200f08ed4f1f000",
+      "archive_sha256": "232e8656107f426beb3c7a25f1833afb295dbfa2ae3981b2a200f08ed4f1f000",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/superhero/database_description/hero_attribute.csv",
+      "archive": "inputs/database-descriptions/superhero/database_description/hero_attribute.csv",
+      "source_sha256": "65af1dfdb96e4ddaba6262f3dffe9f61ea240c31d0ea2122e974d769827f039b",
+      "archive_sha256": "65af1dfdb96e4ddaba6262f3dffe9f61ea240c31d0ea2122e974d769827f039b",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/superhero/database_description/superhero.csv",
+      "archive": "inputs/database-descriptions/superhero/database_description/superhero.csv",
+      "source_sha256": "503f0a71acd1766923c571865277f81accbf79b2c9d8df4a18439dfe01ec6f44",
+      "archive_sha256": "503f0a71acd1766923c571865277f81accbf79b2c9d8df4a18439dfe01ec6f44",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/superhero/database_description/race.csv",
+      "archive": "inputs/database-descriptions/superhero/database_description/race.csv",
+      "source_sha256": "8eb79fe0d1fc7d5641eff43d34e0e10b89fa726360d913bbee31dd55191064c7",
+      "archive_sha256": "8eb79fe0d1fc7d5641eff43d34e0e10b89fa726360d913bbee31dd55191064c7",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/superhero/database_description/superpower.csv",
+      "archive": "inputs/database-descriptions/superhero/database_description/superpower.csv",
+      "source_sha256": "4edef8900f158238382843e348ff9842991c83f1d384c53bef5dd8cb1e613ee2",
+      "archive_sha256": "4edef8900f158238382843e348ff9842991c83f1d384c53bef5dd8cb1e613ee2",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/superhero/database_description/hero_power.csv",
+      "archive": "inputs/database-descriptions/superhero/database_description/hero_power.csv",
+      "source_sha256": "54eb40baa6b5b726bff28c872478caa8da8500f195239f8c6c3c552797c3794f",
+      "archive_sha256": "54eb40baa6b5b726bff28c872478caa8da8500f195239f8c6c3c552797c3794f",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/superhero/database_description/gender.csv",
+      "archive": "inputs/database-descriptions/superhero/database_description/gender.csv",
+      "source_sha256": "7311f964c77b6319184bbfc9ce8cc0ef87a103106bb1d6967461a5c681a3fe08",
+      "archive_sha256": "7311f964c77b6319184bbfc9ce8cc0ef87a103106bb1d6967461a5c681a3fe08",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/superhero/database_description/alignment.csv",
+      "archive": "inputs/database-descriptions/superhero/database_description/alignment.csv",
+      "source_sha256": "ebff59e5832b2870c298d2bbc85607e0f6b93c4921ff4d3265803d02a8796dce",
+      "archive_sha256": "ebff59e5832b2870c298d2bbc85607e0f6b93c4921ff4d3265803d02a8796dce",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/superhero/database_description/attribute.csv",
+      "archive": "inputs/database-descriptions/superhero/database_description/attribute.csv",
+      "source_sha256": "3c6bac9176d61e05ba059e8be6a3d5c5aa6eb743f526f07a1570f172cdbf6c72",
+      "archive_sha256": "3c6bac9176d61e05ba059e8be6a3d5c5aa6eb743f526f07a1570f172cdbf6c72",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/superhero/database_description/colour.csv",
+      "archive": "inputs/database-descriptions/superhero/database_description/colour.csv",
+      "source_sha256": "ba732eddb938dc077cbc3f038057f566f9f12ccb53cc131168a5da538514b9cf",
+      "archive_sha256": "ba732eddb938dc077cbc3f038057f566f9f12ccb53cc131168a5da538514b9cf",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/student_club/database_description/Event.csv",
+      "archive": "inputs/database-descriptions/student_club/database_description/Event.csv",
+      "source_sha256": "1bf99aa2ce4ae79886eb0d4204e3edd1f0c8c0e44ed427c166f3a1a1af0aec04",
+      "archive_sha256": "1bf99aa2ce4ae79886eb0d4204e3edd1f0c8c0e44ed427c166f3a1a1af0aec04",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/student_club/database_description/Income.csv",
+      "archive": "inputs/database-descriptions/student_club/database_description/Income.csv",
+      "source_sha256": "573755cd0f41a5dce3a053eb877a52f101bf21af745aaf83170093aa5a4d0579",
+      "archive_sha256": "573755cd0f41a5dce3a053eb877a52f101bf21af745aaf83170093aa5a4d0579",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/student_club/database_description/Zip_Code.csv",
+      "archive": "inputs/database-descriptions/student_club/database_description/Zip_Code.csv",
+      "source_sha256": "1c903324ec3ff9decd6abb10ac96e3746e1c1b776a26d3a8d4bf5244c8620ecb",
+      "archive_sha256": "1c903324ec3ff9decd6abb10ac96e3746e1c1b776a26d3a8d4bf5244c8620ecb",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/student_club/database_description/Attendance.csv",
+      "archive": "inputs/database-descriptions/student_club/database_description/Attendance.csv",
+      "source_sha256": "33a5d912e8fea231ecd73d1ee3847433ced7d1768b91866bd1403fb7fd88ea22",
+      "archive_sha256": "33a5d912e8fea231ecd73d1ee3847433ced7d1768b91866bd1403fb7fd88ea22",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/student_club/database_description/Major.csv",
+      "archive": "inputs/database-descriptions/student_club/database_description/Major.csv",
+      "source_sha256": "baca5c68fa1b1c9a427445bd60a1c8702cbdab9d27d5eb0a4304fb7f2ef32e0d",
+      "archive_sha256": "baca5c68fa1b1c9a427445bd60a1c8702cbdab9d27d5eb0a4304fb7f2ef32e0d",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/student_club/database_description/Budget.csv",
+      "archive": "inputs/database-descriptions/student_club/database_description/Budget.csv",
+      "source_sha256": "b9000d8f18b4a1613ea3c1877a41823375c2405647756a694591722ba86e60cd",
+      "archive_sha256": "b9000d8f18b4a1613ea3c1877a41823375c2405647756a694591722ba86e60cd",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/student_club/database_description/Expense.csv",
+      "archive": "inputs/database-descriptions/student_club/database_description/Expense.csv",
+      "source_sha256": "b323e60df3ebfa3ec64686a1d76bece0bb94d81cfe5b642a54b6763b67be302d",
+      "archive_sha256": "b323e60df3ebfa3ec64686a1d76bece0bb94d81cfe5b642a54b6763b67be302d",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/student_club/database_description/Member.csv",
+      "archive": "inputs/database-descriptions/student_club/database_description/Member.csv",
+      "source_sha256": "1b9dda90d5fdccc4f70f057bf594a6935975e55a9f81d333714d74d1f4d9674a",
+      "archive_sha256": "1b9dda90d5fdccc4f70f057bf594a6935975e55a9f81d333714d74d1f4d9674a",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/european_football_2/database_description/Country.csv",
+      "archive": "inputs/database-descriptions/european_football_2/database_description/Country.csv",
+      "source_sha256": "e74aa65527321782a69ec5fdc68c3993aa6e1e5684426724776b81d12bcbe437",
+      "archive_sha256": "e74aa65527321782a69ec5fdc68c3993aa6e1e5684426724776b81d12bcbe437",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/european_football_2/database_description/League.csv",
+      "archive": "inputs/database-descriptions/european_football_2/database_description/League.csv",
+      "source_sha256": "d44bbef373f44c16dee4729012375c1bf901664f1097e3af4bb3dfc973067437",
+      "archive_sha256": "d44bbef373f44c16dee4729012375c1bf901664f1097e3af4bb3dfc973067437",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/european_football_2/database_description/Team.csv",
+      "archive": "inputs/database-descriptions/european_football_2/database_description/Team.csv",
+      "source_sha256": "104e03607f09cb41deddcb24a96add08aa2e9d8fc169454c3091a792df9f81ef",
+      "archive_sha256": "104e03607f09cb41deddcb24a96add08aa2e9d8fc169454c3091a792df9f81ef",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/european_football_2/database_description/Player.csv",
+      "archive": "inputs/database-descriptions/european_football_2/database_description/Player.csv",
+      "source_sha256": "a7a3cdc5c995227bbfcddf88d789f9244ffcfe0f6aed8aa69fcbef084149b92c",
+      "archive_sha256": "a7a3cdc5c995227bbfcddf88d789f9244ffcfe0f6aed8aa69fcbef084149b92c",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/european_football_2/database_description/Player_Attributes.csv",
+      "archive": "inputs/database-descriptions/european_football_2/database_description/Player_Attributes.csv",
+      "source_sha256": "d01a00206b4ec6e94435f3af7e5153abca01931c4e93a519bb86ca5bbd42b46c",
+      "archive_sha256": "d01a00206b4ec6e94435f3af7e5153abca01931c4e93a519bb86ca5bbd42b46c",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/european_football_2/database_description/Match.csv",
+      "archive": "inputs/database-descriptions/european_football_2/database_description/Match.csv",
+      "source_sha256": "2facc86ec5e869e7bb61b67fa660591c0a4f6291da79125dc2777a2bdafdd4dd",
+      "archive_sha256": "2facc86ec5e869e7bb61b67fa660591c0a4f6291da79125dc2777a2bdafdd4dd",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/european_football_2/database_description/Team_Attributes.csv",
+      "archive": "inputs/database-descriptions/european_football_2/database_description/Team_Attributes.csv",
+      "source_sha256": "3fbad7950903c65a467c291282ab90d773a9e517802e0fffad5c5abfa7390840",
+      "archive_sha256": "3fbad7950903c65a467c291282ab90d773a9e517802e0fffad5c5abfa7390840",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/formula_1/database_description/races.csv",
+      "archive": "inputs/database-descriptions/formula_1/database_description/races.csv",
+      "source_sha256": "a8e61de0c7e966c5198c701475d80276065f3a1cf96c3b79051c3541d8fd60d3",
+      "archive_sha256": "a8e61de0c7e966c5198c701475d80276065f3a1cf96c3b79051c3541d8fd60d3",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/formula_1/database_description/constructorResults.csv",
+      "archive": "inputs/database-descriptions/formula_1/database_description/constructorResults.csv",
+      "source_sha256": "b446078a76a422e9fbbb3246acf18a36bc75a441fac5f907555ac7031834f7d5",
+      "archive_sha256": "b446078a76a422e9fbbb3246acf18a36bc75a441fac5f907555ac7031834f7d5",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/formula_1/database_description/pitStops.csv",
+      "archive": "inputs/database-descriptions/formula_1/database_description/pitStops.csv",
+      "source_sha256": "6c1c7eb14a445b617710ac286e1f5a303e8b808062fa760c2054c276b2b79fab",
+      "archive_sha256": "6c1c7eb14a445b617710ac286e1f5a303e8b808062fa760c2054c276b2b79fab",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/formula_1/database_description/constructors.csv",
+      "archive": "inputs/database-descriptions/formula_1/database_description/constructors.csv",
+      "source_sha256": "32e73ce0f0c6684af303051e7e18e9ad13a6157d88a5b74275446f1b66ff84d6",
+      "archive_sha256": "32e73ce0f0c6684af303051e7e18e9ad13a6157d88a5b74275446f1b66ff84d6",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/formula_1/database_description/qualifying.csv",
+      "archive": "inputs/database-descriptions/formula_1/database_description/qualifying.csv",
+      "source_sha256": "35b7e1ce9def76a653407a54f2b18901768392d92d1ef2484d24c20077c77e0e",
+      "archive_sha256": "35b7e1ce9def76a653407a54f2b18901768392d92d1ef2484d24c20077c77e0e",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/formula_1/database_description/drivers.csv",
+      "archive": "inputs/database-descriptions/formula_1/database_description/drivers.csv",
+      "source_sha256": "0444a1610c97dcc1cb1af25a8aed4dc3ca585a0b27f8326d1bb9ffaa6f4e8635",
+      "archive_sha256": "0444a1610c97dcc1cb1af25a8aed4dc3ca585a0b27f8326d1bb9ffaa6f4e8635",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/formula_1/database_description/circuits.csv",
+      "archive": "inputs/database-descriptions/formula_1/database_description/circuits.csv",
+      "source_sha256": "fd69591f97ae0cb3b36b2d35524f03e5ec250c52358a71b2e41d435f3b2b658d",
+      "archive_sha256": "fd69591f97ae0cb3b36b2d35524f03e5ec250c52358a71b2e41d435f3b2b658d",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/formula_1/database_description/constructorStandings.csv",
+      "archive": "inputs/database-descriptions/formula_1/database_description/constructorStandings.csv",
+      "source_sha256": "d7df8f78744b244375278bb092f8b6d05c9cf4964bdc9cd41eb60261678db861",
+      "archive_sha256": "d7df8f78744b244375278bb092f8b6d05c9cf4964bdc9cd41eb60261678db861",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/formula_1/database_description/status.csv",
+      "archive": "inputs/database-descriptions/formula_1/database_description/status.csv",
+      "source_sha256": "78725236cee342600f862cea296e87a4ea2e047d64d365f594526363f8acde57",
+      "archive_sha256": "78725236cee342600f862cea296e87a4ea2e047d64d365f594526363f8acde57",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/formula_1/database_description/results.csv",
+      "archive": "inputs/database-descriptions/formula_1/database_description/results.csv",
+      "source_sha256": "7f7cde75b468b8ea135c6ed0872ef30ff715fda691786ca58e70d783b0a23b5d",
+      "archive_sha256": "7f7cde75b468b8ea135c6ed0872ef30ff715fda691786ca58e70d783b0a23b5d",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/formula_1/database_description/driverStandings.csv",
+      "archive": "inputs/database-descriptions/formula_1/database_description/driverStandings.csv",
+      "source_sha256": "3cc467154abbf10dfc7f8ea5fdec512b5674f0683d36b893085a04de5d9aca5e",
+      "archive_sha256": "3cc467154abbf10dfc7f8ea5fdec512b5674f0683d36b893085a04de5d9aca5e",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/formula_1/database_description/seasons.csv",
+      "archive": "inputs/database-descriptions/formula_1/database_description/seasons.csv",
+      "source_sha256": "6a87681dcc94db3f6c81879c8569ec29a966eccc7277aa1d9ad59b16e314e5c9",
+      "archive_sha256": "6a87681dcc94db3f6c81879c8569ec29a966eccc7277aa1d9ad59b16e314e5c9",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/formula_1/database_description/lapTimes.csv",
+      "archive": "inputs/database-descriptions/formula_1/database_description/lapTimes.csv",
+      "source_sha256": "6fc86f0867ca9fc350b8583c18a74784d7a2e78afb1bc6462f83e3b7cddf5573",
+      "archive_sha256": "6fc86f0867ca9fc350b8583c18a74784d7a2e78afb1bc6462f83e3b7cddf5573",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/toxicology/database_description/atom.csv",
+      "archive": "inputs/database-descriptions/toxicology/database_description/atom.csv",
+      "source_sha256": "9de75492701c77c1229242e8c3b688ced9eb9095ac59d37361dfb0ec34300245",
+      "archive_sha256": "9de75492701c77c1229242e8c3b688ced9eb9095ac59d37361dfb0ec34300245",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/toxicology/database_description/bond.csv",
+      "archive": "inputs/database-descriptions/toxicology/database_description/bond.csv",
+      "source_sha256": "7d200d38b0dcc07e8fe22718bd6bdb1bdf4b6522b7a84a5d0c95340b6d8cb4bc",
+      "archive_sha256": "7d200d38b0dcc07e8fe22718bd6bdb1bdf4b6522b7a84a5d0c95340b6d8cb4bc",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/toxicology/database_description/element.csv",
+      "archive": "inputs/database-descriptions/toxicology/database_description/element.csv",
+      "source_sha256": "04c38dc16a2f4c2b32be3dd2ade7238ed037a3a903709b09267177a59a0b516b",
+      "archive_sha256": "04c38dc16a2f4c2b32be3dd2ade7238ed037a3a903709b09267177a59a0b516b",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/toxicology/database_description/molecule.csv",
+      "archive": "inputs/database-descriptions/toxicology/database_description/molecule.csv",
+      "source_sha256": "a6ff2966916d03b07fd3ce275823d9ec65abb0b55158e871b07c40972b292d70",
+      "archive_sha256": "a6ff2966916d03b07fd3ce275823d9ec65abb0b55158e871b07c40972b292d70",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/toxicology/database_description/connected.csv",
+      "archive": "inputs/database-descriptions/toxicology/database_description/connected.csv",
+      "source_sha256": "589b24206b9f884863ca57f3e339abcb2409a15feeaff0b08afcd955cd211036",
+      "archive_sha256": "589b24206b9f884863ca57f3e339abcb2409a15feeaff0b08afcd955cd211036",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/thrombosis_prediction/database_description/Patient.csv",
+      "archive": "inputs/database-descriptions/thrombosis_prediction/database_description/Patient.csv",
+      "source_sha256": "519838a9f2592760bb26d1fb4f074bc304eee4e7aeaf46d03f652c370230e175",
+      "archive_sha256": "519838a9f2592760bb26d1fb4f074bc304eee4e7aeaf46d03f652c370230e175",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/thrombosis_prediction/database_description/Examination.csv",
+      "archive": "inputs/database-descriptions/thrombosis_prediction/database_description/Examination.csv",
+      "source_sha256": "b563c9030159bf169236e4582b653386bd34706e309227bf5eceb63b91eb0a89",
+      "archive_sha256": "b563c9030159bf169236e4582b653386bd34706e309227bf5eceb63b91eb0a89",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/thrombosis_prediction/database_description/Laboratory.csv",
+      "archive": "inputs/database-descriptions/thrombosis_prediction/database_description/Laboratory.csv",
+      "source_sha256": "cf9704e56cf3aca75e38de09277c307a7f0f726301b472254ce66ff4a352ff9f",
+      "archive_sha256": "cf9704e56cf3aca75e38de09277c307a7f0f726301b472254ce66ff4a352ff9f",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/california_schools/database_description/schools.csv",
+      "archive": "inputs/database-descriptions/california_schools/database_description/schools.csv",
+      "source_sha256": "f18d96abf47892e4bd8094dd47d6978ea6bbc11821eccdf91f3f54dd1685979f",
+      "archive_sha256": "f18d96abf47892e4bd8094dd47d6978ea6bbc11821eccdf91f3f54dd1685979f",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/california_schools/database_description/satscores.csv",
+      "archive": "inputs/database-descriptions/california_schools/database_description/satscores.csv",
+      "source_sha256": "a44145158100894387d05a96987c487e3c83742892b13127b486de309bb8f138",
+      "archive_sha256": "a44145158100894387d05a96987c487e3c83742892b13127b486de309bb8f138",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/data/bird/mini-dev-2026/package/california_schools/database_description/frpm.csv",
+      "archive": "inputs/database-descriptions/california_schools/database_description/frpm.csv",
+      "source_sha256": "f2c3fa53a02c5d711866a192f580c6a545389192a096441767f40d72ffa41334",
+      "archive_sha256": "f2c3fa53a02c5d711866a192f580c6a545389192a096441767f40d72ffa41334",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/self-reflection-full-20261113/sr-full-20261113/SelfReflection/dev/sr-luna-none-sqlfirst-001/inference_manifest.json",
+      "archive": "dev/inference_manifest.json",
+      "source_sha256": "0ded085d966cc24b6365d35dde0e2776dc7ab74b466b78eba97ffe704beba9a3",
+      "archive_sha256": "0ded085d966cc24b6365d35dde0e2776dc7ab74b466b78eba97ffe704beba9a3",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/self-reflection-full-20261113/sr-full-20261113/SelfReflection/dev/sr-luna-none-sqlfirst-001/predictions.jsonl",
+      "archive": "dev/predictions.jsonl",
+      "source_sha256": "4f66434c432c4c33ac208d598a82d4d4786e6336a0f06ebd80179b3454a702f0",
+      "archive_sha256": "4f66434c432c4c33ac208d598a82d4d4786e6336a0f06ebd80179b3454a702f0",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/self-reflection-full-20261113/sr-full-20261113/SelfReflection/dev/sr-luna-none-sqlfirst-001/trace-explorer.html",
+      "archive": "dev/trace-explorer.html.gz",
+      "source_sha256": "a203762369484a5295b6d8e4857d692cb7cb90b201a5b7d093c7fbab6a2cfc6f",
+      "archive_sha256": "224e1e1b748dd7370ae1b5bc7f1292269ad45a39fab9e43fdce68dc8e4913520",
+      "compression": "gzip"
+    },
+    {
+      "source": "/home/devuser/self-reflection-full-20261113/sr-full-20261113/SelfReflection/dev/sr-luna-none-sqlfirst-001/traces.jsonl",
+      "archive": "dev/traces.jsonl.gz",
+      "source_sha256": "d168851bc69cb77ff3dbdba431d529bcbffb5bac172c2bcda2665bab41ce6c55",
+      "archive_sha256": "da2c910177c1a69c33ea065cad17f6a46e96bd846464442b714ac44944c95b1d",
+      "compression": "gzip"
+    },
+    {
+      "source": "/home/devuser/self-reflection-full-20261113/sr-full-20261113/SelfReflection/dev/sr-luna-none-sqlfirst-001/scores/report.md",
+      "archive": "dev/scores/report.md",
+      "source_sha256": "47ec72ef956135726645922c7bb1b896b962240f8c12e03c3ddc4af1339fbaa5",
+      "archive_sha256": "47ec72ef956135726645922c7bb1b896b962240f8c12e03c3ddc4af1339fbaa5",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/self-reflection-full-20261113/sr-full-20261113/SelfReflection/dev/sr-luna-none-sqlfirst-001/scores/summary.json",
+      "archive": "dev/scores/summary.json",
+      "source_sha256": "8c262347890ef1ad74a971013cbe763edad94a98897ea8f2f9cb6fd9dcf1a04c",
+      "archive_sha256": "8c262347890ef1ad74a971013cbe763edad94a98897ea8f2f9cb6fd9dcf1a04c",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/self-reflection-full-20261113/sr-full-20261113/SelfReflection/dev/sr-luna-none-sqlfirst-001/scores/per_question.csv",
+      "archive": "dev/scores/per_question.csv",
+      "source_sha256": "bb19ee6021babd6927af328af39d4d55236697e17b49e4552003b6fa90e97450",
+      "archive_sha256": "bb19ee6021babd6927af328af39d4d55236697e17b49e4552003b6fa90e97450",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/self-reflection-full-20261113/sr-full-20261113/SelfReflection/dev/sr-luna-none-sqlfirst-001/scores/run_manifest.json",
+      "archive": "dev/scores/run_manifest.json",
+      "source_sha256": "421052172c0ed7159e0d4457c1d72cf615f3e3b2177670bd396fad73729f2658",
+      "archive_sha256": "421052172c0ed7159e0d4457c1d72cf615f3e3b2177670bd396fad73729f2658",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/self-reflection-full-20261113/sr-full-20261113/SelfReflection/dev/sr-luna-none-sqlfirst-001/scores/per_question.jsonl",
+      "archive": "dev/scores/per_question.jsonl",
+      "source_sha256": "70971c456cb5318f59a27ecff26040ef8c097d35234f21a168911e035985959e",
+      "archive_sha256": "70971c456cb5318f59a27ecff26040ef8c097d35234f21a168911e035985959e",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/self-reflection-full-20261113/sr-full-20261113/SelfReflection/dev/sr-luna-none-sqlfirst-001/reviews/reflection_decisions.jsonl",
+      "archive": "dev/reviews/reflection_decisions.jsonl",
+      "source_sha256": "10299ea4af5fbe2ce62fba4401275687ca74b1d4eee98d5daab4a3e20031b989",
+      "archive_sha256": "10299ea4af5fbe2ce62fba4401275687ca74b1d4eee98d5daab4a3e20031b989",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/self-reflection-full-20261113/sr-full-20261113/SelfReflection/test/sr-luna-none-sqlfirst-001/inference_manifest.json",
+      "archive": "test/inference_manifest.json",
+      "source_sha256": "e4c603dec25c7d8292146afc4d09173f1f1357888e2c24185d5e9d8ef3780689",
+      "archive_sha256": "e4c603dec25c7d8292146afc4d09173f1f1357888e2c24185d5e9d8ef3780689",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/self-reflection-full-20261113/sr-full-20261113/SelfReflection/test/sr-luna-none-sqlfirst-001/predictions.jsonl",
+      "archive": "test/predictions.jsonl",
+      "source_sha256": "e01d35ae151ffbaff078ef4fc1ec4aeeaea081e576ea955d2d0bce0cf999db48",
+      "archive_sha256": "e01d35ae151ffbaff078ef4fc1ec4aeeaea081e576ea955d2d0bce0cf999db48",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/self-reflection-full-20261113/sr-full-20261113/SelfReflection/test/sr-luna-none-sqlfirst-001/trace-explorer.html",
+      "archive": "test/trace-explorer.html.gz",
+      "source_sha256": "a5fd7743ae2aeb2e40d25afcde562bfa3921ca85d5167e17d53cb84051ac06c1",
+      "archive_sha256": "d13620d12e84e6c3e22cf2d555fa83ae0d9221f02e2e2a482d0eebe8c777734a",
+      "compression": "gzip"
+    },
+    {
+      "source": "/home/devuser/self-reflection-full-20261113/sr-full-20261113/SelfReflection/test/sr-luna-none-sqlfirst-001/traces.jsonl",
+      "archive": "test/traces.jsonl.gz",
+      "source_sha256": "d5c14096ef3e104bd655812178a62caa19197723daa815e6eb6556d2f004b53f",
+      "archive_sha256": "c33ffb11041b73692df5834b85af625510ae63b5666e43e2e4b3a61cf56f14d7",
+      "compression": "gzip"
+    },
+    {
+      "source": "/home/devuser/self-reflection-full-20261113/sr-full-20261113/SelfReflection/test/sr-luna-none-sqlfirst-001/scores/report.md",
+      "archive": "test/scores/report.md",
+      "source_sha256": "db2ba3aa1b1bdbbb0c48647b048a4661e7f782366b57d01918bbe0f3bfe8abc0",
+      "archive_sha256": "db2ba3aa1b1bdbbb0c48647b048a4661e7f782366b57d01918bbe0f3bfe8abc0",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/self-reflection-full-20261113/sr-full-20261113/SelfReflection/test/sr-luna-none-sqlfirst-001/scores/summary.json",
+      "archive": "test/scores/summary.json",
+      "source_sha256": "c7c4cfd6eff7e6531d657d362a5ab6f06602809c7d1b130d5c0fe70ed2d9160f",
+      "archive_sha256": "c7c4cfd6eff7e6531d657d362a5ab6f06602809c7d1b130d5c0fe70ed2d9160f",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/self-reflection-full-20261113/sr-full-20261113/SelfReflection/test/sr-luna-none-sqlfirst-001/scores/per_question.csv",
+      "archive": "test/scores/per_question.csv",
+      "source_sha256": "be39d77d5465ec27410297814fc35f28c5a0ab4d5597c31b5f9dfc5d5c777968",
+      "archive_sha256": "be39d77d5465ec27410297814fc35f28c5a0ab4d5597c31b5f9dfc5d5c777968",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/self-reflection-full-20261113/sr-full-20261113/SelfReflection/test/sr-luna-none-sqlfirst-001/scores/run_manifest.json",
+      "archive": "test/scores/run_manifest.json",
+      "source_sha256": "7ee9609d312d099a17b330fb49c746fea74d5021cd5820fb2c15a640f8bac4ec",
+      "archive_sha256": "7ee9609d312d099a17b330fb49c746fea74d5021cd5820fb2c15a640f8bac4ec",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/self-reflection-full-20261113/sr-full-20261113/SelfReflection/test/sr-luna-none-sqlfirst-001/scores/per_question.jsonl",
+      "archive": "test/scores/per_question.jsonl",
+      "source_sha256": "a1c17380b6d46ba6a68529f914081f93c70be7912f61e4cc309fb1741ca75247",
+      "archive_sha256": "a1c17380b6d46ba6a68529f914081f93c70be7912f61e4cc309fb1741ca75247",
+      "compression": null
+    },
+    {
+      "source": "/home/devuser/self-reflection-full-20261113/sr-full-20261113/SelfReflection/test/sr-luna-none-sqlfirst-001/reviews/reflection_decisions.jsonl",
+      "archive": "test/reviews/reflection_decisions.jsonl",
+      "source_sha256": "af4ff65853f6e303f40d9b40789d3c7fb43e3092937a063cb6aceae98cbfed99",
+      "archive_sha256": "af4ff65853f6e303f40d9b40789d3c7fb43e3092937a063cb6aceae98cbfed99",
+      "compression": null
+    }
+  ],
+  "rename_migration": {
+    "name": "Metadata Discovery V2",
+    "historical_test_labels_normalized": true,
+    "run_not_repeated": true,
+    "source_sha256_retained": true
+  }
+}

@@ -1,0 +1,462 @@
+{
+  "n_025136699352dfca7f79f760": {
+    "concept_id": "TransactionID",
+    "keywords": [
+      "transaction",
+      "identifier",
+      "primary key"
+    ],
+    "note_id": "n_025136699352dfca7f79f760",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "0b6ee48044fd30e890dde156a500d147865936cc23665b49e89ad21009f7e482",
+    "source_refs": [
+      "schema:transactions_1k DDL and primary key"
+    ],
+    "status": "provisional",
+    "summary": "INTEGER primary-key identifier for a transaction_1k record.",
+    "table_name": "transactions_1k",
+    "title": "Transaction record identifier"
+  },
+  "n_0f7d20b23818329759138457": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "products",
+      "product",
+      "description",
+      "fuel",
+      "catalog"
+    ],
+    "note_id": "n_0f7d20b23818329759138457",
+    "note_type": "table",
+    "revision": 2,
+    "sha256": "a5741c5208108f326d2052c17171b6ff328e68c21072f047efcc4d1ceb79b393",
+    "source_refs": [
+      "schema:products DDL ProductID primary key and Description TEXT",
+      "values:products observed product labels and transaction product-description groups"
+    ],
+    "status": "provisional",
+    "summary": "ProductID-keyed product labels; observed labels include fuel-associated and non-fuel items, but no formal gasoline classification.",
+    "table_name": "products",
+    "title": "Product description catalog"
+  },
+  "n_101fcea653bc8f6dedf5639c": {
+    "concept_id": "Amount",
+    "keywords": [
+      "transaction",
+      "amount",
+      "price",
+      "calculation",
+      "unit"
+    ],
+    "note_id": "n_101fcea653bc8f6dedf5639c",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "e0201dee088db7eb8cc067cccd810c4b3a4e7eb9381a84dbbb135ca613001cbb",
+    "source_refs": [
+      "schema:transactions_1k DDL Amount INTEGER",
+      "description:transactions_1k.csv:8",
+      "description:transactions_1k.csv:9"
+    ],
+    "status": "provisional",
+    "summary": "INTEGER Amount on transaction records; source describes total price as Amount × Price, but unit and business interpretation remain unverified.",
+    "table_name": "transactions_1k",
+    "title": "Transaction amount field"
+  },
+  "n_1f5233782079851dcdb72063": {
+    "concept_id": "Description",
+    "keywords": [
+      "product",
+      "description",
+      "fuel",
+      "label"
+    ],
+    "note_id": "n_1f5233782079851dcdb72063",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "d2ad6392e2fd620922ab8d94b12361a4df039c8c9893b51a9b1df08077eadf66",
+    "source_refs": [
+      "schema:products DDL Description TEXT",
+      "values:products observed descriptions including Diesel, Petrol, LPG, AdBlue and non-fuel labels"
+    ],
+    "status": "provisional",
+    "summary": "TEXT product description; observed labels include fuel variants and non-fuel goods/services, but no verified classification field.",
+    "table_name": "products",
+    "title": "Product description label"
+  },
+  "n_60ebc2d10ac85c471b1e9da3": {
+    "concept_id": "ProductID",
+    "keywords": [
+      "transaction",
+      "product",
+      "identifier",
+      "join"
+    ],
+    "note_id": "n_60ebc2d10ac85c471b1e9da3",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "124123adb81810a2c2a8dafcd04a822bf989e9f518a719d5bcc89de102ee2372",
+    "source_refs": [
+      "schema:transactions_1k DDL ProductID INTEGER and no foreign keys",
+      "schema:products DDL ProductID primary key",
+      "description:transactions_1k.csv:7",
+      "values:products observed ProductID/Description labels"
+    ],
+    "status": "provisional",
+    "summary": "INTEGER product identifier recorded on transactions; matching products identifies a label, but no foreign-key constraint is declared.",
+    "table_name": "transactions_1k",
+    "title": "Transaction product identifier"
+  },
+  "n_6c19485ecc8b0cd178a6b65d": {
+    "concept_id": "Time",
+    "keywords": [
+      "transaction",
+      "time",
+      "clock"
+    ],
+    "note_id": "n_6c19485ecc8b0cd178a6b65d",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "c98abf111a28319fe50a5fc1c76a2b311f5e9b70042de24a80caa4e7169a4911",
+    "source_refs": [
+      "schema:transactions_1k DDL Time TEXT",
+      "description:transactions_1k.csv:3"
+    ],
+    "status": "provisional",
+    "summary": "TEXT time field associated with transaction records; exact format and timezone semantics are not verified.",
+    "table_name": "transactions_1k",
+    "title": "Transaction time field"
+  },
+  "n_6d740b8fd37ba597f9dd4e37": {
+    "concept_id": "Consumption",
+    "keywords": [
+      "consumption",
+      "customer",
+      "period",
+      "measure",
+      "fuel",
+      "unit"
+    ],
+    "note_id": "n_6d740b8fd37ba597f9dd4e37",
+    "note_type": "column",
+    "revision": 20,
+    "sha256": "f09255a32a0db0c75cb0fbe60e450c0617205d353030a022132f067180f3f76d",
+    "source_refs": [
+      "schema:yearmonth DDL Consumption REAL",
+      "description:yearmonth.csv:3",
+      "values:yearmonth observed Consumption values include positive, zero, negative"
+    ],
+    "status": "provisional",
+    "summary": "REAL customer-period measure called Consumption; exact unit, fuel classification, derivation and completeness remain unverified.",
+    "table_name": "yearmonth",
+    "title": "Customer-period consumption measure"
+  },
+  "n_90cd3af5506ae7d2572910b0": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "customer",
+      "segment",
+      "currency",
+      "client"
+    ],
+    "note_id": "n_90cd3af5506ae7d2572910b0",
+    "note_type": "table",
+    "revision": 4,
+    "sha256": "8eedbff6d81005cf2b18d1bcf7f58507f4db8b3c525a3004209345ba7863f253",
+    "source_refs": [
+      "schema:customers DDL CustomerID UNIQUE primary key and columns",
+      "description:customers.csv:1",
+      "description:customers.csv:2",
+      "description:customers.csv:3",
+      "values:customers Segment grouped counts",
+      "values:customers Currency grouped counts"
+    ],
+    "status": "provisional",
+    "summary": "Customer-level records keyed by CustomerID include client Segment and Currency; Segment values observed include SME, LAM, and KAM.",
+    "table_name": "customers",
+    "title": "Customer attributes"
+  },
+  "n_9cbcecb1dcd5b24f5368abdf": {
+    "concept_id": "Date",
+    "keywords": [
+      "transaction",
+      "date",
+      "coverage",
+      "period",
+      "sample"
+    ],
+    "note_id": "n_9cbcecb1dcd5b24f5368abdf",
+    "note_type": "column",
+    "revision": 4,
+    "sha256": "beed4c3357814869497813e8158377210070e1185eea1d8e34247755dfc28429",
+    "source_refs": [
+      "schema:transactions_1k DDL Date DATE",
+      "description:transactions_1k.csv:2",
+      "values:transactions_1k row count 1000, MIN/MAX Date and distinct-date count"
+    ],
+    "status": "provisional",
+    "summary": "DATE transaction field observed in 2012 only from 2012-08-23 through 2012-08-26; narrow coverage does not verify 2013 customer-month fuel use.",
+    "table_name": "transactions_1k",
+    "title": "Transaction date field"
+  },
+  "n_9e172fa6c6a4c4f27047645d": {
+    "concept_id": "CardID",
+    "keywords": [
+      "card",
+      "transaction",
+      "identifier",
+      "coverage"
+    ],
+    "note_id": "n_9e172fa6c6a4c4f27047645d",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "635a241172790bb53726603c26968d6e1fbe5b8dc0f1e9583ebca08300831a9f",
+    "source_refs": [
+      "schema:transactions_1k DDL CardID INTEGER",
+      "values:transactions_1k Date MIN/MAX and distinct CardID over all rows"
+    ],
+    "status": "provisional",
+    "summary": "INTEGER card identifier on transaction records; observed 902 distinct cards among 1,000 records, but dataset spans only four dates in August 2012.",
+    "table_name": "transactions_1k",
+    "title": "Transaction card identifier"
+  },
+  "n_acb4613a747b5868d4db3251": {
+    "concept_id": "Date",
+    "keywords": [
+      "date",
+      "period",
+      "consumption",
+      "coverage",
+      "month"
+    ],
+    "note_id": "n_acb4613a747b5868d4db3251",
+    "note_type": "column",
+    "revision": 5,
+    "sha256": "a3ff688e9a0d777d3dcee26d8892e7f6f59f0e07ebdff22a76e3b65256c3107a",
+    "source_refs": [
+      "schema:yearmonth DDL Date TEXT NOT NULL and composite primary key",
+      "values:yearmonth observed Date values and monthly distinct CustomerID counts in 2012–2013",
+      "values:customers row count"
+    ],
+    "status": "provisional",
+    "summary": "TEXT period key for customer consumption records; observed values use YYYYMM, monthly coverage varies and completeness is unverified.",
+    "table_name": "yearmonth",
+    "title": "Customer consumption period field"
+  },
+  "n_c7b5f028dbb96d8a32a04d1b": {
+    "concept_id": "ProductID",
+    "keywords": [
+      "product",
+      "identifier",
+      "primary key",
+      "transaction"
+    ],
+    "note_id": "n_c7b5f028dbb96d8a32a04d1b",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "d9ed16ecb54b150f34f61a302872796006c13f5963f8bf8be2029cda3dcdf02f",
+    "source_refs": [
+      "schema:products DDL ProductID INTEGER UNIQUE NOT NULL PRIMARY KEY",
+      "schema:transactions_1k DDL ProductID INTEGER"
+    ],
+    "status": "provisional",
+    "summary": "INTEGER primary-key identifier for a products record; transaction linkage is by matching identifier, not declared foreign key.",
+    "table_name": "products",
+    "title": "Product identifier"
+  },
+  "n_cb7426043f3a05d9980917be": {
+    "concept_id": "Country",
+    "keywords": [
+      "gas station",
+      "country",
+      "code"
+    ],
+    "note_id": "n_cb7426043f3a05d9980917be",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "8df429f0ee2e398802dfbf23cf4a35d5edd4ffb6564da20a8cf9b8b8e1337587",
+    "source_refs": [
+      "schema:gasstations DDL Country TEXT",
+      "values:gasstations Country counts",
+      "description:gasstations.csv:3"
+    ],
+    "status": "provisional",
+    "summary": "TEXT country attribute on gasstations; observed values include CZE and SVK, with CZE used to denote Czech Republic per supplied evidence.",
+    "table_name": "gasstations",
+    "title": "Gas station country code"
+  },
+  "n_da09385196807107786697c5": {
+    "concept_id": "Price",
+    "keywords": [
+      "transaction",
+      "price",
+      "amount",
+      "calculation"
+    ],
+    "note_id": "n_da09385196807107786697c5",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "b414200a5bf6732f641d493f8337ed73646951bd7c4f022d48303f08b6421c08",
+    "source_refs": [
+      "schema:transactions_1k DDL and column type",
+      "description:transactions_1k.csv:9"
+    ],
+    "status": "provisional",
+    "summary": "REAL Price field; source states total price = Amount × Price, but the Price unit and exact concept are unverified.",
+    "table_name": "transactions_1k",
+    "title": "Transaction price field"
+  },
+  "n_de4b24075db9d279202517a1": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "consumption",
+      "customer",
+      "date",
+      "monthly",
+      "coverage",
+      "completeness"
+    ],
+    "note_id": "n_de4b24075db9d279202517a1",
+    "note_type": "table",
+    "revision": 13,
+    "sha256": "0b79aa0d8a1d10087475ca9c5526c6cd49c628559b954af72c9e2872f5888152",
+    "source_refs": [
+      "schema:yearmonth DDL primary key (Date, CustomerID), columns and foreign key",
+      "values:yearmonth grouped Date counts and distinct CustomerID per Date",
+      "values:yearmonth 2012 records January-September and none October-December"
+    ],
+    "status": "provisional",
+    "summary": "Customer-period Consumption records keyed by Date and CustomerID; 2012 records end in September, with uneven customer coverage.",
+    "table_name": "yearmonth",
+    "title": "Customer-date consumption records"
+  },
+  "n_e5027642af3124b825bae936": {
+    "concept_id": "CustomerID",
+    "keywords": [
+      "transaction",
+      "customer",
+      "identifier"
+    ],
+    "note_id": "n_e5027642af3124b825bae936",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "a4456e1507e504eeebe170e8485d81518bef5fb42e2d099da939996a1cdec4c2",
+    "source_refs": [
+      "schema:transactions_1k DDL CustomerID INTEGER and no declared foreign keys",
+      "description:transactions_1k.csv:4"
+    ],
+    "status": "provisional",
+    "summary": "INTEGER customer identifier on transaction records; transactions table DDL declares no relationship constraint.",
+    "table_name": "transactions_1k",
+    "title": "Transaction customer identifier"
+  },
+  "n_ea4a0fc4ce822f301bffcce7": {
+    "concept_id": "GasStationID",
+    "keywords": [
+      "transaction",
+      "gas station",
+      "identifier",
+      "join"
+    ],
+    "note_id": "n_ea4a0fc4ce822f301bffcce7",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "b0beeb99aff470c20d265e92ecc67cb1f86b9d8bc0014e671119e146bde483e6",
+    "source_refs": [
+      "schema:transactions_1k DDL GasStationID INTEGER",
+      "schema:gasstations DDL GasStationID INTEGER PRIMARY KEY",
+      "values:transactions_1k LEFT JOIN gasstations on GasStationID, 1000/1000 matched"
+    ],
+    "status": "provisional",
+    "summary": "INTEGER station reference on transactions; all 1,000 observed transaction rows matched a gasstations.GasStationID.",
+    "table_name": "transactions_1k",
+    "title": "Transaction gas station identifier"
+  },
+  "n_f317589a341b8c280a5ae7ed": {
+    "concept_id": "CustomerID",
+    "keywords": [
+      "customer",
+      "identifier",
+      "consumption"
+    ],
+    "note_id": "n_f317589a341b8c280a5ae7ed",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "d418a724d8498fb0f52bc78439998a985a3f69d4d9c8e6bef2ad1edb8541cc6c",
+    "source_refs": [
+      "schema:yearmonth DDL and composite primary key",
+      "description:yearmonth.csv:1"
+    ],
+    "status": "provisional",
+    "summary": "INTEGER customer identifier in yearmonth; part of composite key and references customers in DDL.",
+    "table_name": "yearmonth",
+    "title": "Consumption customer identifier"
+  },
+  "n_f920d2921816e4236c26a9af": {
+    "concept_id": "Currency",
+    "keywords": [
+      "customer",
+      "currency",
+      "eur",
+      "czk",
+      "attribute"
+    ],
+    "note_id": "n_f920d2921816e4236c26a9af",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "f8700650cd5af3a938a5c9972bb64fe4b4c073967fc9ca9e27009e5590bcbe35",
+    "source_refs": [
+      "schema:customers DDL Currency TEXT",
+      "description:customers.csv:3",
+      "values:customers Currency grouped counts"
+    ],
+    "status": "provisional",
+    "summary": "TEXT customer attribute labeled Currency with observed EUR and CZK values; account-currency semantics remain unverified by source metadata.",
+    "table_name": "customers",
+    "title": "Customer currency field"
+  },
+  "n_f95c7e737bd1e94cbfb9ade9": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "transaction",
+      "date",
+      "customer",
+      "product",
+      "amount",
+      "price"
+    ],
+    "note_id": "n_f95c7e737bd1e94cbfb9ade9",
+    "note_type": "table",
+    "revision": 2,
+    "sha256": "bf0fcb1cae18a2d9a4b0ba58ea7371b086f38808334a493eaab256c953994f13",
+    "source_refs": [
+      "schema:transactions_1k DDL columns and TransactionID primary key",
+      "values:transactions_1k row count and observed Date min/max/distinct count"
+    ],
+    "status": "provisional",
+    "summary": "Transaction rows with date, customer/card/product/station identifiers, amount and price; observed sample covers only four dates in August 2012.",
+    "table_name": "transactions_1k",
+    "title": "Transaction records (limited sample)"
+  },
+  "n_fe55ff0d753ff4f525cd8c94": {
+    "concept_id": "Segment",
+    "keywords": [
+      "customer",
+      "segment",
+      "classification"
+    ],
+    "note_id": "n_fe55ff0d753ff4f525cd8c94",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "b311e4e49f411ca7e2ce4fadf81a93af611754cf093a10e987ddc60406280e8d",
+    "source_refs": [
+      "schema:customers DDL Segment TEXT null",
+      "description:customers.csv:2",
+      "values:customers Segment grouped counts"
+    ],
+    "status": "provisional",
+    "summary": "TEXT customer classification labeled client segment; observed categories include SME, LAM, and KAM; category definitions are unverified.",
+    "table_name": "customers",
+    "title": "Customer client segment"
+  }
+}

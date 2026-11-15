@@ -1,4 +1,4 @@
-"""Reproducible setup for original (not V2) BIRD Mini-Dev SQLite databases.
+"""Reproducible setup for original and current BIRD Mini-Dev SQLite databases.
 
 Use `python -m scr.datasets.setup_bird --help`. No API keys or gold SQL are
 passed to agents. Dataset archives and generated manifests stay under data/bird/.
@@ -61,23 +61,24 @@ def safe_extract_zip(archive: Path, destination: Path) -> None:
                     shutil.copyfileobj(src, dst, 1024 * 1024)
 
 
-def fetch_annotations(path: Path | None = None) -> tuple[Path, str]:
-    """Download only the pinned official SQLite annotations, or use manual input."""
+def fetch_annotations(path: Path | None = None, *, release: str = "original", revision: str | None = None) -> tuple[Path, str]:
+    """Download official SQLite annotations at a resolved commit, or use manual input."""
     if path:
         path = Path(path).resolve()
         if not path.is_file():
             raise FileNotFoundError(path)
         return path, "manual-annotations-verify-against-pinned-source"
     try:
-        from huggingface_hub import hf_hub_download
+        from huggingface_hub import hf_hub_download, HfApi
     except ImportError as exc:
         raise RuntimeError("Install dependencies with 'uv sync' to use Hugging Face downloads") from exc
     try:
+        resolved = HfApi().dataset_info(HF_REPO, revision=revision or "main").sha if release == "latest" else HF_REVISION
         result = hf_hub_download(repo_id=HF_REPO, repo_type="dataset",
-                                 revision=HF_REVISION, filename=HF_FILE)
+                                 revision=resolved, filename="data/mini_dev_sqlite.jsonl" if release == "latest" else HF_FILE)
     except Exception as exc:
-        raise RuntimeError("Pinned Hugging Face annotations unavailable; download the original SQLite JSON and pass --annotations PATH") from exc
-    return Path(result), HF_REVISION
+        raise RuntimeError("Hugging Face annotations unavailable; check the release/revision or pass --annotations PATH") from exc
+    return Path(result), resolved
 
 
 def fetch_archive(destination: Path, manual: Path | None = None) -> Path:
@@ -119,6 +120,10 @@ def locate_databases(extracted: Path, db_ids: set[str]) -> dict[str, Path]:
 
 def verify(root: Path = DEFAULT_ROOT, *, hashes: bool = True) -> dict:
     dataset = BirdDataset(root)
+    if "source_annotations_file" in dataset.manifest:
+        source = dataset.root / dataset.manifest["source_annotations_file"]
+        if not source.resolve().is_relative_to(dataset.root) or sha256_file(source) != dataset.manifest["source_annotations_sha256"]:
+            raise ValueError("Source annotation checksum mismatch")
     if hashes:
         for dbid, item in dataset.manifest["databases"].items():
             if sha256_file(dataset.get_database_path(dbid)) != item["sha256"]:
@@ -139,31 +144,56 @@ def verify(root: Path = DEFAULT_ROOT, *, hashes: bool = True) -> dict:
 
 
 def setup(root: Path = DEFAULT_ROOT, *, archive: Path | None = None,
-          annotations: Path | None = None, force: bool = False) -> dict:
+          annotations: Path | None = None, force: bool = False,
+          release: str = "original", revision: str | None = None) -> dict:
+    if release not in {"original", "latest"}:
+        raise ValueError("Unknown release")
+    if revision and release != "latest":
+        raise ValueError("--revision requires --release latest")
     root = Path(root).resolve()
     if root.exists() and not force:
+        installed = BirdDataset(root).manifest
+        expected = "bird-mini-dev-2026-sqlite" if release == "latest" else "bird-mini-dev-original-sqlite"
+        if installed["dataset"] != expected or (revision and installed["annotations_source_revision"] != revision):
+            raise ValueError("Installed release/revision differs; use a separate --root")
         return verify(root)
     if root.exists() and force:
         raise ValueError("Refusing to overwrite dataset in place; move/delete the existing dataset after backing it up")
     root.parent.mkdir(parents=True, exist_ok=True)
-    source_json, source_revision = fetch_annotations(annotations)
+    source_json, source_revision = fetch_annotations(annotations, release=release, revision=revision)
     rows = read_annotations(source_json)
+    if release == "latest" and {r["question_id"] for r in rows} != set(range(500)):
+        raise ValueError("Latest Mini-Dev requires IDs 0–499")
     split = make_split(rows)
-    archive_path = fetch_archive(root.parent / "_downloads" / "original-mini-dev.zip", archive)
+    if release == "latest" and archive:
+        raise ValueError("Latest release uses official database images, not the legacy archive")
+    archive_path = fetch_archive(root.parent / "_downloads" / "original-mini-dev.zip", archive) if release == "original" else None
     with tempfile.TemporaryDirectory(prefix="bird-setup-", dir=root.parent) as tmp:
         staging = Path(tmp) / "original-mini-dev"
         package = staging / "package"
-        safe_extract_zip(archive_path, package)
+        images = {}
+        if release == "latest":
+            from .bird_images import fetch_databases
+            images = fetch_databases(package, {row["db_id"] for row in rows})
+        else:
+            safe_extract_zip(archive_path, package)
         dbs = locate_databases(package, {row["db_id"] for row in rows})
         staging.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(source_json, staging / "annotations.json")
+        shutil.copyfile(source_json, staging / ("annotations.source.jsonl" if source_json.suffix == ".jsonl" else "annotations.source.json"))
+        (staging / "annotations.json").write_text(json.dumps(rows, ensure_ascii=False) + "\n", encoding="utf-8")
+        if release == "original":
+            shutil.copyfile(source_json, staging / "annotations.json")
         inventory = {db_id: {"path": path.relative_to(staging).as_posix(), "sha256": sha256_file(path)}
                      for db_id, path in sorted(dbs.items())}
         manifest = {
-            "dataset": "bird-mini-dev-original-sqlite", "source": HF_REPO,
-            "hf_revision_expected": HF_REVISION, "annotations_source_revision": source_revision,
-            "hf_annotations_file": HF_FILE, "drive_file_id": DRIVE_FILE_ID,
-            "archive_filename": archive_path.name, "archive_sha256": sha256_file(archive_path),
+            "dataset": "bird-mini-dev-2026-sqlite" if release == "latest" else "bird-mini-dev-original-sqlite", "source": HF_REPO,
+            "database_images": images, "source_annotations_sha256": sha256_file(source_json),
+            "source_annotations_file": "annotations.source.jsonl" if source_json.suffix == ".jsonl" else "annotations.source.json",
+            "hf_revision_expected": source_revision if release == "latest" else HF_REVISION, "annotations_source_revision": source_revision,
+            "hf_annotations_file": "data/mini_dev_sqlite.jsonl" if release == "latest" else HF_FILE,
+            "drive_file_id": DRIVE_FILE_ID if archive_path else None,
+            "archive_filename": archive_path.name if archive_path else None,
+            "archive_sha256": sha256_file(archive_path) if archive_path else None,
             "annotations_sha256": sha256_file(staging / "annotations.json"),
             "question_count": EXPECTED_QUESTIONS, "database_count": EXPECTED_DATABASES,
             "sql_dialect": "SQLite", "split_seed": 42, "split": split,
@@ -178,16 +208,24 @@ def setup(root: Path = DEFAULT_ROOT, *, archive: Path | None = None,
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Setup original 500-question BIRD Mini-Dev SQLite (not V2)")
-    parser.add_argument("--root", type=Path, default=DEFAULT_ROOT, help="Local dataset directory")
+    parser = argparse.ArgumentParser(description="Setup original or current 500-question BIRD Mini-Dev SQLite")
+    parser.add_argument("--release", choices=("original", "latest"), default="original")
+    parser.add_argument("--revision", help="Hugging Face commit for current Mini-Dev layout")
+    parser.add_argument("--root", type=Path, default=None, help="Local dataset directory")
     parser.add_argument("--archive", type=Path, help="Official Google Drive complete-package ZIP, already downloaded")
-    parser.add_argument("--annotations", type=Path, help="Original SQLite JSON for offline/manual setup; provenance marked unverified")
+    parser.add_argument("--annotations", type=Path, help="SQLite JSON/JSONL for manual setup; provenance marked unverified")
     parser.add_argument("--verify-only", action="store_true", help="Check installed dataset without network")
     args = parser.parse_args(argv)
     if args.verify_only and (args.archive or args.annotations):
         parser.error("--verify-only cannot be combined with --archive or --annotations")
+    args.root = args.root or (DEFAULT_ROOT if args.release == "original" else DEFAULT_ROOT.parent / "mini-dev-2026")
     try:
-        result = verify(args.root) if args.verify_only else setup(args.root, archive=args.archive, annotations=args.annotations)
+        if args.verify_only:
+            installed = BirdDataset(args.root).manifest
+            expected = "bird-mini-dev-2026-sqlite" if args.release == "latest" else "bird-mini-dev-original-sqlite"
+            if installed["dataset"] != expected or (args.revision and installed["annotations_source_revision"] != args.revision):
+                raise ValueError("Installed release/revision differs from requested verification")
+        result = verify(args.root) if args.verify_only else setup(args.root, archive=args.archive, annotations=args.annotations, release=args.release, revision=args.revision)
     except (ValueError, FileNotFoundError, RuntimeError, zipfile.BadZipFile, OSError) as exc:
         parser.exit(1, f"BIRD setup/verification failed: {exc}\n")
     print(json.dumps(result, indent=2))

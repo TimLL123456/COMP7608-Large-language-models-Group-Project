@@ -1,0 +1,2383 @@
+question_id,split,db_id,difficulty,status,review_status,stop_reason,predicted_sql
+2,dev,california_schools,moderate,incorrect_result,PASS,final_sql_ready,"SELECT
+    s.School,
+    ROUND(f.""Percent (%) Eligible FRPM (K-12)"", 6) AS eligible_meal_rate
+FROM schools AS s
+JOIN frpm AS f ON f.CDSCode = s.CDSCode
+WHERE s.SOC = '66'
+ORDER BY f.""FRPM Count (K-12)"" DESC
+LIMIT 5;"
+3,dev,california_schools,moderate,incorrect_result,PASS,final_sql_ready,"SELECT COUNT(DISTINCT CASE WHEN DOCType = 'Unified School District' THEN DOC END) * 1.0
+       / COUNT(DISTINCT CASE WHEN DOCType = 'Elementary School District' THEN DOC END) AS ratio
+FROM schools
+WHERE County = 'Orange'
+  AND StatusType = 'Merged'
+  AND DOCType IN ('Unified School District', 'Elementary School District');"
+19,dev,california_schools,challenging,incorrect_result,PASS,final_sql_ready,"SELECT CASE MIN(CASE
+    WHEN substr(GSserved, 1, 1) = 'P' THEN 0
+    WHEN substr(GSserved, 1, 1) = 'K' THEN 1
+    ELSE CAST(substr(GSserved, 1, instr(GSserved || '-', '-') - 1) AS INTEGER) + 1
+END)
+    WHEN 0 THEN 'P'
+    WHEN 1 THEN 'K'
+    ELSE CAST(MIN(CASE
+        WHEN substr(GSserved, 1, 1) = 'P' THEN 0
+        WHEN substr(GSserved, 1, 1) = 'K' THEN 1
+        ELSE CAST(substr(GSserved, 1, instr(GSserved || '-', '-') - 1) AS INTEGER) + 1
+    END) - 1 AS TEXT)
+END AS lowest_grade
+FROM schools
+WHERE NCESDist = '0632640'
+  AND StatusType = 'Active'
+  AND GSserved IS NOT NULL;"
+23,dev,california_schools,challenging,incorrect_result,UNCERTAIN,review_uncertain,"WITH school_scores AS (
+    SELECT
+        s.CDSCode,
+        s.School,
+        ss.NumGE1500,
+        s.AdmEmail1,
+        s.AdmEmail2,
+        s.AdmEmail3
+    FROM schools AS s
+    JOIN satscores AS ss
+        ON ss.cds = s.CDSCode
+    WHERE s.DOCType = 'State Board of Education'
+      AND s.School IS NOT NULL
+      AND ss.rtype = 'S'
+),
+max_score AS (
+    SELECT MAX(NumGE1500) AS NumGE1500
+    FROM school_scores
+)
+SELECT
+    school_scores.School,
+    school_scores.AdmEmail1,
+    school_scores.AdmEmail2,
+    school_scores.AdmEmail3
+FROM school_scores
+JOIN max_score
+    ON school_scores.NumGE1500 = max_score.NumGE1500;"
+24,dev,california_schools,challenging,incorrect_result,PASS,final_sql_ready,"WITH middle_schools AS (
+    SELECT SOCType AS school_type, School AS school_name, Latitude AS latitude
+    FROM schools
+    WHERE (
+        LOWER(COALESCE(SOCType, '')) LIKE '%middle%'
+        OR LOWER(COALESCE(SOCType, '')) LIKE '%junior%'
+        OR LOWER(COALESCE(School, '')) LIKE '%middle%'
+    )
+      AND Latitude IS NOT NULL
+)
+SELECT
+    school_type AS ""School Type"",
+    school_name AS ""School Name"",
+    latitude AS Latitude
+FROM middle_schools
+WHERE latitude = (SELECT MAX(latitude) FROM middle_schools);"
+26,dev,california_schools,challenging,incorrect_result,FAIL,no_progress_repeated_sql,"WITH active_charters AS (
+    SELECT CDSCode, FundingType
+    FROM schools
+    WHERE StatusType = 'Active'
+      AND FundingType IN ('Directly funded', 'Locally funded')
+),
+frpm_2014_2015 AS (
+    SELECT
+        CDSCode,
+        `Enrollment (K-12)` AS enrollment,
+        `Percent (%) Eligible FRPM (K-12)` AS frpm_percentage
+    FROM frpm
+    WHERE `Academic Year` = '2014-2015'
+),
+school_sat AS (
+    SELECT
+        cds AS CDSCode,
+        AvgScrRead + AvgScrMath + AvgScrWrite AS combined_sat
+    FROM satscores
+    WHERE AvgScrRead IS NOT NULL
+      AND AvgScrMath IS NOT NULL
+      AND AvgScrWrite IS NOT NULL
+)
+SELECT
+    a.FundingType,
+    COUNT(*) AS charter_school_count,
+    SUM(f.enrollment) AS total_k12_enrollment,
+    ROUND(AVG(f.frpm_percentage) * 100, 2) AS avg_frpm_eligible_percentage,
+    ROUND(AVG(s.combined_sat), 2) AS avg_combined_sat_score
+FROM active_charters AS a
+LEFT JOIN frpm_2014_2015 AS f ON f.CDSCode = a.CDSCode
+LEFT JOIN school_sat AS s ON s.CDSCode = a.CDSCode
+GROUP BY a.FundingType;"
+28,dev,california_schools,challenging,incorrect_result,UNCERTAIN,review_uncertain,"SELECT COUNT(*) AS school_count
+FROM schools AS s
+JOIN frpm AS f
+  ON f.CDSCode = s.CDSCode
+LEFT JOIN satscores AS sat
+  ON sat.cds = s.CDSCode
+WHERE s.School IS NOT NULL
+  AND TRIM(s.School) <> ''
+  AND s.StatusType = 'Active'
+  AND CAST(f.""Enrollment (K-12)"" AS REAL) > 500
+  AND CAST(
+        CASE
+          WHEN INSTR(s.GSserved, '-') > 0
+            THEN SUBSTR(s.GSserved, INSTR(s.GSserved, '-') + 1)
+          ELSE s.GSserved
+        END AS INTEGER
+      ) <= 8
+  AND CAST(
+        CASE
+          WHEN INSTR(s.GSserved, '-') > 0
+            THEN SUBSTR(s.GSserved, 1, INSTR(s.GSserved, '-') - 1)
+          ELSE s.GSserved
+        END AS INTEGER
+      ) BETWEEN 1 AND 12
+  AND (sat.cds IS NULL OR sat.NumTstTakr = 0);"
+31,dev,california_schools,challenging,incorrect_result,FAIL,max_attempts,"SELECT COUNT(*) AS count_zero_takers
+FROM schools AS s
+LEFT JOIN satscores AS sat
+    ON sat.cds = s.CDSCode
+WHERE s.State = 'CA'
+  AND s.StatusType = 'Active'
+  AND s.EILName = 'High School'
+  AND s.DOCType IN (
+      'County Office of Education (COE)',
+      'Elementary School District',
+      'High School District',
+      'Unified School District',
+      'State Board of Education',
+      'Statewide Benefit Charter',
+      'State Special Schools'
+  )
+  AND (sat.cds IS NULL OR sat.NumTstTakr = 0);"
+34,dev,california_schools,challenging,incorrect_result,PASS,final_sql_ready,"SELECT ROUND(
+    100.0 * SUM(CASE WHEN sc.Virtual IN ('F', 'P') THEN 1 ELSE 0 END) / COUNT(*),
+    1
+) AS percentage
+FROM satscores AS ss
+JOIN schools AS sc ON sc.CDSCode = ss.cds
+WHERE sc.State = 'CA'
+  AND ss.AvgScrMath > 400;"
+36,dev,california_schools,challenging,incorrect_result,FAIL,max_attempts,"WITH eligible_schools AS (
+    SELECT
+        s.CDSCode,
+        s.School,
+        s.GSserved,
+        s.Charter,
+        f.`Free Meal Count (K-12)` * 1.0 / f.`Enrollment (K-12)` AS free_meal_rate
+    FROM schools AS s
+    JOIN frpm AS f ON f.CDSCode = s.CDSCode
+    WHERE s.County = 'Alameda'
+      AND s.GSserved IS NOT NULL
+      AND (s.GSserved LIKE '%12%' OR s.GSserved = '12')
+      AND f.`Enrollment (K-12)` > 0
+),
+top_rate AS (
+    SELECT MAX(free_meal_rate) AS rate
+    FROM eligible_schools
+)
+SELECT
+    e.School AS school_name,
+    printf('%.4f', e.free_meal_rate) AS free_meal_rate,
+    CASE e.Charter
+        WHEN 1 THEN 'Yes'
+        WHEN 0 THEN 'No'
+        ELSE 'Unknown'
+    END AS charter_school,
+    e.GSserved AS grades_served,
+    CASE
+        WHEN ss.AvgScrRead IS NULL
+          OR ss.AvgScrMath IS NULL
+          OR ss.AvgScrWrite IS NULL THEN 'No SAT Data'
+        WHEN ss.AvgScrRead + ss.AvgScrMath + ss.AvgScrWrite < 1200 THEN 'Below Average'
+        WHEN ss.AvgScrRead + ss.AvgScrMath + ss.AvgScrWrite <= 1500 THEN 'Average'
+        ELSE 'Above Average'
+    END AS sat_performance_level
+FROM eligible_schools AS e
+JOIN top_rate AS t ON e.free_meal_rate = t.rate
+LEFT JOIN satscores AS ss ON ss.cds = e.CDSCode;"
+37,dev,california_schools,challenging,incorrect_result,FAIL,no_progress_repeated_sql,"WITH top_score AS (
+    SELECT MAX(sat.AvgScrMath) AS highest_math
+    FROM satscores AS sat
+    JOIN schools AS active_school
+      ON active_school.CDSCode = sat.cds
+    WHERE active_school.StatusType = 'Active'
+      AND sat.NumTstTakr >= 10
+)
+SELECT
+    s.School AS school_name,
+    s.Phone AS phone_number,
+    s.Website AS website,
+    sat.AvgScrRead AS average_sat_reading,
+    sat.AvgScrMath AS average_sat_math,
+    sat.AvgScrWrite AS average_sat_writing,
+    s.Charter AS charter_school,
+    f.`Enrollment (K-12)` AS enrollment_k12_2014_2015,
+    ROUND(f.`Percent (%) Eligible FRPM (K-12)`, 2) AS percent_students_eligible_frpm,
+    t.highest_math AS highest_active_school_sat_math,
+    t.highest_math - sat.AvgScrMath AS points_below_highest_math
+FROM schools AS s
+LEFT JOIN satscores AS sat
+  ON sat.cds = s.CDSCode
+LEFT JOIN frpm AS f
+  ON f.CDSCode = s.CDSCode
+ AND f.`Academic Year` = '2014-2015'
+CROSS JOIN top_score AS t
+WHERE s.CDSCode = '07618040113118';"
+45,dev,california_schools,challenging,incorrect_result,PASS,final_sql_ready,"SELECT s.Street, s.City, s.Zip, s.State
+FROM satscores AS t
+JOIN schools AS s ON s.CDSCode = t.cds
+WHERE t.NumTstTakr >= 700
+ORDER BY 1.0 * t.NumGE1500 / t.NumTstTakr ASC,
+         CAST(t.cds AS INTEGER) ASC
+LIMIT 1;"
+64,dev,card_games,challenging,incorrect_result,PASS,final_sql_ready,"SELECT COUNT(*)
+FROM cards
+WHERE borderColor = 'black'
+  AND availability LIKE '%mtgo%'
+  AND types LIKE '%Creature%'
+  AND power GLOB '[0-9]*'
+  AND CAST(power AS INTEGER) >= 10;"
+65,dev,card_games,challenging,incorrect_result,PASS,final_sql_ready,"WITH qualifying_sets AS (
+    SELECT s.code
+    FROM sets AS s
+    LEFT JOIN set_translations AS st
+        ON st.setCode = s.code
+    GROUP BY s.code
+    HAVING COUNT(DISTINCT st.translation) < 5
+),
+card_counts AS (
+    SELECT setCode, COUNT(*) AS card_count
+    FROM cards
+    GROUP BY setCode
+)
+SELECT SUM(card_counts.card_count) AS total_cards
+FROM qualifying_sets
+JOIN card_counts
+    ON card_counts.setCode = qualifying_sets.code;"
+66,dev,card_games,challenging,incorrect_result,UNCERTAIN,review_uncertain,"SELECT
+    s.type,
+    COUNT(DISTINCT CASE
+        WHEN st.translation IS NOT NULL AND TRIM(st.translation) <> '' THEN s.id
+    END) AS sets_with_translated_name,
+    COUNT(DISTINCT CASE
+        WHEN st.translation IS NOT NULL AND TRIM(st.translation) <> '' THEN c.id
+    END) AS total_cards
+FROM sets AS s
+LEFT JOIN set_translations AS st
+    ON st.setCode = s.code
+LEFT JOIN cards AS c
+    ON c.setCode = s.code
+GROUP BY s.type
+ORDER BY s.type;"
+67,dev,card_games,challenging,incorrect_result,PASS,final_sql_ready,"SELECT COUNT(*) AS ruling_count
+FROM rulings AS r
+JOIN cards AS c ON c.uuid = r.uuid
+WHERE c.name = 'Mishra''s Factory'
+  AND r.date = (
+    SELECT MAX(r2.date)
+    FROM rulings AS r2
+    JOIN cards AS c2 ON c2.uuid = r2.uuid
+    WHERE c2.name = 'Mishra''s Factory'
+  );"
+69,dev,card_games,challenging,incorrect_result,PASS,final_sql_ready,"SELECT c.frameVersion, COUNT(*) AS card_count
+FROM cards AS c
+WHERE c.frameVersion = (
+    SELECT MAX(frameVersion)
+    FROM cards
+    WHERE convertedManaCost = 0
+)
+GROUP BY c.frameVersion;"
+70,dev,card_games,challenging,incorrect_result,UNCERTAIN,review_uncertain,"WITH printing_counts AS (
+    SELECT
+        frameVersion,
+        COUNT(*) AS printing_count,
+        COUNT(*) * 100.0 / SUM(COUNT(*)) OVER () AS percentage
+    FROM cards
+    WHERE name = 'Tarmogoyf'
+    GROUP BY frameVersion
+)
+SELECT
+    frameVersion AS year,
+    ROUND(percentage, 2) AS percentage
+FROM printing_counts
+ORDER BY CAST(frameVersion AS INTEGER) DESC
+LIMIT 1;"
+75,dev,card_games,challenging,incorrect_result,FAIL,max_attempts,"WITH numbered_abzan AS (
+    SELECT
+        c.name,
+        c.number,
+        c.uuid,
+        c.setCode,
+        CAST(c.number AS INTEGER) AS collector_number,
+        MAX(CAST(c.number AS INTEGER)) OVER (PARTITION BY c.setCode) AS set_max_number
+    FROM cards AS c
+    WHERE lower(c.watermark) = 'abzan'
+)
+SELECT
+    a.name,
+    a.number AS collector_number,
+    (
+        SELECT COUNT(*)
+        FROM foreign_data AS fd
+        WHERE fd.uuid = a.uuid
+    ) AS foreign_language_printings
+FROM numbered_abzan AS a
+WHERE a.collector_number = a.set_max_number;"
+79,dev,card_games,challenging,incorrect_result,PASS,final_sql_ready,"SELECT COUNT(*) AS total_cards
+FROM cards c
+JOIN sets s ON s.code = c.setCode
+WHERE s.releaseDate >= '2017-01-01'
+  AND s.releaseDate < '2018-01-01'
+  AND EXISTS (
+      SELECT 1
+      FROM set_translations st
+      WHERE st.setCode = s.code
+        AND st.language <> 'English'
+        AND st.translation IS NOT NULL
+        AND TRIM(st.translation) <> ''
+  );"
+80,dev,card_games,challenging,incorrect_result,PASS,final_sql_ready,"SELECT COUNT(*) AS card_count
+FROM cards
+WHERE duelDeck = 'b'
+  AND hasFoil = 0
+  AND CAST(power AS REAL) < 3;"
+81,dev,card_games,challenging,incorrect_result,PASS,final_sql_ready,"WITH unique_cards AS (
+    SELECT DISTINCT scryfallOracleId, name, artist
+    FROM cards
+    WHERE borderColor = 'black'
+      AND availability LIKE '%arena%'
+      AND power GLOB '[0-9]*'
+      AND CAST(power AS INTEGER) >= 10
+),
+artist_counts AS (
+    SELECT artist, COUNT(*) AS card_count
+    FROM unique_cards
+    GROUP BY artist
+)
+SELECT artist, card_count
+FROM artist_counts
+WHERE card_count = (SELECT MAX(card_count) FROM artist_counts)
+ORDER BY artist;"
+84,dev,card_games,challenging,incorrect_result,PASS,final_sql_ready,"SELECT COUNT(DISTINCT artist)
+FROM cards
+WHERE borderColor = 'black'
+  AND availability LIKE '%arena%'
+  AND availability NOT LIKE '%mtgo%'
+  AND type LIKE '%Creature%'
+  AND power IS NOT NULL
+  AND TRIM(power) <> ''
+  AND power NOT LIKE '%*%'
+  AND power NOT LIKE '%+%'
+  AND power NOT LIKE '%−%'
+  AND power NOT LIKE '%-%'
+  AND CAST(power AS REAL) >= 5
+  AND artist IS NOT NULL
+  AND TRIM(artist) <> '';"
+86,dev,card_games,challenging,incorrect_result,UNCERTAIN,review_uncertain,"SELECT frameVersion AS frame_year,
+       COUNT(DISTINCT COALESCE(scryfallOracleId, name)) AS card_count
+FROM cards
+WHERE instr(leadershipSkills, ""'commander': True"") > 0
+  AND cardKingdomFoilId IS NOT NULL
+  AND cardKingdomFoilId <> ''
+  AND cardKingdomId IS NOT NULL
+  AND cardKingdomId <> ''
+  AND frameVersion IS NOT NULL
+  AND frameVersion <> ''
+GROUP BY frameVersion
+ORDER BY CASE
+           WHEN frameVersion = 'future' THEN 1
+           ELSE CAST(frameVersion AS INTEGER)
+         END DESC
+LIMIT 1;"
+88,dev,card_games,challenging,incorrect_result,PASS,final_sql_ready,"SELECT c.name, COUNT(DISTINCT r.id) AS ruling_count
+FROM cards AS c
+JOIN rulings AS r ON r.uuid = c.uuid
+WHERE c.originalType = 'Creature - Elf'
+GROUP BY c.name
+HAVING COUNT(DISTINCT r.id) = (
+    SELECT MAX(ruling_count)
+    FROM (
+        SELECT COUNT(DISTINCT r2.id) AS ruling_count
+        FROM cards AS c2
+        JOIN rulings AS r2 ON r2.uuid = c2.uuid
+        WHERE c2.originalType = 'Creature - Elf'
+        GROUP BY c2.name
+    )
+);"
+92,dev,card_games,challenging,incorrect_result,FAIL,max_attempts,"SELECT cardKingdomFoilId, cardKingdomId
+FROM (
+    SELECT name, cardKingdomFoilId, cardKingdomId
+    FROM (
+        SELECT name, cardKingdomFoilId, cardKingdomId,
+               ROW_NUMBER() OVER (
+                   PARTITION BY name
+                   ORDER BY CAST(cardKingdomFoilId AS INTEGER), cardKingdomId
+               ) AS rn
+        FROM cards
+        WHERE types LIKE '%Creature%'
+          AND cardKingdomFoilId IS NOT NULL
+          AND cardKingdomFoilId <> ''
+          AND cardKingdomId IS NOT NULL
+          AND cardKingdomId <> ''
+    )
+    WHERE rn = 1
+    ORDER BY CAST(cardKingdomFoilId AS INTEGER), cardKingdomId
+    LIMIT 3
+)
+ORDER BY name ASC, cardKingdomId ASC;"
+96,dev,card_games,challenging,incorrect_result,FAIL,no_progress_repeated_sql,"SELECT COUNT(DISTINCT scryfallOracleId)
+FROM cards
+WHERE frameVersion IN ('2015', 'future')
+  AND text IS NOT NULL
+  AND trim(text) <> '';"
+105,dev,card_games,challenging,incorrect_result,PASS,final_sql_ready,"SELECT ROUND(
+    COUNT(st.language) * 1.0 /
+    COUNT(DISTINCT s.code),
+    2
+)
+FROM sets AS s
+LEFT JOIN set_translations AS st
+    ON st.setCode = s.code
+WHERE s.releaseDate >= '2016-01-01'
+  AND s.releaseDate < '2017-01-01';"
+106,dev,card_games,challenging,incorrect_result,FAIL,max_attempts,"WITH block_sets AS (
+    SELECT
+        s.block,
+        COUNT(DISTINCT CASE
+            WHEN st.translation IS NOT NULL AND TRIM(st.translation) <> '' THEN s.code
+        END) AS sets_with_official_translated_name,
+        SUM(s.baseSetSize) AS total_base_set_cards
+    FROM sets AS s
+    LEFT JOIN set_translations AS st
+        ON st.setCode = s.code
+    WHERE s.block IN ('Masques', 'Mirage')
+      AND s.type = 'expansion'
+    GROUP BY s.block
+)
+SELECT
+    block AS block_name,
+    sets_with_official_translated_name,
+    total_base_set_cards
+FROM block_sets
+ORDER BY CASE block WHEN 'Masques' THEN 1 WHEN 'Mirage' THEN 2 END;"
+120,dev,codebase_community,challenging,incorrect_result,PASS,final_sql_ready,"SELECT
+    100.0 * (
+        SUM(CASE WHEN Name = 'Student' AND substr(Date, 1, 4) = '2010' THEN 1 ELSE 0 END)
+        - SUM(CASE WHEN Name = 'Student' AND substr(Date, 1, 4) = '2011' THEN 1 ELSE 0 END)
+    ) / COUNT(*) AS percentage_point_difference
+FROM badges;"
+130,dev,codebase_community,challenging,incorrect_result,PASS,final_sql_ready,"WITH first_posts AS (
+    SELECT OwnerUserId, MIN(CreaionDate) AS first_post_date
+    FROM posts
+    WHERE OwnerUserId IS NOT NULL
+      AND CreaionDate IS NOT NULL
+    GROUP BY OwnerUserId
+)
+SELECT COUNT(*) AS user_count
+FROM first_posts AS fp
+JOIN users AS u ON u.Id = fp.OwnerUserId
+WHERE fp.first_post_date >= '2010-01-01'
+  AND fp.first_post_date < '2011-01-01'
+  AND TRIM(u.Location) = 'India';"
+136,dev,codebase_community,challenging,incorrect_result,PASS,final_sql_ready,"WITH badge_totals AS (
+    SELECT u.Id, u.DisplayName, COUNT(b.Id) AS badge_total
+    FROM users AS u
+    LEFT JOIN badges AS b ON b.UserId = u.Id
+    WHERE u.Location = 'Germany'
+    GROUP BY u.Id, u.DisplayName
+),
+ranked_totals AS (
+    SELECT badge_total,
+           DENSE_RANK() OVER (ORDER BY badge_total DESC) AS total_rank
+    FROM (SELECT DISTINCT badge_total FROM badge_totals)
+)
+SELECT bt.DisplayName, bt.badge_total
+FROM badge_totals AS bt
+JOIN ranked_totals AS rt ON rt.badge_total = bt.badge_total
+WHERE rt.total_rank = 2
+ORDER BY bt.DisplayName;"
+142,dev,codebase_community,challenging,incorrect_result,PASS,final_sql_ready,"SELECT Id
+FROM users
+WHERE DisplayName = 'Michael'
+ORDER BY CreationDate DESC, Id ASC
+LIMIT 1;"
+147,dev,codebase_community,challenging,incorrect_result,UNCERTAIN,review_uncertain,"SELECT ROUND(
+    100.0 * SUM(CASE WHEN u.Reputation < 1000 THEN 1 ELSE 0 END) / COUNT(*),
+    2
+)
+FROM posts AS p
+LEFT JOIN users AS u ON u.Id = p.OwnerUserId
+WHERE p.CreaionDate >= '2010-01-01'
+  AND p.CreaionDate < '2011-01-01'
+  AND p.Score > 5;"
+154,dev,debit_card_specializing,challenging,incorrect_result,FAIL,no_progress_repeated_sql,"SELECT c.Segment, COUNT(DISTINCT c.CustomerID) AS customer_count
+FROM customers AS c
+JOIN yearmonth AS y ON y.CustomerID = c.CustomerID
+WHERE y.Date >= '201301'
+  AND y.Date < '201401'
+GROUP BY c.Segment;"
+155,dev,debit_card_specializing,challenging,incorrect_result,PASS,final_sql_ready,"SELECT CAST((julianday(MAX(t.Date || ' ' || t.Time)) - julianday(MIN(t.Date || ' ' || t.Time))) * 24 * 60 AS INTEGER) AS elapsed_minutes
+FROM transactions_1k AS t
+JOIN gasstations AS g ON t.GasStationID = g.GasStationID
+WHERE g.Country = 'CZE'
+  AND t.Price > 1000;"
+157,dev,debit_card_specializing,challenging,incorrect_result,PASS,final_sql_ready,"WITH quarterly AS (
+    SELECT
+        CustomerID,
+        SUM(Consumption) AS quarter_consumption
+    FROM yearmonth
+    WHERE Date IN ('201304', '201305', '201306')
+    GROUP BY CustomerID
+)
+SELECT
+    c.Currency,
+    ROUND(AVG(q.quarter_consumption), 2) AS avg_quarter_consumption
+FROM quarterly q
+JOIN customers c ON c.CustomerID = q.CustomerID
+WHERE c.Currency IN ('EUR', 'CZK')
+GROUP BY c.Currency
+ORDER BY c.Currency;"
+165,dev,european_football_2,moderate,incorrect_result,PASS,final_sql_ready,"SELECT p.player_api_id, AVG(pa.heading_accuracy) AS mean_heading_accuracy
+FROM Player AS p
+JOIN Player_Attributes AS pa
+  ON pa.player_api_id = p.player_api_id
+WHERE p.height > 180
+  AND pa.heading_accuracy IS NOT NULL
+GROUP BY p.player_api_id
+ORDER BY mean_heading_accuracy DESC, p.player_api_id ASC
+LIMIT 10;"
+172,dev,european_football_2,challenging,incorrect_result,PASS,final_sql_ready,"SELECT ROUND(AVG(p.height), 2) AS average_height_cm
+FROM ""Match"" AS m
+JOIN Player AS p ON p.player_api_id = m.home_player_3
+WHERE p.height > 180;"
+177,dev,european_football_2,challenging,incorrect_result,PASS,final_sql_ready,"WITH ranked AS (
+    SELECT
+        player_api_id,
+        defensive_work_rate,
+        ROW_NUMBER() OVER (
+            PARTITION BY player_api_id
+            ORDER BY date DESC, id DESC
+        ) AS rn
+    FROM Player_Attributes
+    WHERE defensive_work_rate IS NOT NULL
+      AND TRIM(defensive_work_rate) <> ''
+)
+SELECT ROUND(AVG(p.height), 2) AS average_height_cm
+FROM Player AS p
+JOIN ranked AS r
+    ON r.player_api_id = p.player_api_id
+   AND r.rn = 1
+WHERE p.birthday >= '1990-01-01'
+  AND p.birthday < '1996-01-01'
+  AND LOWER(TRIM(r.defensive_work_rate)) = 'medium'
+  AND p.height IS NOT NULL;"
+186,dev,european_football_2,challenging,incorrect_result,PASS,final_sql_ready,"WITH player_totals AS (
+    SELECT home_player_3 AS player_id, SUM(home_team_goal) AS total_goals
+    FROM ""Match""
+    WHERE home_player_3 IS NOT NULL
+    GROUP BY home_player_3
+)
+SELECT ROUND(AVG(total_goals), 2) AS average_home_goals
+FROM player_totals;"
+189,dev,european_football_2,challenging,incorrect_result,UNCERTAIN,review_uncertain,"WITH ranked_attributes AS (
+    SELECT
+        player_api_id,
+        preferred_foot,
+        attacking_work_rate,
+        ROW_NUMBER() OVER (
+            PARTITION BY player_api_id
+            ORDER BY date DESC, id DESC
+        ) AS rn
+    FROM Player_Attributes
+)
+SELECT ROUND(
+    100.0 * SUM(CASE WHEN attacking_work_rate = 'low' THEN 1 ELSE 0 END) / COUNT(*),
+    1
+) AS percentage
+FROM ranked_attributes
+WHERE rn = 1
+  AND preferred_foot = 'left'
+  AND attacking_work_rate IS NOT NULL
+  AND TRIM(attacking_work_rate) <> '';"
+194,dev,financial,challenging,incorrect_result,UNCERTAIN,review_uncertain,"WITH salary_range AS (
+    SELECT MAX(A12) - MIN(A12) AS salary_difference
+    FROM district
+),
+oldest_female AS (
+    SELECT c.client_id
+    FROM client c
+    WHERE c.gender = 'F'
+      AND c.district_id = (
+          SELECT district_id
+          FROM district
+          WHERE A12 = (SELECT MIN(A12) FROM district)
+      )
+      AND c.birth_date = (
+          SELECT MIN(c2.birth_date)
+          FROM client c2
+          WHERE c2.gender = 'F'
+            AND c2.district_id = (
+                SELECT district_id
+                FROM district
+                WHERE A12 = (SELECT MIN(A12) FROM district)
+            )
+      )
+)
+SELECT dp.account_id, sr.salary_difference
+FROM oldest_female ofe
+JOIN disp dp ON dp.client_id = ofe.client_id
+CROSS JOIN salary_range sr;"
+203,dev,financial,challenging,incorrect_result,UNCERTAIN,review_uncertain,"WITH first_month AS (
+    SELECT strftime('%Y-%m', MIN(date)) AS month
+    FROM account
+),
+opened_districts AS (
+    SELECT DISTINCT a.district_id
+    FROM account AS a
+    JOIN first_month AS f
+      ON strftime('%Y-%m', a.date) = f.month
+),
+district_populations AS (
+    SELECT d.district_id, CAST(d.A4 AS INTEGER) AS population
+    FROM district AS d
+    JOIN opened_districts AS o
+      ON o.district_id = d.district_id
+)
+SELECT district_id, population
+FROM district_populations
+WHERE population = (SELECT MAX(population) FROM district_populations);"
+205,dev,financial,challenging,incorrect_result,UNCERTAIN,review_uncertain,"WITH top5 AS (
+    SELECT district_id
+    FROM district
+    ORDER BY CAST(A4 AS INTEGER) DESC
+    LIMIT 5
+),
+district_load AS (
+    SELECT
+        d.district_id,
+        d.A2 AS district_name,
+        ROUND(
+            SUM(CASE WHEN l.status IN ('C', 'D') THEN l.amount ELSE 0 END) * 1.0
+            / COUNT(DISTINCT a.account_id),
+            0
+        ) AS avg_active_loan_per_account
+    FROM top5 t
+    JOIN district d ON d.district_id = t.district_id
+    JOIN account a ON a.district_id = d.district_id
+    LEFT JOIN loan l ON l.account_id = a.account_id
+    GROUP BY d.district_id
+)
+SELECT district_name, avg_active_loan_per_account
+FROM district_load
+WHERE avg_active_loan_per_account = (
+    SELECT MAX(avg_active_loan_per_account) FROM district_load
+);"
+206,dev,financial,challenging,incorrect_result,PASS,final_sql_ready,"WITH regional_totals AS (
+    SELECT d.A2 AS region, SUM(l.amount) AS total_approved_amount
+    FROM loan AS l
+    JOIN account AS a ON a.account_id = l.account_id
+    JOIN district AS d ON d.district_id = a.district_id
+    WHERE l.date <= '1995-12-31'
+      AND date(l.date, '+' || l.duration || ' months', '-1 day') >= '1995-12-31'
+    GROUP BY d.A2
+)
+SELECT region, total_approved_amount
+FROM regional_totals
+WHERE total_approved_amount = (
+    SELECT MAX(total_approved_amount)
+    FROM regional_totals
+);"
+213,dev,financial,challenging,incorrect_result,UNCERTAIN,review_uncertain,"WITH eligible_accounts AS (
+    SELECT DISTINCT dp.account_id, c.gender
+    FROM card ca
+    JOIN disp dp
+      ON dp.disp_id = ca.disp_id
+     AND dp.type = 'OWNER'
+    JOIN client c
+      ON c.client_id = dp.client_id
+    WHERE ca.type = 'gold'
+),
+average_balances AS (
+    SELECT account_id, AVG(balance) AS avg_balance
+    FROM trans
+    GROUP BY account_id
+),
+gender_districts AS (
+    SELECT DISTINCT ea.gender, a.district_id
+    FROM eligible_accounts ea
+    JOIN average_balances ab
+      ON ab.account_id = ea.account_id
+     AND ab.avg_balance > 1000
+    JOIN account a
+      ON a.account_id = ea.account_id
+    JOIN district d
+      ON d.district_id = a.district_id
+    WHERE CAST(d.A4 AS INTEGER) > 100000
+),
+district_metrics AS (
+    SELECT gd.gender,
+           gd.district_id,
+           CAST(d.A4 AS INTEGER) AS inhabitants,
+           d.A11 AS salary,
+           d.A13 AS urban_ratio
+    FROM gender_districts gd
+    JOIN district d
+      ON d.district_id = gd.district_id
+),
+summaries AS (
+    SELECT gender,
+           COUNT(*) AS district_count,
+           MAX(inhabitants) AS max_inhabitants,
+           ROUND(AVG(salary), 2) AS avg_salary,
+           ROUND(AVG(urban_ratio), 2) AS avg_urban_ratio
+    FROM district_metrics
+    GROUP BY gender
+)
+SELECT s.gender,
+       s.district_count,
+       dm.district_id,
+       dm.inhabitants,
+       s.avg_salary,
+       s.avg_urban_ratio
+FROM summaries s
+JOIN district_metrics dm
+  ON dm.gender = s.gender
+ AND dm.inhabitants = s.max_inhabitants
+ORDER BY CASE s.gender WHEN 'F' THEN 1 WHEN 'M' THEN 2 END,
+         dm.district_id;"
+216,dev,financial,challenging,incorrect_result,PASS,final_sql_ready,"WITH qualified_districts AS (
+    SELECT DISTINCT c.district_id
+    FROM client c
+    JOIN disp own
+      ON own.client_id = c.client_id
+     AND own.type = 'OWNER'
+    WHERE c.gender = 'F'
+      AND EXISTS (
+          SELECT 1
+          FROM card ca
+          WHERE ca.disp_id = own.disp_id
+      )
+      AND EXISTS (
+          SELECT 1
+          FROM loan l
+          WHERE l.account_id = own.account_id
+      )
+),
+regional_districts AS (
+    SELECT d.A3 AS region,
+           d.A2 AS district_name,
+           d.A11 AS salary,
+           d.A12 AS unemployment_1996,
+           d.A16 AS inhabitants
+    FROM district d
+    JOIN qualified_districts q
+      ON q.district_id = d.district_id
+),
+ranked_districts AS (
+    SELECT region,
+           district_name,
+           ROW_NUMBER() OVER (
+               PARTITION BY region
+               ORDER BY inhabitants DESC, district_name ASC
+           ) AS rn
+    FROM regional_districts
+)
+SELECT rd.region,
+       ROUND(AVG(rd.salary), 2) AS average_district_salary,
+       ROUND(AVG(rd.unemployment_1996), 2) AS average_1996_unemployment_rate,
+       MAX(CASE WHEN ranked.rn = 1 THEN ranked.district_name END) AS most_populous_district
+FROM regional_districts rd
+JOIN ranked_districts ranked
+  ON ranked.region = rd.region
+ AND ranked.district_name = rd.district_name
+GROUP BY rd.region;"
+217,dev,financial,challenging,incorrect_result,UNCERTAIN,review_uncertain,"WITH district_crimes AS (
+    SELECT
+        d.district_id,
+        d.A2 AS district_name,
+        d.A3 AS region_name,
+        CAST(d.A4 AS INTEGER) AS inhabitants,
+        COUNT(t.trans_id) AS crime_count
+    FROM district AS d
+    LEFT JOIN account AS a
+        ON a.district_id = d.district_id
+    LEFT JOIN trans AS t
+        ON t.account_id = a.account_id
+       AND t.date >= '1996-01-01'
+       AND t.date < '1997-01-01'
+    GROUP BY d.district_id, d.A2, d.A3, d.A4
+),
+ranked_central_boh AS (
+    SELECT
+        district_id,
+        ROW_NUMBER() OVER (
+            ORDER BY inhabitants DESC, lower(district_name) COLLATE NOCASE ASC
+        ) AS population_rank
+    FROM district_crimes
+    WHERE region_name = 'central Bohemia'
+),
+top_three AS (
+    SELECT
+        dc.district_id,
+        dc.district_name,
+        dc.crime_count,
+        rb.population_rank
+    FROM district_crimes AS dc
+    JOIN ranked_central_boh AS rb
+      ON rb.district_id = dc.district_id
+    WHERE rb.population_rank <= 3
+),
+averages AS (
+    SELECT
+        AVG(crime_count) AS overall_average
+    FROM district_crimes
+)
+SELECT
+    t.district_name,
+    t.crime_count,
+    ROUND(AVG(t.crime_count) OVER (), 2) AS three_district_average,
+    ROUND(a.overall_average, 2) AS overall_average,
+    ROUND(AVG(t.crime_count) OVER () - a.overall_average, 2) AS difference
+FROM top_three AS t
+CROSS JOIN averages AS a
+ORDER BY t.population_rank;"
+219,dev,financial,challenging,incorrect_result,PASS,final_sql_ready,"WITH region_accounts AS (
+    SELECT a.account_id, a.district_id
+    FROM account AS a
+    JOIN district AS d ON d.district_id = a.district_id
+    WHERE d.A3 = (SELECT A3 FROM district WHERE A2 = 'Litomerice')
+      AND a.date >= '1996-01-01'
+      AND a.date < '1997-01-01'
+),
+ranked_transactions AS (
+    SELECT t.account_id,
+           t.balance,
+           ROW_NUMBER() OVER (
+               PARTITION BY t.account_id
+               ORDER BY t.date DESC, t.trans_id DESC
+           ) AS rn
+    FROM trans AS t
+    JOIN region_accounts AS ra ON ra.account_id = t.account_id
+    WHERE t.date < '1997-01-01'
+),
+last_balances AS (
+    SELECT account_id, balance
+    FROM ranked_transactions
+    WHERE rn = 1
+),
+account_balances AS (
+    SELECT ra.account_id, ra.district_id, lb.balance
+    FROM region_accounts AS ra
+    LEFT JOIN last_balances AS lb ON lb.account_id = ra.account_id
+),
+district_stats AS (
+    SELECT d.A2 AS district_name,
+           COUNT(ab.account_id) AS account_count,
+           ROUND(AVG(ab.balance), 2) AS average_balance
+    FROM account_balances AS ab
+    JOIN district AS d ON d.district_id = ab.district_id
+    GROUP BY d.district_id, d.A2
+),
+region_stats AS (
+    SELECT ROUND(AVG(balance), 2) AS region_average_balance
+    FROM account_balances
+),
+top_district AS (
+    SELECT district_name
+    FROM district_stats
+    ORDER BY average_balance DESC, district_name ASC
+    LIMIT 1
+)
+SELECT 'district' AS result_type,
+       district_name,
+       account_count,
+       average_balance,
+       NULL AS region_average_balance,
+       NULL AS highest_average_district
+FROM district_stats
+UNION ALL
+SELECT 'region_average', NULL, NULL, NULL, region_average_balance, NULL
+FROM region_stats
+UNION ALL
+SELECT 'highest_average_district', NULL, NULL, NULL, NULL, district_name
+FROM top_district
+ORDER BY result_type, district_name;"
+220,dev,financial,challenging,incorrect_result,UNCERTAIN,review_uncertain,"WITH ranked_loans AS (
+    SELECT
+        l.loan_id,
+        l.account_id,
+        ROW_NUMBER() OVER (
+            ORDER BY l.amount DESC, l.loan_id ASC
+        ) AS rn
+    FROM loan AS l
+    JOIN account AS a
+        ON a.account_id = l.account_id
+    WHERE l.duration = 24
+      AND a.frequency = 'POPLATEK TYDNE'
+),
+top_districts AS (
+    SELECT DISTINCT a.district_id
+    FROM ranked_loans AS r
+    JOIN account AS a
+        ON a.account_id = r.account_id
+    WHERE r.rn <= 10
+),
+district_summary AS (
+    SELECT
+        d.district_id,
+        CAST(d.A4 AS INTEGER) AS inhabitants,
+        d.A11 AS average_salary
+    FROM top_districts AS td
+    JOIN district AS d
+        ON d.district_id = td.district_id
+)
+SELECT
+    (
+        SELECT district_id
+        FROM district_summary
+        ORDER BY inhabitants DESC, district_id ASC
+        LIMIT 1
+    ) AS district_id,
+    (
+        SELECT inhabitants
+        FROM district_summary
+        ORDER BY inhabitants DESC, district_id ASC
+        LIMIT 1
+    ) AS inhabitants,
+    ROUND(AVG(average_salary), 2) AS average_salary
+FROM district_summary;"
+222,dev,financial,challenging,incorrect_result,PASS,final_sql_ready,"WITH
+client_home AS (
+    SELECT district_id
+    FROM client
+    WHERE client_id = 3541
+),
+accessible_accounts AS (
+    SELECT DISTINCT account_id
+    FROM disp
+    WHERE client_id = 3541
+),
+transaction_totals AS (
+    SELECT
+        account_id,
+        COUNT(*) AS transaction_count,
+        SUM(CASE WHEN type = 'PRIJEM' THEN amount ELSE 0 END) AS total_income,
+        SUM(CASE WHEN type = 'VYDAJ' THEN amount ELSE 0 END) AS total_expense
+    FROM trans
+    GROUP BY account_id
+),
+region_client_counts AS (
+    SELECT d.A3 AS region, COUNT(*) AS client_count
+    FROM client c
+    JOIN district d ON d.district_id = c.district_id
+    GROUP BY d.A3
+),
+ranked_districts AS (
+    SELECT
+        district_id,
+        A3 AS region,
+        A2 AS district_name,
+        A4 AS inhabitants,
+        RANK() OVER (PARTITION BY A3 ORDER BY CAST(A4 AS INTEGER) DESC) AS population_rank,
+        ROW_NUMBER() OVER (PARTITION BY A3 ORDER BY CAST(A4 AS INTEGER) DESC, district_id) AS most_populous_row
+    FROM district
+)
+SELECT
+    a.account_id,
+    a.date AS account_opened_date,
+    a.frequency,
+    account_district.A2 AS district_name,
+    account_district.A3 AS region,
+    CASE WHEN account_district.district_id = ch.district_id THEN 'Yes' ELSE 'No' END AS is_client_home_district,
+    account_district.A11 AS average_salary,
+    COALESCE(l.status, 'none') AS loan_repayment_status,
+    COALESCE(l.amount, 0) AS loan_amount,
+    COALESCE(tt.transaction_count, 0) AS transaction_count,
+    COALESCE(tt.total_income, 0) AS total_income,
+    COALESCE(tt.total_expense, 0) AS total_expense,
+    COALESCE(tt.total_income, 0) - COALESCE(tt.total_expense, 0) AS net_balance,
+    rcc.client_count AS clients_in_region,
+    most_populous.district_name AS most_populous_district,
+    most_populous.inhabitants AS most_populous_district_inhabitants,
+    account_rank.population_rank AS account_district_population_rank
+FROM accessible_accounts aa
+JOIN account a ON a.account_id = aa.account_id
+JOIN district account_district ON account_district.district_id = a.district_id
+CROSS JOIN client_home ch
+LEFT JOIN transaction_totals tt ON tt.account_id = a.account_id
+LEFT JOIN loan l ON l.account_id = a.account_id
+LEFT JOIN region_client_counts rcc ON rcc.region = account_district.A3
+LEFT JOIN ranked_districts account_rank ON account_rank.district_id = account_district.district_id
+LEFT JOIN ranked_districts most_populous
+    ON most_populous.region = account_district.A3
+   AND most_populous.most_populous_row = 1
+ORDER BY transaction_count DESC, a.account_id ASC;"
+223,dev,financial,challenging,incorrect_result,PASS,final_sql_ready,"WITH per_account AS (
+    SELECT
+        a.account_id,
+        a.district_id,
+        strftime('%Y', a.date) AS year,
+        COALESCE(SUM(l.amount), 0) AS lent
+    FROM account AS a
+    JOIN district AS d
+        ON d.district_id = a.district_id
+    LEFT JOIN loan AS l
+        ON l.account_id = a.account_id
+    WHERE d.A3 = 'central Bohemia'
+      AND a.date >= '1996-01-01'
+    GROUP BY a.account_id, a.district_id, strftime('%Y', a.date)
+),
+per_district AS (
+    SELECT
+        year,
+        district_id,
+        AVG(lent) AS avg_lent_per_account
+    FROM per_account
+    GROUP BY year, district_id
+)
+SELECT
+    p.year,
+    COUNT(*) AS account_count,
+    SUM(p.lent) AS total_amount_lent,
+    ROUND(AVG(d.avg_lent_per_account), 2) AS avg_district_amount_lent_per_account
+FROM per_account AS p
+JOIN per_district AS d
+    ON d.year = p.year
+   AND d.district_id = p.district_id
+GROUP BY p.year
+ORDER BY p.year;"
+226,dev,financial,challenging,incorrect_result,UNCERTAIN,review_uncertain,"SELECT d.A2 AS branch_name, COUNT(*) AS transaction_count
+FROM district AS d
+JOIN account AS a ON a.district_id = d.district_id
+JOIN trans AS t ON t.account_id = a.account_id
+WHERE d.A3 = 'north Moravia'
+  AND t.date <= '1998-10-14'
+  AND t.k_symbol IS NULL
+GROUP BY d.district_id, d.A2
+ORDER BY transaction_count DESC, branch_name ASC
+LIMIT 3;"
+227,dev,financial,challenging,incorrect_result,UNCERTAIN,review_uncertain,"SELECT t.bank AS bank_code,
+       t.account AS account_number,
+       COUNT(*) AS outgoing_payment_count,
+       SUM(t.amount) AS total_amount_paid
+FROM loan AS l
+JOIN trans AS t
+  ON t.account_id = l.account_id
+WHERE l.loan_id = 98832
+  AND l.date = '1996-01-03'
+  AND t.type = 'VYDAJ'
+  AND t.date < '1996-01-03'
+GROUP BY t.bank, t.account
+ORDER BY total_amount_paid DESC;"
+228,dev,financial,challenging,incorrect_result,UNCERTAIN,review_uncertain,"SELECT COUNT(DISTINCT l.account_id)
+FROM account a
+JOIN loan l ON l.account_id = a.account_id
+WHERE a.district_id = 1
+  AND a.date <= '1995-12-31'
+  AND l.date <= '1995-12-31'
+  AND l.status IN ('C', 'D');"
+231,dev,financial,challenging,incorrect_result,PASS,final_sql_ready,"WITH qualifying_loans AS (
+    SELECT l.loan_id, a.district_id
+    FROM loan AS l
+    JOIN account AS a ON a.account_id = l.account_id
+    WHERE l.duration > 24
+      AND l.date < '1997-01-01'
+),
+qualifying_districts AS (
+    SELECT DISTINCT
+        d.district_id,
+        d.A3 AS region,
+        CAST(d.A4 AS INTEGER) AS population
+    FROM qualifying_loans AS q
+    JOIN district AS d ON d.district_id = q.district_id
+),
+region_population AS (
+    SELECT
+        region,
+        COUNT(*) AS district_count,
+        SUM(population) AS combined_population
+    FROM qualifying_districts
+    GROUP BY region
+),
+region_accounts AS (
+    SELECT d.A3 AS region, COUNT(*) AS account_count
+    FROM qualifying_loans AS q
+    JOIN district AS d ON d.district_id = q.district_id
+    GROUP BY d.A3
+)
+SELECT
+    p.region,
+    p.district_count,
+    p.combined_population,
+    a.account_count
+FROM region_population AS p
+JOIN region_accounts AS a ON a.region = p.region
+ORDER BY p.combined_population DESC, p.region ASC
+LIMIT 1;"
+235,dev,financial,challenging,incorrect_result,UNCERTAIN,review_tool_budget_exhausted,"WITH classic_owner_accounts AS (
+    SELECT DISTINCT
+        d.client_id,
+        d.account_id,
+        a.district_id
+    FROM disp AS d
+    JOIN card AS c
+        ON c.disp_id = d.disp_id
+    JOIN account AS a
+        ON a.account_id = d.account_id
+    WHERE d.type = 'OWNER'
+      AND c.type = 'classic'
+),
+district_stats AS (
+    SELECT
+        coa.district_id,
+        COUNT(DISTINCT coa.client_id) AS client_count,
+        COUNT(DISTINCT CASE
+            WHEN t.type = 'VYDAJ'
+             AND t.bank IS NOT NULL
+             AND t.account IS NOT NULL
+            THEN t.bank || ':' || CAST(t.account AS TEXT)
+        END) AS external_account_count,
+        SUM(CASE WHEN t.type = 'VYDAJ' THEN t.amount ELSE 0 END) AS payment_total
+    FROM classic_owner_accounts AS coa
+    LEFT JOIN trans AS t
+        ON t.account_id = coa.account_id
+    GROUP BY coa.district_id
+)
+SELECT
+    d.A2 AS district_name,
+    COALESCE(ds.client_count, 0) AS client_count,
+    COALESCE(ds.external_account_count, 0) AS external_account_count,
+    COALESCE(ds.payment_total, 0) AS payment_total
+FROM district AS d
+LEFT JOIN district_stats AS ds
+    ON ds.district_id = d.district_id
+ORDER BY payment_total DESC, district_name ASC;"
+247,dev,formula_1,challenging,incorrect_result,PASS,final_sql_ready,"SELECT c.name, c.nationality, SUM(cr.points) AS score
+FROM races r
+JOIN constructorResults cr ON cr.raceId = r.raceId
+JOIN constructors c ON c.constructorId = cr.constructorId
+WHERE r.name = 'Monaco Grand Prix'
+  AND r.year BETWEEN 1980 AND 2010
+GROUP BY c.constructorId, c.name, c.nationality
+ORDER BY score DESC
+LIMIT 1;"
+251,dev,formula_1,challenging,incorrect_result,PASS,final_sql_ready,"WITH hosted_2000 AS (
+    SELECT DISTINCT circuitId
+    FROM races
+    WHERE year = 2000
+),
+race_stops AS (
+    SELECT r.raceId, COUNT(p.stop) AS pit_stops
+    FROM races AS r
+    LEFT JOIN pitStops AS p ON p.raceId = r.raceId
+    WHERE r.year = 2017
+      AND r.circuitId NOT IN (SELECT circuitId FROM hosted_2000)
+    GROUP BY r.raceId
+)
+SELECT ROUND(AVG(pit_stops), 2) AS average_pit_stops
+FROM race_stops;"
+258,dev,formula_1,challenging,incorrect_result,PASS,final_sql_ready,"SELECT d.forename, COUNT(*) AS runners_up_count
+FROM results AS r
+JOIN races AS ra ON ra.raceId = r.raceId
+JOIN drivers AS d ON d.driverId = r.driverId
+WHERE ra.name = 'Italian Grand Prix'
+  AND r.position = 2
+GROUP BY d.forename
+HAVING COUNT(*) >= 2
+ORDER BY runners_up_count DESC, d.forename ASC;"
+266,dev,formula_1,challenging,incorrect_result,PASS,final_sql_ready,"SELECT d.driverRef, SUM(r.points) AS total_points
+FROM drivers AS d
+JOIN results AS r
+  ON r.driverId = d.driverId
+WHERE d.forename = 'Robert'
+  AND EXISTS (
+    SELECT 1
+    FROM lapTimes AS l
+    WHERE l.driverId = r.driverId
+      AND l.raceId = r.raceId
+  )
+GROUP BY d.driverId, d.driverRef
+ORDER BY d.driverRef;"
+272,dev,formula_1,challenging,incorrect_result,PASS,final_sql_ready,"WITH season_points AS (
+    SELECT
+        cr.constructorId,
+        r.year,
+        SUM(COALESCE(cr.points, 0)) AS points
+    FROM constructorResults AS cr
+    JOIN races AS r ON r.raceId = cr.raceId
+    GROUP BY cr.constructorId, r.year
+),
+career AS (
+    SELECT
+        c.constructorId,
+        c.name,
+        c.url,
+        COALESCE(SUM(sp.points), 0) AS career_points
+    FROM constructors AS c
+    LEFT JOIN season_points AS sp ON sp.constructorId = c.constructorId
+    WHERE c.nationality = 'Italian'
+    GROUP BY c.constructorId, c.name, c.url
+),
+ranked AS (
+    SELECT
+        name,
+        career_points,
+        url,
+        RANK() OVER (ORDER BY career_points DESC) AS career_rank
+    FROM career
+)
+SELECT
+    name,
+    career_points,
+    url
+FROM ranked
+WHERE career_rank <= 3
+ORDER BY career_points DESC, name;"
+286,dev,formula_1,challenging,incorrect_result,PASS,final_sql_ready,"SELECT
+    r.year AS season_year,
+    (runner_up.milliseconds - winner.milliseconds) / 1000.0 AS runner_up_time_gap_seconds
+FROM races AS r
+JOIN results AS winner
+    ON winner.raceId = r.raceId
+   AND winner.positionOrder = 1
+JOIN results AS runner_up
+    ON runner_up.raceId = r.raceId
+   AND runner_up.positionOrder = 2
+WHERE r.name = 'Chinese Grand Prix'
+  AND r.year BETWEEN 2000 AND 2009
+  AND r.time = (
+      SELECT MIN(time)
+      FROM races
+      WHERE name = 'Chinese Grand Prix'
+        AND year BETWEEN 2000 AND 2009
+        AND time IS NOT NULL
+  )
+ORDER BY r.year DESC
+LIMIT 1;"
+292,dev,formula_1,challenging,incorrect_result,PASS,final_sql_ready,"SELECT d.driverRef
+FROM qualifying AS q
+JOIN races AS r ON r.raceId = q.raceId
+JOIN drivers AS d ON d.driverId = q.driverId
+WHERE r.year = 2017
+  AND r.name = 'Italian Grand Prix'
+  AND q.q1 IS NOT NULL
+  AND q.q2 IS NULL
+ORDER BY q.q1 DESC, q.driverId;"
+294,dev,formula_1,challenging,incorrect_result,PASS,final_sql_ready,"SELECT ROUND(
+    100.0 * SUM(CASE
+        WHEN s.status = 'Finished' OR s.status LIKE '+% lap%' THEN 1
+        ELSE 0
+    END) / COUNT(*),
+    2
+)
+FROM races AS r
+JOIN results AS res ON res.raceId = r.raceId
+JOIN status AS s ON s.statusId = res.statusId
+WHERE r.year = 1957
+  AND r.name = 'British Grand Prix';"
+302,dev,student_club,challenging,missing_sql,unverified,b0_invalid_final_answer,
+309,dev,student_club,challenging,incorrect_result,FAIL,no_progress_repeated_sql,"SELECT ROUND(AVG(member_count), 2)
+FROM (
+    SELECT b.link_to_event, COUNT(DISTINCT a.link_to_member) AS member_count
+    FROM budget AS b
+    LEFT JOIN attendance AS a
+        ON a.link_to_event = b.link_to_event
+    WHERE LOWER(b.category) = 'advertising'
+    GROUP BY b.link_to_event
+);"
+313,dev,student_club,challenging,incorrect_result,PASS,final_sql_ready,"WITH attendance_counts AS (
+    SELECT
+        m.member_id,
+        m.position,
+        COUNT(a.link_to_event) AS events_attended
+    FROM member AS m
+    LEFT JOIN attendance AS a
+        ON a.link_to_member = m.member_id
+    GROUP BY m.member_id, m.position
+)
+SELECT
+    CASE
+        WHEN position IN ('President', 'Vice President', 'Secretary', 'Treasurer')
+            THEN 'officer'
+        ELSE 'other student'
+    END AS group_name,
+    ROUND(AVG(events_attended), 2) AS average_events_attended
+FROM attendance_counts
+GROUP BY
+    CASE
+        WHEN position IN ('President', 'Vice President', 'Secretary', 'Treasurer')
+            THEN 'officer'
+        ELSE 'other student'
+    END;"
+321,dev,student_club,challenging,incorrect_result,UNCERTAIN,review_uncertain,"SELECT e.location, COUNT(DISTINCT x.expense_description) AS things_bought
+FROM event AS e
+JOIN budget AS b
+  ON b.link_to_event = e.event_id
+ AND b.amount > 40
+JOIN expense AS x
+  ON x.link_to_budget = b.budget_id
+GROUP BY e.location;"
+327,dev,student_club,challenging,incorrect_result,FAIL,review_uncertain,"SELECT
+    x.expense_description AS item_name,
+    b.category AS budget_category,
+    SUM(x.cost) AS total_cost
+FROM event AS e
+JOIN budget AS b
+    ON b.link_to_event = e.event_id
+JOIN expense AS x
+    ON x.link_to_budget = b.budget_id
+WHERE e.event_name = 'October Meeting'
+  AND x.approved = 'true'
+GROUP BY b.category, x.expense_description
+ORDER BY b.category, x.expense_description;"
+328,dev,student_club,challenging,incorrect_result,PASS,final_sql_ready,"SELECT
+    e.event_name,
+    e.event_date,
+    (SELECT SUM(b.amount)
+     FROM budget AS b
+     WHERE b.link_to_event = e.event_id) AS total_amount_budgeted,
+    (SELECT COUNT(DISTINCT a.link_to_member)
+     FROM attendance AS a
+     WHERE a.link_to_event = e.event_id) AS member_count
+FROM event AS e
+ORDER BY e.event_name ASC, e.event_date ASC;"
+329,dev,student_club,challenging,incorrect_result,PASS,final_sql_ready,"SELECT e.expense_description AS item_name, COUNT(*) AS times_bought
+FROM expense AS e
+JOIN member AS m ON e.link_to_member = m.member_id
+WHERE m.first_name = 'Sacha'
+  AND m.last_name = 'Harrison'
+GROUP BY e.expense_description
+ORDER BY e.expense_description;"
+332,dev,superhero,moderate,incorrect_result,PASS,final_sql_ready,"SELECT
+    colour,
+    hero_count,
+    RANK() OVER (ORDER BY hero_count DESC) AS rank
+FROM (
+    SELECT c.colour AS colour, COUNT(*) AS hero_count
+    FROM superhero AS s
+    JOIN publisher AS p ON p.id = s.publisher_id
+    JOIN colour AS c ON c.id = s.eye_colour_id
+    WHERE p.publisher_name = 'Marvel Comics'
+      AND s.eye_colour_id IS NOT NULL
+      AND c.colour IS NOT NULL
+      AND TRIM(c.colour) <> ''
+    GROUP BY c.colour
+)
+ORDER BY hero_count DESC, colour ASC;"
+335,dev,superhero,challenging,incorrect_result,PASS,final_sql_ready,"SELECT
+    p.publisher_name,
+    COUNT(s.id) AS superhero_count,
+    COUNT(s.id) - MIN(COUNT(s.id)) OVER () AS more_by
+FROM superhero AS s
+JOIN publisher AS p ON p.id = s.publisher_id
+WHERE p.publisher_name IN ('Marvel Comics', 'DC Comics')
+GROUP BY p.publisher_name
+ORDER BY superhero_count DESC;"
+342,dev,superhero,challenging,incorrect_result,PASS,final_sql_ready,"WITH publisher_counts AS (
+    SELECT p.publisher_name, COUNT(s.id) AS superhero_count
+    FROM publisher AS p
+    LEFT JOIN superhero AS s ON s.publisher_id = p.id
+    WHERE p.publisher_name IN ('DC Comics', 'Marvel Comics')
+    GROUP BY p.id, p.publisher_name
+),
+comparison AS (
+    SELECT
+        MAX(CASE WHEN publisher_name = 'DC Comics' THEN superhero_count END) AS dc_count,
+        MAX(CASE WHEN publisher_name = 'Marvel Comics' THEN superhero_count END) AS marvel_count
+    FROM publisher_counts
+)
+SELECT CASE
+    WHEN dc_count = marvel_count THEN 'Tie'
+    WHEN dc_count > marvel_count THEN 'DC Comics by ' || (dc_count - marvel_count)
+    ELSE 'Marvel Comics by ' || (marvel_count - dc_count)
+END AS result
+FROM comparison;"
+345,dev,superhero,challenging,incorrect_result,PASS,final_sql_ready,"SELECT ROUND(AVG(s.weight_kg), 1)
+FROM superhero AS s
+JOIN colour AS c ON s.skin_colour_id = c.id
+WHERE LOWER(c.colour) = 'green'
+  AND s.weight_kg IS NOT NULL;"
+348,dev,superhero,challenging,incorrect_result,PASS,final_sql_ready,"SELECT ROUND(AVG(s.weight_kg), 2) AS average_weight_kg
+FROM superhero AS s
+JOIN hero_attribute AS ha ON ha.hero_id = s.id
+JOIN attribute AS a ON a.id = ha.attribute_id
+WHERE a.attribute_name = 'Intelligence'
+  AND ha.attribute_value = (
+      SELECT ha2.attribute_value
+      FROM hero_attribute AS ha2
+      JOIN attribute AS a2 ON a2.id = ha2.attribute_id
+      JOIN superhero AS ab ON ab.id = ha2.hero_id
+      WHERE a2.attribute_name = 'Intelligence'
+        AND ab.superhero_name = 'Abomination'
+  )
+  AND s.weight_kg IS NOT NULL;"
+350,dev,superhero,challenging,incorrect_result,UNCERTAIN,review_uncertain,"SELECT CAST(ROUND(AVG(s.weight_kg)) AS INTEGER)
+FROM superhero AS s
+JOIN hero_attribute AS ha ON ha.hero_id = s.id
+JOIN attribute AS a ON a.id = ha.attribute_id
+WHERE a.attribute_name = 'Strength'
+  AND ha.attribute_value = (
+      SELECT hulk_ha.attribute_value
+      FROM superhero AS hulk
+      JOIN hero_attribute AS hulk_ha ON hulk_ha.hero_id = hulk.id
+      JOIN attribute AS hulk_a ON hulk_a.id = hulk_ha.attribute_id
+      WHERE hulk.superhero_name = 'Hulk'
+        AND hulk_a.attribute_name = 'Strength'
+  )
+  AND s.weight_kg IS NOT NULL;"
+352,dev,superhero,challenging,incorrect_result,PASS,final_sql_ready,"SELECT COUNT(*) AS count
+FROM superhero
+WHERE publisher_id = (
+    SELECT publisher_id
+    FROM superhero
+    WHERE superhero_name = 'A-Bomb'
+)
+AND race_id IS NULL;"
+355,dev,superhero,challenging,incorrect_result,PASS,final_sql_ready,"WITH marvel_eye_colours AS (
+    SELECT DISTINCT eye_colour_id
+    FROM superhero
+    WHERE publisher_id = 13
+)
+SELECT ROUND(AVG(s.weight_kg)) AS average_weight_kg
+FROM superhero AS s
+WHERE s.publisher_id = 4
+  AND s.weight_kg IS NOT NULL
+  AND EXISTS (
+      SELECT 1
+      FROM marvel_eye_colours AS m
+      WHERE m.eye_colour_id = s.eye_colour_id
+  );"
+356,dev,superhero,challenging,incorrect_result,PASS,final_sql_ready,"SELECT ROUND(AVG(height_cm), 1)
+FROM superhero
+WHERE race_id = (SELECT race_id FROM superhero WHERE superhero_name = 'A-Bomb')
+  AND height_cm IS NOT NULL;"
+357,dev,superhero,challenging,incorrect_result,PASS,final_sql_ready,"SELECT AVG(s.weight_kg)
+FROM superhero AS s
+WHERE s.weight_kg IS NOT NULL
+  AND NOT EXISTS (
+      SELECT 1
+      FROM superhero AS f
+      JOIN gender AS g ON g.id = f.gender_id
+      WHERE f.race_id IS s.race_id
+        AND LOWER(g.gender) = 'female'
+  );"
+358,dev,superhero,challenging,incorrect_result,PASS,final_sql_ready,"SELECT COUNT(DISTINCT p.id) AS publisher_count
+FROM publisher AS p
+JOIN superhero AS s ON s.publisher_id = p.id
+WHERE s.height_cm > 200;"
+363,dev,superhero,challenging,incorrect_result,PASS,final_sql_ready,"SELECT ROUND(AVG(s.weight_kg), 2)
+FROM superhero AS s
+JOIN gender AS g ON g.id = s.gender_id
+WHERE g.gender = 'Female'
+  AND s.weight_kg IS NOT NULL;"
+365,dev,superhero,challenging,incorrect_result,UNCERTAIN,review_uncertain,"WITH power_counts AS (
+    SELECT hero_id, COUNT(DISTINCT power_id) AS power_count
+    FROM hero_power
+    GROUP BY hero_id
+)
+SELECT
+    g.gender,
+    ROUND(AVG(COALESCE(pc.power_count, 0)), 2) AS avg_superpowers_per_hero
+FROM superhero AS s
+JOIN gender AS g ON g.id = s.gender_id
+LEFT JOIN power_counts AS pc ON pc.hero_id = s.id
+WHERE g.gender IN ('Male', 'Female')
+  AND s.full_name IS NOT NULL
+  AND TRIM(s.full_name) <> ''
+  AND s.full_name <> '-'
+  AND INSTR(TRIM(s.full_name), ' ') > 0
+GROUP BY g.gender;"
+366,dev,superhero,challenging,incorrect_result,PASS,final_sql_ready,"SELECT
+    ROUND(AVG(height_cm), 2) AS average_height_cm,
+    ROUND(AVG(weight_kg), 2) AS average_weight_kg
+FROM superhero
+WHERE alignment_id = (SELECT id FROM alignment WHERE alignment = 'Bad')
+  AND skin_colour_id = (SELECT id FROM colour WHERE colour = 'Green');"
+368,dev,superhero,challenging,incorrect_result,PASS,final_sql_ready,"SELECT ROUND(AVG(h.height_cm), 1) AS average_height_cm
+FROM superhero AS h
+WHERE h.id <> (SELECT id FROM superhero WHERE superhero_name = '3-D Man')
+  AND h.height_cm IS NOT NULL
+  AND EXISTS (
+      SELECT 1
+      FROM hero_power AS hp
+      WHERE hp.hero_id = h.id
+        AND hp.power_id IN (
+            SELECT hp3.power_id
+            FROM hero_power AS hp3
+            JOIN superhero AS h3 ON h3.id = hp3.hero_id
+            WHERE h3.superhero_name = '3-D Man'
+        )
+  );"
+370,dev,superhero,challenging,incorrect_result,PASS,final_sql_ready,"SELECT ROUND(AVG(s.weight_kg), 2) AS avg_weight_kg
+FROM superhero AS s
+JOIN publisher AS p ON p.id = s.publisher_id
+WHERE p.publisher_name = 'George Lucas'
+  AND s.weight_kg IS NOT NULL
+  AND EXISTS (
+    SELECT 1
+    FROM hero_power AS hp
+    WHERE hp.hero_id = s.id
+  );"
+371,dev,superhero,challenging,incorrect_result,PASS,final_sql_ready,"SELECT ROUND(AVG(s.weight_kg), 2) AS average_weight_kg
+FROM superhero AS s
+JOIN gender AS g ON s.gender_id = g.id
+JOIN alignment AS a ON s.alignment_id = a.id
+WHERE g.gender = 'Female'
+  AND a.alignment = 'Good'
+  AND s.weight_kg IS NOT NULL;"
+374,dev,superhero,challenging,incorrect_result,PASS,final_sql_ready,"SELECT MAX(power_count)
+FROM (
+    SELECT COUNT(DISTINCT hp.power_id) AS power_count
+    FROM superhero AS s
+    LEFT JOIN hero_power AS hp ON hp.hero_id = s.id
+    WHERE s.weight_kg = (
+        SELECT MIN(weight_kg)
+        FROM superhero
+        WHERE weight_kg IS NOT NULL
+    )
+    GROUP BY s.id
+);"
+377,dev,superhero,challenging,incorrect_result,PASS,final_sql_ready,"SELECT ec.colour AS eye_colour, COUNT(*) AS hero_count
+FROM superhero AS s
+JOIN colour AS hc ON hc.id = s.hair_colour_id
+JOIN colour AS ec ON ec.id = s.eye_colour_id
+WHERE hc.colour <> 'Brown'
+  AND s.eye_colour_id IN (
+      SELECT DISTINCT sh.eye_colour_id
+      FROM superhero AS sh
+      JOIN colour AS bh ON bh.id = sh.hair_colour_id
+      WHERE bh.colour = 'Brown'
+  )
+GROUP BY s.eye_colour_id
+ORDER BY hero_count DESC, eye_colour ASC;"
+380,dev,superhero,challenging,incorrect_result,UNCERTAIN,review_uncertain,"SELECT ROUND(AVG(s.weight_kg), 2)
+FROM superhero AS s
+WHERE s.id <> (SELECT id FROM superhero WHERE superhero_name = '3-D Man')
+  AND s.weight_kg IS NOT NULL
+  AND EXISTS (
+      SELECT 1
+      FROM hero_power AS hp
+      JOIN hero_power AS ref ON ref.power_id = hp.power_id
+      WHERE hp.hero_id = s.id
+        AND ref.hero_id = (SELECT id FROM superhero WHERE superhero_name = '3-D Man')
+  );"
+381,dev,superhero,challenging,incorrect_result,PASS,final_sql_ready,"SELECT
+    COUNT(CASE WHEN c.colour = 'No Colour' THEN 1 END)
+    - COUNT(CASE WHEN c.colour = 'Blue' THEN 1 END)
+FROM superhero s
+JOIN colour c ON c.id = s.eye_colour_id
+WHERE s.weight_kg IS NULL;"
+392,dev,thrombosis_prediction,challenging,incorrect_result,UNCERTAIN,review_uncertain,"SELECT COUNT(DISTINCT p.ID)
+FROM Patient AS p
+WHERE p.Birthday > '1960-01-01'
+  AND EXISTS (
+      SELECT 1
+      FROM Examination AS e
+      WHERE e.ID = p.ID
+        AND e.Thrombosis > 0
+  )
+  AND NOT EXISTS (
+      SELECT 1
+      FROM Laboratory AS l
+      WHERE l.ID = p.ID
+        AND CAST(l.RNP AS REAL) > 10
+  );"
+393,dev,thrombosis_prediction,challenging,incorrect_result,PASS,final_sql_ready,"WITH eligible AS (
+    SELECT DISTINCT p.ID
+    FROM Patient AS p
+    JOIN Laboratory AS l ON l.ID = p.ID
+    WHERE p.Admission = '-'
+      AND l.SSA IS NOT NULL
+      AND l.SSA NOT IN ('negative', '0')
+),
+patient_titers AS (
+    SELECT l.ID, MAX(CAST(l.RNP AS INTEGER)) AS anti_rnp_titer
+    FROM Laboratory AS l
+    JOIN eligible AS e ON e.ID = l.ID
+    WHERE l.RNP IS NOT NULL
+      AND l.RNP <> 'negative'
+    GROUP BY l.ID
+)
+SELECT ID, anti_rnp_titer
+FROM patient_titers
+WHERE anti_rnp_titer = (SELECT MAX(anti_rnp_titer) FROM patient_titers)
+ORDER BY ID;"
+397,dev,thrombosis_prediction,challenging,incorrect_result,UNCERTAIN,review_uncertain,"SELECT
+    CASE WHEN p.Admission = '+' THEN '+' ELSE '-' END AS care_setting,
+    COUNT(DISTINCT p.ID) AS patient_count
+FROM Patient AS p
+WHERE EXISTS (
+    SELECT 1
+    FROM Laboratory AS l
+    WHERE l.ID = p.ID
+      AND CAST(l.RNP AS REAL) > 16
+)
+GROUP BY CASE WHEN p.Admission = '+' THEN '+' ELSE '-' END
+ORDER BY care_setting DESC;"
+400,dev,thrombosis_prediction,challenging,incorrect_result,FAIL,no_progress_repeated_sql,"WITH eligible_patients AS (
+    SELECT ID
+    FROM Patient
+    WHERE replace(replace(trim(Diagnosis), ' ', ''), ',', '') IN ('RASJS', 'SJSRA')
+),
+patient_status AS (
+    SELECT
+        p.ID,
+        EXISTS (
+            SELECT 1
+            FROM Laboratory AS l
+            WHERE l.ID = p.ID
+              AND l.PLT > 100
+              AND l.PLT < 400
+        ) AS has_normal_platelet
+    FROM eligible_patients AS p
+)
+SELECT
+    SUM(CASE WHEN has_normal_platelet THEN 1 ELSE 0 END) AS patients_with_normal_platelet,
+    SUM(CASE WHEN NOT has_normal_platelet THEN 1 ELSE 0 END) AS patients_never_normal_platelet
+FROM patient_status;"
+406,dev,thrombosis_prediction,challenging,incorrect_result,PASS,final_sql_ready,"WITH qualifying_patients AS (
+    SELECT DISTINCT ID
+    FROM Laboratory
+    WHERE CAST(RNP AS REAL) > 32
+)
+SELECT
+    p.SEX,
+    COUNT(*) AS patient_count
+FROM Patient AS p
+JOIN qualifying_patients AS q ON q.ID = p.ID
+WHERE p.SEX IN ('F', 'M')
+GROUP BY p.SEX
+ORDER BY p.SEX;"
+407,dev,thrombosis_prediction,challenging,incorrect_result,UNCERTAIN,review_tool_budget_exhausted,"SELECT MIN(
+    CAST(substr(L.Date, 1, 4) AS INTEGER) -
+    CAST(substr(P.Birthday, 1, 4) AS INTEGER)
+) AS youngest_age
+FROM Laboratory AS L
+JOIN Patient AS P ON P.ID = L.ID
+WHERE CAST(L.RNP AS NUMERIC) >= 64
+  AND L.Date IS NOT NULL
+  AND P.Birthday IS NOT NULL
+  AND EXISTS (
+      SELECT 1
+      FROM Examination AS E
+      WHERE E.ID = P.ID
+        AND E.Thrombosis > 0
+  );"
+412,dev,thrombosis_prediction,challenging,incorrect_result,UNCERTAIN,review_uncertain,"WITH thrombosis_cohort AS (
+    SELECT DISTINCT ID
+    FROM Examination
+    WHERE Thrombosis > 0
+),
+patient_first_exam AS (
+    SELECT e.ID, MIN(e.""Examination Date"") AS first_exam_date
+    FROM Examination e
+    GROUP BY e.ID
+)
+SELECT ROUND(AVG(julianday(pfe.first_exam_date) - julianday(p.""First Date""))) AS average_delay_days
+FROM Patient p
+JOIN thrombosis_cohort tc ON tc.ID = p.ID
+JOIN patient_first_exam pfe ON pfe.ID = p.ID
+WHERE p.Admission LIKE '%+%'
+  AND p.""First Date"" IS NOT NULL
+  AND pfe.first_exam_date IS NOT NULL;"
+417,dev,thrombosis_prediction,challenging,incorrect_result,PASS,final_sql_ready,"SELECT p.Admission, l.`T-CHO`, l.ID
+FROM Patient AS p
+JOIN Laboratory AS l ON l.ID = p.ID
+WHERE p.Admission IN ('+', '-')
+  AND l.`T-CHO` = (
+    SELECT MAX(l2.`T-CHO`)
+    FROM Patient AS p2
+    JOIN Laboratory AS l2 ON l2.ID = p2.ID
+    WHERE p2.Admission = p.Admission
+  )
+ORDER BY CASE p.Admission WHEN '+' THEN 0 ELSE 1 END, l.ID;"
+420,dev,thrombosis_prediction,challenging,incorrect_result,UNCERTAIN,review_uncertain,"SELECT
+    CASE
+        WHEN Admission = '+' THEN 'Hospital'
+        WHEN Admission = '-' THEN 'Outpatient clinic'
+    END AS care_setting,
+    COUNT(DISTINCT ID) AS patient_count
+FROM Patient
+WHERE Diagnosis = 'SLE'
+  AND Admission IN ('+', '-')
+  AND ID IN (
+      SELECT ID
+      FROM Laboratory
+      WHERE CASE
+          WHEN ""U-PRO"" GLOB '[0-9]*' THEN CAST(""U-PRO"" AS INTEGER) >= 30
+          WHEN ""U-PRO"" LIKE '+%' THEN CAST(substr(""U-PRO"", instr(""U-PRO"", '(') + 1) AS INTEGER) >= 30
+          WHEN ""U-PRO"" LIKE '>=%' THEN CAST(substr(""U-PRO"", 3) AS INTEGER) >= 30
+          ELSE 0
+      END
+  )
+GROUP BY Admission;"
+421,dev,thrombosis_prediction,challenging,incorrect_result,UNCERTAIN,review_uncertain,"SELECT COUNT(DISTINCT p.ID)
+FROM Patient AS p
+WHERE p.Diagnosis LIKE '%APS%'
+  AND p.Admission = '-'
+  AND EXISTS (
+      SELECT 1
+      FROM Laboratory AS l
+      WHERE l.ID = p.ID
+        AND l.RF IN ('-', '+-')
+  )
+  AND NOT EXISTS (
+      SELECT 1
+      FROM Examination AS e
+      WHERE e.ID = p.ID
+        AND (e.KCT = '+' OR e.RVVT = '+' OR e.LAC = '+')
+  );"
+423,dev,thrombosis_prediction,challenging,incorrect_result,UNCERTAIN,review_uncertain,"SELECT COUNT(*)
+FROM Patient p
+WHERE EXISTS (
+    SELECT 1
+    FROM Laboratory l
+    WHERE l.ID = p.ID
+      AND l.SSA IS NOT NULL
+      AND LOWER(TRIM(l.SSA)) NOT IN ('negative', '0')
+)
+AND EXISTS (
+    SELECT 1
+    FROM Laboratory l
+    WHERE l.ID = p.ID
+      AND l.""U-PRO"" IS NOT NULL
+      AND LOWER(TRIM(l.""U-PRO"")) NOT IN ('negative', 'none')
+);"
+430,dev,thrombosis_prediction,challenging,incorrect_result,UNCERTAIN,review_uncertain,"SELECT
+    CASE p.Admission
+        WHEN '+' THEN 'admitted to the hospital'
+        WHEN '-' THEN 'followed at the outpatient clinic'
+    END AS patient_group,
+    COUNT(l.LDH) AS normal_lactate_dehydrogenase_measurements
+FROM Patient AS p
+JOIN Laboratory AS l ON l.ID = p.ID
+WHERE p.Admission IN ('+', '-')
+  AND (
+      p.Diagnosis LIKE '%APS%'
+      OR p.Diagnosis LIKE '%BEHCET%'
+      OR p.Diagnosis LIKE '%throm%'
+  )
+  AND l.LDH < 500
+GROUP BY p.Admission
+ORDER BY CASE p.Admission WHEN '+' THEN 1 WHEN '-' THEN 2 END;"
+438,dev,thrombosis_prediction,challenging,incorrect_result,PASS,final_sql_ready,"WITH eligible AS (
+    SELECT ID
+    FROM Laboratory
+    WHERE CAST(RNP AS REAL) >= 16
+    GROUP BY ID
+),
+abnormal AS (
+    SELECT DISTINCT ID
+    FROM Laboratory
+    WHERE GPT >= 60
+),
+gpt AS (
+    SELECT ID, MAX(GPT) AS max_gpt
+    FROM Laboratory
+    WHERE GPT IS NOT NULL
+      AND GPT < 60
+    GROUP BY ID
+)
+SELECT p.Birthday
+FROM eligible AS e
+JOIN gpt AS g ON g.ID = e.ID
+JOIN Patient AS p ON p.ID = e.ID
+LEFT JOIN abnormal AS a ON a.ID = e.ID
+WHERE a.ID IS NULL
+ORDER BY g.max_gpt DESC, p.ID ASC
+LIMIT 3;"
+439,dev,thrombosis_prediction,challenging,incorrect_result,PASS,final_sql_ready,"SELECT COUNT(DISTINCT p.ID) AS patient_count
+FROM Patient AS p
+WHERE p.SEX = 'F'
+  AND EXISTS (
+    SELECT 1
+    FROM Examination AS e
+    WHERE e.ID = p.ID
+      AND e.Thrombosis > 0
+  )
+  AND EXISTS (
+    SELECT 1
+    FROM Laboratory AS l
+    WHERE l.ID = p.ID
+      AND l.PT < 14
+      AND CAST(l.RNP AS REAL) >= 16
+  );"
+442,dev,thrombosis_prediction,challenging,incorrect_result,PASS,final_sql_ready,"WITH eligible_patients AS (
+    SELECT
+        ID,
+        CASE Admission
+            WHEN '+' THEN 'Admitted to the hospital'
+            WHEN '-' THEN 'Followed at the outpatient clinic'
+        END AS care_setting
+    FROM Patient
+    WHERE SEX = 'F'
+      AND Birthday IS NOT NULL
+      AND date(Birthday, '+50 years') <= '2026-10-09'
+      AND Admission IN ('+', '-')
+),
+patient_results AS (
+    SELECT
+        p.ID,
+        p.care_setting,
+        MAX(CASE WHEN CAST(l.RNP AS REAL) >= 4 THEN 1 ELSE 0 END) AS has_elevated_result
+    FROM eligible_patients AS p
+    LEFT JOIN Laboratory AS l ON l.ID = p.ID
+    GROUP BY p.ID, p.care_setting
+)
+SELECT
+    care_setting,
+    SUM(has_elevated_result) AS patients_with_at_least_one_result_at_least_4,
+    SUM(CASE WHEN has_elevated_result = 0 THEN 1 ELSE 0 END) AS patients_with_no_such_result
+FROM patient_results
+GROUP BY care_setting
+ORDER BY care_setting;"
+443,dev,thrombosis_prediction,challenging,incorrect_result,PASS,final_sql_ready,"WITH ranked_labs AS (
+    SELECT ID,
+           IGG,
+           ROW_NUMBER() OVER (PARTITION BY ID ORDER BY Date DESC) AS rn
+    FROM Laboratory
+)
+SELECT COUNT(*) AS patient_count
+FROM Patient AS p
+JOIN ranked_labs AS l
+    ON l.ID = p.ID
+   AND l.rn = 1
+WHERE p.Admission = '-'
+  AND l.IGG >= 2000;"
+445,dev,thrombosis_prediction,challenging,incorrect_result,PASS,final_sql_ready,"WITH latest_igg AS (
+    SELECT l.ID, l.IGG
+    FROM Laboratory AS l
+    WHERE l.Date = (
+        SELECT MAX(l2.Date)
+        FROM Laboratory AS l2
+        WHERE l2.ID = l.ID
+    )
+)
+SELECT
+    CASE p.Admission
+        WHEN '+' THEN 'admitted to the hospital'
+        WHEN '-' THEN 'followed at the outpatient clinic'
+    END AS care_setting,
+    ROUND(
+        100.0 * SUM(CASE WHEN latest_igg.IGG > 900 AND latest_igg.IGG < 2000 THEN 1 ELSE 0 END)
+        / COUNT(*),
+        1
+    ) AS percentage
+FROM Patient AS p
+LEFT JOIN latest_igg ON latest_igg.ID = p.ID
+WHERE p.Admission IN ('+', '-')
+GROUP BY p.Admission
+ORDER BY CASE p.Admission WHEN '+' THEN 1 WHEN '-' THEN 2 END;"
+447,dev,thrombosis_prediction,challenging,incorrect_result,UNCERTAIN,review_uncertain,"SELECT COUNT(*)
+FROM (
+    SELECT
+        l.ID,
+        l.RNP,
+        l.CPK,
+        ROW_NUMBER() OVER (
+            PARTITION BY l.ID
+            ORDER BY l.Date DESC
+        ) AS rn
+    FROM Laboratory AS l
+    JOIN Patient AS p ON p.ID = l.ID
+    WHERE p.SEX = 'F'
+)
+WHERE rn = 1
+  AND CAST(RNP AS REAL) > 64
+  AND CPK < 250;"
+464,dev,thrombosis_prediction,challenging,incorrect_result,PASS,final_sql_ready,"SELECT ROUND(AVG((julianday('2026-10-09') - julianday(p.Birthday)) / 365.2425), 1)
+FROM Patient AS p
+WHERE p.Birthday IS NOT NULL
+  AND (julianday('2026-10-09') - julianday(p.Birthday)) / 365.2425 < 70
+  AND EXISTS (
+      SELECT 1
+      FROM Laboratory AS l
+      WHERE l.ID = p.ID
+        AND CAST(l.RNP AS REAL) >= 64
+  );"
+470,dev,toxicology,challenging,incorrect_result,PASS,final_sql_ready,"SELECT element, COUNT(*) AS occurrences
+FROM atom
+JOIN molecule USING (molecule_id)
+WHERE label = '-'
+GROUP BY element
+HAVING COUNT(*) = (
+    SELECT MIN(occurrences)
+    FROM (
+        SELECT COUNT(*) AS occurrences
+        FROM atom
+        JOIN molecule USING (molecule_id)
+        WHERE label = '-'
+        GROUP BY element
+    )
+);"
+480,dev,toxicology,challenging,incorrect_result,UNCERTAIN,review_uncertain,"SELECT COUNT(*) AS carbon_carbon_double_bond_pairs
+FROM molecule m
+JOIN bond b ON b.molecule_id = m.molecule_id
+JOIN connected c ON c.bond_id = b.bond_id
+JOIN atom a1 ON a1.atom_id = c.atom_id
+JOIN atom a2 ON a2.atom_id = c.atom_id2
+WHERE m.label = '+'
+  AND b.bond_type = '='
+  AND a1.element = 'c'
+  AND a2.element = 'c';"
+481,dev,toxicology,challenging,incorrect_result,PASS,final_sql_ready,"WITH plus_atoms AS (
+    SELECT a.atom_id, a.element
+    FROM atom AS a
+    JOIN molecule AS m ON m.molecule_id = a.molecule_id
+    WHERE m.label = '+'
+),
+bonded_atoms AS (
+    SELECT atom_id FROM connected
+    UNION
+    SELECT atom_id2 FROM connected
+),
+element_counts AS (
+    SELECT
+        pa.element,
+        COUNT(DISTINCT CASE WHEN ba.atom_id IS NOT NULL THEN pa.atom_id END) AS bonded_count,
+        COUNT(DISTINCT pa.atom_id) AS all_atom_count
+    FROM plus_atoms AS pa
+    LEFT JOIN bonded_atoms AS ba ON ba.atom_id = pa.atom_id
+    GROUP BY pa.element
+),
+ranked_counts AS (
+    SELECT
+        element,
+        bonded_count,
+        MAX(bonded_count) OVER () AS max_bonded_count,
+        SUM(all_atom_count) OVER () AS total_atoms
+    FROM element_counts
+)
+SELECT
+    element,
+    ROUND(100.0 * bonded_count / total_atoms, 2) AS percentage_of_all_plus_atoms
+FROM ranked_counts
+WHERE bonded_count = max_bonded_count
+ORDER BY element;"
+486,dev,toxicology,challenging,incorrect_result,PASS,final_sql_ready,"SELECT DISTINCT b.bond_id, b.molecule_id
+FROM bond AS b
+JOIN molecule AS m ON m.molecule_id = b.molecule_id
+JOIN connected AS c ON c.bond_id = b.bond_id
+JOIN atom AS a1 ON a1.atom_id = c.atom_id
+JOIN atom AS a2 ON a2.atom_id = c.atom_id2
+WHERE m.label = '+'
+  AND (
+    NOT EXISTS (
+      SELECT 1
+      FROM atom AS other
+      WHERE other.element = a1.element
+        AND other.molecule_id <> b.molecule_id
+    )
+    OR NOT EXISTS (
+      SELECT 1
+      FROM atom AS other
+      WHERE other.element = a2.element
+        AND other.molecule_id <> b.molecule_id
+    )
+  );"
+497,dev,toxicology,challenging,incorrect_result,PASS,final_sql_ready,"SELECT a.element AS element_symbol, COUNT(*) AS atom_count
+FROM atom AS a
+WHERE EXISTS (
+    SELECT 1
+    FROM connected AS c
+    JOIN bond AS b ON b.bond_id = c.bond_id
+    WHERE (c.atom_id = a.atom_id OR c.atom_id2 = a.atom_id)
+      AND b.bond_type = '-'
+)
+AND NOT EXISTS (
+    SELECT 1
+    FROM connected AS c
+    JOIN bond AS b ON b.bond_id = c.bond_id
+    WHERE (c.atom_id = a.atom_id OR c.atom_id2 = a.atom_id)
+      AND b.bond_type IN ('=', '#')
+)
+GROUP BY a.element
+ORDER BY a.element;"
+498,dev,toxicology,challenging,incorrect_result,PASS,final_sql_ready,"SELECT a.element AS element_symbol,
+       COUNT(DISTINCT a.molecule_id) AS molecule_count
+FROM connected AS c
+JOIN bond AS b
+  ON b.bond_id = c.bond_id
+JOIN atom AS a
+  ON a.atom_id = c.atom_id
+  OR a.atom_id = c.atom_id2
+WHERE b.bond_type = '#'
+GROUP BY a.element
+ORDER BY molecule_count DESC, element_symbol ASC;"
+499,dev,toxicology,challenging,incorrect_result,PASS,final_sql_ready,"SELECT a.element AS element_symbol,
+       COUNT(DISTINCT a.atom_id) AS bonded_atom_count
+FROM atom AS a
+WHERE a.molecule_id = 'TR397'
+  AND EXISTS (
+      SELECT 1
+      FROM connected AS c
+      WHERE c.atom_id = a.atom_id
+         OR c.atom_id2 = a.atom_id
+  )
+GROUP BY a.element
+ORDER BY a.element;"
+0,test,california_schools,moderate,incorrect_result,PASS,final_sql_ready,"SELECT MAX(f.`Percent (%) Eligible Free (Ages 5-17)`)
+FROM frpm AS f
+JOIN satscores AS s ON f.CDSCode = s.cds
+WHERE s.rtype = 'S'
+  AND s.NumTstTakr > 0
+  AND 1.0 * s.NumGE1500 / s.NumTstTakr > 0.3;"
+30,test,california_schools,challenging,incorrect_result,FAIL,no_progress_repeated_sql,"WITH eligible AS (
+    SELECT
+        s.CDSCode,
+        COALESCE(s.School, sat.sname, s.District) AS School,
+        s.District,
+        s.County,
+        sat.AvgScrWrite
+    FROM schools AS s
+    JOIN satscores AS sat ON sat.cds = s.CDSCode
+    WHERE s.StatusType = 'Closed'
+      AND sat.AvgScrWrite IS NOT NULL
+),
+ranked AS (
+    SELECT *,
+           DENSE_RANK() OVER (ORDER BY AvgScrWrite DESC) AS score_rank
+    FROM eligible
+)
+SELECT School, District, County, AvgScrWrite
+FROM ranked
+WHERE score_rank = 2
+ORDER BY School, District, County;"
+59,test,card_games,moderate,incorrect_result,PASS,final_sql_ready,"SELECT COUNT(DISTINCT s.code) AS count_sets
+FROM sets AS s
+JOIN set_translations AS t ON t.setCode = s.code
+WHERE s.block = 'Ice Age'
+  AND t.language = 'Italian';"
+76,test,card_games,challenging,incorrect_result,PASS,final_sql_ready,"SELECT COUNT(*) AS count
+FROM cards
+WHERE borderColor = 'white'
+  AND power <> '*'
+  AND CAST(power AS REAL) < 3;"
+87,test,card_games,challenging,incorrect_result,UNCERTAIN,review_uncertain,"SELECT COUNT(*) AS official_ruling_count
+FROM rulings
+WHERE uuid IN (
+    SELECT uuid
+    FROM cards
+    WHERE name = 'Fireball'
+);"
+97,test,card_games,challenging,incorrect_result,FAIL,review_error,"SELECT DISTINCT name
+FROM cards
+WHERE isPromo = 1
+  AND frameVersion = (
+      SELECT MAX(CAST(frameVersion AS INTEGER))
+      FROM cards
+      WHERE frameVersion GLOB '[0-9]*'
+  )
+  AND layout <> 'normal';"
+113,test,card_games,challenging,incorrect_result,FAIL,max_attempts,"SELECT language, COUNT(*) AS printings
+FROM foreign_data
+WHERE language NOT IN ('Ancient Greek', 'Arabic', 'Hebrew', 'Latin', 'Sanskrit')
+  AND (language <> 'Phyrexian' OR uuid IN (
+      SELECT fd.uuid
+      FROM foreign_data AS fd
+      JOIN cards AS c ON c.uuid = fd.uuid
+      WHERE fd.language = 'Phyrexian'
+        AND c.setCode = 'KHM'
+  ))
+GROUP BY language
+HAVING COUNT(*) = (
+    SELECT MIN(printings)
+    FROM (
+        SELECT COUNT(*) AS printings
+        FROM foreign_data
+        WHERE language NOT IN ('Ancient Greek', 'Arabic', 'Hebrew', 'Latin', 'Sanskrit')
+          AND (language <> 'Phyrexian' OR uuid IN (
+              SELECT fd.uuid
+              FROM foreign_data AS fd
+              JOIN cards AS c ON c.uuid = fd.uuid
+              WHERE fd.language = 'Phyrexian'
+                AND c.setCode = 'KHM'
+          ))
+        GROUP BY language
+    )
+);"
+135,test,codebase_community,challenging,incorrect_result,PASS,final_sql_ready,"SELECT SUM(p.Score) AS total_score
+FROM postLinks AS pl
+JOIN posts AS target ON target.Id = pl.RelatedPostId
+JOIN posts AS p ON p.Id = pl.PostId
+WHERE target.Title = 'A Probability distribution value exceeding 1 is OK?'
+  AND p.PostTypeId = 1
+  AND p.Tags LIKE '%<r>%';"
+141,test,codebase_community,challenging,incorrect_result,PASS,final_sql_ready,"WITH target_posts AS (
+    SELECT Id, Title
+    FROM posts
+    WHERE Title LIKE '%principal component scores%' COLLATE NOCASE
+),
+related_posts AS (
+    SELECT PostId AS target_id, RelatedPostId AS related_id
+    FROM postLinks
+    UNION
+    SELECT RelatedPostId AS target_id, PostId AS related_id
+    FROM postLinks
+),
+counts AS (
+    SELECT p.Id, p.Title, COUNT(DISTINCT r.related_id) AS related_count
+    FROM target_posts AS p
+    LEFT JOIN related_posts AS r
+        ON r.target_id = p.Id
+    GROUP BY p.Id, p.Title
+)
+SELECT Title, related_count
+FROM counts
+WHERE related_count = (SELECT MAX(related_count) FROM counts);"
+170,test,european_football_2,moderate,missing_sql,UNCERTAIN,review_uncertain,
+187,test,european_football_2,challenging,incorrect_result,UNCERTAIN,review_uncertain,"WITH player_appearances AS (
+    SELECT country_id, home_player_1 AS player_id FROM ""Match""
+    UNION ALL SELECT country_id, home_player_2 FROM ""Match""
+    UNION ALL SELECT country_id, home_player_3 FROM ""Match""
+    UNION ALL SELECT country_id, home_player_4 FROM ""Match""
+    UNION ALL SELECT country_id, home_player_5 FROM ""Match""
+    UNION ALL SELECT country_id, home_player_6 FROM ""Match""
+    UNION ALL SELECT country_id, home_player_7 FROM ""Match""
+    UNION ALL SELECT country_id, home_player_8 FROM ""Match""
+    UNION ALL SELECT country_id, home_player_9 FROM ""Match""
+    UNION ALL SELECT country_id, home_player_10 FROM ""Match""
+    UNION ALL SELECT country_id, home_player_11 FROM ""Match""
+    UNION ALL SELECT country_id, away_player_1 FROM ""Match""
+    UNION ALL SELECT country_id, away_player_2 FROM ""Match""
+    UNION ALL SELECT country_id, away_player_3 FROM ""Match""
+    UNION ALL SELECT country_id, away_player_4 FROM ""Match""
+    UNION ALL SELECT country_id, away_player_5 FROM ""Match""
+    UNION ALL SELECT country_id, away_player_6 FROM ""Match""
+    UNION ALL SELECT country_id, away_player_7 FROM ""Match""
+    UNION ALL SELECT country_id, away_player_8 FROM ""Match""
+    UNION ALL SELECT country_id, away_player_9 FROM ""Match""
+    UNION ALL SELECT country_id, away_player_10 FROM ""Match""
+    UNION ALL SELECT country_id, away_player_11 FROM ""Match""
+),
+country_counts AS (
+    SELECT c.name, COUNT(*) AS player_match_count
+    FROM player_appearances AS a
+    JOIN Player AS p ON p.player_api_id = a.player_id
+    JOIN Country AS c ON c.id = a.country_id
+    WHERE p.weight <= 160
+    GROUP BY c.id, c.name
+)
+SELECT name, player_match_count
+FROM country_counts
+WHERE player_match_count = (SELECT MIN(player_match_count) FROM country_counts);"
+204,test,financial,challenging,incorrect_result,UNCERTAIN,review_tool_budget_exhausted,"SELECT COUNT(*)
+FROM trans AS t
+JOIN disp AS d ON d.account_id = t.account_id
+JOIN client AS c ON c.client_id = d.client_id
+WHERE d.type = 'OWNER'
+  AND c.gender = 'M'
+  AND CAST(strftime('%Y', c.birth_date) AS INTEGER) BETWEEN 1974 AND 1976
+  AND (t.k_symbol IS NULL OR TRIM(t.k_symbol) = '');"
+239,test,financial,challenging,incorrect_result,UNCERTAIN,review_uncertain,"WITH cohort_districts AS (
+    SELECT DISTINCT
+        CASE
+            WHEN CAST(strftime('%Y', c.birth_date) AS INTEGER) >= 1980 THEN 'young cohort'
+            WHEN CAST(strftime('%Y', c.birth_date) AS INTEGER) <= 1919 THEN 'old cohort'
+        END AS cohort,
+        a.district_id
+    FROM client c
+    JOIN disp dp ON dp.client_id = c.client_id
+    JOIN account a ON a.account_id = dp.account_id
+    WHERE CAST(strftime('%Y', c.birth_date) AS INTEGER) >= 1980
+       OR CAST(strftime('%Y', c.birth_date) AS INTEGER) <= 1919
+)
+SELECT cohort, ROUND(AVG(d.A12)) AS average_salary
+FROM cohort_districts cd
+JOIN district d ON d.district_id = cd.district_id
+GROUP BY cohort
+ORDER BY CASE cohort WHEN 'young cohort' THEN 1 ELSE 2 END;"
+249,test,formula_1,challenging,incorrect_result,PASS,final_sql_ready,"SELECT d.forename, d.surname
+FROM lapTimes AS l
+JOIN drivers AS d ON d.driverId = l.driverId
+WHERE l.milliseconds IS NOT NULL
+GROUP BY d.driverId
+ORDER BY MIN(l.milliseconds) ASC
+LIMIT 20;"
+253,test,formula_1,challenging,incorrect_result,PASS,final_sql_ready,"SELECT d.driverRef, d.nationality, d.dob, q.q1
+FROM races AS r
+JOIN qualifying AS q ON q.raceId = r.raceId
+JOIN drivers AS d ON d.driverId = q.driverId
+WHERE r.year = 1995
+  AND r.name = 'Japanese Grand Prix'
+  AND q.q1 IS NOT NULL
+  AND q.q1 = (
+      SELECT MAX(q2.q1)
+      FROM qualifying AS q2
+      WHERE q2.raceId = r.raceId
+        AND q2.q1 IS NOT NULL
+  );"
+256,test,formula_1,challenging,incorrect_result,PASS,final_sql_ready,"SELECT COUNT(*) AS count_outqualified
+FROM qualifying AS di_grassi
+JOIN races AS r ON r.raceId = di_grassi.raceId
+JOIN qualifying AS other_driver
+  ON other_driver.raceId = di_grassi.raceId
+ AND other_driver.position > di_grassi.position
+JOIN drivers AS d ON d.driverId = di_grassi.driverId
+WHERE r.year = 2010
+  AND lower(d.forename) = 'lucas'
+  AND lower(d.surname) = 'di grassi';"
+299,test,student_club,moderate,incorrect_result,UNCERTAIN,review_uncertain,"WITH event_ratios AS (
+    SELECT
+        e.event_id,
+        e.event_name,
+        SUM(COALESCE(b.spent, 0)) * 1.0
+            / NULLIF(SUM(COALESCE(b.amount, 0)), 0) AS spending_ratio
+    FROM event AS e
+    JOIN budget AS b
+        ON b.link_to_event = e.event_id
+    WHERE e.status = 'Closed'
+    GROUP BY e.event_id, e.event_name
+)
+SELECT event_name, spending_ratio
+FROM event_ratios
+WHERE spending_ratio = (
+    SELECT MAX(spending_ratio)
+    FROM event_ratios
+);"
+303,test,student_club,challenging,incorrect_result,PASS,final_sql_ready,"SELECT
+    a.department AS department_name,
+    GROUP_CONCAT(DISTINCT a.major_name) AS majors_offered,
+    GROUP_CONCAT(DISTINCT CASE WHEN m.member_id IS NOT NULL THEN a.major_name END) AS majors_held,
+    ROUND(CAST(COUNT(m.member_id) AS REAL) / COUNT(DISTINCT a.major_id), 2) AS average_members_per_major
+FROM major AS a
+LEFT JOIN member AS m
+    ON m.link_to_major = a.major_id
+WHERE a.college = 'College of Humanities and Social Sciences'
+GROUP BY a.department
+ORDER BY a.department;"
+326,test,student_club,challenging,incorrect_result,PASS,final_sql_ready,"SELECT e.expense_description AS item_name, COUNT(*) AS record_count
+FROM expense e
+JOIN budget b ON e.link_to_budget = b.budget_id
+WHERE b.category = 'Food'
+GROUP BY e.expense_description
+ORDER BY record_count DESC, item_name ASC
+LIMIT 1;"
+343,test,superhero,challenging,incorrect_result,PASS,final_sql_ready,"WITH dc_powers AS (
+    SELECT DISTINCT hp.power_id
+    FROM hero_power hp
+    JOIN superhero d ON d.id = hp.hero_id
+    JOIN publisher p ON p.id = d.publisher_id
+    WHERE p.publisher_name = 'DC Comics'
+),
+qualifying_marvel AS (
+    SELECT DISTINCT m.id, m.height_cm
+    FROM superhero m
+    JOIN publisher p ON p.id = m.publisher_id
+    JOIN hero_power hp ON hp.hero_id = m.id
+    WHERE p.publisher_name = 'Marvel Comics'
+      AND m.height_cm IS NOT NULL
+      AND NOT EXISTS (
+          SELECT 1
+          FROM dc_powers d
+          WHERE d.power_id = hp.power_id
+      )
+)
+SELECT AVG(height_cm) AS average_height_cm
+FROM qualifying_marvel;"
+346,test,superhero,challenging,incorrect_result,UNCERTAIN,review_uncertain,"SELECT COUNT(*) AS count
+FROM superhero s
+JOIN alignment a ON s.alignment_id = a.id
+WHERE a.alignment NOT IN ('Good', 'Bad');"
+369,test,superhero,challenging,incorrect_result,UNCERTAIN,review_uncertain,"SELECT ROUND(AVG(s.weight_kg)) AS average_weight_kg
+FROM superhero AS s
+JOIN alignment AS a ON a.id = s.alignment_id
+JOIN colour AS c ON c.id = s.skin_colour_id
+WHERE a.alignment = 'Bad'
+  AND c.colour = 'Green'
+  AND s.weight_kg IS NOT NULL
+  AND EXISTS (
+      SELECT 1
+      FROM hero_power AS hp
+      JOIN superpower AS p ON p.id = hp.power_id
+      WHERE hp.hero_id = s.id
+        AND p.power_name = 'Flight'
+  );"
+372,test,superhero,challenging,incorrect_result,PASS,final_sql_ready,"SELECT COUNT(DISTINCT hp.power_id)
+FROM superhero AS s
+JOIN gender AS g ON g.id = s.gender_id
+JOIN hero_power AS hp ON hp.hero_id = s.id
+WHERE g.gender = 'Male'
+  AND s.weight_kg IS NOT NULL
+  AND s.weight_kg < 70;"
+387,test,thrombosis_prediction,challenging,incorrect_result,PASS,final_sql_ready,"WITH cohort AS (
+    SELECT DISTINCT p.ID, p.SEX
+    FROM Patient AS p
+    JOIN Laboratory AS l ON l.ID = p.ID
+    WHERE p.Birthday IS NOT NULL
+      AND date(p.Birthday, '+56 years') <= date('2026-10-09')
+      AND l.PT >= 14
+)
+SELECT ROUND(
+    100.0 * SUM(CASE WHEN SEX = 'F' THEN 1 ELSE 0 END) / COUNT(*),
+    2
+) AS percentage_female
+FROM cohort;"
+388,test,thrombosis_prediction,moderate,incorrect_result,PASS,final_sql_ready,"SELECT COUNT(DISTINCT l.ID) AS patient_count
+FROM Laboratory AS l
+JOIN Patient AS p ON p.ID = l.ID
+WHERE l.CRP = '+'
+  AND p.Description IS NULL;"
+396,test,thrombosis_prediction,challenging,incorrect_result,UNCERTAIN,review_uncertain,"SELECT p.ID, l.Date, l.DNA
+FROM Patient AS p
+JOIN Laboratory AS l ON l.ID = p.ID
+WHERE p.SEX = 'F'
+  AND p.Admission = '+'
+  AND l.DNA IS NOT NULL
+  AND TRIM(l.DNA) <> ''
+  AND CAST(l.DNA AS REAL) = (
+      SELECT MAX(CAST(l2.DNA AS REAL))
+      FROM Laboratory AS l2
+      WHERE l2.ID = p.ID
+        AND l2.DNA IS NOT NULL
+        AND TRIM(l2.DNA) <> ''
+  )
+ORDER BY p.ID;"
+404,test,thrombosis_prediction,challenging,incorrect_result,FAIL,max_attempts,SELECT 0.00 AS percentage;
+452,test,thrombosis_prediction,challenging,incorrect_result,PASS,final_sql_ready,"SELECT e.Symptoms, p.Diagnosis AS overall_diagnosis
+FROM Examination AS e
+JOIN Patient AS p ON p.ID = e.ID
+WHERE e.Diagnosis LIKE '%SLE%'
+  AND e.Diagnosis NOT LIKE '%susp%'
+  AND e.Symptoms IS NOT NULL
+  AND TRIM(e.Symptoms) <> ''
+  AND p.Birthday IS NOT NULL
+ORDER BY p.Birthday ASC, p.ID ASC, e.`Examination Date` DESC
+LIMIT 1;"
+456,test,thrombosis_prediction,challenging,incorrect_result,PASS,final_sql_ready,"SELECT
+    CASE SEX
+        WHEN 'M' THEN 'male'
+        WHEN 'F' THEN 'female'
+    END AS sex,
+    COUNT(*) AS patient_count
+FROM Patient AS p
+WHERE SEX IN ('M', 'F')
+  AND NOT EXISTS (
+      SELECT 1
+      FROM Laboratory AS l
+      WHERE l.ID = p.ID
+        AND l.GPT >= 60
+  )
+GROUP BY SEX
+ORDER BY CASE SEX WHEN 'M' THEN 1 WHEN 'F' THEN 2 END;"
+479,test,toxicology,challenging,incorrect_result,PASS,final_sql_ready,"WITH molecule_saturation AS (
+    SELECT
+        m.molecule_id,
+        m.label,
+        CASE
+            WHEN EXISTS (
+                SELECT 1
+                FROM bond b
+                WHERE b.molecule_id = m.molecule_id
+                  AND b.bond_type <> '-'
+            ) THEN 'other'
+            ELSE 'all_single'
+        END AS saturation_group
+    FROM molecule AS m
+)
+SELECT
+    saturation_group,
+    SUM(CASE WHEN label = '+' THEN 1 ELSE 0 END)
+      - SUM(CASE WHEN label = '-' THEN 1 ELSE 0 END) AS difference
+FROM molecule_saturation
+GROUP BY saturation_group
+ORDER BY CASE saturation_group WHEN 'all_single' THEN 1 ELSE 2 END;"

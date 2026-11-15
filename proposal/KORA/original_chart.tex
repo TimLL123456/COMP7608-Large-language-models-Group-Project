@@ -1,0 +1,31 @@
+% Editable reproduction of the original KORA controller and domain-adapter chart.
+\begin{tikzpicture}[
+ >=Latex,font=\scriptsize,
+ kbox/.style={draw=black!42,rounded corners=2pt,align=center,minimum height=0.7cm,inner sep=4pt},
+ state/.style={kbox,fill=blue!12,text width=3.2cm},
+ core/.style={kbox,fill=red!11,text width=3.2cm},
+ plan/.style={kbox,fill=yellow!16,text width=2.85cm},
+ routing/.style={kbox,fill=violet!12,text width=2.85cm},
+ current/.style={kbox,fill=green!13,text width=4.1cm},
+ future/.style={kbox,draw=black!42,dashed,fill=gray!5,text width=3.25cm},
+ arrow/.style={->,semithick}]
+\node (user) at (-2.1,3.95) {\textbf{User question}};
+\node[state] (work) at (-2.1,3.13) {\textbf{Structured working state}\\\emph{evidence, plan, history, budget}};
+\node[plan] (planner) at (2,3.13) {\textbf{Query planner [B2]}\\\emph{joins, filters, aggregation}};
+\node[core] (agent) at (-2.1,1.98) {\textbf{Agent controller [B0]}\\\emph{select tool / reflect / stop}};
+\node[routing] (model) at (2,1.98) {\textbf{Model router [B3]}\\\emph{normal / stronger LLM}};
+\node[current] (db) at (-2.1,0.15) {\textbf{Database adapter / BIRD (current)}\\\emph{schema search $\cdot$ source inspection}\\\emph{KG join-path explorer [B1]}\\\emph{SQL generation $\cdot$ execution / repair}};
+\node[future] (docs) at (2.18,0.15) {\textbf{Document adapter (future only)}\\\emph{passage retrieval $\cdot$ entity graph}\\\emph{source inspection}\\\emph{evidence and citation checking}};
+\node[font=\tiny\bfseries] at (-2.1,-0.85) {BIRD Mini-Dev $\cdot$ execution accuracy / cost};
+\node[draw=black!28,rounded corners=3pt,inner sep=8pt,fit=(work)(planner)(agent)(model)] (frame) {};
+\node[font=\scriptsize\bfseries,anchor=south east] at ($(frame.north east)+(-0.1,0.13)$) {KORA core (reusable)};
+\draw[arrow] (user) -- (work);
+\draw[arrow] (work) -- (agent);
+\draw[arrow] (agent.east) -- node[above,font=\tiny]{choose model} (model.west);
+\draw[arrow,dashed,gray] ($(model.west)+(0,-0.17)$) -- ($(agent.east)+(0,-0.17)$);
+\draw[arrow] (agent.north east) -- node[above,font=\tiny,sloped]{plan if needed} (planner.south west);
+\draw[arrow] (planner.west) -- (work.east);
+\draw[arrow] (agent.south) -- node[right,font=\tiny]{tool actions} (db.north);
+\draw[arrow,dashed,teal!65!black] (db.west) -- ++(-0.4,0) |- node[pos=0.75,left,font=\tiny]{observations / errors} (work.west);
+\draw[arrow,dashed,gray] (frame.south east) -- node[above,font=\tiny]{future adapter} (docs.north);
+\end{tikzpicture}

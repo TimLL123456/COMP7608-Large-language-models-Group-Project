@@ -1,0 +1,4 @@
+# Preserve original dataset/scorer CSV bytes, including CRLF and source whitespace.
+*.csv -text -whitespace
+# Preserve the original test/run logs without whitespace edits.
+provenance/logs/** -text -whitespace

@@ -5,6 +5,7 @@ Run: uv run python -m scr.cli.run_bird_b0_eval {prepare,infer,score} --help
 from __future__ import annotations
 
 import argparse
+from hashlib import sha256
 from datetime import datetime, timezone
 import json
 import os
@@ -12,7 +13,9 @@ from pathlib import Path
 import re
 import tempfile
 
+from scr.baselines.sqlite_readonly import DEFAULT_SQL_TIMEOUT_SECONDS
 from scr.datasets.bird import BirdDataset, DEFAULT_ROOT
+from scr.baselines.common import DEFAULT_MODELS, build_model
 from scr.evaluation.bird_sampling import LEVELS, difficulty_counts, select_questions, allocate_ratios
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -123,8 +126,32 @@ def infer(args) -> int:
     from scr.baselines.sqlite_readonly import ReadOnlySqlite
 
     folder, dataset, selected = _selection(args)
-    if not os.environ.get("NVIDIA_API_KEY"):
-        raise ValueError("NVIDIA_API_KEY required for live B0; no fallback")
+    provider = args.provider
+    reasoning_effort = args.reasoning_effort
+    prompt_variant = args.prompt_variant
+    # Preflight versioned instructions before opening an immutable run directory.
+    system_prompt_sha256 = sha256(b0.system_prompt_for_variant(prompt_variant).encode("utf-8")).hexdigest()
+    if reasoning_effort is not None and provider != "chatgpt-siwc":
+        raise ValueError("--reasoning-effort currently requires --provider chatgpt-siwc")
+    model_name = args.model or (b0.MODEL if provider == "nvidia" else DEFAULT_MODELS[provider])
+    if not model_name:
+        raise ValueError(f"--model is required for provider {provider!r}")
+    if provider == "nvidia" and not os.environ.get("NVIDIA_API_KEY"):
+        raise ValueError("NVIDIA_API_KEY required for NVIDIA B0; no fallback")
+    if provider == "chatgpt-siwc":
+        from scr.baselines.siwc_auth import CREDS, read_json
+        if not read_json(CREDS):
+            raise ValueError("Sign in first: uv run python -m scr.baselines.siwc_auth")
+    # Preserve the original default NVIDIA call path for backward compatibility.
+    model = None
+    if provider != "nvidia" or model_name != b0.MODEL:
+        model = build_model(
+            model_name, provider=provider,
+            temperature=None if provider in ("openai", "chatgpt-siwc") else b0.TEMPERATURE,
+            top_p=b0.TOP_P if provider == "nvidia" else None,
+            max_tokens=b0.MAX_OUTPUT_TOKENS, timeout=b0.REQUEST_TIMEOUT,
+            **({"reasoning_effort": reasoning_effort} if reasoning_effort is not None else {}),
+        )
     run_dir = folder / "B0" / args.split / args.run_id
     if run_dir.exists():
         raise ValueError(f"Refusing to overwrite run: {run_dir}")
@@ -138,7 +165,17 @@ def infer(args) -> int:
             structured_events = []
             try:
                 store = ReadOnlySqlite(dataset.get_database_path(question["db_id"]), max_rows=args.preview_rows)
-                report = b0.run_one(question, b0.make_agent(store), log=lambda msg: events.append(redact_credentials(str(msg))), trace_events=structured_events)
+                if prompt_variant == "baseline":
+                    # Retain the historical call shape for all legacy users/tests.
+                    agent = b0.make_agent(store) if model is None else b0.make_agent(store, model=model)
+                else:
+                    agent = (b0.make_agent(store, prompt_variant=prompt_variant) if model is None
+                             else b0.make_agent(store, model=model, prompt_variant=prompt_variant))
+                report = b0.run_one(
+                    question, agent, log=lambda msg: events.append(redact_credentials(str(msg))),
+                    trace_events=structured_events,
+                )
+                report["model"] = model_name
             except Exception as exc:
                 report = {
                     "final_sql": None, "model_calls": 0, "tool_calls": 0,
@@ -151,10 +188,22 @@ def infer(args) -> int:
             failures += int(sql is None)
             _jsonl_write(preds, {
                 "question_id": question["question_id"], "db_id": question["db_id"],
-                "predicted_sql": sql, "provider": "nvidia", "model": b0.MODEL,
+                "predicted_sql": sql, "provider": provider, "model": model_name,
+                "requested_reasoning_effort": reasoning_effort,
                 "tool_calls": report.get("tool_calls"),
                 "input_tokens": report.get("input_tokens") if report.get("usage_observed") else None,
                 "output_tokens": report.get("output_tokens") if report.get("usage_observed") else None,
+                "total_tokens": report.get("total_tokens"),
+                "cached_input_tokens": report.get("cached_input_tokens"),
+                "reasoning_tokens": report.get("reasoning_tokens"),
+                "reasoning_effort": report.get("reasoning_effort"),
+                "thinking_level": report.get("thinking_level"),
+                "reasoning_mode": report.get("reasoning_mode"),
+                "input_tokens_observed_calls": report.get("input_tokens_observed_calls"),
+                "output_tokens_observed_calls": report.get("output_tokens_observed_calls"),
+                "total_tokens_observed_calls": report.get("total_tokens_observed_calls"),
+                "cached_input_tokens_observed_calls": report.get("cached_input_tokens_observed_calls"),
+                "reasoning_tokens_observed_calls": report.get("reasoning_tokens_observed_calls"),
                 "latency_ms": round(report["seconds"] * 1000, 3) if report.get("seconds") is not None else None,
                 "model_calls": report.get("model_calls"), "sql_calls": report.get("sql_calls"),
                 "sql_success_calls": report.get("sql_success_calls"),
@@ -168,27 +217,36 @@ def infer(args) -> int:
                                   "report": report, "events": events,
                                   "structured_events": structured_events})
             print(f"Q{question['question_id']}: {'final_sql_ready' if sql else report.get('stop_reason', 'failed')}", flush=True)
-    from hashlib import sha256
     _dump(run_dir / "inference_manifest.json", {
         "completed": True, "question_ids": [q["question_id"] for q in selected],
         "prediction_sha256": sha256((run_dir / "predictions.jsonl").read_bytes()).hexdigest(),
         "selection_sha256": sha256((folder / "selection_manifest.json").read_bytes()).hexdigest(),
         "dataset_manifest": dataset.manifest,
         "preview_rows": args.preview_rows,
+        "agent_sql_timeout_seconds": DEFAULT_SQL_TIMEOUT_SECONDS,
         "output_format_version": b0.OUTPUT_FORMAT_VERSION,
         "parser_revision": "accept-inline-opening-delimiter-v1",
         "trace_schema_version": 1,
         "selection_id": args.selection_id, "split": args.split, "run_id": args.run_id,
-        "created_utc": started, "model": b0.MODEL, "provider": "nvidia",
-        "temperature": b0.TEMPERATURE, "top_p": b0.TOP_P,
+        "created_utc": started, "model": model_name, "provider": provider,
+        "prompt_variant": prompt_variant, "system_prompt_sha256": system_prompt_sha256,
+        "requested_reasoning_effort": reasoning_effort,
+        "temperature": None if provider in ("openai", "chatgpt-siwc") else b0.TEMPERATURE,
+        "top_p": b0.TOP_P if provider == "nvidia" else None,
         "request_timeout_seconds": b0.REQUEST_TIMEOUT,
-        "max_output_tokens": b0.MAX_OUTPUT_TOKENS,
-        "max_context_tokens": b0.MAX_CONTEXT_TOKENS,
+        "max_output_tokens": None if provider == "chatgpt-siwc" else b0.MAX_OUTPUT_TOKENS,
+        "max_context_tokens": b0.MAX_CONTEXT_TOKENS if provider == "nvidia" else None,
         "context_budget_enforced": False,
         "max_model_calls": b0.MAX_MODEL_CALLS, "max_total_tool_calls": b0.MAX_TOTAL_TOOL_CALLS,
         "max_sql_executions": b0.MAX_SQL_EXECUTIONS, "recursion_limit": b0.RECURSION_LIMIT,
         "expected_questions": len(selected), "missing_final_sql": failures,
-        "note": "Top-level usage may exclude nested subagents; cost unknown",
+        "usage_schema_version": 2,
+        "note": (
+            "Optional token details and reasoning settings are stored only when returned. "
+            "Their *_observed_calls may be smaller than model_calls; sums can be partial. "
+            "Cached input tokens are included in input tokens, and reasoning tokens in "
+            "output tokens. Nested subagent usage may be unobserved; cost unknown."
+        ),
     })
     print(f"Saved {len(selected)} predictions ({failures} missing SQL) to {run_dir}")
     return 0
@@ -215,9 +273,11 @@ def score(args) -> int:
                 "selection_sha256": sha256((folder / "selection_manifest.json").read_bytes()).hexdigest(),
                 "dataset_manifest": dataset.manifest,
                 "output_format_version": b0.OUTPUT_FORMAT_VERSION,
-                "provider": "nvidia"}
+                }
     if any(manifest.get(k) != v for k, v in expected.items()) or len(records) != len(selected):
         raise ValueError("Incomplete or mismatched inference manifest/predictions")
+    if manifest.get("provider") not in DEFAULT_MODELS:
+        raise ValueError("Inference manifest has an unsupported provider")
     if not isinstance(manifest.get("model"), str) or not manifest["model"]:
         raise ValueError("Inference manifest missing model")
     if any(row.get("provider") != manifest["provider"] or row.get("model") != manifest["model"] for row in records):
@@ -229,6 +289,7 @@ def score(args) -> int:
         "--predictions", str(predictions), "--dataset-root", str(args.dataset_root),
         "--output-dir", str(run_dir), "--run-id", "scores",
         "--question-ids", ",".join(str(row["question_id"]) for row in selected),
+        "--timeout-seconds", str(args.timeout_seconds),
     ])
     if outcome == 0:
         scores = run_dir / "scores"
@@ -275,6 +336,9 @@ def score(args) -> int:
                 f"{label('model_calls')} | {label('tool_calls')} | {label('sql_calls')} | {label('latency_ms')} |"
             )
         lines.extend(["", "Times are milliseconds. Model turns represent observable main-agent model calls.",
+                      "Cached input tokens are part of input tokens; reasoning tokens are part of output tokens.",
+                      "Optional usage fields may be partial: compare *_observed_calls with model_calls.",
+                      "Thinking/effort values are reported only when a provider supplies them.",
                       "Nested subagent activity may be unobserved. n/a does not mean zero.",
                       "Agent SQL tool success is not equivalent to final SQL EX.",
                       "Gold SQL is validated separately before any predicted SQL scoring."])
@@ -328,10 +392,19 @@ def build_parser():
             else:
                 command.add_argument("--run-id", required=True,
                                      nargs="+" if action == "visualize" else None)
+            if action == "score":
+                command.add_argument("--timeout-seconds", type=float, default=DEFAULT_SQL_TIMEOUT_SECONDS,
+                                     help="Per-query timeout for reference and predicted SQL")
             if action == "visualize":
                 command.add_argument("--output", type=Path)
             if action == "infer":
+                command.add_argument("--prompt-variant", choices=("baseline", "generalized-v1"),
+                                     default="baseline", help="Versioned system instructions; baseline is unchanged")
+                command.add_argument("--reasoning-effort", choices=("none", "low", "medium", "high", "xhigh", "max"),
+                                     help="Explicit SIWC effort; omitted preserves provider default")
                 command.add_argument("--preview-rows", type=int, default=20)
+                command.add_argument("--provider", choices=DEFAULT_MODELS, default="nvidia")
+                command.add_argument("--model", help="Provider-specific model ID; required for OpenAI and ChatGPT SIWC")
     return parser
 
 

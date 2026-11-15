@@ -1,0 +1,44 @@
+[
+  {
+    "path": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/scr/evaluation/result/metadata-discovery-v2-resource-full-20261111/MetadataDiscoveryV2/dev/metadata-discovery-v2-descriptions-dev-20261111/traces.jsonl",
+    "sha256": "06c3b0a50d815885a38c728ade2abf436aec6ecdf7b528cd4339bdcba0604e56",
+    "bytes": 59833361,
+    "committed": false
+  },
+  {
+    "path": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/scr/evaluation/result/metadata-discovery-v2-resource-full-20261111/MetadataDiscoveryV2/dev/metadata-discovery-v2-descriptions-dev-20261111/trace-explorer.html",
+    "sha256": "910c9e53fb6154c8105d34757c8c0e6cec4d99d09987d39d5c4daf0ebf2fa2ee",
+    "bytes": 43693853,
+    "committed": false
+  },
+  {
+    "path": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/scr/evaluation/result/metadata-discovery-v2-resource-full-20261111/MetadataDiscoveryV2/test/metadata-discovery-v2-descriptions-test-20261111/traces.jsonl",
+    "sha256": "d13691d01a6c164397c09830d02fdd73c56b2d9b87002020c177c91c9b38d6f1",
+    "bytes": 16235077,
+    "committed": false
+  },
+  {
+    "path": "/home/devuser/HKU/2026-2027/Sem1/COMP7608 - Large language models/Group Project/scr/evaluation/result/metadata-discovery-v2-resource-full-20261111/MetadataDiscoveryV2/test/metadata-discovery-v2-descriptions-test-20261111/trace-explorer.html",
+    "sha256": "837fbe0aa249836ef3782376a5af84e50c5a09acf28a7e6f886199866e6e5c31",
+    "bytes": 11935693,
+    "committed": false
+  },
+  {
+    "path": "/home/devuser/metadata-discovery-v2-descriptions-20261111/official-mini-dev.zip",
+    "sha256": "aeb211c0e39010bbdae3838bb5e8bd27dc446ed77495b1709f85ccc9bf67f2be",
+    "bytes": 799944582,
+    "committed": false
+  },
+  {
+    "path": "/home/devuser/metadata-discovery-v2-descriptions-20261111/official-sqlite-schema.json",
+    "sha256": "5176e324a72e80a8a37a12285596d123e0ba6c310dceaa9f13a1e413ee88ff5b",
+    "bytes": 77936,
+    "committed": false
+  },
+  {
+    "path": "/home/devuser/metadata-discovery-v2-descriptions-20261111/analysis/failure-semantic-review-evaluator-only.csv",
+    "sha256": "19f59bb2c1d177f46ad254bb1841d45f31f56b686eec76cf744d43db91d40a79",
+    "bytes": 152478,
+    "committed": false
+  }
+]

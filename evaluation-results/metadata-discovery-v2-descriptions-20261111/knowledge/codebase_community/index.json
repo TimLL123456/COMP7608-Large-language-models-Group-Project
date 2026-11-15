@@ -1,0 +1,1215 @@
+{
+  "n_04099e496a163b10151dc401": {
+    "concept_id": "Age",
+    "keywords": [
+      "users",
+      "age",
+      "integer",
+      "profile",
+      "age ranges"
+    ],
+    "note_id": "n_04099e496a163b10151dc401",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "86cce1e6e6d6aa1ebd47766cdf87635258341e5050d7e20c81ca14084d578ce7",
+    "source_refs": [
+      "schema:users.Age",
+      "description:users.csv:13",
+      "values:users grouped Age observations"
+    ],
+    "status": "provisional",
+    "summary": "Nullable integer age supplied on a user row; source gives broad age ranges, but calculation and precision are not verified.",
+    "table_name": "users",
+    "title": "users.Age"
+  },
+  "n_04d382baebdba079e3c7010f": {
+    "concept_id": "PostHistoryTypeId",
+    "keywords": [
+      "posthistory",
+      "event type",
+      "history"
+    ],
+    "note_id": "n_04d382baebdba079e3c7010f",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "88b6a417ec36fdf17c303a39ecffdb8f8abeebe19a57537b74a896d1fa5d19c5",
+    "source_refs": [
+      "schema:postHistory DDL"
+    ],
+    "status": "provisional",
+    "summary": "Nullable integer event-type identifier on each post-history record; code meanings are not verified.",
+    "table_name": "postHistory",
+    "title": "postHistory.PostHistoryTypeId"
+  },
+  "n_0687eb9366d879ecfd6f7c72": {
+    "concept_id": "RelatedPostId",
+    "keywords": [
+      "postlinks",
+      "relatedpostid",
+      "related post",
+      "foreign key"
+    ],
+    "note_id": "n_0687eb9366d879ecfd6f7c72",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "728aa1729008e97a0bf7508c7426983df9fb0e7af24a5cdacbc0ae68321d0042",
+    "source_refs": [
+      "schema:postLinks DDL (nullable RelatedPostId foreign key to posts.Id)",
+      "description:postLinks.csv:4 (RelatedPostId is the id of the related post)"
+    ],
+    "status": "provisional",
+    "summary": "Nullable integer referencing the related post endpoint of a post-link record.",
+    "table_name": "postLinks",
+    "title": "postLinks.RelatedPostId"
+  },
+  "n_06ca4e6fc2f2803dccfd6d48": {
+    "concept_id": "CreationDate",
+    "keywords": [
+      "postlinks",
+      "creationdate",
+      "link date",
+      "datetime"
+    ],
+    "note_id": "n_06ca4e6fc2f2803dccfd6d48",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "50e1cf2262304c24a2b1faaa4a56f98f4ee4d59a0aae080eb530003a2cc351be",
+    "source_refs": [
+      "schema:postLinks DDL",
+      "description:postLinks.csv:2"
+    ],
+    "status": "provisional",
+    "summary": "Nullable DATETIME documented as the creation date of a post link.",
+    "table_name": "postLinks",
+    "title": "postLinks.CreationDate"
+  },
+  "n_072fb8edd15785ebe7d6fd66": {
+    "concept_id": "CreaionDate",
+    "keywords": [
+      "posts",
+      "creaiondate",
+      "timestamp",
+      "date"
+    ],
+    "note_id": "n_072fb8edd15785ebe7d6fd66",
+    "note_type": "column",
+    "revision": 6,
+    "sha256": "5f9976ee81d84210e9e1dc268585b1df7de5d3a820286ed6d037cf0782d0a3b7",
+    "source_refs": [
+      "schema:posts DDL",
+      "values:posts.CreaionDate sampled timestamp strings"
+    ],
+    "status": "provisional",
+    "summary": "Nullable DATETIME field on posts; schema and observed timestamp values do not independently establish that it is the post creation date.",
+    "table_name": "posts",
+    "title": "posts.CreaionDate"
+  },
+  "n_0946ccee17aa280dc7c090bc": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "comments",
+      "posts",
+      "text",
+      "author",
+      "creation date"
+    ],
+    "note_id": "n_0946ccee17aa280dc7c090bc",
+    "note_type": "table",
+    "revision": 1,
+    "sha256": "2e1e71c94ee4b996b82ab694caebb7167c2b31263738b62cd720fc7e21146be6",
+    "source_refs": [
+      "schema:comments DDL and foreign keys"
+    ],
+    "status": "provisional",
+    "summary": "Stores comment records linked to posts and optionally users, with text, score and creation date fields.",
+    "table_name": "comments",
+    "title": "Comments table definition"
+  },
+  "n_0b8de8b3e2f6540d09014304": {
+    "concept_id": "Date",
+    "keywords": [
+      "badges",
+      "date",
+      "earned",
+      "datetime"
+    ],
+    "note_id": "n_0b8de8b3e2f6540d09014304",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "32679a36a88fdf41b8f383d91200b4869ddac861331c45553f3e2220923ddf36",
+    "source_refs": [
+      "schema:badges.Date",
+      "description:badges.csv:4"
+    ],
+    "status": "provisional",
+    "summary": "Date/time associated with a user's badge record.",
+    "table_name": "badges",
+    "title": "badges.Date"
+  },
+  "n_0ba4c82c9ac7d250d587c2e5": {
+    "concept_id": "UserId",
+    "keywords": [
+      "comments",
+      "user",
+      "author",
+      "foreign key"
+    ],
+    "note_id": "n_0ba4c82c9ac7d250d587c2e5",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "18fbee32e8903e96e438d66c108387da10884fe7d7560c8a6a7a2233187b25a7",
+    "source_refs": [
+      "schema:comments DDL"
+    ],
+    "status": "provisional",
+    "summary": "Nullable user identifier associated with a comment; schema foreign key references users.Id.",
+    "table_name": "comments",
+    "title": "comments.UserId"
+  },
+  "n_1381ed01316a9e9151ec46ee": {
+    "concept_id": "FavoriteCount",
+    "keywords": [
+      "posts",
+      "favorites",
+      "count"
+    ],
+    "note_id": "n_1381ed01316a9e9151ec46ee",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "971efeb0c238d5f0c85a62786ce6d4eb5588e87a52c1856b2975589b82cdd938",
+    "source_refs": [
+      "schema:posts DDL"
+    ],
+    "status": "provisional",
+    "summary": "Nullable integer field for the favorite count associated with a post.",
+    "table_name": "posts",
+    "title": "posts.FavoriteCount"
+  },
+  "n_14dc8fb19f2716da86dfa73f": {
+    "concept_id": "UserDisplayName",
+    "keywords": [
+      "comments",
+      "author",
+      "display name"
+    ],
+    "note_id": "n_14dc8fb19f2716da86dfa73f",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "daba332ea33f068558576ce4364f265721ff27d431643a69a8ef39627b612196",
+    "source_refs": [
+      "schema:comments DDL",
+      "description:comments.csv:7"
+    ],
+    "status": "provisional",
+    "summary": "Nullable text display-name field recorded on a comment.",
+    "table_name": "comments",
+    "title": "comments.UserDisplayName"
+  },
+  "n_167e10467bdd53973f1d77a1": {
+    "concept_id": "OwnerDisplayName",
+    "keywords": [
+      "posts",
+      "owner",
+      "display name",
+      "text"
+    ],
+    "note_id": "n_167e10467bdd53973f1d77a1",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "a84f664629d4ec67ec64ec308f0b25713be5d74ff7d0e545a6b55a21eda21c60",
+    "source_refs": [
+      "schema:posts.OwnerDisplayName TEXT nullable"
+    ],
+    "status": "provisional",
+    "summary": "Nullable text field storing a display name associated with the post owner; whether it identifies a distinct user is unverified.",
+    "table_name": "posts",
+    "title": "posts.OwnerDisplayName"
+  },
+  "n_1699d8860a513d6e49f313b3": {
+    "concept_id": "CreationDate",
+    "keywords": [
+      "posthistory",
+      "timestamp",
+      "creation date",
+      "history"
+    ],
+    "note_id": "n_1699d8860a513d6e49f313b3",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "01dddcfc321f158b335e73ba14df30efa8810472826fb640b726bbbf24118abb",
+    "source_refs": [
+      "schema:postHistory DDL"
+    ],
+    "status": "provisional",
+    "summary": "Nullable datetime timestamp recorded for a post-history record.",
+    "table_name": "postHistory",
+    "title": "postHistory.CreationDate"
+  },
+  "n_22cf13c96cda5755ebd31ee8": {
+    "concept_id": "Id",
+    "keywords": [
+      "posts",
+      "id",
+      "primary key",
+      "post identifier"
+    ],
+    "note_id": "n_22cf13c96cda5755ebd31ee8",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "61aae4d1c19407cd500266d2e72fffd059cdf5ca7b26e5c67cf672b3a837bd66",
+    "source_refs": [
+      "schema:posts DDL (Id not null unique primary key)",
+      "schema:postLinks DDL (PostId and RelatedPostId reference posts.Id)"
+    ],
+    "status": "provisional",
+    "summary": "Non-null unique primary-key integer identifying a post record.",
+    "table_name": "posts",
+    "title": "posts.Id"
+  },
+  "n_24439a38a2dc74d18526d084": {
+    "concept_id": "Id",
+    "keywords": [
+      "users",
+      "id",
+      "identifier",
+      "primary key"
+    ],
+    "note_id": "n_24439a38a2dc74d18526d084",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "78ab0e6b83681caa0bafbd80d3ca858ea3dd2816e2a03bd9a8df5c47e41a7bce",
+    "source_refs": [
+      "schema:users DDL",
+      "schema:posts foreign key OwnerUserId references users.Id"
+    ],
+    "status": "provisional",
+    "summary": "Non-null unique primary-key integer identifying a user row.",
+    "table_name": "users",
+    "title": "users.Id"
+  },
+  "n_3d91e33c3e2f7ad1097fa290": {
+    "concept_id": "UserId",
+    "keywords": [
+      "votes",
+      "user",
+      "foreign key",
+      "identifier"
+    ],
+    "note_id": "n_3d91e33c3e2f7ad1097fa290",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "757f9fe01da406d4eb27fe1f3fc480e340630139b88590d1c6a4548d27d37e24",
+    "source_refs": [
+      "schema:votes DDL and foreign keys",
+      "values:votes grouped by VoteTypeId with non-null UserId observations"
+    ],
+    "status": "provisional",
+    "summary": "Nullable integer user reference on a vote row; declared foreign key to users.Id, with inspected non-null values on types 5 and 8.",
+    "table_name": "votes",
+    "title": "votes.UserId"
+  },
+  "n_40467303f62f18a79b675234": {
+    "concept_id": "Comment",
+    "keywords": [
+      "posthistory",
+      "comment",
+      "edit comment",
+      "history"
+    ],
+    "note_id": "n_40467303f62f18a79b675234",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "01c96b3e0fd163a5c7c849c2ead0924312db5a022d2b988c334729099a5353ce",
+    "source_refs": [
+      "schema:postHistory DDL",
+      "description:postHistory.csv:9"
+    ],
+    "status": "provisional",
+    "summary": "Nullable history-event text documented as the comment left when a user edits a post.",
+    "table_name": "postHistory",
+    "title": "postHistory.Comment"
+  },
+  "n_412310f0a031f9a3627bec5f": {
+    "concept_id": "PostTypeId",
+    "keywords": [
+      "posts",
+      "post type",
+      "classification",
+      "code"
+    ],
+    "note_id": "n_412310f0a031f9a3627bec5f",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "8e27fa27d23c7ed78bb1df0d8ffd92cfd0c141a1d7a0c569543dd4cab950c27b",
+    "source_refs": [
+      "schema:posts DDL",
+      "values:posts PostTypeId values for title matches containing principal component scores observed as 1"
+    ],
+    "status": "provisional",
+    "summary": "Nullable integer code classifying the post type; observed phrase-matching posts have code 1, but mappings are unverified.",
+    "table_name": "posts",
+    "title": "posts.PostTypeId"
+  },
+  "n_43d2bb327ddb719dc5e4b093": {
+    "concept_id": "Views",
+    "keywords": [
+      "users",
+      "profile views",
+      "views",
+      "integer"
+    ],
+    "note_id": "n_43d2bb327ddb719dc5e4b093",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "c35bf84ce2bbd757e1d007aa216f107593018678ec6d7ec0409678acd903beba",
+    "source_refs": [
+      "schema:users DDL",
+      "description:users.csv:9"
+    ],
+    "status": "provisional",
+    "summary": "Nullable integer recording the number of views associated with a user profile; the description does not specify counting window or metric implementation.",
+    "table_name": "users",
+    "title": "users.Views"
+  },
+  "n_44df32fae9b8a8d305b5c707": {
+    "concept_id": "CreationDate",
+    "keywords": [
+      "votes",
+      "creation date",
+      "recorded date",
+      "date"
+    ],
+    "note_id": "n_44df32fae9b8a8d305b5c707",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "db7af88ed7787f03649ca2a5283111a53052d0c216026e3745c000ffa834f5f2",
+    "source_refs": [
+      "schema:votes DDL"
+    ],
+    "status": "provisional",
+    "summary": "Nullable DATE field on vote records; timezone and date semantics beyond the field name are unverified.",
+    "table_name": "votes",
+    "title": "votes.CreationDate"
+  },
+  "n_4c30a146e967e4066bd2b9b6": {
+    "concept_id": "LasActivityDate",
+    "keywords": [
+      "posts",
+      "last activity",
+      "datetime"
+    ],
+    "note_id": "n_4c30a146e967e4066bd2b9b6",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "3ba1418b2538b3fe7001495231ebc6b75f726181a0793ae8ba22d66a5358f21a",
+    "source_refs": [
+      "schema:posts DDL (LasActivityDate DATETIME)",
+      "description:posts.csv:9 (Last Activity Date, datetime)"
+    ],
+    "status": "provisional",
+    "summary": "Nullable DATETIME field recording a post's last activity date, per schema and source description.",
+    "table_name": "posts",
+    "title": "posts.LasActivityDate"
+  },
+  "n_63d515fabd2596c1a563d1de": {
+    "concept_id": "DisplayName",
+    "keywords": [
+      "users",
+      "display name",
+      "profile"
+    ],
+    "note_id": "n_63d515fabd2596c1a563d1de",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "e873dad84895f70ae2753433db732336b5b9ed03ef9cfa2d2ae21a844a80261e",
+    "source_refs": [
+      "schema:users.DisplayName",
+      "description:users.csv:4"
+    ],
+    "status": "provisional",
+    "summary": "Nullable text field containing a user's displayed profile name; distinctness and missing-name handling depend on query semantics.",
+    "table_name": "users",
+    "title": "users.DisplayName"
+  },
+  "n_6977f36f3a72638041962432": {
+    "concept_id": "Location",
+    "keywords": [
+      "users",
+      "location",
+      "profile",
+      "geography",
+      "india",
+      "free text"
+    ],
+    "note_id": "n_6977f36f3a72638041962432",
+    "note_type": "column",
+    "revision": 19,
+    "sha256": "9bd52056e42bb72c32d8544d1e28c5758d3de765bf8c118c668d564a9ab47514",
+    "source_refs": [
+      "schema:users.Location",
+      "description:users.csv:7",
+      "values:users.Location grouped counts include exact India and Bangalore, India"
+    ],
+    "status": "provisional",
+    "summary": "Nullable free-text stated profile location; observed values include India and Bangalore, India, but no verified universal country-matching rule exists.",
+    "table_name": "users",
+    "title": "users.Location"
+  },
+  "n_6e83e12fae25348bd01e61c6": {
+    "concept_id": "Id",
+    "keywords": [
+      "posthistory",
+      "id",
+      "primary key",
+      "history"
+    ],
+    "note_id": "n_6e83e12fae25348bd01e61c6",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "b2385782626e74021660d2a2ae8aa1432a55b3bb00693870af2a98211cb3bff3",
+    "source_refs": [
+      "schema:postHistory DDL"
+    ],
+    "status": "provisional",
+    "summary": "Unique, non-null primary-key identifier for a post-history record.",
+    "table_name": "postHistory",
+    "title": "postHistory.Id"
+  },
+  "n_75a7588440d1a988636d0657": {
+    "concept_id": "Tags",
+    "keywords": [
+      "posts",
+      "tags",
+      "tag list",
+      "text",
+      "angle brackets"
+    ],
+    "note_id": "n_75a7588440d1a988636d0657",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "1dad34c4905f67f2278f18697e3a9f8b63541ba4cf9f4b4d92e74fd8afb815a3",
+    "source_refs": [
+      "schema:posts DDL (nullable Tags TEXT)",
+      "description:posts.csv:11 (Tags: the tag of the post)",
+      "values:posts.Tags samples containing <r>",
+      "values:tags.TagName exact r"
+    ],
+    "status": "provisional",
+    "summary": "Nullable text field containing post tags; observed tag names are delimited by angle brackets.",
+    "table_name": "posts",
+    "title": "posts.Tags"
+  },
+  "n_75f9c044e2c0af7db000f158": {
+    "concept_id": "RevisionGUID",
+    "keywords": [
+      "posthistory",
+      "revision guid",
+      "history"
+    ],
+    "note_id": "n_75f9c044e2c0af7db000f158",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "04b5593b3b83a2a45cf77e2561d89e2722393e7dfd270b2b34dee167b78527f2",
+    "source_refs": [
+      "schema:postHistory DDL",
+      "description:postHistory.csv:4"
+    ],
+    "status": "provisional",
+    "summary": "Nullable text field described as the revision globally unique ID of the post.",
+    "table_name": "postHistory",
+    "title": "postHistory.RevisionGUID"
+  },
+  "n_78d38e11ea07034729833516": {
+    "concept_id": "LastEditorDisplayName",
+    "keywords": [
+      "posts",
+      "last editor",
+      "display name"
+    ],
+    "note_id": "n_78d38e11ea07034729833516",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "4ff09ca219415df8ab7f16fd48b308e1c52b2fa618e428e77e94ffc898b3e71d",
+    "source_refs": [
+      "schema:posts DDL",
+      "schema:posts foreign key LastEditorUserId -> users.Id"
+    ],
+    "status": "provisional",
+    "summary": "Nullable text field containing the display name recorded for a post's last editor.",
+    "table_name": "posts",
+    "title": "posts.LastEditorDisplayName"
+  },
+  "n_7ae46a1eff7fb9861eca10a6": {
+    "concept_id": "AnswerCount",
+    "keywords": [
+      "posts",
+      "answer count",
+      "answers",
+      "integer"
+    ],
+    "note_id": "n_7ae46a1eff7fb9861eca10a6",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "ecb680b96cce2d38d0cb15a3df640bdd6dfb658893478efe6ef00439a40226e3",
+    "source_refs": [
+      "schema:posts DDL",
+      "description:posts.csv:12"
+    ],
+    "status": "provisional",
+    "summary": "Nullable integer field documented as the total number of answers of the post.",
+    "table_name": "posts",
+    "title": "posts.AnswerCount"
+  },
+  "n_7e597c8ca3617473254f06bd": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "posts",
+      "post owner",
+      "recorded date",
+      "content",
+      "parent"
+    ],
+    "note_id": "n_7e597c8ca3617473254f06bd",
+    "note_type": "table",
+    "revision": 3,
+    "sha256": "f3d1166fa1ed7be25323253cf29853c1125dcf2c2b7c8839715dc6821d482082",
+    "source_refs": [
+      "schema:posts DDL and foreign keys"
+    ],
+    "status": "provisional",
+    "summary": "Stores post rows with dates, content, owner/editor identifiers and self/user relationships; owner user is declared FK to users.Id.",
+    "table_name": "posts",
+    "title": "Posts table definition"
+  },
+  "n_7f6ab041462325ec47f58661": {
+    "concept_id": "UserId",
+    "keywords": [
+      "posthistory",
+      "user",
+      "editor",
+      "foreign key"
+    ],
+    "note_id": "n_7f6ab041462325ec47f58661",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "8d4b32a5f07d3d42a763718e3c05b55ebf1c0f62de30bdd2fe2716d176f6307d",
+    "source_refs": [
+      "schema:postHistory DDL",
+      "schema:postHistory foreign key UserId -> users.Id"
+    ],
+    "status": "provisional",
+    "summary": "Nullable user identifier associated with a post-history record, referencing users.Id.",
+    "table_name": "postHistory",
+    "title": "postHistory.UserId"
+  },
+  "n_807cc874154a868bbf333977": {
+    "concept_id": "Reputation",
+    "keywords": [
+      "users",
+      "reputation",
+      "influence",
+      "integer"
+    ],
+    "note_id": "n_807cc874154a868bbf333977",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "ea3cb18fc7bd22a7a62c3ed45f0601d77a2b021add59fca22338f7c8b9355902",
+    "source_refs": [
+      "schema:users DDL",
+      "description:users.csv:2"
+    ],
+    "status": "provisional",
+    "summary": "Nullable INTEGER reputation value of a user; source description associates greater reputation with more influence.",
+    "table_name": "users",
+    "title": "users.Reputation"
+  },
+  "n_81ae4e6a66efeb10529cff19": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "votes",
+      "post",
+      "vote type",
+      "bounty",
+      "date",
+      "user"
+    ],
+    "note_id": "n_81ae4e6a66efeb10529cff19",
+    "note_type": "table",
+    "revision": 2,
+    "sha256": "bbb006a28e957bbdfcf2aa4256fcdbc6a42f7dc9e1c13e59b9ce003fa9182f98",
+    "source_refs": [
+      "schema:votes DDL and foreign keys",
+      "description:votes.csv:3",
+      "description:votes.csv:6"
+    ],
+    "status": "provisional",
+    "summary": "Stores records with post, vote-type, recording-date, optional user and optional bounty-amount fields; meanings of vote-type codes are unverified.",
+    "table_name": "votes",
+    "title": "Votes table definition"
+  },
+  "n_831e4079f3b932a3811ef515": {
+    "concept_id": "CreationDate",
+    "keywords": [
+      "comments",
+      "creation date",
+      "datetime"
+    ],
+    "note_id": "n_831e4079f3b932a3811ef515",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "d9a2d0902d79185f49d3261d246be07eebb8b02359f42ee97e8667cc91a858a0",
+    "source_refs": [
+      "schema:comments DDL",
+      "description:comments.csv:5"
+    ],
+    "status": "provisional",
+    "summary": "Nullable datetime field for a comment's creation date.",
+    "table_name": "comments",
+    "title": "comments.CreationDate"
+  },
+  "n_8453f7818c223efdfd368b76": {
+    "concept_id": "UserDisplayName",
+    "keywords": [
+      "posthistory",
+      "editor",
+      "display name",
+      "history"
+    ],
+    "note_id": "n_8453f7818c223efdfd368b76",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "47c9865a06156b9aa97ceeba382779f51b4f2f1154ca755dc16ab64a15a4d1e3",
+    "source_refs": [
+      "schema:postHistory DDL"
+    ],
+    "status": "provisional",
+    "summary": "Nullable text display name recorded on a post-history record; schema does not link it to UserId.",
+    "table_name": "postHistory",
+    "title": "postHistory.UserDisplayName"
+  },
+  "n_8c75dc7db469fd001e31b8d1": {
+    "concept_id": "TagName",
+    "keywords": [
+      "tags",
+      "tag name",
+      "text"
+    ],
+    "note_id": "n_8c75dc7db469fd001e31b8d1",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "4a175bcf3acd98b0a062952370504248f4680af445dfacf736094ba62abe350b",
+    "source_refs": [
+      "schema:tags DDL",
+      "values:tags.TagName exact r"
+    ],
+    "status": "provisional",
+    "summary": "Nullable text field containing the name recorded for a tag.",
+    "table_name": "tags",
+    "title": "tags.TagName"
+  },
+  "n_8cc5924dfe8c4b035f8ab188": {
+    "concept_id": "LinkTypeId",
+    "keywords": [
+      "postlinks",
+      "linktypeid",
+      "link type",
+      "code"
+    ],
+    "note_id": "n_8cc5924dfe8c4b035f8ab188",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "71220ce60f192b08e40783203de1bf25995131739a6528eed7f9720ca5743044",
+    "source_refs": [
+      "schema:postLinks DDL (nullable LinkTypeId)",
+      "description:postLinks.csv:5 (Link Type Id)"
+    ],
+    "status": "provisional",
+    "summary": "Nullable integer identifying a link type on a post-link record; code meanings are not verified.",
+    "table_name": "postLinks",
+    "title": "postLinks.LinkTypeId"
+  },
+  "n_8ecd21b91f65d9efc156c7e4": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "postlinks",
+      "post links",
+      "post endpoints",
+      "link type",
+      "relationships"
+    ],
+    "note_id": "n_8ecd21b91f65d9efc156c7e4",
+    "note_type": "table",
+    "revision": 5,
+    "sha256": "09ac0acf8d0c9b5c5071abbd7f5363b0a0669ca39681f2daf8ce31e9a2235886",
+    "source_refs": [
+      "schema:postLinks DDL and foreign keys",
+      "description:postLinks.csv:3-5",
+      "values:postLinks grouped LinkTypeId counts and sampled rows touching matching-title posts"
+    ],
+    "status": "provisional",
+    "summary": "Stores link records between posts through two post-ID endpoints, with creation date and a link-type code whose values lack verified meanings.",
+    "table_name": "postLinks",
+    "title": "postLinks table definition"
+  },
+  "n_8fec3e322daf818b979385e2": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "users",
+      "reputation",
+      "location",
+      "profile",
+      "votes"
+    ],
+    "note_id": "n_8fec3e322daf818b979385e2",
+    "note_type": "table",
+    "revision": 1,
+    "sha256": "7f0564eda744f01bd9c8efbe2662b8b3c8ff09e94e0f34847d21f9e16ef5498e",
+    "source_refs": [
+      "schema:users DDL"
+    ],
+    "status": "provisional",
+    "summary": "Stores user records with identity, reputation, profile, location, activity and voting fields.",
+    "table_name": "users",
+    "title": "Users table definition"
+  },
+  "n_90dd43e5f27576e7fc2e4aa4": {
+    "concept_id": "Text",
+    "keywords": [
+      "posthistory",
+      "text",
+      "history",
+      "revision"
+    ],
+    "note_id": "n_90dd43e5f27576e7fc2e4aa4",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "178f6cd03e5102b5523b0e5b098daec7f288332e912020fceed996afc4fda0dd",
+    "source_refs": [
+      "schema:postHistory DDL"
+    ],
+    "status": "provisional",
+    "summary": "Nullable text content associated with a post-history record; semantics depend on event type and are not verified.",
+    "table_name": "postHistory",
+    "title": "postHistory.Text"
+  },
+  "n_948b05ae4fd01c902cf7f681": {
+    "concept_id": "Score",
+    "keywords": [
+      "posts",
+      "score",
+      "post score",
+      "integer"
+    ],
+    "note_id": "n_948b05ae4fd01c902cf7f681",
+    "note_type": "column",
+    "revision": 4,
+    "sha256": "34c0a59426398e3687d5e9f6c7e50926ad217628dfc607eb2b79589d8a2837bb",
+    "source_refs": [
+      "schema:posts DDL (nullable Score INTEGER)",
+      "description:posts.csv:5 (score of the post)"
+    ],
+    "status": "provisional",
+    "summary": "Nullable integer score field; source description identifies it as the score of a post.",
+    "table_name": "posts",
+    "title": "posts.Score"
+  },
+  "n_9545b18bc9a152d0e96f2dce": {
+    "concept_id": "OwnerUserId",
+    "keywords": [
+      "posts",
+      "owner",
+      "user id",
+      "foreign key"
+    ],
+    "note_id": "n_9545b18bc9a152d0e96f2dce",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "270ed1d5cd47f525bb560776bb913f74726d1335115ade6de2a528d4ccd8eb83",
+    "source_refs": [
+      "schema:posts DDL and foreign keys"
+    ],
+    "status": "provisional",
+    "summary": "Nullable user identifier referencing users.Id for the post owner.",
+    "table_name": "posts",
+    "title": "posts.OwnerUserId"
+  },
+  "n_9bc3bd774d7681988a530b15": {
+    "concept_id": "Text",
+    "keywords": [
+      "comments",
+      "text",
+      "content"
+    ],
+    "note_id": "n_9bc3bd774d7681988a530b15",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "4fe6ac0f94440e85bfb2db9bf4897db0da9d909266092bcad0cf26f4558802e3",
+    "source_refs": [
+      "schema:comments DDL"
+    ],
+    "status": "provisional",
+    "summary": "Nullable text content stored for a comment.",
+    "table_name": "comments",
+    "title": "comments.Text"
+  },
+  "n_a1d5b69d7f37b6782439bf30": {
+    "concept_id": "CreationDate",
+    "keywords": [
+      "users",
+      "creation date",
+      "timestamp",
+      "chronology",
+      "account"
+    ],
+    "note_id": "n_a1d5b69d7f37b6782439bf30",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "e1981f347ab27710e07e71cb9bfbff76b8f26b51fc6688cd85878b2abd711d57",
+    "source_refs": [
+      "schema:users DDL",
+      "values:users.CreationDate"
+    ],
+    "status": "provisional",
+    "summary": "Nullable datetime field on user rows; observed timestamp values and name suggest chronology, but account-creation meaning is not independently verified.",
+    "table_name": "users",
+    "title": "users.CreationDate"
+  },
+  "n_a548792728dae1eb493e74c5": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "tags",
+      "tag catalog",
+      "count",
+      "excerpt",
+      "wiki"
+    ],
+    "note_id": "n_a548792728dae1eb493e74c5",
+    "note_type": "table",
+    "revision": 1,
+    "sha256": "fd401c4360aae75b1893d46df353c22b403e051db43d90b45b52a901d57ef669",
+    "source_refs": [
+      "schema:tags DDL"
+    ],
+    "status": "provisional",
+    "summary": "Catalog of tag names with associated counts and optional excerpt/wiki post references.",
+    "table_name": "tags",
+    "title": "Tags table definition"
+  },
+  "n_a88b8176c6dc5c38510f8bfe": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "posthistory",
+      "history",
+      "revisions",
+      "events",
+      "editor",
+      "comment"
+    ],
+    "note_id": "n_a88b8176c6dc5c38510f8bfe",
+    "note_type": "table",
+    "revision": 1,
+    "sha256": "5531cd72961618d7e3c3a40606bee3a17689043c1160ca2fe7c372934f3f39d5",
+    "source_refs": [
+      "schema:postHistory DDL and foreign keys"
+    ],
+    "status": "provisional",
+    "summary": "Stores post-history events with optional post/user links, event type, text, and an associated comment field.",
+    "table_name": "postHistory",
+    "title": "Post history table definition"
+  },
+  "n_b684da3f58f84bb76925b3a7": {
+    "concept_id": "UserId",
+    "keywords": [
+      "badges",
+      "user id",
+      "foreign key",
+      "award records",
+      "counts"
+    ],
+    "note_id": "n_b684da3f58f84bb76925b3a7",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "56cfcc4576c8f4fcb669304dd8e454021f0bc06f1fa9e1e1d5edbb4e55d1faec",
+    "source_refs": [
+      "schema:badges.UserId foreign key to users.Id",
+      "description:badges.csv:2",
+      "description:Badges one badge award per record"
+    ],
+    "status": "provisional",
+    "summary": "Nullable user identifier linking a badge record to users.Id; badge award counts can be derived by counting records per linked user.",
+    "table_name": "badges",
+    "title": "badges.UserId"
+  },
+  "n_b8952833a1d4e2d7e846cdbe": {
+    "concept_id": "UpVotes",
+    "keywords": [
+      "users",
+      "upvotes",
+      "count",
+      "integer"
+    ],
+    "note_id": "n_b8952833a1d4e2d7e846cdbe",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "f34126eb4e8072b85c4b634ce585f620b6f3ca96d04b499a10d1b230d08ef028",
+    "source_refs": [
+      "schema:users DDL",
+      "description:users.csv:10"
+    ],
+    "status": "provisional",
+    "summary": "Nullable integer field described as number of upvotes; whether it means votes cast or received is unverified.",
+    "table_name": "users",
+    "title": "users.UpVotes"
+  },
+  "n_c50366e470a8d64e327d5733": {
+    "concept_id": "BountyAmount",
+    "keywords": [
+      "votes",
+      "bounty",
+      "amount",
+      "integer",
+      "vote type"
+    ],
+    "note_id": "n_c50366e470a8d64e327d5733",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "c2b3ae8c85793429d50ba4bb6709b767cd84e29761118badde6dfc08efbd8e69",
+    "source_refs": [
+      "schema:votes.BountyAmount INTEGER nullable",
+      "description:votes.csv:6",
+      "values:votes grouped by VoteTypeId and BountyAmount completeness"
+    ],
+    "status": "provisional",
+    "summary": "Nullable integer amount described as bounty amount; non-null values in inspected data occur only on vote types 8 and 9.",
+    "table_name": "votes",
+    "title": "votes.BountyAmount"
+  },
+  "n_c7b4d566db3e99bdd42cbe68": {
+    "concept_id": "VoteTypeId",
+    "keywords": [
+      "votes",
+      "vote type",
+      "classification",
+      "integer"
+    ],
+    "note_id": "n_c7b4d566db3e99bdd42cbe68",
+    "note_type": "column",
+    "revision": 6,
+    "sha256": "a30dc7d380733c6f3218434a702aa426c00fecc00f5227a972ee7d29913b8ca9",
+    "source_refs": [
+      "schema:votes DDL",
+      "description:votes.csv:3",
+      "values:votes grouped by VoteTypeId and non-null UserId observations"
+    ],
+    "status": "provisional",
+    "summary": "Nullable integer vote classification; code labels are unverified, and inspected user-attributed votes have codes 5 and 8.",
+    "table_name": "votes",
+    "title": "votes.VoteTypeId"
+  },
+  "n_cb4c1ecb9b73d536fe268f86": {
+    "concept_id": "Score",
+    "keywords": [
+      "comments",
+      "score",
+      "rating"
+    ],
+    "note_id": "n_cb4c1ecb9b73d536fe268f86",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "c3f94a7e14ac60b23ad5e0c762e9443975904480a8d74f8987cb43e1904250cf",
+    "source_refs": [
+      "schema:comments DDL",
+      "description:comments.csv:3"
+    ],
+    "status": "provisional",
+    "summary": "Nullable integer score recorded for a comment; source description characterizes its rating scale.",
+    "table_name": "comments",
+    "title": "comments.Score"
+  },
+  "n_d687a93d3abd78758f40e248": {
+    "concept_id": "Title",
+    "keywords": [
+      "posts",
+      "title",
+      "post identification"
+    ],
+    "note_id": "n_d687a93d3abd78758f40e248",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "eadcde542bd01cbf02076b9ce4946d23d5c00bdc4b5b7d43c420a2ced4d9301e",
+    "source_refs": [
+      "schema:posts DDL",
+      "description:posts.csv:10"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT field containing the title text associated with a post record.",
+    "table_name": "posts",
+    "title": "posts.Title"
+  },
+  "n_d9fe56b3501061a24ee4876a": {
+    "concept_id": "Id",
+    "keywords": [
+      "badges",
+      "id",
+      "badge record",
+      "primary key"
+    ],
+    "note_id": "n_d9fe56b3501061a24ee4876a",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "866662c9584e5ffe18eb2f36a505ef81a4df1bdd49c74b624379ec7271aa0fed",
+    "source_refs": [
+      "schema:badges DDL"
+    ],
+    "status": "provisional",
+    "summary": "Non-null primary-key integer identifying a badge record; schema declares it unique.",
+    "table_name": "badges",
+    "title": "badges.Id"
+  },
+  "n_db6b9ee883ad5c38a36ce92a": {
+    "concept_id": "Name",
+    "keywords": [
+      "badges",
+      "name",
+      "badge type",
+      "yearling"
+    ],
+    "note_id": "n_db6b9ee883ad5c38a36ce92a",
+    "note_type": "column",
+    "revision": 4,
+    "sha256": "df9a50dcd56a500edebd5a35d5f27f05a31483cd79f4fe12beab9f3e639f086d",
+    "source_refs": [
+      "schema:badges.Name",
+      "description:badges.csv:3",
+      "values:badges.Name exact Yearling observed"
+    ],
+    "status": "provisional",
+    "summary": "Text badge name identifying the badge recorded; Yearling is an observed exact value.",
+    "table_name": "badges",
+    "title": "badges.Name"
+  },
+  "n_e4daa7e7ce3f974eaf16f36e": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "badges",
+      "users",
+      "earned date",
+      "name"
+    ],
+    "note_id": "n_e4daa7e7ce3f974eaf16f36e",
+    "note_type": "table",
+    "revision": 2,
+    "sha256": "8d7f20122958b23c2bdf959a2acf2e4421f067081c8c6a4fcaaeb81e341b58ab",
+    "source_refs": [
+      "schema:badges DDL and foreign key",
+      "description:badges.csv:1-4"
+    ],
+    "status": "provisional",
+    "summary": "Records badges obtained by users, with badge name and date fields.",
+    "table_name": "badges",
+    "title": "Badges table definition"
+  },
+  "n_e4f2b314ac4e1e3433b3ea86": {
+    "concept_id": "LastEditorUserId",
+    "keywords": [
+      "posts",
+      "last editor",
+      "user id",
+      "foreign key"
+    ],
+    "note_id": "n_e4f2b314ac4e1e3433b3ea86",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "5fb7affdaf83349c894c914429ce8afff076d579523a9c4bebf8298d62887663",
+    "source_refs": [
+      "schema:posts DDL and foreign key LastEditorUserId -> users.Id",
+      "description:posts.csv:15"
+    ],
+    "status": "provisional",
+    "summary": "Nullable user ID recorded as the post's last editor, with a declared foreign key to users.Id.",
+    "table_name": "posts",
+    "title": "posts.LastEditorUserId"
+  },
+  "n_e7f112011e87dbe8264767e6": {
+    "concept_id": "ViewCount",
+    "keywords": [
+      "posts",
+      "views",
+      "count"
+    ],
+    "note_id": "n_e7f112011e87dbe8264767e6",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "92997e8581de42b1f91f25409ab08b145ff958aefd16d5c5a72c9c6df259dd0d",
+    "source_refs": [
+      "schema:posts DDL",
+      "description:posts.csv:6"
+    ],
+    "status": "provisional",
+    "summary": "Nullable integer field recording a post's view count; description identifies it as the post's view count.",
+    "table_name": "posts",
+    "title": "posts.ViewCount"
+  },
+  "n_efaf7df05b4dd3097d6f4105": {
+    "concept_id": "Id",
+    "keywords": [
+      "postlinks",
+      "id",
+      "primary key",
+      "link record"
+    ],
+    "note_id": "n_efaf7df05b4dd3097d6f4105",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "5d6656fc7050fd4718476816d5d8991601055c25d809980b2ec1273fb5f64f79",
+    "source_refs": [
+      "schema:postLinks DDL"
+    ],
+    "status": "provisional",
+    "summary": "Non-null primary-key integer identifying a post-link record.",
+    "table_name": "postLinks",
+    "title": "postLinks.Id"
+  },
+  "n_f04d7016c74273800715d222": {
+    "concept_id": "PostId",
+    "keywords": [
+      "posthistory",
+      "post",
+      "foreign key",
+      "history"
+    ],
+    "note_id": "n_f04d7016c74273800715d222",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "61a5c662fc922479c14188d0c977c7a4cf865360ce70c9501a4e6ff9cf63938f",
+    "source_refs": [
+      "schema:postHistory DDL",
+      "schema:postHistory foreign key PostId -> posts.Id"
+    ],
+    "status": "provisional",
+    "summary": "Nullable post identifier associated with a post-history record; declared foreign key to posts.Id.",
+    "table_name": "postHistory",
+    "title": "postHistory.PostId"
+  },
+  "n_fdfbdb678b14de5d73d4dcf9": {
+    "concept_id": "PostId",
+    "keywords": [
+      "postlinks",
+      "postid",
+      "linked post",
+      "foreign key"
+    ],
+    "note_id": "n_fdfbdb678b14de5d73d4dcf9",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "775864dc9b49bcf76bcae1cf30bed400565460549ca8c26a18234a94eaddd939",
+    "source_refs": [
+      "schema:postLinks DDL (nullable PostId foreign key to posts.Id)",
+      "description:postLinks.csv:3 (PostId is the post id)"
+    ],
+    "status": "provisional",
+    "summary": "Nullable integer referencing the post at the PostId endpoint of a post-link record.",
+    "table_name": "postLinks",
+    "title": "postLinks.PostId"
+  }
+}

@@ -1,0 +1,242 @@
+[
+  {
+    "split": "dev",
+    "measure": "model_calls",
+    "observed": 400,
+    "total": 11425,
+    "mean": 28.562,
+    "p50": 27.5,
+    "p95": 52.0,
+    "max": 68
+  },
+  {
+    "split": "dev",
+    "measure": "tool_calls",
+    "observed": 400,
+    "total": 17502,
+    "mean": 43.755,
+    "p50": 39.0,
+    "p95": 89.0,
+    "max": 130
+  },
+  {
+    "split": "dev",
+    "measure": "sql_calls",
+    "observed": 400,
+    "total": 3434,
+    "mean": 8.585,
+    "p50": 7.0,
+    "p95": 21.0,
+    "max": 38
+  },
+  {
+    "split": "dev",
+    "measure": "input_tokens",
+    "observed": 400,
+    "total": 91632815,
+    "mean": 229082.038,
+    "p50": 194936.0,
+    "p95": 540406.95,
+    "max": 1044027
+  },
+  {
+    "split": "dev",
+    "measure": "output_tokens",
+    "observed": 400,
+    "total": 1588384,
+    "mean": 3970.96,
+    "p50": 3716.0,
+    "p95": 7618.45,
+    "max": 11107
+  },
+  {
+    "split": "dev",
+    "measure": "cached_input_tokens",
+    "observed": 400,
+    "total": 29919872,
+    "mean": 74799.68,
+    "p50": 64896.0,
+    "p95": 173721.6,
+    "max": 358272
+  },
+  {
+    "split": "dev",
+    "measure": "reasoning_tokens",
+    "observed": 400,
+    "total": 0,
+    "mean": 0,
+    "p50": 0.0,
+    "p95": 0.0,
+    "max": 0
+  },
+  {
+    "split": "dev",
+    "measure": "seconds",
+    "observed": 400,
+    "total": 58052.721,
+    "mean": 145.132,
+    "p50": 134.276,
+    "p95": 290.464,
+    "max": 505.515
+  },
+  {
+    "split": "test",
+    "measure": "model_calls",
+    "observed": 100,
+    "total": 2997,
+    "mean": 29.97,
+    "p50": 29.0,
+    "p95": 51.05,
+    "max": 65
+  },
+  {
+    "split": "test",
+    "measure": "tool_calls",
+    "observed": 100,
+    "total": 4654,
+    "mean": 46.54,
+    "p50": 42.0,
+    "p95": 99.05,
+    "max": 132
+  },
+  {
+    "split": "test",
+    "measure": "sql_calls",
+    "observed": 100,
+    "total": 848,
+    "mean": 8.48,
+    "p50": 8.0,
+    "p95": 18.05,
+    "max": 21
+  },
+  {
+    "split": "test",
+    "measure": "input_tokens",
+    "observed": 100,
+    "total": 24955453,
+    "mean": 249554.53,
+    "p50": 222502.0,
+    "p95": 558757.1,
+    "max": 931358
+  },
+  {
+    "split": "test",
+    "measure": "output_tokens",
+    "observed": 100,
+    "total": 408937,
+    "mean": 4089.37,
+    "p50": 4198.5,
+    "p95": 7489.15,
+    "max": 8642
+  },
+  {
+    "split": "test",
+    "measure": "cached_input_tokens",
+    "observed": 100,
+    "total": 7952256,
+    "mean": 79522.56,
+    "p50": 70848.0,
+    "p95": 164249.6,
+    "max": 310784
+  },
+  {
+    "split": "test",
+    "measure": "reasoning_tokens",
+    "observed": 100,
+    "total": 0,
+    "mean": 0,
+    "p50": 0.0,
+    "p95": 0.0,
+    "max": 0
+  },
+  {
+    "split": "test",
+    "measure": "seconds",
+    "observed": 100,
+    "total": 15812.105,
+    "mean": 158.121,
+    "p50": 151.883,
+    "p95": 275.194,
+    "max": 770.951
+  },
+  {
+    "split": "overall",
+    "measure": "model_calls",
+    "observed": 500,
+    "total": 14422,
+    "mean": 28.844,
+    "p50": 28.0,
+    "p95": 52.0,
+    "max": 68
+  },
+  {
+    "split": "overall",
+    "measure": "tool_calls",
+    "observed": 500,
+    "total": 22156,
+    "mean": 44.312,
+    "p50": 40.0,
+    "p95": 89.05,
+    "max": 132
+  },
+  {
+    "split": "overall",
+    "measure": "sql_calls",
+    "observed": 500,
+    "total": 4282,
+    "mean": 8.564,
+    "p50": 7.0,
+    "p95": 20.0,
+    "max": 38
+  },
+  {
+    "split": "overall",
+    "measure": "input_tokens",
+    "observed": 500,
+    "total": 116588268,
+    "mean": 233176.536,
+    "p50": 198530.0,
+    "p95": 541845.5,
+    "max": 1044027
+  },
+  {
+    "split": "overall",
+    "measure": "output_tokens",
+    "observed": 500,
+    "total": 1997321,
+    "mean": 3994.642,
+    "p50": 3748.0,
+    "p95": 7606.35,
+    "max": 11107
+  },
+  {
+    "split": "overall",
+    "measure": "cached_input_tokens",
+    "observed": 500,
+    "total": 37872128,
+    "mean": 75744.256,
+    "p50": 65792.0,
+    "p95": 172480.0,
+    "max": 358272
+  },
+  {
+    "split": "overall",
+    "measure": "reasoning_tokens",
+    "observed": 500,
+    "total": 0,
+    "mean": 0,
+    "p50": 0.0,
+    "p95": 0.0,
+    "max": 0
+  },
+  {
+    "split": "overall",
+    "measure": "seconds",
+    "observed": 500,
+    "total": 73864.826,
+    "mean": 147.73,
+    "p50": 137.094,
+    "p95": 283.123,
+    "max": 770.951
+  }
+]

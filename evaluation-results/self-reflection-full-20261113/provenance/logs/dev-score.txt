@@ -1,0 +1,3 @@
+SelfReflection dev: 280/400 EX=70.00%
+Results: /home/devuser/self-reflection-full-20261113/sr-full-20261113/SelfReflection/dev/sr-luna-none-sqlfirst-001/scores
+SMOKE SUBSET ONLY: not comparable to a full split

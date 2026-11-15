@@ -1,0 +1,7 @@
+{
+  "status": "resolved",
+  "initial_failure": "Standard Dev viewer input exceeds 50 MiB",
+  "resolution": "Process-local 100 MiB bound, existing renderer, complete Dev and Test exports validated in Chromium",
+  "source_repository_changed": false,
+  "finished": "2026-11-12T04:11:23.136549+00:00"
+}

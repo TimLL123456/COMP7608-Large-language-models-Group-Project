@@ -1,0 +1,24 @@
+{
+  "source_revision": "cbb8ea4ada492ceb7970692f571b4e36a34b8227",
+  "provider": "chatgpt-siwc",
+  "model": "gpt-6-luna",
+  "reasoning_effort": "none",
+  "prompt_variant": "generalized-v1",
+  "questions": {
+    "dev": 400,
+    "test": 100
+  },
+  "max_attempts": 3,
+  "max_review_model_calls": 40,
+  "max_inspections": 39,
+  "max_total_model_calls": 240,
+  "max_total_tool_calls": 240,
+  "max_total_sql_calls": 240,
+  "tests": {
+    "run": 198,
+    "passed": 195,
+    "failures": 1,
+    "skipped": 2
+  },
+  "known_test_failure": "test_forced_sql_finalization_generates_executable_sql"
+}

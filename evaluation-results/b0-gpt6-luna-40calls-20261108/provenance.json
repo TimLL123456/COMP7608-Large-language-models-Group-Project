@@ -1,0 +1,8 @@
+{
+  "exported_utc": "2026-11-08T06:59:15.973236+00:00",
+  "git_base_commit": "58078a8b63957775b0e33e2fc0cafff039d462a8",
+  "source_run": "scr/evaluation/result/full-500-40calls-20261108",
+  "source_run_id": "gpt6-luna-none-40calls-001",
+  "source_snapshot_matches_committed_worktree": true,
+  "note": "Source changes and uv.lock accompany this export in the same commit. No credentials are required for offline rescoring."
+}

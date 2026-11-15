@@ -147,6 +147,33 @@ class EvaluatorTests(unittest.TestCase):
         self.assertEqual(summary["performance"]["latency_ms"]["p95"], 100)
         self.assertIsNotNone(records[0]["gold_sql_execution_ms"])
 
+    def test_optional_token_metrics_round_trip_through_scorer(self):
+        row = self.prediction(
+            cached_input_tokens=0, reasoning_tokens=35, total_tokens=145,
+            reasoning_effort="medium", thinking_level="advanced", reasoning_mode="pro",
+            cached_input_tokens_observed_calls=1, reasoning_tokens_observed_calls=1,
+        )
+        records, summary = self.score([row], [self.questions[0]])
+        self.assertEqual(records[0]["reasoning_effort"], "medium")
+        self.assertEqual(records[0]["thinking_level"], "advanced")
+        self.assertEqual(records[0]["reasoning_mode"], "pro")
+        self.assertEqual(summary["performance"]["cached_input_tokens"]["total"], 0)
+        self.assertEqual(summary["performance"]["reasoning_tokens"]["total"], 35)
+        self.assertEqual(summary["performance"]["reasoning_tokens"]["observed"], 1)
+        self.assertEqual(summary["performance"]["total_tokens"]["total"], 145)
+        self.assertEqual(summary["performance"]["reasoning_tokens_observed_calls"]["total"], 1)
+        self.assertEqual(summary["observed_reasoning_tokens"], 1)
+
+        missing, summary_missing = self.score([self.prediction()], [self.questions[0]])
+        self.assertIsNone(missing[0]["reasoning_tokens"])
+        self.assertIsNone(summary_missing["performance"]["reasoning_tokens"]["total"])
+        self.assertEqual(summary_missing["performance"]["reasoning_tokens"]["observed"], 0)
+
+        with self.assertRaises(ValueError):
+            validate_predictions(
+                [self.prediction(cached_input_tokens=-1)], self.questions
+            )
+
     def test_reference_failure_invalidates_run(self):
         class BadRefs:
             def get_reference_sql(self, qid):
@@ -169,6 +196,7 @@ class EvaluatorTests(unittest.TestCase):
             self.assertTrue((output / name).is_file(), name)
         summary = json.loads((output / "summary.json").read_text())
         manifest = json.loads((output / "run_manifest.json").read_text())
+        self.assertEqual(manifest["timeout_seconds"], 300.0)
         self.assertEqual((summary["total"], summary["correct"]), (3, 1))
         self.assertEqual(summary["mean_tool_calls"], 4)
         self.assertEqual(manifest["question_ids"], [10, 11, 12])

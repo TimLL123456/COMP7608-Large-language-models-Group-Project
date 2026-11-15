@@ -1,0 +1,2427 @@
+question_id,split,category,evaluation_status,stop_reason,predicted_sql,question,evidence,node_errors
+2,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT s.School,
+       ROUND(f.`Percent (%) Eligible FRPM (K-12)`, 6) AS eligible_meal_rate
+FROM schools AS s
+JOIN frpm AS f ON f.CDSCode = s.CDSCode
+WHERE s.DOC = '66'
+ORDER BY f.`FRPM Count (K-12)` DESC
+LIMIT 5;","For the five schools with ownership code 66 and the largest K-12 free-or-reduced-price meal counts, give each school's K-12 eligible meal rate rounded to six decimal places.",,
+4,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT sch.MailStreet, sch.School
+FROM satscores AS s
+JOIN schools AS sch ON sch.CDSCode = s.cds
+WHERE s.AvgScrMath IS NOT NULL
+ORDER BY s.AvgScrMath DESC
+LIMIT 1 OFFSET 6;",What are the mailing street address and name of the school with the seventh-highest recorded average mathematics score?,,
+6,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT s.School,
+       f.`Percent (%) Eligible FRPM (Ages 5-17)`
+FROM schools AS s
+JOIN frpm AS f ON f.CDSCode = s.CDSCode
+WHERE s.County = 'Los Angeles'
+  AND s.GSserved = 'K-9'
+ORDER BY s.School;",Which schools served a grade span of Kindergarten to 9th grade in the county of Los Angeles and what is its Percent (%) Eligible FRPM (Ages 5-17)?,"FRPM eligibility percentage is free-or-reduced-price meal recipients divided by same-age-band enrollment, times 100.",ModelCallLimitExceededError: Model call limits exceeded: run limit (20/20)
+7,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT
+    f.`District Code`,
+    100.0 * f.`Free Meal Count (K-12)` / f.`Enrollment (K-12)` AS `Percent (%) Eligible Free (K-12)`
+FROM schools AS s
+JOIN frpm AS f ON f.CDSCode = s.CDSCode
+WHERE s.AdmFName1 = 'Alusine';",What is the Percent (%) Eligible Free (K-12) in the school administered by an administrator whose first name is Alusine. List the district code of the school.,"K-12 free-meal eligibility percentage is K-12 free-meal recipients divided by K-12 enrollment, times 100.",
+8,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT DISTINCT AdmEmail1
+FROM schools
+WHERE City = 'San Bernardino'
+  AND County = 'San Bernardino'
+  AND DOCType = 'Unified School District'
+  AND SOCType = 'Intermediate/Middle Schools (Public)'
+  AND OpenDate >= '2009-01-01'
+  AND OpenDate < '2011-01-01'
+  AND AdmEmail1 IS NOT NULL
+  AND TRIM(AdmEmail1) <> ''
+ORDER BY AdmEmail1;","List the distinct available administrator email addresses for public intermediate/middle schools in San Bernardino city and county, in a unified school district, opened during 2009 or 2010.",,
+11,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT s.School, s.GSserved
+FROM schools AS s
+LEFT JOIN satscores AS sat
+    ON sat.cds = s.CDSCode
+WHERE s.NCESDist = '0613360'
+  AND s.StatusType = 'Active'
+  AND s.EILCode = 'HS'
+  AND s.GSserved LIKE '%12'
+  AND (sat.cds IS NULL OR sat.NumTstTakr = 0)
+ORDER BY s.School;","Following up on the SAT participation review: among the currently operating high schools in the district with NCES identification number 0613360 that had no SAT test takers, which one begins serving students at the earliest grade? Please give me each such school's name and grade span served. Note that a high school must actually enroll students through grade 12-offering grade 12 without enrollment doesn't count. A school with no SAT record counts as having zero SAT test takers and should be included; only exclude schools with a positive number of SAT test takers. Compare starting grades as school grades-preschool comes before kindergarten, which comes before grade 1-and use the lowest grade the school actually serves, not just what it offers. If several schools tie at the earliest grade, list them all alphabetically by school name.",NCES identification number 0613360 is the school district identification number assigned by the National Center for Education Statistics.,RuntimeError: SIWC stream failed: error (server_is_overloaded)
+13,dev,workflow_no_sql,missing_sql,RuntimeError,,"I'm trying to verify where a school I was told about is located. It's a high school in Alameda County with Breakfast Provision 2 status, serving grades 9 through 12, and its identification number is 1611920113902. What city is this school in?",The identification number is the school's CDS code; Educational Instruction Level Code 'HS' identifies a high school; grades 9 through 12 means lowest grade 9 and highest grade 12; Breakfast Provision 2 is a National School Lunch Program provision status.,RuntimeError: SIWC stream failed: error (server_is_overloaded)
+16,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT s.AvgScrMath, s.NumTstTakr
+FROM schools AS sch
+JOIN satscores AS s ON s.cds = sch.CDSCode
+WHERE sch.CDSCode = '1611190130609'
+  AND sch.FundingType = 'Directly funded';","I'm looking at a directly-funded charter high school in California with CDS code 1611190130609. Could you tell me its average SAT math score and how many students took the SAT there? Just that one school's figures. If the school with that CDS code turns out not to be directly funded, then there's no answer.","CDS code: the identification number the California Department of Education assigns to a county, district, or school. Directly-funded charter school: a charter school that receives its funding directly from the state rather than through its district.",
+17,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT COUNT(*)
+FROM satscores AS s
+JOIN schools AS sch ON sch.CDSCode = s.cds
+WHERE sch.County = 'Contra Costa'
+  AND s.NumTstTakr > (
+      SELECT target.NumTstTakr
+      FROM satscores AS target
+      WHERE target.cds = '07618040730051'
+  );","I'm looking at SAT participation in Contra Costa County. How many schools in the county had more SAT test takers than the school with CDS code 7618040730051? That school is itself a Contra Costa County school, so I just want the count of schools strictly ahead of it by number of SAT test takers, based on the SAT results snapshot in the data. A single number is all I need.",CDS code: the County-District-School identifier that the California Department of Education assigns to each school and district in the state.,
+18,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT COUNT(*) AS qualifying_schools
+FROM schools AS s
+JOIN satscores AS sat
+  ON sat.cds = s.CDSCode
+WHERE s.MailCity = 'San Francisco'
+  AND s.DOCType IN (
+    'Unified School District',
+    'High School District',
+    'Elementary School District',
+    'County Office of Education (COE)'
+  )
+  AND s.SOCType LIKE '%(Public)'
+  AND sat.AvgScrRead + sat.AvgScrMath + sat.AvgScrWrite >= 1500;","I'm comparing schools in San Francisco. How many public schools with a San Francisco mailing city had an average total SAT score of at least 1500? Please count only schools whose district type is 'Unified School District', 'High School District', 'Elementary School District', or 'County Office of Education (COE)' - exclude any other district type. I just need the single count of qualifying schools.","A school's total SAT score is the sum of its average reading, average math, and average writing scores; a school's mailing city is the city in its mailing address.",
+20,dev,workflow_no_sql,missing_sql,RuntimeError,,"I'm reviewing administrator coverage across Amador and Madera counties, and I want to see which administrator first names actually cover the most schools. For the two administrator first names whose holders run the most schools across the two counties (ranking names by the number of schools their holders run, with the alphabetically earlier name ranking higher if two names run equally many schools), please give me one row per public school district in those two counties and per those two first names, showing the district name, the first name, and the number of schools in that district run by an administrator with that first name - including every public school district, even ones where that's zero. Every administrator listed for a school counts, not just the first-listed one. A public school district means a unified school district, an elementary school district, a high school district, or a county office of education, and only Amador and Madera counties are in scope.",,ModelCallLimitExceededError: Model call limits exceeded: run limit (20/20); RuntimeError: SIWC stream failed: error (server_is_overloaded)
+24,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT SOCType AS ""School Type"",
+       School AS ""School Name"",
+       Latitude
+FROM schools
+WHERE (
+    SOCType IN ('Intermediate/Middle Schools (Public)', 'Junior High Schools (Public)')
+    OR School LIKE '%Middle%'
+    OR School LIKE '%Junior High%'
+)
+AND Latitude = (
+    SELECT MAX(Latitude)
+    FROM schools
+    WHERE (
+        SOCType IN ('Intermediate/Middle Schools (Public)', 'Junior High Schools (Public)')
+        OR School LIKE '%Middle%'
+        OR School LIKE '%Junior High%'
+    )
+);","We're relocating to far Northern California and want to know how far north California's middle schools reach. A middle school means a school serving the middle grades, the level between elementary school and high school — count it as a middle school if either its school type or its school name marks it as serving the middle grades, so a junior high school whose name says 'Middle' counts. Include both open and closed schools. Please tell me which middle school is located furthest north in California, along with its school type (the value of the field named 'School Type'), its school name, and its latitude in degrees. If several middle schools tie for the highest latitude, list all of them.","middle school: a school serving the middle grades, the level between elementary school and high school",
+26,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT
+    s.FundingType,
+    COUNT(*) AS school_count,
+    SUM(f.`Enrollment (K-12)`) AS total_k12_enrollment,
+    ROUND(AVG(f.`Percent (%) Eligible FRPM (K-12)`) * 100, 2) AS avg_frpm_eligible_pct,
+    ROUND(
+        AVG(
+            CASE
+                WHEN sat.AvgScrRead IS NOT NULL
+                 AND sat.AvgScrMath IS NOT NULL
+                 AND sat.AvgScrWrite IS NOT NULL
+                THEN sat.AvgScrRead + sat.AvgScrMath + sat.AvgScrWrite
+            END
+        ),
+        2
+    ) AS avg_combined_sat_score
+FROM schools AS s
+LEFT JOIN frpm AS f
+    ON f.CDSCode = s.CDSCode
+   AND f.`Academic Year` = '2014-2015'
+LEFT JOIN satscores AS sat
+    ON sat.cds = s.CDSCode
+WHERE s.StatusType = 'Active'
+  AND s.FundingType IN ('Directly funded', 'Locally funded')
+GROUP BY s.FundingType;","I'm reviewing charter school funding models and want to compare the directly funded and locally funded charters that are currently in operation. For each of the two funding categories, please give me: (1) the number of charter schools currently in operation, counting only schools the directory lists as active (open), not closed or merged; (2) total 2014-2015 K-12 enrollment; (3) the average percentage of students eligible for free or reduced-price meals, on a 0-100 scale, rounded to two decimals; and (4) the average combined SAT score (reading + math + writing) across schools that have reported scores, rounded to two decimals. Note that schools without SAT results should still count in the school count, enrollment total, and meal-eligibility average. Please give me these figures grouped by funding category.","Directly funded and locally funded are the two charter funding categories. Free or reduced-price meal eligibility is measured by the K-12 eligible percentage. Combined SAT score is the sum of the average reading, math and writing scores.",ModelCallLimitExceededError: Model call limits exceeded: run limit (20/20); ModelCallLimitExceededError: Model call limits exceeded: run limit (20/20); ToolCallLimitExceededError: Tool call limit reached: run limit exceeded (41/40 calls).
+28,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT COUNT(*) AS school_count
+FROM schools AS s
+JOIN frpm AS f
+  ON f.CDSCode = s.CDSCode
+LEFT JOIN satscores AS sat
+  ON sat.cds = s.CDSCode
+WHERE s.School IS NOT NULL
+  AND trim(s.School) <> ''
+  AND s.DOCType <> 'County Office of Education (COE)'
+  AND f.""Enrollment (K-12)"" > 500
+  AND CAST(
+        CASE
+          WHEN instr(s.GSserved, '-') > 0
+            THEN substr(s.GSserved, instr(s.GSserved, '-') + 1)
+          ELSE s.GSserved
+        END AS INTEGER
+      ) BETWEEN 1 AND 8
+  AND (sat.cds IS NULL OR sat.NumTstTakr = 0);","I'm putting together a brief on SAT participation among California's larger public schools. How many individual named school sites in the state with a K-12 enrollment over 500 and a highest grade served of 8 or below had no SAT test takers? I just need the school_count, a single whole number. Please count a school as an individual school site with a name - district and county offices of education are not schools. Include every qualifying school site statewide even if it shows no SAT results at all; such a site simply had no test takers. By highest grade served I mean the top grade level the school serves, as a grade number from 1 through 12.",,ToolCallLimitExceededError: Tool call limit reached: run limit exceeded (43/40 calls).
+34,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT ROUND(
+    100.0 * SUM(CASE WHEN s.Virtual IN ('F', 'P') THEN 1 ELSE 0 END) / COUNT(*),
+    1
+) AS percentage
+FROM schools AS s
+JOIN satscores AS sat ON sat.cds = s.CDSCode
+WHERE s.State = 'CA'
+  AND sat.AvgScrMath > 400;","Among California schools whose students have an average SAT Math score above 400, what percentage offer virtual instruction, either exclusively or in part? Please give me a single percentage value rounded to one decimal place.","In the school directory, the exclusive-virtual category is coded 'F' and the partial-virtual category is coded 'P'.",
+36,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH eligible_schools AS (
+    SELECT
+        s.CDSCode,
+        s.School,
+        s.GSserved,
+        s.Charter,
+        f.""Free Meal Count (K-12)"" / f.""Enrollment (K-12)"" AS free_meal_rate
+    FROM schools AS s
+    JOIN frpm AS f
+        ON f.CDSCode = s.CDSCode
+    WHERE s.County = 'Alameda'
+      AND s.GSserved LIKE '%-12'
+      AND f.""Enrollment (K-12)"" > 0
+),
+highest_rate AS (
+    SELECT MAX(free_meal_rate) AS rate
+    FROM eligible_schools
+)
+SELECT
+    e.School AS school_name,
+    printf('%.4f', e.free_meal_rate) AS free_meal_rate,
+    CASE e.Charter
+        WHEN 1 THEN 'Yes'
+        WHEN 0 THEN 'No'
+        ELSE 'Unknown'
+    END AS charter_status,
+    e.GSserved AS grades_served,
+    CASE
+        WHEN sat.AvgScrRead IS NULL
+          OR sat.AvgScrMath IS NULL
+          OR sat.AvgScrWrite IS NULL THEN 'No SAT Data'
+        WHEN sat.AvgScrRead + sat.AvgScrMath + sat.AvgScrWrite < 1200
+            THEN 'Below Average'
+        WHEN sat.AvgScrRead + sat.AvgScrMath + sat.AvgScrWrite <= 1500
+            THEN 'Average'
+        ELSE 'Above Average'
+    END AS sat_performance_level
+FROM eligible_schools AS e
+JOIN highest_rate AS h
+    ON e.free_meal_rate = h.rate
+LEFT JOIN satscores AS sat
+    ON sat.cds = e.CDSCode;","I'm putting together a profile of Alameda County high schools, focusing on economic disadvantage among schools that serve up through 12th grade. Among those schools, can you tell me which one has the highest free meal rate? For each school you identify, give me one line with: the school name, its free meal rate to 4 decimal places, whether it is a charter school (Yes/No/Unknown), the grades it serves, and its SAT performance level (Below Average, Average, Above Average, or No SAT Data). Please use the school's grade span of enrollment from the school directory (the GSserved field of the schools table) both to decide whether it serves up through 12th grade and for the grades-it-serves column-do not use the free-meal program record's Low Grade/High Grade for either. If several schools tie for the highest free meal rate, list every one of them.","Free meal rate = Free Meal Count (K-12) / Enrollment (K-12). SAT performance level is based on the SAT total (Reading + Math + Writing): Below Average if below 1200, Average if 1200 to 1500, Above Average if above 1500, and 'No SAT Data' if no SAT scores are available.",ToolCallLimitExceededError: Tool call limit reached: run limit exceeded (41/40 calls).
+42,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT s.School, s.Street
+FROM frpm AS f
+JOIN schools AS s ON s.CDSCode = f.CDSCode
+WHERE f.""Low Grade"" IN ('9', '10', '11', '12', 'Adult')
+  AND f.""Enrollment (K-12)"" - f.""Enrollment (Ages 5-17)"" > 30
+ORDER BY s.CDSCode ASC;","I'm auditing high-school-level campuses that draw enrollments beyond their surrounding school-age population. Can you give me a list of schools where the K-12 enrollment exceeds the ages-5-17 enrollment by more than 30, limited to schools whose lowest served grade is grade 9 or a later grade (a school's lowest served grade being the low end of the grade range reported in the same enrollment record as its K-12 and ages-5-17 counts)? For each school, I just need the school name and street address. Please order the results by the school's CDS code, smallest first.",CDS code: a school's identifier in the California schools data.,
+44,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT s.AdmFName1, s.AdmLName1
+FROM schools AS s
+JOIN satscores AS t ON t.cds = s.CDSCode
+WHERE s.County = (
+    SELECT County
+    FROM schools
+    WHERE substr(CDSCode, 1, 2) = substr('1611430131177', 1, 2)
+    LIMIT 1
+)
+  AND t.rtype = 'S'
+ORDER BY t.NumGE1500 DESC, s.CDSCode ASC
+LIMIT 1;","I have a school on file with CDS code 1611430131177. Find the school in the same county as that school whose own SAT record shows the most students scoring at least 1500 (not a district-wide roll-up). If two schools tie on that count, use the one with the smaller CDS code. Send me that school's administrator's first and last name.",CDS code: the County-District-School identifier assigned to each school; scoring at least 1500: a test taker whose combined SAT score is 1500 or higher.,
+45,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT sch.Street, sch.City, sch.Zip, sch.State
+FROM satscores AS s
+JOIN schools AS sch ON sch.CDSCode = s.cds
+WHERE s.NumTstTakr >= 700
+  AND s.NumGE1500 IS NOT NULL
+ORDER BY CAST(s.NumGE1500 AS REAL) / s.NumTstTakr ASC,
+         CAST(s.cds AS INTEGER) ASC
+LIMIT 1;","I'm working on a story about the largest schools in the state with the worst SAT excellence rates. Among schools where at least 700 students took the SAT, can you find the school with the lowest SAT excellence rate? If several schools tie for the lowest rate, go with the one with the smallest school code. I just need that school's street, city, ZIP code and state so I can visit and request an interview.",The SAT excellence rate is the share of SAT test takers scoring at least 1500. A school code is a number.,
+52,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT DISTINCT text
+FROM cards
+WHERE name = 'Benalish Knight';",What rules text is printed on Benalish Knight? Return the distinct text as one line.,,
+66,dev,SQL_execution_error,sql_error,final_sql_ready,"SELECT
+    s.type,
+    COUNT(DISTINCT CASE
+        WHEN t.translation IS NOT NULL AND TRIM(t.translation) <> '' THEN s.code
+    END) AS translated_set_count,
+    COALESCE(SUM(CASE
+        WHEN t.translation IS NOT NULL AND TRIM(t.translation) <> '' THEN s.totalSetSize
+        ELSE 0
+    END), 0) AS total_cards
+FROM sets AS s
+LEFT JOIN (
+    SELECT DISTINCT setCode
+    FROM set_translations
+    WHERE translation IS NOT NULL
+      AND TRIM(translation) <> ''
+) AS t
+    ON t.setCode = s.code
+GROUP BY s.type
+ORDER BY s.type;","I'm preparing a multilingual catalog and want to gauge how much localizable content exists per kind of set. For every set type, I need the number of sets of that type that have an officially translated name, and the total number of cards in those sets. Please include every set type in the results, even ones where no set has an officially translated name (show zero for both values in that case), and sort the results alphabetically by set type.","Set type: the expansion type of a set, such as core, expansion or promo. Officially translated name: the set's name rendered in another language, such as Italian or Chinese Traditional.",
+67,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH target_rulings AS (
+  SELECT r.date
+  FROM rulings AS r
+  JOIN cards AS c ON c.uuid = r.uuid
+  WHERE c.name = 'Mishra''s Factory'
+),
+latest_date AS (
+  SELECT MAX(date) AS date
+  FROM target_rulings
+)
+SELECT COUNT(*) AS ruling_count
+FROM target_rulings
+WHERE date = (SELECT date FROM latest_date);","How many rulings were issued for Mishra's Factory on the latest date any ruling for it exists? By ""latest date"" I mean the most recent calendar date on which any ruling for the card exists, and by Mishra's Factory I mean the card by that name across all of its printings. I only want that count.",ruling: an official rules statement issued for a card on a given date,
+69,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH newest_frame AS (
+    SELECT frameVersion
+    FROM cards
+    WHERE convertedManaCost = 0
+    GROUP BY frameVersion
+    ORDER BY CASE
+        WHEN frameVersion = 'future' THEN 9999
+        WHEN frameVersion GLOB '[0-9][0-9][0-9][0-9]' THEN CAST(frameVersion AS INTEGER)
+    END DESC
+    LIMIT 1
+)
+SELECT c.frameVersion, COUNT(*) AS card_count
+FROM cards AS c
+JOIN newest_frame AS n ON c.frameVersion = n.frameVersion
+GROUP BY c.frameVersion;","I'm putting together a showcase of zero-mana-cost cards. What is the newest frame version used by any card with a converted mana cost of 0? Please give me that frame version value, and the number of cards in the database that use that frame version. The count should cover all cards in the database, not just the zero-cost ones. If several frame versions tie as the newest, give me each of them with its own count.",Frame version: the edition of the card frame style a printing uses.,
+70,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT
+    frameVersion AS frame_version_year,
+    ROUND(100.0 * COUNT(*) / (SELECT COUNT(*) FROM cards WHERE name = 'Tarmogoyf'), 2) AS percentage_of_printings
+FROM cards
+WHERE name = 'Tarmogoyf'
+  AND frameVersion = 'future';","I'm tracking printings of Tarmogoyf. Of all its printings, which frame version is the newest? Please give me the year that identifies that latest frame version, and the percentage of the card's printings that use it, rounded to two decimal places. The percentage should be over all printings of the card.",A printing is an occurrence of the card in a set; a frame version is the version of the card frame style of a printing.,
+71,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT COUNT(DISTINCT c.uuid) AS card_count
+FROM cards AS c
+WHERE c.manaCost = '{0}'
+  AND EXISTS (
+    SELECT 1
+    FROM legalities AS l
+    WHERE l.uuid = c.uuid
+      AND l.format = 'commander'
+      AND l.status = 'Legal'
+  );",I'm building an artifact-heavy Commander deck and want to know the size of the pool of zero-cost cards available to me. How many different cards have a printed mana cost of {0} and are legal in Commander? A card is legal in Commander if its Commander legality entry is marked Legal.,Printed mana cost of 0 means the cost shown on the card is {0}. Commander is a format of play in which any card marked Legal for that format is playable.,
+82,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT COUNT(DISTINCT scryfallOracleId) AS count_cards
+FROM cards
+WHERE hasContentWarning = 1
+  AND availability LIKE '%paper%'
+  AND availability NOT LIKE '%mtgo%';","I'm going through my paper collection before sharing it publicly, and I want to check something about the cards Wizards of the Coast has flagged. How many different cards are there that carry a sensitive content warning, are available in paper form, and have never been available on Magic Online (MTGO)? I just need that one count.","MTGO means Magic: The Gathering Online, the official online version of the game. A sensitive content warning means Wizards of the Coast has marked the card for having sensitive content.",
+85,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH latest_release AS (
+    SELECT MAX(s.releaseDate) AS releaseDate
+    FROM cards c
+    JOIN sets s ON s.code = c.setCode
+    WHERE c.name = 'Ancestor''s Chosen'
+)
+SELECT COUNT(*) AS count
+FROM cards c
+JOIN sets s ON s.code = c.setCode
+JOIN latest_release lr ON s.releaseDate = lr.releaseDate
+WHERE c.types LIKE '%Creature%'
+  AND c.power GLOB '[0-9]*'
+  AND c.toughness GLOB '[0-9]*'
+  AND CAST(c.power AS INTEGER) > CAST(c.toughness AS INTEGER);","I collect trading cards, and one of my favorites is Ancestor's Chosen. Of all the sets that include this card, look at the one released most recently - if several sets share that latest release date, consider them together. How many creature cards in that set (or sets) have power greater than toughness? I just want that single count, nothing else.",Power is the attack strength printed on a creature card; toughness is the defense strength printed on a creature card.,
+86,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH eligible AS (
+    SELECT frameVersion
+    FROM cards
+    WHERE cardKingdomId IS NOT NULL
+      AND cardKingdomFoilId IS NOT NULL
+      AND leadershipSkills LIKE '%commander%'
+      AND leadershipSkills LIKE '%True%'
+),
+latest_year AS (
+    SELECT MAX(CAST(frameVersion AS INTEGER)) AS frame_year
+    FROM eligible
+    WHERE frameVersion GLOB '[0-9]*'
+      AND frameVersion NOT GLOB '*[^0-9]*'
+)
+SELECT frame_year, COUNT(*) AS card_count
+FROM eligible
+CROSS JOIN latest_year
+WHERE CAST(frameVersion AS INTEGER) = frame_year
+GROUP BY frame_year;","Among the Commander-leadable cards that the Card Kingdom catalog lists for both a foil printing and a regular non-foil printing – cards listed for only one of the two printings don't count – I want the single most recent card frame year (the latest calendar year among the frame versions), and the count of cards in that group whose frame version is that year. Please return just that one row: the frame year and its card count.",A card 'may lead a Commander deck' if it can be the deck's commander – the one card that leads the deck and sets its color identity – not merely be included among the deck's other cards.,
+88,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH eligible_cards AS (
+    SELECT DISTINCT scryfallOracleId, name
+    FROM cards
+    WHERE originalType = 'Creature - Elf'
+      AND scryfallOracleId IS NOT NULL
+      AND name IS NOT NULL
+),
+ruling_counts AS (
+    SELECT e.name, COUNT(r.id) AS ruling_count
+    FROM eligible_cards AS e
+    JOIN cards AS c
+      ON c.scryfallOracleId = e.scryfallOracleId
+    LEFT JOIN rulings AS r
+      ON r.uuid = c.uuid
+    GROUP BY e.scryfallOracleId, e.name
+),
+ranked AS (
+    SELECT name, ruling_count,
+           DENSE_RANK() OVER (ORDER BY ruling_count DESC) AS ranking
+    FROM ruling_counts
+)
+SELECT name, ruling_count
+FROM ranked
+WHERE ranking = 1;","Which card whose original type is 'Creature - Elf' has received the most rulings, and how many rulings has it received? I want the card name and the number of rulings. A card and all of its printings/reprints count as one and the same card. If several cards tie for the most rulings, list every one of them.","A ruling is an official rules clarification issued for a card, on the date it was issued.",
+93,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH eligible_cards AS (
+    SELECT c.uuid, c.types
+    FROM cards AS c
+    WHERE c.watermark = 'boros'
+      AND EXISTS (
+          SELECT 1
+          FROM foreign_data AS f
+          WHERE f.uuid = c.uuid
+            AND f.language <> 'English'
+      )
+),
+type_counts AS (
+    SELECT TRIM(j.value) AS card_type,
+           COUNT(DISTINCT e.uuid) AS card_count
+    FROM eligible_cards AS e,
+         json_each(
+             '[""' || REPLACE(REPLACE(e.types, '""', '\\""'), ',', '"",""') || '""]'
+         ) AS j
+    WHERE e.types IS NOT NULL
+    GROUP BY TRIM(j.value)
+),
+ranked AS (
+    SELECT card_type,
+           card_count,
+           RANK() OVER (ORDER BY card_count DESC) AS rnk
+    FROM type_counts
+)
+SELECT card_type, card_count
+FROM ranked
+WHERE rnk = 1;","Among the cards carrying the boros watermark that were printed in a foreign language, which card type is the most common, and how many of those cards have that type? If several types tie for the most, list all of them with their counts.","""Boros watermark"" refers to the guild watermark appearing on cards of the Boros guild; ""printed in a foreign language"" means the card was printed in any language other than English.",
+95,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT c.originalType AS card_type,
+       COUNT(DISTINCT c.uuid) AS card_count
+FROM cards AS c
+WHERE c.watermark = 'azorius'
+  AND c.originalType IS NOT NULL
+  AND EXISTS (
+      SELECT 1
+      FROM foreign_data AS fd
+      WHERE fd.uuid = c.uuid
+        AND fd.language IS NOT NULL
+        AND TRIM(fd.language) <> ''
+  )
+GROUP BY c.originalType
+ORDER BY card_count DESC, card_type ASC;","I'm cataloguing the guild cards. Among the cards that carry the Azorius watermark and were printed in at least one foreign language, how many cards are there of each card type? For each card type, please give me the card type exactly as printed, including any supertypes and subtypes, along with the number of cards of that type. List every card type that qualifies, sorted from the largest count to the smallest, and alphabetically by card type when counts are equal.",,
+96,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT COUNT(DISTINCT scryfallOracleId)
+FROM cards
+WHERE frameVersion = '2015'
+  AND isTextless = 0
+  AND TRIM(COALESCE(text, '')) <> '';",I'm cataloguing modern-frame printings. How many different cards that have a text box were printed with a frame version of 2015 or a later year? I just need that single count.,"Frame version: the version of the card frame style, given as the year the frame style was introduced.",
+106,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT
+    s.block AS block_name,
+    COUNT(DISTINCT CASE
+        WHEN t.translation IS NOT NULL AND TRIM(t.translation) <> ''
+        THEN s.code
+    END) AS sets_with_translated_name,
+    SUM(s.baseSetSize) AS total_base_set_cards
+FROM sets AS s
+LEFT JOIN set_translations AS t
+    ON t.setCode = s.code
+WHERE s.block IN ('Masques', 'Mirage')
+  AND s.type = 'expansion'
+GROUP BY s.block
+ORDER BY s.block;","For the blocks named exactly ""Masques"" and ""Mirage"", how widely were their sets localized? For each of these two blocks, give me one row with the block's name, how many of its sets have an official translated name, and the total number of cards in the base sets of those sets combined. Base set size means the number of cards in the set's base set, not counting supplementary cards. Nothing else, please.",,
+109,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT COUNT(DISTINCT c.scryfallOracleId)
+FROM cards AS c
+WHERE c.scryfallOracleId IS NOT NULL
+  AND CAST(c.power AS REAL) >= 10
+  AND EXISTS (
+      SELECT 1
+      FROM set_translations AS st
+      WHERE st.setCode = c.setCode
+        AND st.language = 'French'
+        AND NULLIF(TRIM(st.translation), '') IS NOT NULL
+  );","I'm building a French-language cube and want some big finishers for it. How many different creature cards with power 10 or greater have at least one printing in a set whose name has a French translation? Please return just that single number. Note: a set qualifies based on its name having a French translation, no matter when it was released or what type of set it is, and a card counts if any of its printings comes from such a set.",French translation: the set's name as given in French.,ModelCallLimitExceededError: Model call limits exceeded: run limit (20/20); ModelCallLimitExceededError: Model call limits exceeded: run limit (20/20)
+112,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT COUNT(*) AS printing_count
+FROM cards AS c
+JOIN sets AS s ON s.code = c.setCode
+WHERE s.releaseDate >= '2014-01-01'
+  AND s.releaseDate < '2015-01-01'
+  AND s.mtgoCode IS NOT NULL;","I want a single number: how many card printings originally released in 2014 belong to a set that carries a Magic: The Gathering Online code. A set counts as MTGO-available only if its MTGO code is present for that set. By 2014 I mean the calendar year 2014 of the printing's original release date. Count each printing separately, even if the same card name appears in more than one set.",Magic: The Gathering Online (MTGO) is the official digital edition of the game; a set's MTGO code identifies that set within MTGO.,
+115,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT id, name, totalSetSize
+FROM sets
+WHERE type = 'commander'
+  AND releaseDate >= '2020-01-01'
+  AND releaseDate < '2021-01-01'
+  AND totalSetSize = (
+      SELECT MAX(totalSetSize)
+      FROM sets
+      WHERE type = 'commander'
+        AND releaseDate >= '2020-01-01'
+        AND releaseDate < '2021-01-01'
+  )
+ORDER BY id ASC;","Among the Commander-type expansion sets released in calendar year 2020 (1 January 2020 to 31 December 2020), I need the one with the highest total card count, so we can plan translation work. Please send me the set's id from the sets listing, its name, and the number of official languages it was released in. The total card count should include promotional and related supplemental products, but exclude Alchemy modifications. If two sets tie for the highest total card count, list each of them, ordered by set id ascending.",Commander: a multiplayer expansion type of the game. Alchemy modifications: online-only variant versions of cards.,
+120,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT
+    100.0 * SUM(CASE WHEN strftime('%Y', Date) = '2010' AND Name = 'Student' THEN 1 ELSE 0 END)
+        / SUM(CASE WHEN strftime('%Y', Date) = '2010' THEN 1 ELSE 0 END)
+    -
+    100.0 * SUM(CASE WHEN strftime('%Y', Date) = '2011' AND Name = 'Student' THEN 1 ELSE 0 END)
+        / SUM(CASE WHEN strftime('%Y', Date) = '2011' THEN 1 ELSE 0 END)
+    AS percentage_point_difference
+FROM badges
+WHERE strftime('%Y', Date) IN ('2010', '2011');","What is the difference in percentage points between the 2010 and 2011 shares of all Student badges, taking the 2010 share minus the 2011 share?",,
+124,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT c.Text, c.UserDisplayName
+FROM comments AS c
+JOIN posts AS p ON p.Id = c.PostId
+WHERE p.Title = 'Analysing wind data with R'
+ORDER BY c.CreationDate DESC
+LIMIT 10;","Give the text and author's display name for the latest ten comments on the post titled 'Analysing wind data with R', newest comment first.",,
+127,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT SUM(u.Reputation) AS total_reputation
+FROM users AS u
+WHERE (u.Location = 'United Kingdom' OR u.Location LIKE '%, United Kingdom')
+  AND EXISTS (
+      SELECT 1
+      FROM posts AS p
+      WHERE p.OwnerUserId = u.Id
+  );","I'd like to gauge the standing of our United Kingdom contributor community on the site. Can you give me the combined reputation of the users based in the United Kingdom who have posted on the site, as a single total? Please write the country by its full name, ""United Kingdom"", and don't substitute abbreviations. I just need the one number, not a per-user list.",Reputation is the score the site assigns each user. A user who has posted owns at least one item in the site's post collection.,
+130,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH first_posts AS (
+    SELECT OwnerUserId, MIN(CreaionDate) AS first_post_date
+    FROM posts
+    WHERE OwnerUserId IS NOT NULL
+    GROUP BY OwnerUserId
+)
+SELECT COUNT(*) AS users_in_india
+FROM first_posts AS fp
+JOIN users AS u ON u.Id = fp.OwnerUserId
+WHERE fp.first_post_date >= '2010-01-01'
+  AND fp.first_post_date < '2011-01-01'
+  AND LOWER(TRIM(u.Location)) = 'india';","I'm putting together a report for the site owners on where people who started posting during 2010 were located, with a focus on India. Could you tell me how many of the users whose first post was created in 2010 are located in India? By 2010 I mean the calendar year 2010, and by India I mean the country itself, not any place whose name merely contains the word.",A user's first post is the earliest-created post among the posts that user owns.,
+131,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT ROUND(AVG(u.Reputation))
+FROM posts AS p
+JOIN users AS u ON u.Id = p.OwnerUserId
+WHERE p.Score < 20
+  AND p.Tags LIKE '%<r>%';","I'm profiling the authors behind poorly received R posts to see if they tend to be low-reputation members. Can you give me the average reputation of the users who own posts tagged with the R tag that have a score below 20? Just the single number, rounded to the nearest whole number.",'r' is the tag used on this site for the R programming language for statistical computing.,
+133,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT SUM(u.Reputation) AS combined_reputation
+FROM posts AS p
+JOIN users AS u ON u.Id = p.OwnerUserId
+WHERE p.Score = 10
+  AND p.Tags LIKE '%<r>%';","I'm reviewing R-language activity on the site. I'd like to gauge the standing of the community members behind the highly-rated R posts: what is the combined reputation of the users who own a post with a score of exactly 10 that carries the R programming language tag? Please return just that single number. Note that by R I mean the R programming language tag specifically, not any other tag or value that just happens to contain the letter r.",,
+134,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT SUM(u.Reputation) AS combined_reputation
+FROM posts p
+JOIN users u ON u.Id = p.OwnerUserId
+WHERE p.Tags LIKE '%<r>%'
+  AND p.LasActivityDate >= '2014-08-27'
+  AND p.LasActivityDate < '2014-08-28';","I'd like to gauge the standing of the community members behind the R posts on one day. Could you tell me the combined reputation of the users who own the posts tagged R that were last active on 2014-08-27? I just need that one number, covering the whole calendar day 2014-08-27.",R: the R language for statistical computing.,
+138,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT Age
+FROM users
+WHERE Location = 'York'
+  AND Reputation = (
+    SELECT MAX(Reputation)
+    FROM users
+    WHERE Location = 'York'
+  );","We're profiling our most respected members by where they live, focusing on York, England (the English city itself; a location listed as just ""York"" counts). Who is the most influential user based there – the one with the highest reputation – and what is their age? If several users tie for the highest reputation, give me the age of each of them. Please return only the age, exactly as it stands for each user, even when an age isn't reported.",,
+140,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT COUNT(DISTINCT u.DisplayName) AS distinct_display_names
+FROM users AS u
+WHERE u.Age BETWEEN 19 AND 65
+  AND u.DisplayName IS NOT NULL
+  AND EXISTS (
+    SELECT 1
+    FROM badges AS b
+    WHERE b.UserId = u.Id
+      AND b.Name = 'Supporter'
+  );","I'm putting together a summary of how active badge-holders present themselves on the site. How many different display names appear among the adult users who obtained the Supporter badge? By adult I mean age 19 to 65 inclusive, and please cover all time. I just need that one number.",NaN stands for a user who never set a display name.,
+142,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT Id
+FROM users
+WHERE DisplayName = 'Michael'
+ORDER BY CreationDate ASC, Id ASC
+LIMIT 1;","I'm auditing accounts on the stats forum. What is the id of the youngest user account whose display name is Michael? If two or more such accounts tie as the youngest, give me the smallest id.",,
+145,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH active_users AS (
+    SELECT OwnerUserId
+    FROM posts
+    WHERE CreaionDate >= '2012-01-01'
+      AND CreaionDate < '2013-01-01'
+      AND OwnerUserId IS NOT NULL
+    GROUP BY OwnerUserId
+    HAVING COUNT(*) > 10
+),
+cast_upvotes AS (
+    SELECT UserId, COUNT(*) AS upvotes_cast
+    FROM votes
+    WHERE VoteTypeId = 5
+      AND UserId IS NOT NULL
+    GROUP BY UserId
+)
+SELECT
+    ROUND(AVG(COALESCE(c.upvotes_cast, 0)), 2) AS average_upvotes_cast,
+    ROUND(AVG(u.Age), 2) AS average_age
+FROM active_users a
+JOIN users u ON u.Id = a.OwnerUserId
+LEFT JOIN cast_upvotes c ON c.UserId = a.OwnerUserId;","I'm profiling our most active contributors of 2012. Among the users who created more than ten posts in 2012 (judged by each post's creation date), what is their average number of up-votes cast and their average age? Please give me a single row with both averages, each rounded to two decimal places.",Up-vote: a vote a user cast in favor of a post.,
+152,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT COUNT(*)
+FROM (
+    SELECT ym.CustomerID
+    FROM yearmonth AS ym
+    JOIN customers AS c ON c.CustomerID = ym.CustomerID
+    WHERE c.Currency = 'EUR'
+      AND ym.Consumption > 0
+      AND ym.Date BETWEEN '201201' AND '201212'
+    GROUP BY ym.CustomerID
+
+    INTERSECT
+
+    SELECT ym.CustomerID
+    FROM yearmonth AS ym
+    JOIN customers AS c ON c.CustomerID = ym.CustomerID
+    WHERE c.Currency = 'EUR'
+      AND ym.Consumption > 0
+      AND ym.Date BETWEEN '201301' AND '201312'
+    GROUP BY ym.CustomerID
+);","How many customers who pay in EUR and had gas consumption in 2012 also had gas consumption in 2013? I just need a single number: the count of such customers. By 2012 and 2013 I mean those calendar years, and gas consumption in any month of the year counts.",,
+153,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT c.Segment, COUNT(DISTINCT y.CustomerID) AS customer_count
+FROM customers AS c
+JOIN yearmonth AS y
+  ON y.CustomerID = c.CustomerID
+WHERE y.Date LIKE '2012%'
+GROUP BY c.Segment
+HAVING SUM(y.Consumption) < 30000;","I'm reviewing our 2012 performance and want to see which client segments hold our small-scale customers. For each client segment, can you tell me how many customers had total consumption below 30,000 over the whole of 2012? Please count only customers who used their cards at some point during 2012, and treat 30,000 as a strict limit - someone at exactly 30,000 doesn't count. I just need the client segment and the number of such customers per segment.",Consumption means the amount spent through a customer's fuel cards.,
+155,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH qualifying AS (
+  SELECT datetime(t.Date || ' ' || t.Time) AS ts
+  FROM transactions_1k AS t
+  JOIN gasstations AS g ON g.GasStationID = t.GasStationID
+  WHERE g.Country = 'CZE'
+    AND t.Price > 1000
+)
+SELECT CAST((julianday(MAX(ts)) - julianday(MIN(ts))) * 24 * 60 AS INTEGER) AS elapsed_whole_minutes
+FROM qualifying;",I want to gauge how spread out our high-value fuelling activity in the Czech Republic was over the recorded window. How many whole minutes elapsed from the first to the last fuel transaction at gas stations in the Czech Republic with a price over 1000? Please round down to whole minutes.,Czech Republic means the gas station is in the CZE country.,
+156,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT c.Currency, COUNT(DISTINCT ym.CustomerID) AS customer_count
+FROM yearmonth AS ym
+JOIN customers AS c ON c.CustomerID = ym.CustomerID
+WHERE ym.Date BETWEEN '201301' AND '201311'
+  AND ym.Consumption > 0
+GROUP BY c.Currency
+HAVING COUNT(DISTINCT ym.Date) = 11;","I'm preparing a loyalty review of our steadily active customers in 2013. For each currency, I'd like to know how many customers bought fuel in every month from January through November 2013, with both January and November included. Please give me the currency and that customer count. If several currencies tie, list them all – no ranking needed.",Consumption means the total fuel a customer purchased in a month on their fuel card; a customer counts for a month if they had any consumption that month.,
+157,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH quarterly AS (
+  SELECT
+    ym.CustomerID,
+    SUM(ym.Consumption) AS quarter_consumption
+  FROM yearmonth AS ym
+  WHERE ym.Date >= '201304'
+    AND ym.Date <= '201306'
+    AND ym.Consumption IS NOT NULL
+  GROUP BY ym.CustomerID
+)
+SELECT
+  c.Currency,
+  ROUND(AVG(q.quarter_consumption), 2) AS average_quarterly_consumption
+FROM quarterly AS q
+JOIN customers AS c
+  ON c.CustomerID = q.CustomerID
+WHERE c.Currency IN ('EUR', 'CZK')
+GROUP BY c.Currency
+ORDER BY CASE c.Currency WHEN 'EUR' THEN 1 WHEN 'CZK' THEN 2 END;","I'm putting together currency-specific pricing proposals and need a sense of typical quarterly fuel consumption. Among customers who have fuel consumption recorded in the second quarter of 2013 (April, May and June 2013), what is the average amount of fuel consumed over the whole quarter by an EUR-paying customer, and the same average for a CZK-paying customer? Please round both averages to two decimal places. By EUR-paying / CZK-paying I mean a customer whose account currency is EUR / CZK.",EUR-paying / CZK-paying: a customer whose account currency is EUR / CZK,
+162,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,SELECT 0;,"For my February 2013 activity report: how many SME customers actually purchased gas in February 2013? Please give me just a single whole number - the count of SME customers who consumed gas during the calendar month of February 2013 (Feb 1-28, 2013).","By ""gas"" I mean gasoline (motor fuel) purchases, not natural gas.",
+165,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT
+    p.player_api_id,
+    p.player_name,
+    AVG(pa.heading_accuracy) AS mean_heading_accuracy
+FROM Player AS p
+JOIN Player_Attributes AS pa
+    ON pa.player_api_id = p.player_api_id
+WHERE p.height > 180
+GROUP BY p.player_api_id, p.player_name
+ORDER BY mean_heading_accuracy DESC, p.player_api_id ASC
+LIMIT 10;","List the ten players taller than 180 cm with the highest mean recorded heading accuracy, highest first. Break mean ties by player API ID.",,
+172,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT ROUND(AVG(p.height), 2) AS average_height_cm
+FROM ""Match"" AS m
+JOIN Player AS p ON p.player_api_id = m.home_player_3
+WHERE p.height > 180;","What is the average height, in centimetres, of the players taller than 180 cm who have appeared in the home team's number-3 lineup slot? This should cover the whole recorded match history with no season or date restriction. 'Taller than 180' means strictly taller than 180 cm. Please round the final average to two decimal places and return just that single value.",Number-3 lineup slot: each match records a home team's starting eleven as eleven ordered player slots; the number-3 slot is the home team's third slot.,
+175,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH ranked AS (
+    SELECT
+        player_api_id,
+        defensive_work_rate,
+        ROW_NUMBER() OVER (
+            PARTITION BY player_api_id
+            ORDER BY date DESC, id DESC
+        ) AS rn
+    FROM Player_Attributes
+)
+SELECT ROUND(AVG(p.height), 2)
+FROM ranked r
+JOIN Player p ON p.player_api_id = r.player_api_id
+WHERE r.rn = 1
+  AND r.defensive_work_rate <> 'medium';","What is the average height in centimeters of players whose current defensive work rate grade is not medium? Use each player's most recent rating record to determine their current grade, and round the result to two decimal places. I just need that single number.","Defensive work rate grades run low, medium and high.",
+176,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH risky_teams AS (
+    SELECT DISTINCT team_api_id
+    FROM Team_Attributes
+    WHERE chanceCreationPassingClass = 'Risky'
+),
+dated_risks AS (
+    SELECT team_api_id, chanceCreationPassing
+    FROM Team_Attributes
+    WHERE date = '2014-09-19 00:00:00'
+)
+SELECT
+    t.team_short_name,
+    COUNT(DISTINCT t.team_api_id) AS club_count,
+    ROUND(AVG(d.chanceCreationPassing), 1) AS avg_chance_creation_passing_risk
+FROM Team AS t
+JOIN risky_teams AS r ON r.team_api_id = t.team_api_id
+JOIN dated_risks AS d ON d.team_api_id = t.team_api_id
+GROUP BY t.team_short_name
+HAVING COUNT(DISTINCT t.team_api_id) > 1
+ORDER BY avg_chance_creation_passing_risk DESC, t.team_short_name ASC;","I'm preparing a report on team playing styles. First, consider only teams whose chance creation passing class was Risky at any point in the recorded history. Among those, I want the short names that are carried by more than one club. For each such short name, please give me: the short name, the number of clubs that carry it, and the average chance creation passing risk of those clubs that was in force on 19 September 2014, rounded to one decimal place. Sort the results by that average, highest first; if two averages are the same, order them alphabetically by short name.",A team's chance creation passing class is 'Risky' when chanceCreationPassingClass = 'Risky'; its chance creation passing risk is the chanceCreationPassing value in force on the date in question.,
+177,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH ranked AS (
+    SELECT
+        player_api_id,
+        defensive_work_rate,
+        ROW_NUMBER() OVER (
+            PARTITION BY player_api_id
+            ORDER BY date DESC, id DESC
+        ) AS rn
+    FROM Player_Attributes
+    WHERE defensive_work_rate IS NOT NULL
+      AND TRIM(defensive_work_rate) <> ''
+)
+SELECT ROUND(AVG(p.height), 2) AS average_height_cm
+FROM ranked AS r
+JOIN Player AS p ON p.player_api_id = r.player_api_id
+WHERE r.rn = 1
+  AND r.defensive_work_rate = 'medium'
+  AND p.birthday >= '1990-01-01'
+  AND p.birthday < '1996-01-01';","I want to gauge how tall the current medium-defensive-work players from the 1990-1995 birth cohort are. Please find the average height, in centimetres, of players born from 1990 through 1995 inclusive whose defensive work rating is medium, and round the average to two decimals. A player's rating is the grade on their most recent record that carries a grade.","The defensive work rating grades are low, medium and high.",
+186,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH per_player AS (
+    SELECT
+        home_player_3 AS player_id,
+        SUM(home_team_goal) AS total_home_goals
+    FROM ""Match""
+    WHERE home_player_3 IS NOT NULL
+    GROUP BY home_player_3
+)
+SELECT ROUND(AVG(total_home_goals), 2) AS average_total_home_goals
+FROM per_player;","I'm reviewing home-match outcomes by lineup slot and want one number: across the whole player population, what is the average of the total home-team goals scored in the matches where a player appeared as the home team's third listed player? In other words, for each player, take all matches where they were the home team's third listed player and add up the home team's goals in those matches; give me the average of those totals over all players, rounded to two decimal places.",The home team's third listed player means the player recorded third in the home team's lineup for a match.,
+191,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT COUNT(DISTINCT player_api_id) AS player_count
+FROM Player_Attributes
+WHERE date >= '2007-02-22'
+  AND date <= '2007-08-30'
+  AND jumping >= 80;","How many players had a jumping score of 80 or higher in the player fitness assessments made between 22 February 2007 and 30 August 2007, with both of those dates included in the period? For clarity, the jumping score is the player's jumping assessment on a 1-100 scale.",jumping score: the player's jumping assessment on a 1-100 scale,
+199,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT
+    d.A2 AS district,
+    ROUND((d.A9 - d.A8) * 100.0 / NULLIF(d.A8, 0), 2) AS percentage_change
+FROM district AS d
+WHERE EXISTS (
+    SELECT 1
+    FROM account AS a
+    JOIN loan AS l ON l.account_id = a.account_id
+    WHERE a.district_id = d.district_id
+      AND l.status = 'D'
+)
+ORDER BY d.A2;","For branch districts of accounts with loans still running in debt and recorded unemployment rates in both 1995 and 1996, list each district and the percentage change in its unemployment rate from 1995 to 1996, rounded to two decimal places.",Loan status 'D' denotes a running contract with the client in debt.,
+201,dev,SQL_execution_error,sql_error,final_sql_ready,"WITH yearly AS (
+    SELECT
+        CAST(strftime('%Y', l.date) AS INTEGER) AS loan_year,
+        SUM(l.amount) AS total_amount
+    FROM loan AS l
+    WHERE l.date >= '1996-01-01'
+      AND l.date < '1998-01-01'
+      AND EXISTS (
+          SELECT 1
+          FROM disp AS d
+          JOIN client AS c ON c.client_id = d.client_id
+          WHERE d.account_id = l.account_id
+            AND d.type = 'OWNER'
+            AND c.gender = 'M'
+      )
+    GROUP BY CAST(strftime('%Y', l.date) AS INTEGER)
+)
+SELECT
+    (1997.0_total - 1996.0_total) * 100.0 / 1996.0_total AS percentage_growth
+FROM (
+    SELECT
+        SUM(CASE WHEN loan_year = 1996 THEN total_amount ELSE 0 END) AS 1996_total,
+        SUM(CASE WHEN loan_year = 1997 THEN total_amount ELSE 0 END) AS 1997_total
+    FROM yearly
+);","For loans dated in 1996 and 1997 across accounts owned by male clients, what was the percentage growth in total loan amount from 1996 to 1997?",,ModelCallLimitExceededError: Model call limits exceeded: run limit (20/20)
+203,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH first_month AS (
+    SELECT date(MIN(date), 'start of month') AS month_start
+    FROM account
+),
+opened_districts AS (
+    SELECT DISTINCT a.district_id
+    FROM account AS a
+    CROSS JOIN first_month AS f
+    WHERE date(a.date) >= f.month_start
+      AND date(a.date) < date(f.month_start, '+1 month')
+)
+SELECT d.district_id, CAST(d.A4 AS INTEGER) AS population
+FROM district AS d
+JOIN opened_districts AS od ON od.district_id = d.district_id
+WHERE CAST(d.A4 AS INTEGER) = (
+    SELECT MAX(CAST(d2.A4 AS INTEGER))
+    FROM district AS d2
+    JOIN opened_districts AS od2 ON od2.district_id = d2.district_id
+)
+ORDER BY d.district_id;","We're reviewing our first month of operations. Looking at the districts where we opened at least one account during that first month, which district had the largest population, and how many inhabitants does it have? If several districts tie for the largest population, list all of them with their populations.",The bank's first month of operation is the calendar month in which its earliest account was opened.,
+205,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH top_districts AS (
+    SELECT district_id, A2 AS district_name
+    FROM district
+    ORDER BY CAST(A4 AS INTEGER) DESC
+    LIMIT 5
+),
+per_account AS (
+    SELECT
+        a.account_id,
+        a.district_id,
+        COALESCE(SUM(CASE WHEN l.status IN ('C', 'D') THEN l.amount ELSE 0 END), 0) AS active_loan_amount
+    FROM account AS a
+    LEFT JOIN loan AS l ON l.account_id = a.account_id
+    GROUP BY a.account_id, a.district_id
+),
+district_averages AS (
+    SELECT
+        d.district_id,
+        d.district_name,
+        AVG(p.active_loan_amount) AS average_active_loan_per_account
+    FROM top_districts AS d
+    JOIN per_account AS p ON p.district_id = d.district_id
+    GROUP BY d.district_id, d.district_name
+)
+SELECT
+    district_name,
+    ROUND(average_active_loan_per_account) AS average_active_loan_per_account
+FROM district_averages
+WHERE average_active_loan_per_account = (
+    SELECT MAX(average_active_loan_per_account)
+    FROM district_averages
+)
+ORDER BY district_name;","Among the bank's five most populous districts (the five with the largest numbers of inhabitants), which carries the heaviest active-lending burden relative to the account base it serves? For each of those five districts, please give me the district name and the average active loan per account, rounded to the nearest whole koruna. An active loan is a running loan contract with status 'C' (repaid OK so far) or status 'D' (client in debt). The average should be taken over every account held in the district, not just accounts with loans, and accounts and their loans count toward the district of the branch that holds the account, not the client's district. If several districts tie for the highest average, list them all.",,
+213,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH account_avg AS (
+    SELECT account_id, AVG(balance) AS avg_balance
+    FROM trans
+    GROUP BY account_id
+),
+eligible_districts AS (
+    SELECT DISTINCT c.gender, a.district_id
+    FROM card cd
+    JOIN disp dp ON cd.disp_id = dp.disp_id
+    JOIN client c ON dp.client_id = c.client_id
+    JOIN account a ON dp.account_id = a.account_id
+    JOIN account_avg aa ON aa.account_id = a.account_id
+    JOIN district d ON d.district_id = a.district_id
+    WHERE cd.type = 'gold'
+      AND dp.type = 'OWNER'
+      AND aa.avg_balance > 1000
+      AND CAST(d.A4 AS INTEGER) > 100000
+      AND c.gender IN ('F', 'M')
+),
+district_metrics AS (
+    SELECT ed.gender,
+           d.district_id,
+           CAST(d.A4 AS INTEGER) AS inhabitants,
+           d.A11 AS salary,
+           d.A10 AS urban_ratio
+    FROM eligible_districts ed
+    JOIN district d ON ed.district_id = d.district_id
+),
+ranked AS (
+    SELECT *,
+           MAX(inhabitants) OVER (PARTITION BY gender) AS max_inhabitants
+    FROM district_metrics
+)
+SELECT CASE gender WHEN 'F' THEN 'women' ELSE 'men' END AS gender,
+       COUNT(*) OVER (PARTITION BY gender) AS district_count,
+       district_id,
+       inhabitants,
+       ROUND(AVG(salary) OVER (PARTITION BY gender), 2) AS avg_salary,
+       ROUND(AVG(urban_ratio) OVER (PARTITION BY gender), 2) AS avg_urban_inhabitant_ratio
+FROM ranked
+WHERE inhabitants = max_inhabitants
+ORDER BY CASE gender WHEN 'F' THEN 1 ELSE 2 END, district_id;","I'm profiling our gold-card customers for a regional campaign, split by gender. For women first, then men, look at gold-card holders whose card's account has an average balance over 1,000. Among the branch districts holding those accounts, keep only the districts with over 100,000 inhabitants. For each gender, tell me: the number of those districts; which of them has the most inhabitants, with its inhabitants figure - if two districts tie, list both, one row per district; the average salary across those districts, rounded to two decimals; and the average ratio of urban inhabitants across those districts, rounded to two decimals. Nothing else. Please note: 'over' means strictly greater than, and an account's average balance is the mean of its balances after each transaction.","A gold card is a card of type 'gold', and its holder is the client linked to its account as type 'OWNER'. The district of an account is the district of the branch that holds it; a district's inhabitants, salary and urban-inhabitant ratio are the district's own figures.",
+216,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH eligible_districts AS (
+    SELECT DISTINCT c.district_id
+    FROM client AS c
+    JOIN disp AS dp
+      ON dp.client_id = c.client_id
+     AND dp.type = 'OWNER'
+    JOIN account AS a
+      ON a.account_id = dp.account_id
+    WHERE c.gender = 'F'
+      AND EXISTS (
+          SELECT 1
+          FROM card AS ca
+          JOIN disp AS card_dp
+            ON card_dp.disp_id = ca.disp_id
+          WHERE card_dp.account_id = a.account_id
+            AND ca.type IN ('classic', 'gold')
+      )
+      AND EXISTS (
+          SELECT 1
+          FROM loan AS l
+          WHERE l.account_id = a.account_id
+      )
+)
+SELECT
+    d.A3 AS region,
+    ROUND(AVG(CAST(d.A11 AS REAL)), 2) AS avg_district_salary,
+    ROUND(AVG(CAST(d.A9 AS REAL)), 2) AS avg_unemployment_1996,
+    (
+        SELECT d2.A2
+        FROM district AS d2
+        JOIN eligible_districts AS ed2
+          ON ed2.district_id = d2.district_id
+        WHERE d2.A3 = d.A3
+        ORDER BY CAST(d2.A4 AS INTEGER) DESC, d2.A2 ASC
+        LIMIT 1
+    ) AS most_populous_district
+FROM district AS d
+JOIN eligible_districts AS ed
+  ON ed.district_id = d.district_id
+GROUP BY d.A3;","I'm planning a regional campaign for female customers who hold a credit card and a loan, and I need a demographic profile per region. For each region, please give me: the region, the average district salary of the districts where these female clients live, and the average 1996 district unemployment rate of those same districts – both averages rounded to 2 decimal places. I also want the name of the most populous district among those districts in each region, so I know where to focus local advertising. A few rules: count only female clients who own the account (disposition type OWNER) and who have at least one credit card and at least one loan on that account. 'Most populous' means the district with the largest number of inhabitants; if two tie, take the one whose name comes first alphabetically. One row per region, and include every region that has at least one such client – nothing else.",Disposition type OWNER means the client owns the account. Unemployment rate in 1996 is the district's unemployment rate for 1996; average salary is the district's average salary.,ToolCallLimitExceededError: Tool call limit reached: run limit exceeded (41/40 calls).; ModelCallLimitExceededError: Model call limits exceeded: run limit (20/20)
+217,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH top3 AS (
+    SELECT
+        A2 AS district_name,
+        CAST(A4 AS INTEGER) AS inhabitants,
+        CAST(A6 AS INTEGER) AS crimes_1996
+    FROM district
+    WHERE A3 = 'central Bohemia'
+    ORDER BY CAST(A4 AS INTEGER) DESC, A2 COLLATE NOCASE
+    LIMIT 3
+),
+averages AS (
+    SELECT AVG(crimes_1996) AS three_district_average
+    FROM top3
+),
+overall AS (
+    SELECT AVG(CAST(A6 AS INTEGER)) AS overall_average
+    FROM district
+)
+SELECT
+    t.district_name,
+    t.crimes_1996,
+    ROUND(a.three_district_average, 2) AS three_district_average,
+    ROUND(o.overall_average, 2) AS all_district_average,
+    ROUND(a.three_district_average - o.overall_average, 2) AS difference
+FROM top3 AS t
+CROSS JOIN averages AS a
+CROSS JOIN overall AS o
+ORDER BY t.inhabitants DESC, t.district_name COLLATE NOCASE;","I'm reviewing our presence in central Bohemia. Please tell me: the names of the three most populous districts of central Bohemia (largest by inhabitants), the number of crimes committed in 1996 in each of them, the average 1996 crime count across those three districts, the average 1996 crime count across all districts in the country, and the difference between the three-district average and the overall average (three-district average minus overall average). Rank districts by inhabitants, breaking ties by district name alphabetically (ignoring accents). Round all averages and the difference to 2 decimal places. The overall average should cover every district in the country, whether or not it has any accounts.",Central Bohemia is the region of the Czech Republic surrounding Prague.,ModelCallLimitExceededError: Model call limits exceeded: run limit (20/20)
+219,dev,SQL_execution_error,sql_error,final_sql_ready,"WITH region AS (
+    SELECT A3
+    FROM district
+    WHERE A2 = 'Litomerice'
+),
+ranked_transactions AS (
+    SELECT
+        a.account_id,
+        d.A2 AS district_name,
+        t.balance,
+        ROW_NUMBER() OVER (
+            PARTITION BY a.account_id
+            ORDER BY t.date DESC, t.trans_id DESC
+        ) AS transaction_rank
+    FROM account AS a
+    JOIN district AS d
+        ON d.district_id = a.district_id
+    JOIN region AS r
+        ON r.A3 = d.A3
+    JOIN trans AS t
+        ON t.account_id = a.account_id
+    WHERE a.date >= '1996-01-01'
+      AND a.date < '1997-01-01'
+      AND t.date <= '1996-12-31'
+),
+account_balances AS (
+    SELECT account_id, district_name, balance
+    FROM ranked_transactions
+    WHERE transaction_rank = 1
+),
+district_stats AS (
+    SELECT
+        district_name,
+        COUNT(*) AS accounts_opened,
+        ROUND(AVG(balance), 2) AS avg_balance
+    FROM account_balances
+    GROUP BY district_name
+),
+region_stats AS (
+    SELECT ROUND(AVG(balance), 2) AS avg_balance
+    FROM account_balances
+),
+highest_district AS (
+    SELECT district_name
+    FROM district_stats
+    ORDER BY avg_balance DESC, district_name ASC
+    LIMIT 1
+)
+SELECT
+    'DISTRICT' AS result_type,
+    district_name,
+    accounts_opened,
+    avg_balance
+FROM district_stats
+UNION ALL
+SELECT
+    'REGION_AVERAGE',
+    NULL,
+    NULL,
+    avg_balance
+FROM region_stats
+UNION ALL
+SELECT
+    'HIGHEST_DISTRICT',
+    district_name,
+    NULL,
+    avg_balance
+FROM district_stats
+WHERE district_name = (SELECT district_name FROM highest_district)
+ORDER BY
+    CASE result_type
+        WHEN 'DISTRICT' THEN 1
+        WHEN 'REGION_AVERAGE' THEN 2
+        ELSE 3
+    END,
+    district_name;","I'm reviewing how our branches performed in 1996, and I'd like a picture of the money standing in accounts opened during that year, across the region that Litomerice belongs to (the region as given in the district table's region field).
+
+For each district in that region where at least one account was opened in 1996 (openings counted by account creation date within the calendar year 1996), please give me:
+- the district name,
+- the number of accounts opened in 1996,
+- the average end-of-1996 balance of those accounts,
+with rows ordered by district name.
+
+Also give me:
+- the region-wide average end-of-1996 balance, taken across all those accounts (not as the mean of the district averages),
+- the district with the highest average end-of-1996 balance; if two districts tie, name the one that comes first alphabetically.
+
+By end-of-1996 balance I mean the balance after the account's last transaction dated on or before 1996-12-31; transactions dated 1997 or later don't count, and if several transactions fall on that last date, the one with the highest transaction id is the one that matters. Please round all averages to two decimals.",Balance means the balance after a transaction.,
+220,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH top_loans AS (
+    SELECT
+        l.loan_id,
+        a.district_id,
+        ROW_NUMBER() OVER (ORDER BY l.amount DESC, l.loan_id ASC) AS rn
+    FROM loan AS l
+    JOIN account AS a ON a.account_id = l.account_id
+    WHERE l.duration = 24
+      AND a.frequency = 'POPLATEK TYDNE'
+),
+selected_districts AS (
+    SELECT DISTINCT
+        d.district_id,
+        CAST(d.A4 AS INTEGER) AS inhabitants,
+        d.A11 AS average_salary
+    FROM top_loans AS t
+    JOIN district AS d ON d.district_id = t.district_id
+    WHERE t.rn <= 10
+)
+SELECT
+    district_id,
+    inhabitants,
+    ROUND(AVG(average_salary) OVER (), 2) AS avg_salary_across_districts
+FROM selected_districts
+ORDER BY inhabitants DESC, district_id ASC
+LIMIT 1;","I want to check whether our biggest short-term loans cluster in populous branch districts and how well-off those areas are. Looking at 24-month loans on accounts with weekly statement issuance, take the ten largest loans ranked by approved amount from highest to lowest — if two loans have the same amount, the one with the smaller loan id ranks first, and ranking continues consecutively after a tie. The district of a loan is the district where the branch managing the loan account is located. Among the districts those ten loans come from, I need: the district with the most inhabitants (if two districts tie on inhabitants, the one with the smaller district id counts as more populous), that district's number of inhabitants, and the average salary across those districts rounded to two decimals.","Weekly statement issuance means account issuance frequency 'POPLATEK TYDNE'. A district's inhabitants are its number of inhabitants, and its average salary is its average yearly salary.",ModelCallLimitExceededError: Model call limits exceeded: run limit (20/20)
+226,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT d.A2 AS branch, COUNT(*) AS transaction_count
+FROM district AS d
+JOIN account AS a ON a.district_id = d.district_id
+JOIN trans AS t ON t.account_id = a.account_id
+WHERE d.A3 = 'north Moravia'
+  AND t.date <= '1998-10-14'
+  AND t.k_symbol IS NULL
+GROUP BY d.district_id, d.A2
+ORDER BY transaction_count DESC, branch ASC
+LIMIT 3;","I'm reviewing branches in the north Moravia region ahead of a client meeting. For each branch there, how many transactions dated on or before 14 October 1998 have no characterization recorded? A branch is the district the account belongs to, and the count should cover all of the branch's accounts' transactions. Please list only the top three branches by this count, with the branch name and its count, ranked first to third. If any branches tie on the count, order them alphabetically by branch name and keep three rows after that ordering.",A transaction with no characterization recorded means the bank did not tag it with any characterization.,
+227,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT
+    t.bank AS bank_code,
+    t.account AS account_number,
+    COUNT(*) AS number_of_outgoing_payments,
+    SUM(t.amount) AS total_amount_paid
+FROM loan AS l
+JOIN trans AS t
+    ON t.account_id = l.account_id
+WHERE l.loan_id = 98832
+  AND l.date = '1996-01-03'
+  AND t.type = 'VYDAJ'
+  AND t.date < '1996-01-03'
+  AND t.bank IS NOT NULL
+  AND t.account IS NOT NULL
+GROUP BY t.bank, t.account
+ORDER BY total_amount_paid DESC;","The loan of 98832 approved on January 3rd, 1996 has one applicant account. For that account, list every counterparty it had paid before January 3rd, 1996. A counterparty means a specific account number at a specific bank, so give me one row per bank code and account number combination. For each counterparty I need the bank code, the account number, the number of outgoing payments made to them, and the total amount paid to them. Count only outgoing payments (VYDAJ, i.e. debits) made before January 3rd, 1996, and sort the counterparties by total amount paid, largest first.",VYDAJ denotes an outgoing payment (debit); PRIJEM denotes an incoming payment (credit).,
+228,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT COUNT(DISTINCT a.account_id)
+FROM account AS a
+JOIN loan AS l ON l.account_id = a.account_id
+WHERE a.district_id = 1
+  AND a.date <= '1995-12-31'
+  AND l.status IN ('C', 'D')
+  AND l.date <= '1995-12-31';","For the year-end review of my branch at location 1: how many accounts that were on the branch's books as of 31 December 1995 hold an active loan contract? I want a single integer, nothing else. An account counts only if it belonged to the branch on that date, and only contracts that are still active by their repayment status count - statuses A and B are finished contracts and shouldn't be included.",Loan status C means an active contract in good standing; loan status D means an active contract with the client in debt. Both are active contracts.,
+231,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH qualifying_districts AS (
+    SELECT DISTINCT a.district_id
+    FROM account AS a
+    JOIN loan AS l ON l.account_id = a.account_id
+    WHERE a.date < '1997-01-01'
+      AND l.duration > 24
+),
+region_totals AS (
+    SELECT
+        d.A3 AS region,
+        COUNT(DISTINCT d.district_id) AS district_count,
+        SUM(CAST(d.A4 AS INTEGER)) AS combined_population,
+        COUNT(*) AS account_count
+    FROM qualifying_districts AS q
+    JOIN district AS d ON d.district_id = q.district_id
+    JOIN account AS a ON a.district_id = d.district_id
+    JOIN loan AS l ON l.account_id = a.account_id
+    WHERE a.date < '1997-01-01'
+      AND l.duration > 24
+    GROUP BY d.A3
+)
+SELECT region, district_count, combined_population, account_count
+FROM region_totals
+ORDER BY combined_population DESC, region ASC
+LIMIT 1;","I need to find out where our pre-1997 long-term mortgage exposure is concentrated geographically. Long-term means a loan duration of more than 24 months, and ""opened before 1997"" should exclude anything opened during 1997. Please tell me: for each region, which districts have at least one such account, and give me the region whose qualifying districts have the largest combined number of inhabitants. Along with the region's name, I want the number of those districts in it, their combined population, and the total number of those accounts in the region. If two regions tie on combined population, pick the one whose name comes first alphabetically.",,
+245,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT
+    r.year,
+    ROUND(AVG(res.milliseconds) / 1000.0, 2) AS mean_elapsed_seconds
+FROM races AS r
+JOIN results AS res ON res.raceId = r.raceId
+WHERE r.year < 1975
+  AND res.positionOrder = 1
+  AND res.milliseconds IS NOT NULL
+GROUP BY r.year
+ORDER BY r.year;","For each year before 1975 with recorded winner times, what was the mean race winner elapsed time in seconds? Round the exact mean to two decimal places; if it is exactly halfway, round away from zero. Order by year.",,
+247,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT c.name, c.nationality, SUM(res.points) AS score
+FROM races AS ra
+JOIN results AS res ON res.raceId = ra.raceId
+JOIN constructors AS c ON c.constructorId = res.constructorId
+WHERE ra.name = 'Monaco Grand Prix'
+  AND ra.year BETWEEN 1980 AND 2010
+GROUP BY c.constructorId, c.name, c.nationality
+ORDER BY score DESC
+LIMIT 1;","Which constructor scored most points from Monaco Grand Prix between 1980 and 2010? List the score, name and nationality of this team.",,
+258,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT d.forename, COUNT(*) AS runner_up_count
+FROM races AS ra
+JOIN results AS re ON re.raceId = ra.raceId
+JOIN drivers AS d ON d.driverId = re.driverId
+WHERE ra.name = 'Italian Grand Prix'
+  AND re.position = 2
+GROUP BY d.forename
+HAVING COUNT(*) >= 2
+ORDER BY runner_up_count DESC, d.forename ASC;","I'm writing an article about the Italian Grand Prix and want to know which first names recur among the drivers who finished second in that race. For every forename carried by two or more runners-up of the Italian Grand Prix across all its editions in the data, please give me one row with the forename and the number of runners-up who carried it. Order the rows from the most runners-up to the fewest, and alphabetically by forename when two forenames are tied. Leave out any forename held by only one runner-up.",A runner-up is the driver who finished second in an edition of the Italian Grand Prix.,
+266,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT d.driverRef, SUM(r.points) AS total_points
+FROM drivers AS d
+JOIN results AS r
+  ON r.driverId = d.driverId
+WHERE d.forename = 'Robert'
+  AND EXISTS (
+      SELECT 1
+      FROM lapTimes AS lt
+      WHERE lt.driverId = r.driverId
+        AND lt.raceId = r.raceId
+  )
+GROUP BY d.driverId, d.driverRef
+ORDER BY d.driverRef;","I'm checking how much of the championship points for drivers named Robert came from races covered by the lap-by-lap timing archive. For every driver whose forename is Robert, I need their reference name and the total points they scored in races where lap-by-lap timing data exists for that driver in that race. The totals should cover all seasons and races on record.","The reference name is the driver's short identifier, and points are championship points recorded for that driver's race result.",
+270,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH ranked AS (
+    SELECT
+        raceId,
+        driverId,
+        RANK() OVER (
+            PARTITION BY raceId
+            ORDER BY fastestLapTime
+        ) AS lap_rank
+    FROM results
+    WHERE fastestLapTime IS NOT NULL
+)
+SELECT COUNT(DISTINCT d.driverId) AS driver_count
+FROM ranked AS r
+JOIN drivers AS d ON d.driverId = r.driverId
+WHERE r.lap_rank = 2
+  AND d.dob >= '1976-01-01';",We're writing a piece on F1's younger generation and want a number for it: how many drivers born in 1976 or later (born from 1 January 1976 onwards) have ever set the second-fastest lap of a race at any point in the history covered by the data? I just need the single count of such drivers.,By second-fastest lap of a race I mean the driver's own fastest lap in that race was the second quickest among all drivers in that race.,
+292,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT d.driverRef
+FROM qualifying AS q
+JOIN races AS r ON r.raceId = q.raceId
+JOIN drivers AS d ON d.driverId = q.driverId
+WHERE r.year = 2017
+  AND r.name = 'Italian Grand Prix'
+  AND q.q2 IS NULL
+ORDER BY
+  CAST(substr(q.q1, 1, instr(q.q1, ':') - 1) AS INTEGER) * 60
+    + CAST(substr(q.q1, instr(q.q1, ':') + 1) AS REAL) DESC,
+  q.driverId;","For the 2017 Italian Grand Prix, I need the list of drivers who were eliminated after the first qualifying session. Give me one row per eliminated driver with their reference name, ordered by their first-segment time from slowest to fastest. If two eliminated drivers have the same first-segment time, list the one with the lower driverId first.",Eliminated after the first qualifying session means the driver took part in qualifying but did not go out in the second qualifying session.,ModelCallLimitExceededError: Model call limits exceeded: run limit (20/20)
+312,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT ROUND(
+    100.0 * (
+        COUNT(*) - COUNT(DISTINCT m.link_to_major)
+    ) / COUNT(*),
+    2
+) AS percentage_unrepresented
+FROM major AS ma
+LEFT JOIN member AS m
+    ON m.link_to_major = ma.major_id;","I want to gauge how much of the university's range of academic programs our club is failing to reach. Out of every major offered by the university - including majors where we have no members - what percentage have no club member studying them? Please give me just that single percentage, between 0 and 100, rounded to two decimal places.","Major: an academic program offered by the university, as listed in the club's records of majors.",
+313,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH member_attendance AS (
+    SELECT
+        m.member_id,
+        CASE
+            WHEN m.position IN ('President', 'Vice President', 'Secretary', 'Treasurer')
+                THEN 'officer'
+            ELSE 'other student'
+        END AS group_name,
+        COUNT(DISTINCT a.link_to_event) AS events_attended
+    FROM member AS m
+    LEFT JOIN attendance AS a
+        ON a.link_to_member = m.member_id
+    GROUP BY m.member_id
+)
+SELECT
+    group_name,
+    ROUND(AVG(events_attended), 2) AS average_events_attended
+FROM member_attendance
+GROUP BY group_name;","Our officer team wants to settle a debate about whether we pull more weight than the rest of the club, so we need the attendance numbers before the next meeting. Could you tell us two things: the average number of events attended per officer, and the average number of events attended per other student, each rounded to two decimal places? To be clear on who counts where: officers are the members holding the position of President, Vice President, Secretary, or Treasurer, and everyone else in the club counts as an other student. Each average should cover every member of its group, and include every event in the club's records - there's no date cutoff.",,
+314,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT COUNT(DISTINCT lower(trim(item.value))) AS item_kind_count
+FROM budget AS b
+JOIN expense AS ex ON ex.link_to_budget = b.budget_id
+JOIN event AS ev ON ev.event_id = b.link_to_event
+JOIN json_each(
+    '[""' || replace(replace(ex.expense_description, '""', ''), ', ', '"",""') || '""]'
+) AS item
+WHERE b.remaining < 0;","I'm finalizing the semester wrap-up report and need one number: how many different kinds of things the club bought for events that went over budget this semester. A few things to keep in mind: an event counts as over budget if, in at least one of its budgeted categories, we spent more than we budgeted for that category - the budgeted amount minus what was actually spent came out below zero. Also, a single purchase can cover several kinds of things at once, and the purchase description lists what it bought, so make sure each kind is counted. The answer should cover the whole semester shown in the records, and I just need the single integer count, nothing else.","went over budget: a budgeted category of the event ended with more spent than was budgeted for it, i.e. the amount budgeted minus the amount spent is below zero; kind of thing: a type of item bought, like water, pizza or posters",
+320,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH college_counts AS (
+  SELECT ma.college, COUNT(*) AS major_count
+  FROM member AS me
+  JOIN major AS ma ON ma.major_id = me.link_to_major
+  GROUP BY ma.college
+)
+SELECT college, major_count
+FROM college_counts
+WHERE major_count = (SELECT MAX(major_count) FROM college_counts)
+ORDER BY college;","I'm putting together a recruitment report for the colleges and want to know which parts of the university our club's membership actually draws from. For every person on the roster-regardless of their position in the club-look at their major, and the college that houses the department offering that major. Which college or colleges do the most majors on our roster come from, and how many majors is that? If there's a tie at the top, give me every college tied at that count. Please list the colleges in alphabetical order by college name, and return just each college's name and its number of majors.",Major: a field of study offered by a department housed in a college.,
+321,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH qualifying_events AS (
+    SELECT DISTINCT link_to_event
+    FROM budget
+    WHERE amount > 40
+),
+purchased_things AS (
+    SELECT DISTINCT
+        ev.location,
+        TRIM(j.value) AS thing
+    FROM qualifying_events qe
+    JOIN event ev ON ev.event_id = qe.link_to_event
+    JOIN budget b ON b.link_to_event = qe.link_to_event
+    JOIN expense x ON x.link_to_budget = b.budget_id
+    JOIN json_each(
+        '[""' || REPLACE(
+            REPLACE(x.expense_description, '""', '\""'),
+            ', ',
+            '"",""'
+        ) || '""]'
+    ) AS j
+)
+SELECT location, COUNT(DISTINCT thing) AS number_of_different_things
+FROM purchased_things
+GROUP BY location;","I want to review what the money actually went on for the well-funded events, by venue. For events that had a budget line of more than forty dollars, how many different things were bought for them at each location? Please give me, for each location, the location of the event and the number of different things bought for such events at that location, and nothing else. Note that a budget line of more than forty dollars means a single budgeted amount strictly over 40 dollars, and all qualifying events held at a location should be pooled together.",,
+322,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT SUM(b.amount) AS total_budgeted
+FROM budget b
+JOIN event ev ON ev.event_id = b.link_to_event
+WHERE ev.event_date >= '2019-09-01'
+  AND ev.event_date < '2019-10-01'
+  AND EXISTS (
+      SELECT 1
+      FROM expense ex
+      WHERE ex.link_to_budget = b.budget_id
+        AND ex.expense_description = 'Pizza'
+  );","I'm reconciling what we budgeted for September events against what we actually spent. Can you give me the total amount budgeted for the September 2019 events that served pizza? By September 2019 I mean events dated September 1 through September 30, 2019. An event counts as having served pizza if pizza was among the expenses booked to it. Please include every budget line for those events, whatever the category - not just the food lines. All I need back is the single dollar figure for that total.",A pizza expense means an expense whose description is Pizza.,
+324,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH event_totals AS (
+    SELECT
+        ev.event_id,
+        ev.event_name,
+        COALESCE(SUM(b.amount), 0) AS total_budget,
+        COALESCE(SUM(b.spent), 0) AS total_spending
+    FROM event AS ev
+    LEFT JOIN budget AS b ON b.link_to_event = ev.event_id
+    WHERE ev.status = 'Closed'
+    GROUP BY ev.event_id, ev.event_name
+),
+purchase_counts AS (
+    SELECT
+        b.link_to_event AS event_id,
+        COUNT(*) AS purchase_count
+    FROM budget AS b
+    JOIN expense AS x ON x.link_to_budget = b.budget_id
+    GROUP BY b.link_to_event
+)
+SELECT et.event_name
+FROM event_totals AS et
+LEFT JOIN purchase_counts AS pc ON pc.event_id = et.event_id
+WHERE et.total_spending <= et.total_budget
+ORDER BY COALESCE(pc.purchase_count, 0) DESC, et.event_id ASC
+LIMIT 1;","Among our closed events that stayed within budget (total spending not exceeding total budget), which one had the most purchases? Please give me just that event's name. Consider every closed event that didn't go over budget, including events with no purchases at all. If two events tie for the most purchases, report only the one with the alphabetically first event ID.",A purchase is a single item recorded on an expense record; one expense record may list several items. Total budget is the sum of budgeted amounts across all budget lines of the event; total spending is the sum of spent amounts across all budget lines of the event.,ModelCallLimitExceededError: Model call limits exceeded: run limit (20/20)
+329,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT expense_description AS item_name, COUNT(*) AS purchase_count
+FROM expense
+JOIN member ON expense.link_to_member = member.member_id
+WHERE member.first_name = 'Sacha'
+  AND member.last_name = 'Harrison'
+GROUP BY expense_description
+ORDER BY item_name;","I'm preparing the year-end audit of club spending. For each item Sacha Harrison bought with club money, I need the item name and how many times she bought it. Can you give me that list?","By ""item"" I mean an individual thing named in a record of what money was spent for.",
+332,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT
+    c.colour AS eye_colour,
+    COUNT(DISTINCT s.id) AS hero_count,
+    RANK() OVER (ORDER BY COUNT(DISTINCT s.id) DESC) AS rank
+FROM superhero AS s
+JOIN publisher AS p
+    ON p.id = s.publisher_id
+JOIN colour AS c
+    ON c.id = s.eye_colour_id
+WHERE p.publisher_name = 'Marvel Comics'
+  AND c.colour IS NOT NULL
+  AND TRIM(c.colour) <> ''
+GROUP BY c.colour
+ORDER BY hero_count DESC, eye_colour ASC;","Among Marvel Comics superheroes with a known eye colour, rank the eye colours by number of superheroes. Give each colour, its hero count, and its rank, most common first; break display-order ties alphabetically.",,
+336,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT superhero_name
+FROM superhero
+WHERE height_cm BETWEEN 170 AND 190
+  AND eye_colour_id IS NULL;","Among superheroes from 170 through 190 cm tall whose recorded eye-colour category is unknown, list their names.",,
+339,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT s.superhero_name, p.publisher_name
+FROM superhero AS s
+LEFT JOIN publisher AS p
+    ON p.id = s.publisher_id
+WHERE s.eye_colour_id IS NOT NULL
+  AND s.eye_colour_id = s.hair_colour_id
+  AND s.eye_colour_id = s.skin_colour_id
+ORDER BY s.superhero_name;","List superheroes whose known eye, hair and skin colours are all the same, along with any recorded publisher name.",,
+342,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT CASE
+         WHEN SUM(CASE WHEN publisher_name = 'Marvel Comics' THEN superhero_count ELSE 0 END) >
+              SUM(CASE WHEN publisher_name = 'DC Comics' THEN superhero_count ELSE 0 END)
+         THEN 'Marvel Comics by ' ||
+              (SUM(CASE WHEN publisher_name = 'Marvel Comics' THEN superhero_count ELSE 0 END) -
+               SUM(CASE WHEN publisher_name = 'DC Comics' THEN superhero_count ELSE 0 END))
+         WHEN SUM(CASE WHEN publisher_name = 'DC Comics' THEN superhero_count ELSE 0 END) >
+              SUM(CASE WHEN publisher_name = 'Marvel Comics' THEN superhero_count ELSE 0 END)
+         THEN 'DC Comics by ' ||
+              (SUM(CASE WHEN publisher_name = 'DC Comics' THEN superhero_count ELSE 0 END) -
+               SUM(CASE WHEN publisher_name = 'Marvel Comics' THEN superhero_count ELSE 0 END))
+         ELSE 'Tie'
+       END AS result
+FROM (
+  SELECT p.publisher_name, COUNT(s.id) AS superhero_count
+  FROM superhero s
+  JOIN publisher p ON s.publisher_id = p.id
+  WHERE p.publisher_name IN ('DC Comics', 'Marvel Comics')
+  GROUP BY p.publisher_name
+);","Which publisher has more superheroes, DC Comics or Marvel Comics, and by how many? Return Tie if their counts are equal.",,
+344,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH strength_heroes AS (
+    SELECT DISTINCT hero_id
+    FROM hero_attribute
+    WHERE attribute_id = (
+        SELECT id
+        FROM attribute
+        WHERE attribute_name = 'Strength'
+    )
+),
+strength_only_powers AS (
+    SELECT DISTINCT hp.power_id
+    FROM hero_power hp
+    WHERE hp.hero_id IN (SELECT hero_id FROM strength_heroes)
+      AND hp.power_id IS NOT NULL
+      AND NOT EXISTS (
+          SELECT 1
+          FROM hero_power other_hp
+          WHERE other_hp.power_id = hp.power_id
+            AND other_hp.hero_id NOT IN (SELECT hero_id FROM strength_heroes)
+      )
+)
+SELECT COUNT(*) AS power_count
+FROM strength_only_powers;","For a segment on strength heroes, I want to know how many superpowers are held only by heroes who have Super Strength. A power counts as held only if at least one hero who has Super Strength holds it, and Super Strength itself should be included if it meets that condition. Just give me the count.",Super Strength is a super power name.,ModelCallLimitExceededError: Model call limits exceeded: run limit (20/20)
+347,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH power_counts AS (
+  SELECT sp.power_name, COUNT(DISTINCT s.id) AS hero_count
+  FROM superhero AS s
+  JOIN publisher AS pub ON pub.id = s.publisher_id
+  JOIN hero_power AS hp ON hp.hero_id = s.id
+  JOIN superpower AS sp ON sp.id = hp.power_id
+  WHERE pub.publisher_name = 'Marvel Comics'
+    AND s.full_name IS NOT NULL
+    AND TRIM(s.full_name) <> ''
+    AND sp.power_name IS NOT NULL
+  GROUP BY sp.id, sp.power_name
+)
+SELECT power_name, hero_count
+FROM power_counts
+WHERE hero_count = (SELECT MAX(hero_count) FROM power_counts)
+ORDER BY power_name;","I'm building a fact box on Marvel heroes' civilian identities. Among Marvel Comics superheroes whose full name (their civilian identity, like 'Richard Milhouse Jones') is known, which superpower is the most common, and how many of those heroes have it? If several superpowers tie for most common, list all of them with their counts. Just give me the superpower name(s) and the counts.",,
+352,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT COUNT(*)
+FROM superhero AS s
+JOIN publisher AS p ON p.id = s.publisher_id
+WHERE p.id = (
+    SELECT publisher_id
+    FROM superhero
+    WHERE superhero_name = 'A-Bomb'
+)
+AND s.race_id IS NULL;","How many characters published by A-Bomb's publisher have no race listed? I just need a single count. (By A-Bomb's publisher, I mean the publisher that publishes the character A-Bomb.)","race: the character's race or group, e.g. Human, Alien, Mutant",
+354,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT ROUND(AVG(power_count), 1)
+FROM (
+    SELECT hp.hero_id, COUNT(DISTINCT hp.power_id) AS power_count
+    FROM hero_power hp
+    WHERE hp.hero_id IN (
+        SELECT DISTINCT shared.hero_id
+        FROM hero_power shared
+        WHERE shared.power_id IN (
+            SELECT id
+            FROM superpower
+            WHERE power_name = 'Cryokinesis'
+        )
+    )
+    GROUP BY hp.hero_id
+);","For my cryokinesis page, I want to know how broad the power portfolios are around ice-powered heroes. Consider all heroes who share at least one superpower with a cryokinesis holder - including the cryokinesis holders themselves, since they share cryokinesis with each other. What is the average number of superpowers these heroes have, rounded to one decimal place? Please send back just that single number.",Cryokinesis is the superpower to generate and control ice.,
+358,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT COUNT(DISTINCT p.id) AS publisher_count
+FROM publisher AS p
+JOIN superhero AS s ON s.publisher_id = p.id
+WHERE s.height_cm > 200;","I'm writing a piece about which real publishing companies have put out very tall heroes. How many publishers in the database have released at least one hero taller than 200 cm? Note that taller than 200 cm means strictly more than 200 cm, and it counts if even one of their heroes is that tall. I just need the number of publishers, nothing else.",A hero's publisher being 'released' means the publisher the hero is attributed to in the database.,
+365,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT gender.gender,
+       ROUND(AVG(COALESCE(pc.power_count, 0)), 2) AS avg_powers
+FROM superhero AS s
+JOIN gender ON gender.id = s.gender_id
+LEFT JOIN (
+    SELECT hero_id, COUNT(DISTINCT power_id) AS power_count
+    FROM hero_power
+    WHERE power_id IS NOT NULL
+    GROUP BY hero_id
+) AS pc ON pc.hero_id = s.id
+WHERE gender.gender IN ('Male', 'Female')
+  AND s.full_name IS NOT NULL
+  AND TRIM(s.full_name) <> ''
+  AND INSTR(TRIM(s.full_name), ' ') > 0
+GROUP BY gender.gender;","I'm comparing how power-rich male and female heroes are. For all male heroes and all female heroes that have a documented real full name, what is the average number of superpowers per hero for each gender? Please compute each average over the entire hero population of that gender, not just the heroes that happen to have power records. Give me both averages, each rounded to two decimal places, and nothing else.","Full name: the hero's real, full personal name (first name plus last name, and optionally middle names); single names such as mononyms or aliases are not a full name.",
+377,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT eye_colour.colour AS eye_colour,
+       COUNT(*) AS hero_count
+FROM superhero AS hero
+JOIN colour AS eye_colour
+  ON eye_colour.id = hero.eye_colour_id
+WHERE hero.hair_colour_id <> (
+    SELECT id
+    FROM colour
+    WHERE colour = 'Brown'
+)
+  AND hero.eye_colour_id IN (
+    SELECT DISTINCT brown_hero.eye_colour_id
+    FROM superhero AS brown_hero
+    JOIN colour AS hair_colour
+      ON hair_colour.id = brown_hero.hair_colour_id
+    WHERE hair_colour.colour = 'Brown'
+)
+GROUP BY eye_colour.id, eye_colour.colour
+ORDER BY hero_count DESC, eye_colour.colour ASC;","I'm looking at how designers pair hair and eye colours. For every eye colour that appears on at least one brown-haired hero, how many heroes have that eye colour while their hair is NOT brown? Just give me each eye colour and that count, listing the eye colour with the highest count first. If two eye colours have the same count, the one whose name comes first alphabetically should come first.",By a brown-haired hero I mean a hero whose hair colour is Brown.,
+384,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT COUNT(DISTINCT p.ID) AS patient_count
+FROM Laboratory AS l
+JOIN Patient AS p ON p.ID = l.ID
+WHERE l.TG >= 200
+  AND p.Birthday IS NOT NULL
+  AND p.Birthday <= date('2026-10-09', '-51 years');",How many distinct patients with a triglyceride result of at least 200 were older than 50 on 2026-10-09?,,
+392,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT COUNT(*)
+FROM Patient AS p
+WHERE p.Birthday > '1960-01-01'
+  AND EXISTS (
+      SELECT 1
+      FROM Examination AS e
+      WHERE e.ID = p.ID
+        AND e.Thrombosis > 0
+  )
+  AND NOT EXISTS (
+      SELECT 1
+      FROM Laboratory AS l
+      WHERE l.ID = p.ID
+        AND CAST(l.RNP AS REAL) > 10
+  );","I'm describing our young-patient group and want to show how unusual a raised RNP antibody is in these patients. Could you tell me how many patients in the thrombosis cohort born after 1 January 1960 never had a raised RNP antibody result? A few points: the group should cover every patient born after that date, including patients with no laboratory results at all - they count as never having had a raised result. ""Raised"" means a result strictly above 10, so a result of exactly 10 doesn't count, and a result of ""negative"" (no antibody detected) is never raised. Please return just one row with a single integer: the number of these patients.","RNP: anti-ribonuclear protein antibody; a result of ""negative"" means no antibody was detected. A raised RNP result is a laboratory result strictly above 10.",
+393,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH eligible AS (
+    SELECT DISTINCT p.ID
+    FROM Patient AS p
+    JOIN Laboratory AS l ON l.ID = p.ID
+    WHERE p.Admission = '-'
+      AND l.SSA IS NOT NULL
+      AND l.SSA NOT IN ('negative', '0')
+),
+titers AS (
+    SELECT l.ID, CAST(l.RNP AS INTEGER) AS rnp_titer
+    FROM Laboratory AS l
+    JOIN eligible AS e ON e.ID = l.ID
+    WHERE l.RNP IS NOT NULL
+      AND l.RNP != 'negative'
+)
+SELECT ID, rnp_titer
+FROM titers
+WHERE rnp_titer = (SELECT MAX(rnp_titer) FROM titers)
+ORDER BY ID;","Among patients followed at the outpatient clinic who ever had an abnormal anti-SSA result, which one showed the highest anti-RNP titer? Please give me the patient's ID and the anti-RNP titer value. This should cover the hospital's full records across all years, and if several patients tie for the highest anti-RNP titer, list every one of them.","Abnormal anti-SSA means any SSA result other than negative or 0. ""Followed at the outpatient clinic"" is the admission status marked with a minus sign. Anti-RNP titer is the strength of the anti-ribonuclear protein result.",
+400,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH cohort AS (
+    SELECT ID
+    FROM Patient
+    WHERE Diagnosis IN ('RA, SJS', 'SJS, RA')
+)
+SELECT
+    COUNT(DISTINCT CASE
+        WHEN EXISTS (
+            SELECT 1
+            FROM Laboratory l
+            WHERE l.ID = cohort.ID
+              AND l.PLT > 100
+              AND l.PLT < 400
+        ) THEN cohort.ID
+    END) AS patients_with_normal_platelet,
+    COUNT(DISTINCT CASE
+        WHEN NOT EXISTS (
+            SELECT 1
+            FROM Laboratory l
+            WHERE l.ID = cohort.ID
+              AND l.PLT > 100
+              AND l.PLT < 400
+        ) THEN cohort.ID
+    END) AS patients_never_normal
+FROM cohort;","I'm studying patients who carry exactly the rheumatoid arthritis and Sjögren's syndrome overlap. Please look at each patient's own record and find those whose record names exactly rheumatoid arthritis and Sjögren's syndrome, in either order, and no other disease – a disease recorded only as suspected does not count as a diagnosis. For those patients, considering their whole recorded laboratory history regardless of date, I need two numbers: how many have had at least one laboratory result showing a normal platelet level, and how many have never had a laboratory result showing a normal platelet level – count a patient with no laboratory results at all as never having had a normal platelet result.",Rheumatoid arthritis is recorded as the code RA and Sjögren's syndrome as the code SJS. A normal platelet level means a platelet count above 100 and below 400.,
+406,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT
+    p.SEX,
+    COUNT(DISTINCT p.ID) AS patient_count
+FROM Patient AS p
+WHERE p.SEX IN ('F', 'M')
+  AND EXISTS (
+      SELECT 1
+      FROM Laboratory AS l
+      WHERE l.ID = p.ID
+        AND CAST(l.RNP AS REAL) > 32
+  )
+GROUP BY p.SEX
+ORDER BY p.SEX;","I'm looking at patients whose anti-ribonuclear protein antibody measurement came out higher than 32. Of those patients, how many were women and how many were men? Note that 'higher than 32' means strictly above 32, not equal to it, and a patient qualifies if any of their laboratory measurements exceeded 32.","A woman means a patient recorded as F, and a man means a patient recorded as M.",
+407,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT MIN(
+    CAST(strftime('%Y', l.Date) AS INTEGER)
+    - CAST(strftime('%Y', p.Birthday) AS INTEGER)
+) AS youngest_age_years
+FROM Patient AS p
+JOIN Laboratory AS l ON l.ID = p.ID
+WHERE CAST(l.RNP AS INTEGER) >= 64
+  AND l.RNP GLOB '[0-9]*'
+  AND p.Birthday IS NOT NULL
+  AND EXISTS (
+      SELECT 1
+      FROM Examination AS e
+      WHERE e.ID = p.ID
+        AND e.Thrombosis > 0
+  );","I'm studying how early in life a patient in the thrombosis cohort can show a high anti-ribonuclear protein (RNP) reading. Please tell me the youngest age, in whole years, at which a patient had a laboratory test showing an anti-RNP result of at least 64. Age in whole years means the year of the test minus the year of birth. If several patients or tests share that youngest age, report that age once. I just need that single youngest age value, nothing else.","Anti-ribonuclear protein (RNP): an antibody measured in the laboratory panel, reported as a titer number or as negative.",
+409,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT COUNT(DISTINCT e.ID)
+FROM Examination AS e
+JOIN Patient AS p ON p.ID = e.ID
+WHERE p.Diagnosis = 'APS'
+  AND e.`Examination Date` >= '1997-01-01'
+  AND e.`Examination Date` < '1998-01-01'
+  AND e.Thrombosis BETWEEN 1 AND 3;","For our annual report, I need the count of patients in the thrombosis cohort who showed thrombosis at any examination performed between 01/01/1997 and 12/31/1997, inclusive. Please give me just that number of patients.","Thrombosis refers to the formation of blood clots, recorded at each examination as a graded finding.",
+411,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT ROUND(
+    100.0 * SUM(CASE WHEN Diagnosis LIKE '%SLE%' THEN 1 ELSE 0 END) / COUNT(*),
+    2
+) AS percentage
+FROM Examination
+WHERE Thrombosis IN (1, 2, 3);","In our autoimmune disease cohort, what percentage of thrombosis patients were diagnosed with SLE at the examination visit? I need the percentage on a 0-100 scale, rounded to two decimal places. Please use the diagnosis recorded at the examination visit, not the diagnosis on the patient's overall file. This is for a write-up on which diagnoses accompany thrombotic events in this cohort.","SLE: systemic lupus erythematosus, an autoimmune disease; thrombosis: formation of a blood clot within a blood vessel",ModelCallLimitExceededError: Model call limits exceeded: run limit (20/20)
+412,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT ROUND(AVG(julianday(first_exam) - julianday(""First Date""))) AS average_delay_days
+FROM (
+    SELECT p.ID,
+           p.""First Date"",
+           MIN(e.""Examination Date"") AS first_exam
+    FROM Patient AS p
+    JOIN Examination AS e ON e.ID = p.ID
+    WHERE p.Diagnosis = 'APS'
+      AND instr(p.Admission, '+') > 0
+      AND p.""First Date"" IS NOT NULL
+      AND e.""Examination Date"" IS NOT NULL
+    GROUP BY p.ID, p.""First Date""
+);","For the thrombosis cohort, I need to describe how long admitted patients typically wait from their first hospital visit until their first examination. Please give me the average delay in days across admitted patients, based on each patient's own first visit and first examination, rounded to the nearest whole number. A patient counts as admitted whenever her admission entry carries a plus sign, regardless of anything else in that entry.",,ModelCallLimitExceededError: Model call limits exceeded: run limit (20/20); ModelCallLimitExceededError: Model call limits exceeded: run limit (20/20)
+418,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH patient_levels AS (
+  SELECT
+    p.ID,
+    MAX(CAST(l.RNP AS INTEGER)) AS rnp_level
+  FROM Patient AS p
+  JOIN Laboratory AS l ON l.ID = p.ID
+  WHERE p.`First Date` >= '1991-01-01'
+    AND p.`First Date` < '1992-01-01'
+    AND l.RNP IS NOT NULL
+    AND l.RNP <> 'negative'
+  GROUP BY p.ID
+)
+SELECT ID, rnp_level AS RNP
+FROM patient_levels
+WHERE rnp_level = (SELECT MAX(rnp_level) FROM patient_levels)
+ORDER BY ID;","Among patients whose first visit to the hospital was in 1991, which patients mounted the strongest anti-ribonuclear protein (RNP) response? Please give me the patient ID and anti-RNP level for every patient tied at the highest recorded level. Only consider patients for whom a level was actually recorded.",anti-ribonuclear protein (RNP): an antibody titer; a higher titer means a higher level.,
+420,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT
+  CASE p.Admission
+    WHEN '+' THEN 'hospital admission'
+    WHEN '-' THEN 'outpatient clinic'
+  END AS care_setting,
+  COUNT(DISTINCT p.ID) AS patient_count
+FROM Patient AS p
+WHERE p.Diagnosis = 'SLE'
+  AND p.Admission IN ('+', '-')
+  AND EXISTS (
+    SELECT 1
+    FROM Laboratory AS l
+    WHERE l.ID = p.ID
+      AND (
+        CAST(l.`U-PRO` AS REAL) >= 30
+        OR l.`U-PRO` IN ('+1(30)', '+2(100)', '>=300', '>=1000')
+      )
+  )
+GROUP BY p.Admission
+ORDER BY p.Admission DESC;","I'm putting together a care-setting summary of severe SLE cases for the rheumatology department. Among patients diagnosed with SLE, considering only those whose only diagnosis is SLE and who had abnormally high proteinuria, how many were admitted to the hospital and how many were followed at the outpatient clinic? Please count each patient based on their full history at the hospital.",Abnormally high proteinuria means a proteinuria level of 30 or higher.,
+422,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH latest AS (
+    SELECT ID, MAX(Date) AS max_date
+    FROM Laboratory
+    GROUP BY ID
+)
+SELECT l.ID
+FROM Laboratory AS l
+JOIN latest AS x
+    ON l.ID = x.ID
+   AND l.Date = x.max_date
+WHERE l.Date > '1997-01-01'
+  AND l.SC170 IN ('negative', '0')
+ORDER BY l.ID;",I'm reviewing our cohort and need to identify patients whose most recent laboratory sample on file was collected after 1 January 1997 (strictly later than that date) and whose most recent anti-Scl-70 result on file was normal. Please return only the patient IDs for these patients.,"anti-Scl-70: anti-topoisomerase I antibody, an autoantibody measured in the laboratory. A normal anti-Scl-70 result is a result of 'negative' or 0.",
+423,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT COUNT(DISTINCT s.ID)
+FROM Laboratory AS s
+WHERE s.SSA IS NOT NULL
+  AND s.SSA NOT IN ('negative', '0')
+  AND EXISTS (
+      SELECT 1
+      FROM Laboratory AS u
+      WHERE u.ID = s.ID
+        AND u.`U-PRO` IS NOT NULL
+        AND LOWER(u.`U-PRO`) NOT IN ('negative', 'none')
+  );",I'd like to know how many patients on record have both an abnormal anti-SSA antibody result and a positive proteinuria finding at some point in their record. Abnormal anti-SSA means any recorded test result other than negative or zero. Proteinuria counts as positive if any urine test on file returned a result other than negative or none. The two findings don't need to come from the same visit – I'm looking across each patient's entire record. Please just give me the number of such patients.,anti-SSA: anti-SSA antibody laboratory test; proteinuria: protein found in the urine,
+425,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT COUNT(*)
+FROM Patient AS p
+WHERE p.Admission = '+'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM Laboratory AS l
+      WHERE l.ID = p.ID
+        AND l.ALP >= 300
+  );","For patients admitted to the hospital, how many never had an alkaliphosphatase level above the normal ceiling in their lab results? I just need that single count.",A patient is admitted when their status is anything other than the outpatient-clinic code; the outpatient-clinic code is '-' and admitted is '+'. A normal alkaliphosphatase level is below 300; a level of 300 or more is above the normal ceiling.,
+430,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH cohort AS (
+    SELECT ID, Admission
+    FROM Patient
+    WHERE Diagnosis LIKE '%APS%'
+)
+SELECT
+    CASE Admission
+        WHEN '+' THEN 'admitted to the hospital'
+        WHEN '-' THEN 'followed at the outpatient clinic'
+    END AS ""patient group"",
+    COUNT(*) AS ""number of normal lactate dehydrogenase measurements""
+FROM cohort
+JOIN Laboratory USING (ID)
+WHERE Admission IN ('+', '-')
+  AND LDH < 500
+GROUP BY Admission
+ORDER BY CASE Admission WHEN '+' THEN 1 WHEN '-' THEN 2 END;","In the thrombosis and autoimmune-disease cohort, I want to compare how often lactate dehydrogenase stays in the normal range between patients admitted to the hospital and patients followed at the outpatient clinic. Please give me one row per patient group showing the number of lactate dehydrogenase measurements within the normal range recorded for that group, with the admitted group's row first. Label the rows 'admitted to the hospital' for the Admission = '+' group and 'followed at the outpatient clinic' for the Admission = '-' group. Every laboratory measurement recorded for those patients across the whole study period counts. Nothing else is needed.",The normal range for lactate dehydrogenase means a value below 500.,
+431,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT COUNT(*) AS patients_without_recorded_sex,
+       SUM(CASE WHEN EXISTS (
+           SELECT 1
+           FROM Laboratory AS l
+           WHERE l.ID = p.ID
+       ) THEN 1 ELSE 0 END) AS with_any_laboratory_record,
+       SUM(CASE WHEN EXISTS (
+           SELECT 1
+           FROM Laboratory AS l
+           WHERE l.ID = p.ID
+             AND l.`T-BIL` >= 2.0
+       ) THEN 1 ELSE 0 END) AS with_elevated_total_bilirubin
+FROM Patient AS p
+WHERE p.SEX IS NULL OR TRIM(p.SEX) = '';","For patients whose sex is not recorded in the registry, I need two counts for the annual quality report: how many have at least one laboratory result on file, and of those, how many have at least one laboratory result showing elevated total bilirubin. The report covers all dates.",A patient's sex is not recorded when the registry holds no sex entry for that patient. Total bilirubin of 2.0 or higher counts as elevated.,
+432,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT COUNT(DISTINCT p.ID) AS patient_count
+FROM Patient AS p
+JOIN Examination AS e ON e.ID = p.ID
+WHERE p.SEX = 'F'
+  AND p.Admission = '+'
+  AND p.Birthday >= '1945-01-01'
+  AND p.Birthday < '1990-01-01'
+  AND e.`ANA Pattern` = 'P';","For an audit, I need the number of admitted female patients born between 1945 and 1989 (inclusive) who have an ANA examination where the observed pattern is exactly P, with no other pattern alongside it. Please return just that single count.","ANA pattern: the pattern observed in the ANA examination, e.g. 'P' or 'P,S'; the admission mark starting with a plus indicates the patient was admitted.",
+442,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH cohort AS (
+    SELECT
+        ID,
+        CASE
+            WHEN Admission = '+' THEN 'Admitted to the hospital'
+            ELSE 'Followed at the outpatient clinic'
+        END AS care_setting
+    FROM Patient
+    WHERE SEX = 'F'
+      AND Birthday <= '1976-10-09'
+      AND Admission IN ('+', '-')
+),
+elevated AS (
+    SELECT DISTINCT ID
+    FROM Laboratory
+    WHERE CAST(RNP AS REAL) >= 4
+)
+SELECT
+    care_setting,
+    SUM(CASE WHEN elevated.ID IS NOT NULL THEN 1 ELSE 0 END) AS patients_with_result_at_least_4,
+    SUM(CASE WHEN elevated.ID IS NULL THEN 1 ELSE 0 END) AS patients_with_no_such_result
+FROM cohort
+LEFT JOIN elevated USING (ID)
+GROUP BY care_setting
+ORDER BY care_setting;","I'm reviewing how often older female patients show elevated anti-RNP antibody results, split by whether they were admitted to the hospital or followed at the outpatient clinic. For female patients aged at least 50 as of 2026-10-09, please give me a two-row breakdown by care setting (admitted to the hospital vs. followed at the outpatient clinic), showing for each setting how many patients had at least one anti-RNP laboratory result of at least 4, and how many had no such result. A patient's admission marker of '+' counts as admitted to the hospital and '-' counts as followed at the outpatient clinic; patients with any other admission marker are out of scope. Order the two rows alphabetically by care setting.","anti-RNP: anti-ribonuclear protein antibody, measured in laboratory results; admission marker: the patient's recorded admission sign.",
+443,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH latest_labs AS (
+    SELECT ID, IGG,
+           ROW_NUMBER() OVER (PARTITION BY ID ORDER BY Date DESC) AS rn
+    FROM Laboratory
+)
+SELECT COUNT(*) AS patient_count
+FROM Patient p
+JOIN latest_labs l ON l.ID = p.ID AND l.rn = 1
+WHERE p.Admission = '-'
+  AND l.IGG >= 2000;","I'm putting together a cohort summary and need one number: how many patients followed at the outpatient clinic (admission marker '-') have a most recent IgG lab result of 2000 or higher? By most recent, I mean the IgG measurement with the greatest laboratory date for that patient - since a patient has at most one lab record per date, there should be no ambiguity.",,
+446,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH cohort AS (
+    SELECT DISTINCT ID
+    FROM Examination
+    WHERE Thrombosis > 0
+),
+ranked_labs AS (
+    SELECT
+        l.ID,
+        l.RNP,
+        ROW_NUMBER() OVER (
+            PARTITION BY l.ID
+            ORDER BY l.Date DESC
+        ) AS rn
+    FROM Laboratory AS l
+    JOIN cohort AS c ON c.ID = l.ID
+)
+SELECT
+    COALESCE(SUM(CASE WHEN p.SEX = 'F' AND CAST(r.RNP AS REAL) >= 32 THEN 1 ELSE 0 END), 0)
+    - COALESCE(SUM(CASE WHEN p.SEX = 'M' AND CAST(r.RNP AS REAL) >= 32 THEN 1 ELSE 0 END), 0)
+    AS female_minus_male
+FROM ranked_labs AS r
+JOIN Patient AS p ON p.ID = r.ID
+WHERE r.rn = 1;","In the thrombosis prediction cohort, I'd like to know whether the female predominance I saw for strongly positive anti-RNP results across follow-up also holds at patients' current status. Please give me a single integer: the number of female patients whose most recent visit shows a strongly positive anti-RNP result, minus the number of male patients whose most recent visit shows such a result. Use only the result at each patient's most recent visit, not earlier visits. A strongly positive anti-RNP result means a level of 32 or higher.",anti-ribonuclear protein (RNP): an autoantibody measured in the laboratory work-up; visit: a date on which the patient's laboratory tests were performed,
+447,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT COUNT(*) AS patient_count
+FROM (
+    SELECT l.ID,
+           ROW_NUMBER() OVER (PARTITION BY l.ID ORDER BY l.Date DESC) AS rn,
+           l.RNP,
+           l.CPK
+    FROM Laboratory AS l
+    JOIN Patient AS p ON p.ID = l.ID
+    WHERE p.SEX = 'F'
+) AS latest
+WHERE rn = 1
+  AND CAST(RNP AS INTEGER) > 64
+  AND CPK < 250;","In the thrombosis prediction cohort, I want to gauge how often the most recent anti-ribonuclear protein measurement among female patients was markedly elevated while CPK stayed low at that same measurement. Please give me a single integer: the number of female patients whose most recent anti-ribonuclear protein titer was above 64 and whose CPK from that same laboratory record was below 250. Above 64 means strictly greater than 64, and below 250 means strictly less than 250.",Anti-ribonuclear protein is an autoantibody measured as a titer in the blood; a negative result means the antibody was not detected.,
+464,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH eligible_patients AS (
+    SELECT DISTINCT p.ID, p.Birthday
+    FROM Patient AS p
+    JOIN Laboratory AS l ON l.ID = p.ID
+    WHERE l.RNP GLOB '[0-9]*'
+      AND CAST(l.RNP AS INTEGER) >= 64
+      AND p.Birthday IS NOT NULL
+      AND date(p.Birthday) <= date('2026-10-09')
+      AND date(p.Birthday, '+70 years') > date('2026-10-09')
+)
+SELECT ROUND(
+    AVG((julianday('2026-10-09') - julianday(Birthday)) / 365.2425),
+    1
+)
+FROM eligible_patients;","In our autoimmune-cohort registry, I'm profiling young patients with strongly positive anti-RNP findings. What is the average age, in years, of the patients who were younger than 70 as of 2026-10-09 and who have at least one anti-RNP result of 64 or higher? Please give the average as a single number to one decimal place.",anti-ribonuclear protein (anti-RNP) result: the reading recorded for a patient's anti-RNP test in the laboratory record,
+473,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH bond_counts AS (
+  SELECT bond_type, COUNT(*) AS n
+  FROM bond
+  WHERE molecule_id = 'TR010'
+  GROUP BY bond_type
+),
+most_common AS (
+  SELECT bond_type
+  FROM bond_counts
+  ORDER BY n DESC
+  LIMIT 1
+)
+SELECT
+  CASE most_common.bond_type
+    WHEN '-' THEN 'single'
+    WHEN '=' THEN 'double'
+    WHEN '#' THEN 'triple'
+    ELSE most_common.bond_type
+  END AS bond_type,
+  CASE WHEN molecule.label = '+' THEN 'YES' ELSE 'NO' END AS carcinogenic
+FROM most_common
+JOIN molecule ON molecule.molecule_id = 'TR010';","What is the most common bond type in molecule TR010, and is that molecule carcinogenic? Return the bond type and YES or NO.","In this dataset, a molecule labeled '+' is carcinogenic; a molecule labeled '-' is not.",
+483,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT
+  CASE b.bond_type
+    WHEN '-' THEN 'single'
+    WHEN '=' THEN 'double'
+    WHEN '#' THEN 'triple'
+  END AS bond_type,
+  COUNT(DISTINCT b.bond_id) AS bond_count
+FROM bond AS b
+JOIN molecule AS m ON m.molecule_id = b.molecule_id
+JOIN connected AS c ON c.bond_id = b.bond_id
+JOIN atom AS a1 ON a1.atom_id = c.atom_id
+JOIN atom AS a2 ON a2.atom_id = c.atom_id2
+WHERE m.label = '+'
+  AND a1.element = 'c'
+  AND a2.element = 'c'
+  AND b.bond_type IN ('-', '=', '#')
+GROUP BY b.bond_type
+ORDER BY CASE b.bond_type
+  WHEN '-' THEN 1
+  WHEN '=' THEN 2
+  WHEN '#' THEN 3
+END;","For the carcinogenic molecules in the toxicology database, how many carbon-carbon bonds are there of each bond type (single, double, and triple)? Please give me the bond type and the corresponding count.","A molecule labelled '+' is carcinogenic. Bond types are recorded as follows: a single bond as '-', a double bond as '=', and a triple bond as '#'. A carbon-carbon bond is a bond whose two bonded atoms are both carbon.",
+488,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH endpoints AS (
+    SELECT
+        molecule_id,
+        substr(bond_id, 7, instr(substr(bond_id, 7), '_') - 1) AS atom1_num,
+        substr(bond_id, 7 + instr(substr(bond_id, 7), '_')) AS atom2_num
+    FROM bond
+)
+SELECT COUNT(*) AS bonded_atom_count
+FROM endpoints e
+JOIN atom a
+    ON a.molecule_id = e.molecule_id
+   AND a.atom_id IN (
+       e.molecule_id || '_' || e.atom1_num,
+       e.molecule_id || '_' || e.atom2_num
+   )
+WHERE a.element = 'cl';","In the toxicology database, how many atoms are bonded to chlorine atoms, taken across all molecules? I want a single number. By chlorine I mean the element 'cl'.",cl: chlorine,ModelCallLimitExceededError: Model call limits exceeded: run limit (20/20)
+489,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH triple_bond_molecules AS (
+    SELECT DISTINCT molecule_id
+    FROM bond
+    WHERE bond_type = '#'
+),
+classified AS (
+    SELECT m.label
+    FROM molecule AS m
+    JOIN triple_bond_molecules AS t USING (molecule_id)
+    WHERE m.label IN ('+', '-')
+)
+SELECT
+    label,
+    ROUND(100.0 * COUNT(*) / SUM(COUNT(*)) OVER (), 2) AS percentage
+FROM classified
+GROUP BY label
+ORDER BY label DESC;","For a report on structural features of carcinogenic compounds, I'm looking at compounds that form a triple bond. Among those, what percent are labeled carcinogenic and what percent are labeled non-carcinogenic, each rounded to two decimal places? The two percents should sum to 100, apart from rounding.",Label '+' means carcinogenic; label '-' means non-carcinogenic.,
+496,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT m.molecule_id
+FROM molecule AS m
+WHERE m.label = '-'
+  AND EXISTS (
+      SELECT 1
+      FROM atom AS a
+      WHERE a.molecule_id = m.molecule_id
+        AND a.element IN ('na', 'k', 'ca', 'cu', 'zn', 'sn', 'pb', 'mg', 'li')
+  )
+  AND EXISTS (
+      SELECT 1
+      FROM bond AS b
+      WHERE b.molecule_id = m.molecule_id
+  )
+  AND NOT EXISTS (
+      SELECT 1
+      FROM bond AS b
+      WHERE b.molecule_id = m.molecule_id
+        AND b.bond_type <> '-'
+  )
+ORDER BY m.molecule_id
+LIMIT 3;","I'm screening for molecules to flag for follow-up. Can you give me the molecule_id of the first three molecules, in alphabetical order, that are non-carcinogenic, contain at least one metal atom, and have single bonds between their atoms? Please return only the molecule ids.","A molecule label of '-' means the molecule is non-carcinogenic. A bond type of '-' means a single bond between two atoms. The metals are sodium (na), potassium (k), calcium (ca), copper (cu), zinc (zn), tin (sn), lead (pb), magnesium (mg) and lithium (li).",
+497,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH atom_bond_flags AS (
+    SELECT c.atom_id AS atom_id,
+           MAX(CASE WHEN b.bond_type = '-' THEN 1 ELSE 0 END) AS has_single,
+           MAX(CASE WHEN b.bond_type IN ('=', '#') THEN 1 ELSE 0 END) AS has_multiple
+    FROM connected c
+    JOIN bond b ON b.bond_id = c.bond_id
+    GROUP BY c.atom_id
+
+    UNION ALL
+
+    SELECT c.atom_id2 AS atom_id,
+           MAX(CASE WHEN b.bond_type = '-' THEN 1 ELSE 0 END) AS has_single,
+           MAX(CASE WHEN b.bond_type IN ('=', '#') THEN 1 ELSE 0 END) AS has_multiple
+    FROM connected c
+    JOIN bond b ON b.bond_id = c.bond_id
+    GROUP BY c.atom_id2
+),
+atom_flags AS (
+    SELECT atom_id,
+           MAX(has_single) AS has_single,
+           MAX(has_multiple) AS has_multiple
+    FROM atom_bond_flags
+    GROUP BY atom_id
+)
+SELECT a.element AS element_symbol,
+       COUNT(*) AS atom_count
+FROM atom a
+JOIN atom_flags f ON f.atom_id = a.atom_id
+WHERE f.has_single = 1
+  AND f.has_multiple = 0
+GROUP BY a.element
+ORDER BY a.element;","I'm profiling the compound library and want to size the fully saturated portion of each element's atom population - atoms attached only by single bonds behave differently from unsaturated sites. For each element symbol in the database, how many atoms are connected only by single bonds and never part of any multiple bond? Please give me one row per element symbol with the element symbol and the number of such atoms, sorted alphabetically by element symbol. This should cover all compounds in the database. Note that an atom with no bonds at all doesn't count as being connected by single bonds, so exclude those.","A single bond is a bond between two atoms sharing exactly one electron pair, denoted by the bond-type symbol '-'. A multiple bond is a double or triple bond, i.e. a bond between two atoms sharing more than one electron pair.",
+498,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT a.element AS element_symbol,
+       COUNT(DISTINCT a.molecule_id) AS molecule_count
+FROM bond AS b
+JOIN connected AS c ON c.bond_id = b.bond_id
+JOIN atom AS a ON a.atom_id = c.atom_id
+WHERE b.bond_type = '#'
+  AND a.element IS NOT NULL
+  AND a.molecule_id IS NOT NULL
+GROUP BY a.element
+ORDER BY molecule_count DESC, element_symbol ASC;","In the toxicology compound database, which elements take part in a triple bond, and how widely are they distributed across the tested compounds? For each such element, give me its element symbol and the number of molecules that contain that element. Order the results from the most widespread element to the least; where two elements have equal counts, list them alphabetically by element symbol.",The '#' bond-type symbol denotes a triple bond.,
+499,dev,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT a.element, COUNT(DISTINCT a.atom_id) AS bonded_atom_count
+FROM atom AS a
+WHERE a.molecule_id = 'TR397'
+  AND a.element IS NOT NULL
+  AND (
+    EXISTS (SELECT 1 FROM connected AS c WHERE c.atom_id = a.atom_id)
+    OR EXISTS (SELECT 1 FROM connected AS c WHERE c.atom_id2 = a.atom_id)
+  )
+GROUP BY a.element
+ORDER BY a.element;","For molecule TR397, I want to see which elements form the bonding skeleton. For each element present among its atoms, how many atoms of that element take part in at least one bond? Please report two things per row: the element symbol (e.g. c, h, o) and the number of that element's atoms in TR397 that take part in a bond. One row per element, ordered alphabetically by element symbol. Only atoms belonging to TR397 should count.",Takes part in a bond: the atom is one of the two atoms a bond joins.,
+0,test,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT MAX(f.`Percent (%) Eligible FRPM (Ages 5-17)`) AS highest_ages_5_17_frpm_rate
+FROM satscores s
+JOIN frpm f ON f.CDSCode = s.cds
+WHERE s.NumTstTakr > 0
+  AND CAST(s.NumGE1500 AS REAL) / s.NumTstTakr > 0.3;","Among schools with a school-level SAT excellence rate above 0.3, what is the highest ages-5-17 free-meal eligibility rate?",SAT excellence rate is the share of test takers scoring at least 1500.,
+15,test,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT s.School, s.Phone
+FROM schools AS s
+JOIN satscores AS x ON x.cds = s.CDSCode
+WHERE s.DOCType = 'Statewide Benefit Charter'
+  AND x.NumGE1500 IS NOT NULL
+  AND x.NumGE1500 = (
+      SELECT MAX(x2.NumGE1500)
+      FROM schools AS s2
+      JOIN satscores AS x2 ON x2.cds = s2.CDSCode
+      WHERE s2.DOCType = 'Statewide Benefit Charter'
+        AND x2.NumGE1500 IS NOT NULL
+  );","I'm profiling California's statewide benefit charter networks. Among the schools run by a statewide benefit charter network, which single school had the highest number of SAT test takers who scored 1500 or above? Please give me that school's name and its phone number. If several schools tie for the highest count, list every tied school with its phone number.",Statewide benefit charter: a charter school network authorized directly by the California State Board of Education to operate schools throughout the state; charter schools authorized by a school district or county office of education are not statewide benefit charters.,
+40,test,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH eligible AS (
+    SELECT
+        s.CDSCode,
+        s.School,
+        s.County,
+        s.City,
+        s.MailStreet,
+        s.MailCity,
+        s.MailState,
+        s.MailZip,
+        s.Website,
+        s.OpenDate,
+        s.ClosedDate,
+        f.`Enrollment (K-12)` AS enrollment_k12,
+        f.`FRPM Count (K-12)` AS frpm_count,
+        f.`Percent (%) Eligible FRPM (K-12)` AS frpm_share,
+        sat.NumTstTakr,
+        sat.NumGE1500,
+        sat.AvgScrRead,
+        sat.AvgScrMath,
+        sat.AvgScrWrite
+    FROM schools AS s
+    JOIN frpm AS f
+        ON f.CDSCode = s.CDSCode
+    LEFT JOIN satscores AS sat
+        ON sat.cds = s.CDSCode
+    WHERE f.`School Type` = 'High Schools (Public)'
+      AND f.`Charter School (Y/N)` = 0
+      AND f.`Enrollment (K-12)` > 100
+),
+ranked AS (
+    SELECT
+        *,
+        MAX(frpm_count) OVER () AS largest_frpm_count,
+        MIN(frpm_share) OVER () AS smallest_frpm_share
+    FROM eligible
+),
+selected AS (
+    SELECT
+        *,
+        'largest FRPM-eligible count' AS part,
+        1 AS part_order
+    FROM ranked
+    WHERE frpm_count = largest_frpm_count
+
+    UNION ALL
+
+    SELECT
+        *,
+        'smallest FRPM share' AS part,
+        2 AS part_order
+    FROM ranked
+    WHERE frpm_share = smallest_frpm_share
+
+    UNION ALL
+
+    SELECT
+        *,
+        'the CDS code from my notes' AS part,
+        3 AS part_order
+    FROM ranked
+    WHERE CDSCode = '04615150435602'
+)
+SELECT
+    part,
+    School AS school_name,
+    County AS county,
+    City AS city,
+    MailStreet AS mailing_street,
+    MailCity AS mailing_city,
+    MailState AS mailing_state,
+    MailZip AS mailing_zip,
+    Website AS website,
+    enrollment_k12,
+    frpm_count AS frpm_eligible_student_count,
+    frpm_share,
+    AvgScrRead + AvgScrMath + AvgScrWrite AS average_total_sat_score,
+    100.0 * NumGE1500 / NULLIF(NumTstTakr, 0) AS percentage_sat_takers_scoring_1500_or_more,
+    OpenDate AS opening_date,
+    CASE WHEN ClosedDate IS NOT NULL THEN 'closed' ELSE 'open' END AS status
+FROM selected
+ORDER BY part_order, school_name;","I'm studying how concentrated economic need relates to SAT outcomes in California public schools. Among regular, non-charter schools with more than 100 K-12 students, I'd like two extremes plus one benchmark school: the school with the largest count of FRPM-eligible students, the school with the smallest FRPM share (the proportion of its K-12 enrollment that is FRPM-eligible – smallest by that share, not the raw count), and the school with CDS code 4615150435602 from my notes. If a school answers more than one part, report it once per part, and label each row with which part it answers ('largest FRPM-eligible count', 'smallest FRPM share', or 'the CDS code from my notes', in that order). Include ties. For each school, please give: school name, county, city, full mailing address as four columns (mailing street, mailing city, mailing state, mailing ZIP), website, K-12 enrollment, FRPM-eligible student count, FRPM share, average total SAT score (reading + math + writing) among its SAT takers, percentage of its SAT takers scoring 1500 or more, opening date, and status ('closed' if a closing date is recorded, otherwise 'open'). Nothing else, please.",CDS code: the California Department of Education's identification code for a school; the benchmark school in my notes is identified by CDS code 4615150435602.,ToolCallLimitExceededError: Tool call limit reached: run limit exceeded (42/40 calls).; ModelCallLimitExceededError: Model call limits exceeded: run limit (20/20); ToolCallLimitExceededError: Tool call limit reached: run limit exceeded (41/40 calls).
+46,test,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT s.City, COUNT(*) AS MagnetSchoolsWithProvision2
+FROM schools AS s
+JOIN frpm AS f ON f.CDSCode = s.CDSCode
+WHERE s.Magnet = 1
+  AND f.`NSLP Provision Status` = 'Provision 2'
+GROUP BY s.City
+ORDER BY s.City;","I'm planning reviews of Provision 2 meal programs under the NSLP and want to see which cities concentrate magnet schools under that provision. For each city that has at least one, can you give me the number of the city's magnet schools that run a Provision 2 meal program? Use the city where the school is located, not its mailing city. Also, if a school's NSLP entry lists multiple provision types, don't count it as running Provision 2.",NSLP is the National School Lunch Program. Provision 2 is a federal provision under the NSLP that lets a school serve meals at no charge to all students regardless of family income.,
+73,test,SQL_execution_error,sql_error,final_sql_ready,"WITH chosen_sets AS (
+    SELECT s.code, s.name
+    FROM sets AS s
+    WHERE s.code = (
+        SELECT s2.code
+        FROM sets AS s2
+        JOIN cards AS c ON c.setCode = s2.code
+        WHERE c.name = 'Abyssal Horror'
+        ORDER BY s2.releaseDate ASC, s2.code ASC
+        LIMIT 1
+    )
+
+    UNION
+
+    SELECT s.code, s.name
+    FROM sets AS s
+    ORDER BY s.releaseDate DESC, s.code ASC
+    LIMIT 1
+)
+SELECT
+    s.name AS set_name,
+    ROUND(
+        100.0 * SUM(
+            CASE
+                WHEN c.manaCost IS NOT NULL AND c.convertedManaCost <= 3 THEN 1
+                ELSE 0
+            END
+        ) / COUNT(*),
+        2
+    ) AS percentage
+FROM chosen_sets AS s
+JOIN cards AS c ON c.setCode = s.code
+GROUP BY s.code, s.name
+ORDER BY s.code;","I'm comparing how mana-cheap Magic: The Gathering sets have become over time. For two sets — the set where Abyssal Horror was first printed, and the most recently released set in the database — I want one row per set with the set name and the percentage of that set's cards that have a mana cost whose converted mana cost is 3 or less, rounded to two decimal places. By ""first printed"", I mean the set with the earliest release date among the sets Abyssal Horror appears in; if several share that earliest date, use the one whose set code comes first alphabetically. For the most recent set, use the latest release date among all sets; if several share that date, again take the one whose set code comes first alphabetically. By ""converted mana cost"" I mean the card's mana value, and a card counts as having a mana cost only if a mana cost is printed on it.",Converted mana cost means the card's mana value; a card has a mana cost when a mana cost is printed on the card.,ModelCallLimitExceededError: Model call limits exceeded: run limit (20/20)
+87,test,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT COUNT(*) AS ruling_count
+FROM rulings AS r
+JOIN cards AS c ON c.uuid = r.uuid
+WHERE c.name = 'Fireball';","I'm compiling the official rulings archive for the Magic: The Gathering card Fireball. How many official rulings have ever been issued for Fireball? I need the total across all time, with no date restriction.",A ruling is an official clarification issued by Wizards of the Coast about how a card works.,
+91,test,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT COUNT(*) AS printing_count
+FROM cards c
+WHERE c.artist = 'Erica Yang'
+  AND c.rarity = 'common'
+  AND instr(',' || c.availability || ',', ',paper,') > 0
+  AND EXISTS (
+      SELECT 1
+      FROM legalities l
+      WHERE l.uuid = c.uuid
+        AND l.format = 'pauper'
+        AND l.status = 'Legal'
+  );","I play paper Magic and I'm building a pauper deck. How many printings of cards illustrated by Erica Yang are legal in the pauper format and exist as paper (physically printed) cards? I want just a single count of printings, with each printing counted separately.",Pauper is a Magic: The Gathering format where only common-rarity cards are legal; a printing is a specific physical or digital release of a card in a set; 'legal in pauper' means the card's pauper legality status is Legal; 'paper' means a physical printed card.,
+117,test,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT COUNT(DISTINCT c.uuid)
+FROM cards c
+WHERE c.colors = 'B'
+  AND c.types LIKE '%Artifact%'
+  AND EXISTS (
+    SELECT 1
+    FROM foreign_data f
+    WHERE f.uuid = c.uuid
+      AND f.language IS NOT NULL
+      AND TRIM(f.language) <> ''
+      AND f.flavorText IS NOT NULL
+      AND TRIM(f.flavorText) <> ''
+  );","I'm putting together a black artifact flavor-showcase section for a trade binder. How many mono-black Artifact cards have a foreign-language printing that shows flavor text in that language? By mono-black I mean black is the card's only colour, and by Artifact cards I include artifacts combined with another card type, like an Artifact Creature. I'm counting cards, not printings – a card is the same card regardless of set, print run, or language. Just give me one number.","In Magic colour notation, B denotes black, and a card is mono-black when black is its only colour.",
+135,test,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT COALESCE(SUM(p.Score), 0) AS total_score
+FROM postLinks AS pl
+JOIN posts AS target
+  ON target.Id = pl.RelatedPostId
+JOIN posts AS p
+  ON p.Id = pl.PostId
+WHERE target.Title = 'A Probability distribution value exceeding 1 is OK?'
+  AND p.Tags LIKE '%<r>%';","What is the total score of the questions tagged 'r' that link to the question titled ""A Probability distribution value exceeding 1 is OK?""? I only need the total score of those linking questions.","'r' here means the R programming language for statistical computing, not the letter on its own.",
+141,test,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH candidates AS (
+    SELECT Id, Title
+    FROM posts
+    WHERE Title LIKE '%principal component scores%' COLLATE NOCASE
+),
+counts AS (
+    SELECT c.Id, c.Title, COUNT(DISTINCT pl.Id) AS related_post_count
+    FROM candidates AS c
+    LEFT JOIN postLinks AS pl
+        ON pl.PostId = c.Id OR pl.RelatedPostId = c.Id
+    GROUP BY c.Id, c.Title
+)
+SELECT Title, related_post_count
+FROM counts
+WHERE related_post_count = (SELECT MAX(related_post_count) FROM counts);","Among all posts whose title contains the phrase 'principal component scores', which one has the most related posts linked to it? For each such post, give me the post title and the number of related posts. If several posts tie for the most, list every one of them with their counts. The count should cover related posts across the site's entire history.",A related post is another post that the community's link records connect to a given post.,
+187,test,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH match_players AS (
+    SELECT m.id AS match_id, l.country_id, p.player_api_id
+    FROM ""Match"" AS m
+    JOIN League AS l ON l.id = m.league_id
+    JOIN Player AS p
+      ON p.weight <= 160
+     AND p.player_api_id IN (
+        m.home_player_1, m.home_player_2, m.home_player_3,
+        m.home_player_4, m.home_player_5, m.home_player_6,
+        m.home_player_7, m.home_player_8, m.home_player_9,
+        m.home_player_10, m.home_player_11,
+        m.away_player_1, m.away_player_2, m.away_player_3,
+        m.away_player_4, m.away_player_5, m.away_player_6,
+        m.away_player_7, m.away_player_8, m.away_player_9,
+        m.away_player_10, m.away_player_11
+     )
+),
+country_counts AS (
+    SELECT country_id, COUNT(*) AS player_match_count
+    FROM match_players
+    GROUP BY country_id
+)
+SELECT c.name
+FROM country_counts AS cc
+JOIN Country AS c ON c.id = cc.country_id
+WHERE cc.player_match_count = (
+    SELECT MIN(player_match_count)
+    FROM country_counts
+);","I'm studying where small, low-weight players are concentrated across European leagues. Which country's league matches featured the fewest players weighing at most 160 pounds? If several countries tie for the fewest, give me every tied country's name. Include all seasons in the database, and count the players who took part in those matches.","Players are associated with a country through the matches they played in that country's league; all 22 players of a match, the 11 of the home team and the 11 of the away team, took part in it.",
+193,test,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH eligible AS (
+    SELECT player_api_id, overall_rating
+    FROM Player_Attributes
+    WHERE date(date) = '2013-07-12'
+      AND lower(defensive_work_rate) IN ('low', 'medium', 'high')
+      AND overall_rating IS NOT NULL
+)
+SELECT ROUND(
+    100.0 * (
+        MAX(CASE WHEN player_api_id = 30700 THEN overall_rating END)
+        - AVG(overall_rating)
+    ) / AVG(overall_rating),
+    2
+) AS pct_higher
+FROM eligible;","I'm profiling how exceptional Landon Donovan was in the mid-2013 player ratings. By what percentage was his overall rating on 12 July 2013 higher than the average overall rating across all players on that same calendar date, considering every player with the overall rating they carried on that date (not only those updated that day), among players rated low, medium or high for defensive work rate? Return one value only: that percentage, rounded to two decimals (e.g. 12.34 meaning 12.34% higher).","Defensive work rate: a player's intensity of work in defense, rated low, medium or high. Overall rating: the overall score given to a player in the ratings.",
+204,test,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT COUNT(*)
+FROM trans AS t
+WHERE t.k_symbol IS NULL
+  AND t.account_id IN (
+    SELECT d.account_id
+    FROM disp AS d
+    JOIN client AS c ON c.client_id = d.client_id
+    WHERE d.type = 'OWNER'
+      AND c.gender = 'M'
+      AND c.birth_date >= '1974-01-01'
+      AND c.birth_date < '1977-01-01'
+  );","As part of a data-quality review for a segment report, I need to know how much of the recorded transaction activity for one of our segments has no payment purpose noted. How many transactions are there, over the whole recorded history, on the accounts held by male customers born between 1974 and 1976 (birth years 1974, 1975 and 1976), for which no payment purpose is noted? Please give me just that single number.",Payment purpose: the stated reason or note recorded for a transaction.,
+211,test,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT
+    COUNT(DISTINCT CASE WHEN t.k_symbol = 'SIPO' THEN t.trans_id END) AS household_payments,
+    COUNT(DISTINCT CASE
+        WHEN t.k_symbol IS NOT NULL
+         AND t.k_symbol <> 'SIPO'
+         AND TRIM(t.k_symbol) <> ''
+        THEN t.trans_id
+    END) AS other_purpose_payments
+FROM trans AS t
+JOIN disp AS d
+    ON d.account_id = t.account_id
+JOIN client AS c
+    ON c.client_id = d.client_id
+WHERE d.type = 'OWNER'
+  AND c.gender = 'M'
+  AND c.birth_date >= '1974-01-01'
+  AND c.birth_date < '1977-01-01'
+  AND t.type = 'VYDAJ'
+  AND t.operation = 'PREVOD NA UCET'
+  AND t.amount > 4000;","I'm putting together a periodic report on large payments made by a specific customer cohort, split by what the payment was for. Among payments over $4000 (strictly more than $4000) made from the accounts of male customers born between 1974 and 1976, I need two figures: how many were household payments, and how many were made for a purpose other than household payment. A few rules to keep in mind: born between 1974 and 1976 means the birth year is 1974, 1975 or 1976; a customer's accounts are the ones they hold a disposition on; payments are the individual transactions executed on the account, not standing payment orders; a payment counts as other-purpose only if it has a recorded purpose different from household payment, and a payment with no purpose recorded counts in neither bucket.",SIPO stands for household payment.,ModelCallLimitExceededError: Model call limits exceeded: run limit (20/20)
+221,test,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH
+district_accounts AS (
+    SELECT
+        d.district_id,
+        d.A2 AS district_name,
+        d.A3 AS region,
+        CAST(d.A4 AS INTEGER) AS population,
+        a.account_id
+    FROM district AS d
+    JOIN account AS a
+      ON a.district_id = d.district_id
+    WHERE CAST(d.A4 AS INTEGER) >= 100000
+),
+district_withdrawals AS (
+    SELECT
+        da.district_id,
+        SUM(t.amount) AS total_amount_withdrawn
+    FROM district_accounts AS da
+    JOIN trans AS t
+      ON t.account_id = da.account_id
+    WHERE t.type = 'VYDAJ'
+      AND t.operation IN ('VYBER', 'VYBER KARTOU')
+    GROUP BY da.district_id
+),
+district_standing_orders AS (
+    SELECT
+        da.district_id,
+        SUM(o.amount) AS total_standing_order_debit
+    FROM district_accounts AS da
+    JOIN `order` AS o
+      ON o.account_id = da.account_id
+    WHERE o.k_symbol = 'SIPO'
+    GROUP BY da.district_id
+),
+district_metrics AS (
+    SELECT
+        da.district_id,
+        da.district_name,
+        da.region,
+        da.population,
+        dw.total_amount_withdrawn,
+        1.0 * dw.total_amount_withdrawn / da.population AS withdrawals_per_inhabitant,
+        COALESCE(dso.total_standing_order_debit, 0.0)
+            / COUNT(DISTINCT da.account_id) AS average_standing_order_debit_per_account
+    FROM district_accounts AS da
+    JOIN district_withdrawals AS dw
+      ON dw.district_id = da.district_id
+    LEFT JOIN district_standing_orders AS dso
+      ON dso.district_id = da.district_id
+    GROUP BY
+        da.district_id,
+        da.district_name,
+        da.region,
+        da.population,
+        dw.total_amount_withdrawn,
+        dso.total_standing_order_debit
+)
+SELECT
+    district_name,
+    region,
+    population,
+    total_amount_withdrawn,
+    ROUND(withdrawals_per_inhabitant, 2) AS withdrawals_per_inhabitant,
+    RANK() OVER (ORDER BY withdrawals_per_inhabitant DESC) AS rank_by_withdrawals_per_inhabitant,
+    ROUND(average_standing_order_debit_per_account, 2) AS average_standing_order_debit_per_account
+FROM district_metrics
+ORDER BY rank_by_withdrawals_per_inhabitant, district_name;","For every district with at least 100,000 inhabitants that has withdrawal transactions, can you show me the district name, region, population, total amount withdrawn in the district, withdrawals per inhabitant (rounded to 2 decimals), the district's rank by withdrawals per inhabitant (highest first), and the average standing-order debit per account held in the district (rounded to 2 decimals)? I want to compare withdrawal pressure and the standing-order burden side by side across our major districts. Please rank all qualifying districts, not just the top few, using competition ranking so tied districts share a rank and the next rank is skipped (e.g. 1, 1, 3). The whole transaction history on record is in scope. For the average standing-order debit per account, every account held in the district counts, including ones with no standing orders – those simply bring no debits.",Withdrawal transactions are those recorded with type = 'VYDAJ'; a standing order is a recurring payment order that debits the account.,
+239,test,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT 'Young cohort' AS cohort, ROUND(AVG(d.A11)) AS average_salary
+FROM client c
+JOIN disp dp ON dp.client_id = c.client_id
+JOIN account a ON a.account_id = dp.account_id
+JOIN district d ON d.district_id = a.district_id
+WHERE c.birth_date >= '1980-01-01'
+
+UNION ALL
+
+SELECT 'Old cohort' AS cohort, ROUND(AVG(d.A11)) AS average_salary
+FROM client c
+JOIN disp dp ON dp.client_id = c.client_id
+JOIN account a ON a.account_id = dp.account_id
+JOIN district d ON d.district_id = a.district_id
+WHERE c.birth_date <= '1919-12-31';","I'm studying how client age relates to branch location. For each of two client cohorts, I want the cohort label and the average salary across the districts where the branches holding that cohort's accounts are located, rounded to the nearest whole number. A client's cohort is based on birth date: born 1980 or later is the young cohort, born 1919 or earlier is the old cohort. Note the district of an account is the district of its branch, not the client's home district. Give me one row per cohort, young cohort first. Nothing else.",,
+249,test,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT d.forename || ' ' || d.surname AS full_name
+FROM results AS r
+JOIN drivers AS d ON d.driverId = r.driverId
+WHERE r.fastestLapTime IS NOT NULL
+  AND TRIM(r.fastestLapTime) <> ''
+ORDER BY CAST(substr(r.fastestLapTime, 1, instr(r.fastestLapTime, ':') - 1) AS INTEGER) * 60000
+       + CAST(substr(r.fastestLapTime, instr(r.fastestLapTime, ':') + 1, 2) AS INTEGER) * 1000
+       + CAST(substr(r.fastestLapTime, instr(r.fastestLapTime, '.') + 1) AS INTEGER)
+LIMIT 20;","Which 20 drivers recorded the shortest single lap times in Formula 1 races? Give their full names, shortest lap first.",,
+252,test,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT
+    d.forename,
+    d.surname,
+    d.url,
+    d.dob,
+    COUNT(q.q3) AS q3_times
+FROM drivers AS d
+LEFT JOIN qualifying AS q
+    ON q.driverId = d.driverId
+WHERE d.nationality = 'German'
+  AND d.dob >= '1971-01-01'
+  AND d.dob < '1986-01-01'
+GROUP BY d.driverId, d.forename, d.surname, d.url, d.dob
+ORDER BY q3_times DESC, d.dob ASC;","I'm writing a retrospective on German F1 drivers born between 1971 and 1985, and I'd like to quantify how often each of them reached the final part of qualifying. For every German driver born in 1971 through 1985 inclusive, over their entire career (every race on record), please give me their forename, surname, Wikipedia page link, date of birth, and the number of Q3 times they set. Sort the list from most Q3 times to fewest, and where two drivers have the same number, put the older one (by date of birth) first.",Q3 is the third and final part of the qualifying session that sets the starting grid; a driver's Q3 time is the lap time recorded for them in that part.,
+254,test,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT d.nationality
+FROM qualifying AS q
+JOIN races AS r ON r.raceId = q.raceId
+JOIN drivers AS d ON d.driverId = q.driverId
+WHERE r.year = 1995
+  AND r.name = 'Japanese Grand Prix'
+  AND q.q1 = (
+      SELECT MAX(q1)
+      FROM qualifying AS q2
+      JOIN races AS r2 ON r2.raceId = q2.raceId
+      WHERE r2.year = 1995
+        AND r2.name = 'Japanese Grand Prix'
+        AND q2.q1 IS NOT NULL
+  );","For qualifying at the 1995 Japanese Grand Prix, I need the nationality of the driver who set the slowest time in Q1. If two drivers tie for the slowest Q1 time, give me each of their nationalities. I only want the nationality value(s), nothing else.",,
+256,test,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT COUNT(*) AS count
+FROM qualifying AS di_grassi
+JOIN races AS race
+  ON race.raceId = di_grassi.raceId
+JOIN qualifying AS other
+  ON other.raceId = di_grassi.raceId
+WHERE race.year = 2010
+  AND di_grassi.driverId = 810
+  AND other.driverId <> di_grassi.driverId
+  AND di_grassi.position IS NOT NULL
+  AND other.position IS NOT NULL
+  AND di_grassi.position < other.position;","For the 2010 Formula 1 season, how many drivers did Lucas di Grassi qualify ahead of? I want a single number: the count of drivers he out-qualified over the whole season. By 'qualify ahead of' I mean recording a better qualifying position than that driver in the same race, with a lower position number being better. The 2010 season means the races held in the year 2010.",qualifying position: the starting slot a driver earns in the qualifying session before a race,
+299,test,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH per_event AS (
+    SELECT
+        e.event_id,
+        e.event_name,
+        SUM(b.spent) AS total_spending,
+        SUM(b.amount) AS total_budget,
+        SUM(b.spent) * 1.0 / NULLIF(SUM(b.amount), 0) AS spending_to_budget_ratio
+    FROM event AS e
+    JOIN budget AS b
+        ON b.link_to_event = e.event_id
+    WHERE e.status = 'Closed'
+    GROUP BY e.event_id, e.event_name
+)
+SELECT event_id, event_name, total_spending, total_budget, spending_to_budget_ratio
+FROM per_event
+WHERE spending_to_budget_ratio = (
+    SELECT MAX(spending_to_budget_ratio)
+    FROM per_event
+);",Which closed events are tied for the highest ratio of total spending to total budget amount?,,
+303,test,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH dept_majors AS (
+    SELECT department, major_id, major_name
+    FROM major
+    WHERE college = 'College of Humanities and Social Sciences'
+),
+major_counts AS (
+    SELECT
+        dm.department,
+        dm.major_id,
+        dm.major_name,
+        COUNT(m.member_id) AS member_count
+    FROM dept_majors AS dm
+    LEFT JOIN member AS m
+        ON m.link_to_major = dm.major_id
+    GROUP BY dm.department, dm.major_id, dm.major_name
+)
+SELECT
+    department,
+    GROUP_CONCAT(major_name, ', ') AS majors_offered,
+    GROUP_CONCAT(
+        CASE WHEN member_count > 0 THEN major_name END,
+        ', '
+    ) AS majors_held_by_members,
+    ROUND(AVG(member_count), 2) AS average_members_per_major
+FROM major_counts
+GROUP BY department
+ORDER BY department;","I'm reviewing our roster against the catalog and want to see how much of the College of Humanities and Social Sciences' coverage our members actually hold, department by department. For each department in that college, give me: the department's name, the majors it offers, the majors held by at least one of our members, and the average members per major it offers, rounded to two decimals. Membership is as currently listed in the member records, and count a department as belonging to the college when any of its majors sits in the college.",College of Humanities and Social Sciences: one of the colleges that houses departments offering majors.,
+304,test,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH events_2019 AS (
+    SELECT event_id, type
+    FROM event
+    WHERE event_date >= '2019-01-01'
+      AND event_date < '2020-01-01'
+),
+attendance_by_event AS (
+    SELECT link_to_event, COUNT(DISTINCT link_to_member) AS member_count
+    FROM attendance
+    GROUP BY link_to_event
+),
+budget_by_event AS (
+    SELECT link_to_event, SUM(amount) AS budgeted_amount
+    FROM budget
+    GROUP BY link_to_event
+)
+SELECT
+    e.type AS event_type,
+    SUM(COALESCE(a.member_count, 0)) AS members_attended,
+    SUM(COALESCE(b.budgeted_amount, 0)) AS total_budgeted_dollars
+FROM events_2019 AS e
+LEFT JOIN attendance_by_event AS a
+    ON a.link_to_event = e.event_id
+LEFT JOIN budget_by_event AS b
+    ON b.link_to_event = e.event_id
+GROUP BY e.type
+ORDER BY e.type;","I'm putting together our yearly report and need a breakdown of our 2019 events by event type. For each type of event we held in 2019, please give me: the event type, how many members attended that type's events during 2019, and the total amount budgeted for that type's events in dollars. A few notes: 2019 means the calendar year; the budgeted amount is the planned amount, not what was actually spent. If nothing was budgeted for a type's events, or no member attended them, just show zero. Please list one row per event type, in alphabetical order by event type.",,
+346,test,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT COUNT(*) AS count
+FROM superhero s
+JOIN alignment a ON a.id = s.alignment_id
+WHERE a.alignment NOT IN ('Good', 'Bad');",I'm writing an article about heroes who fall outside the classic good-versus-evil divide. How many superheroes in the database have an alignment that is neither good nor bad? Please give me just that count. Note that this should cover all superheroes in the database.,good: a superhero whose alignment is Good; bad: a superhero whose alignment is Bad; alignment: the moral category assigned to a superhero,
+353,test,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT ROUND(AVG(power_count), 2) AS avg_powers_per_hero
+FROM (
+  SELECT s.id, COUNT(hp.power_id) AS power_count
+  FROM superhero s
+  JOIN gender g ON g.id = s.gender_id
+    AND g.gender = 'Male'
+  JOIN race r ON r.id = s.race_id
+    AND r.race IN ('God', 'Eternal')
+  LEFT JOIN hero_power hp ON hp.hero_id = s.id
+  GROUP BY s.id
+);","Hey, following up on my count of the God / Eternal heroes – among those who are male, what's the average number of superpowers per hero? Just give me the average rounded to two decimal places.",A superpower is any power linked to a hero.,
+372,test,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT COUNT(DISTINCT hp.power_id) AS different_superpower_count
+FROM superhero AS h
+JOIN gender AS g ON g.id = h.gender_id
+JOIN hero_power AS hp ON hp.hero_id = h.id
+WHERE g.gender = 'Male'
+  AND h.weight_kg < 70
+  AND h.weight_kg IS NOT NULL;",I'm picking powers for a lightweight male hero archetype. How many different superpowers are held by at least one male superhero who weighs under 70 kilograms? Heroes whose weight isn't recorded shouldn't count as weighing under 70.,,
+373,test,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT c.colour
+FROM superhero AS s
+LEFT JOIN colour AS c ON c.id = s.hair_colour_id
+WHERE s.height_cm IS NOT NULL
+  AND s.height_cm <> 0
+  AND s.height_cm = (
+      SELECT MIN(height_cm)
+      FROM superhero
+      WHERE height_cm IS NOT NULL
+        AND height_cm <> 0
+  );","I'm putting together a trivia fact box on tiny heroes. Could you tell me the hair colour of the shortest human superhero? Please treat heroes with no recorded height as unmeasured rather than as being the shortest. I just need the colour, nothing else.",,
+388,test,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT COUNT(DISTINCT p.ID) AS patient_count
+FROM Patient AS p
+JOIN Laboratory AS l ON l.ID = p.ID
+WHERE p.Description IS NULL
+  AND l.CRP = '+';",How many distinct patients have at least one positive CRP laboratory result and no recorded patient description?,Plus-marked CRP results indicate positivity.,
+396,test,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH eligible AS (
+    SELECT
+        l.ID,
+        l.Date,
+        l.DNA,
+        CAST(l.DNA AS REAL) AS level
+    FROM Laboratory AS l
+    JOIN Patient AS p ON p.ID = l.ID
+    WHERE p.SEX = 'F'
+      AND p.Admission = '+'
+      AND l.DNA IS NOT NULL
+),
+ranked AS (
+    SELECT
+        ID,
+        Date,
+        DNA,
+        level,
+        MAX(level) OVER (PARTITION BY ID) AS max_level
+    FROM eligible
+)
+SELECT ID, Date, DNA
+FROM ranked
+WHERE level = max_level
+ORDER BY ID, Date;","I'm reviewing autoimmune antibody profiles in our thrombosis registry. Among the female patients who were admitted to the hospital as inpatients, I need to find the laboratory test record with the highest anti-DNA antibody level, for a case review. Please give me the patient ID, the laboratory test date of that record, and the anti-DNA antibody level reported in it - nothing else. Order the results by patient ID, and if several lab test records share the highest level, list each of them.",Anti-DNA antibody level means the anti-DNA test result recorded in the laboratory tests.,
+404,test,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT ROUND(
+    100.0 * SUM(CASE WHEN CAST(l.RNP AS INTEGER) > 64 THEN 1 ELSE 0 END)
+    / COUNT(*),
+    2
+) AS percentage
+FROM (
+    SELECT DISTINCT p.ID
+    FROM Patient p
+    WHERE p.SEX = 'F'
+      AND EXISTS (
+          SELECT 1
+          FROM Examination e
+          WHERE e.ID = p.ID
+            AND e.Thrombosis > 0
+      )
+) AS cohort
+JOIN Laboratory l ON l.ID = cohort.ID
+WHERE l.RNP IS NOT NULL;","I'm preparing a department audit on how often anti-ribonuclear protein testing comes back clearly elevated among the women in the thrombosis cohort. Among the women in the cohort, what percentage of those with an available anti-ribonuclear protein test result had a clearly elevated result? Please give me the percentage rounded to two decimal places on the 0-100 scale. Note: elevated means a titer strictly above 1:64. Patients never tested for anti-ribonuclear protein should be excluded from both the numerator and the denominator, while a negative reading counts as an available result and is never elevated.",Anti-ribonuclear protein is a serology test reported as a titer reading; a negative reading is a result of zero titer.,
+452,test,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"SELECT e.Symptoms, p.Diagnosis AS overall_diagnosis
+FROM Examination AS e
+JOIN Patient AS p ON p.ID = e.ID
+WHERE e.Diagnosis LIKE '%SLE%'
+  AND e.Diagnosis NOT LIKE '%SLE susp%'
+  AND e.Symptoms IS NOT NULL
+  AND TRIM(e.Symptoms) <> ''
+ORDER BY p.Birthday ASC, p.ID ASC, e.`Examination Date` DESC
+LIMIT 1;","I'm reviewing confirmed SLE cases for a study of neurologic involvement. Among patients whose examination lists SLE among the diagnosed diseases and who have a symptom recorded at such an examination, I need the case detail of the youngest such patient. Please send me the symptom recorded at that qualifying examination and that patient's overall diagnosis (their overall diagnosis, not the diagnosis written at the examination). If two patients share the same birth date, use the one with the smaller patient ID; and if that patient has more than one qualifying examination, use the most recent one.","SLE is systemic lupus erythematosus. A disease name followed by 'susp' means the disease was only suspected, not diagnosed.",
+479,test,SQL_result_mismatch_requires_semantic_review,incorrect_result,final_sql_ready,"WITH molecule_groups AS (
+  SELECT
+    m.molecule_id,
+    m.label,
+    CASE
+      WHEN COUNT(b.bond_id) > 0
+       AND SUM(CASE WHEN b.bond_type = '-' THEN 0 ELSE 1 END) = 0
+      THEN 'all_single'
+      ELSE 'other'
+    END AS saturation_group
+  FROM molecule AS m
+  LEFT JOIN bond AS b
+    ON b.molecule_id = m.molecule_id
+  GROUP BY m.molecule_id, m.label
+)
+SELECT
+  saturation_group,
+  SUM(CASE WHEN label = '+' THEN 1 ELSE 0 END)
+    - SUM(CASE WHEN label = '-' THEN 1 ELSE 0 END)
+      AS carcinogenic_minus_non_carcinogenic
+FROM molecule_groups
+GROUP BY saturation_group
+ORDER BY CASE saturation_group WHEN 'all_single' THEN 1 ELSE 2 END;","I want to know whether molecular saturation is associated with carcinogenicity in our compound library. Please report, for molecules in which every bond is a single bond: the number of carcinogenic molecules minus the number of non-carcinogenic molecules. And for all other molecules: the same difference (carcinogenic count minus non-carcinogenic count). Rules: label '+' means the molecule is carcinogenic; label '-' means non-carcinogenic; bond type '-' denotes a single bond; each molecule belongs to exactly one of the two groups.","In the labels, '+' indicates a carcinogenic molecule and '-' indicates a non-carcinogenic molecule; for bond types, '-' indicates a single bond.",

@@ -26,15 +26,40 @@ MAX_CONTEXT_TOKENS = 262_144
 MAX_OUTPUT_TOKENS = 16_384
 # Timeout for each NVIDIA HTTP model request, not the entire agent run.
 REQUEST_TIMEOUT = 300
-MAX_MODEL_CALLS = 20
-MAX_TOTAL_TOOL_CALLS = 20
-MAX_SQL_EXECUTIONS = 20
-RECURSION_LIMIT = 100
+MAX_MODEL_CALLS = 40
+MAX_TOTAL_TOOL_CALLS = 40
+MAX_SQL_EXECUTIONS = 40
+RECURSION_LIMIT = 200
 SHOW_TOOL_CALLS = True
 SHOW_TOOL_RESULTS = True
 SHOW_TOKEN_USAGE = True
 
 OUTPUT_FORMAT_VERSION = "final-sql-query-v2"
+
+# The original B0 system prompt is immutable for controlled comparisons.
+BASELINE_SYSTEM_PROMPT = (
+    "You are a BIRD Text-to-SQL agent. Query the provided SQLite database "
+    "using the custom read-only SQL tools. You can use Deep Agents' default "
+    "planning, virtual filesystem, and subagent features when they help. "
+    "Output only Final SQL Query: with SQL between two lines of triple double quotes; "
+    "avoid unnecessary tool calls."
+)
+PROMPT_VARIANTS = ("baseline", "generalized-v1")
+
+
+def system_prompt_for_variant(prompt_variant="baseline"):
+    """Return exact historical B0 prompt or an opt-in, versioned rule addendum."""
+    if prompt_variant == "baseline":
+        return BASELINE_SYSTEM_PROMPT
+    if prompt_variant == "generalized-v1":
+        addendum = (Path(__file__).resolve().parent / "prompts" / "generalized-v1.txt").read_text(
+            encoding="utf-8"
+        ).strip()
+        if not addendum:
+            raise ValueError("Empty generalized-v1 prompt addendum")
+        return BASELINE_SYSTEM_PROMPT + "\n\n" + addendum
+    raise ValueError(f"Unknown prompt variant: {prompt_variant!r}")
+
 
 def extract_final_sql(answer):
     """Parse a single explicitly delimited SQL statement; reject ambiguity."""
@@ -77,8 +102,10 @@ def make_prompt(question):
     )
 
 
-def make_agent(store, model=None):
-    """Add SQLite tools to the default Deep Agents harness."""
+def make_agent(store, model=None, prompt_variant="baseline", *,
+               model_call_limit=MAX_MODEL_CALLS, tool_call_limit=MAX_TOTAL_TOOL_CALLS,
+               sql_call_limit=MAX_SQL_EXECUTIONS):
+    """Add SQLite tools; optional per-run limits preserve standalone B0 defaults."""
     from deepagents import create_deep_agent
     from langchain.agents.middleware import ModelCallLimitMiddleware, ToolCallLimitMiddleware
     from langchain_core.tools import tool
@@ -106,21 +133,72 @@ def make_agent(store, model=None):
 
     return create_deep_agent(
         model=model, tools=[list_tables, inspect_table, execute_sql],
-        system_prompt=(
-            "You are a BIRD Text-to-SQL agent. Query the provided SQLite database "
-            "using the custom read-only SQL tools. You can use Deep Agents' default "
-            "planning, virtual filesystem, and subagent features when they help. "
-            "Output only Final SQL Query: with SQL between two lines of triple double quotes; "
-            "avoid unnecessary tool calls."
-        ),
+        system_prompt=system_prompt_for_variant(prompt_variant),
         middleware=[
-            ModelCallLimitMiddleware(run_limit=MAX_MODEL_CALLS, exit_behavior="error"),
-            ToolCallLimitMiddleware(run_limit=MAX_TOTAL_TOOL_CALLS, exit_behavior="error"),
+            ModelCallLimitMiddleware(run_limit=model_call_limit, exit_behavior="error"),
+            ToolCallLimitMiddleware(run_limit=tool_call_limit, exit_behavior="error"),
             ToolCallLimitMiddleware(
-                tool_name="execute_sql", run_limit=MAX_SQL_EXECUTIONS, exit_behavior="error"
+                tool_name="execute_sql", run_limit=sql_call_limit, exit_behavior="error"
             ),
         ],
     )
+
+
+def _observed_model_metadata(message):
+    """Read optional usage/settings across providers without inventing defaults."""
+    def obj(value):
+        return value if isinstance(value, dict) else {}
+
+    def nested(value, *keys):
+        for key in keys:
+            value = obj(value).get(key)
+        return value
+
+    def count(*candidates):
+        return next((value for value in candidates
+                     if type(value) is int and value >= 0), None)
+
+    def label(*candidates):
+        return next((value for value in candidates
+                     if isinstance(value, str) and 0 < len(value) <= 64), None)
+
+    usage = obj(message.usage_metadata)
+    meta = obj(message.response_metadata)
+    extra = obj(message.additional_kwargs)
+    provider_usage = obj(meta.get("token_usage"))
+    input_detail = obj(usage.get("input_token_details"))
+    output_detail = obj(usage.get("output_token_details"))
+
+    return {
+        "input_tokens": count(
+            usage.get("input_tokens"), provider_usage.get("input_tokens"),
+            provider_usage.get("prompt_tokens")),
+        "output_tokens": count(
+            usage.get("output_tokens"), provider_usage.get("output_tokens"),
+            provider_usage.get("completion_tokens")),
+        "total_tokens": count(
+            usage.get("total_tokens"), meta.get("total_tokens"),
+            provider_usage.get("total_tokens")),
+        "cached_input_tokens": count(
+            input_detail.get("cache_read"), input_detail.get("cached_tokens"),
+            meta.get("cached_input_tokens"),
+            nested(provider_usage, "input_tokens_details", "cached_tokens"),
+            nested(provider_usage, "prompt_tokens_details", "cached_tokens")),
+        "reasoning_tokens": count(
+            output_detail.get("reasoning"), output_detail.get("reasoning_tokens"),
+            meta.get("reasoning_tokens"),
+            nested(provider_usage, "output_tokens_details", "reasoning_tokens"),
+            nested(provider_usage, "completion_tokens_details", "reasoning_tokens")),
+        "reasoning_effort": label(
+            meta.get("reasoning_effort"), nested(meta, "reasoning", "effort"),
+            extra.get("reasoning_effort"), nested(extra, "reasoning", "effort")),
+        "thinking_level": label(
+            meta.get("thinking_level"), nested(meta, "thinking", "level"),
+            extra.get("thinking_level"), nested(extra, "thinking", "level")),
+        "reasoning_mode": label(
+            meta.get("reasoning_mode"), nested(meta, "reasoning", "mode"),
+            extra.get("reasoning_mode"), nested(extra, "reasoning", "mode")),
+    }
 
 
 def run_one(question, agent, log=print, trace_events=None):
@@ -132,7 +210,15 @@ def run_one(question, agent, log=print, trace_events=None):
         "model": MODEL, "model_calls": 0, "tool_calls": 0, "sql_calls": 0,
         "sql_success_calls": 0, "sql_error_calls": 0, "sql_truncated_calls": 0,
         "agent_sql_execution_ms": 0.0, "sql_execution_observed": False,
-        "input_tokens": 0, "output_tokens": 0, "usage_observed": False,
+        "input_tokens": None, "output_tokens": None, "total_tokens": None,
+        "cached_input_tokens": None, "reasoning_tokens": None,
+        "usage_observed": False,
+        "input_tokens_observed_calls": 0, "output_tokens_observed_calls": 0,
+        "total_tokens_observed_calls": 0,
+        "cached_input_tokens_observed_calls": 0,
+        "reasoning_tokens_observed_calls": 0,
+        "reasoning_effort": None, "thinking_level": None, "reasoning_mode": None,
+        "reasoning_efforts": [], "thinking_levels": [], "reasoning_modes": [],
         "final_sql_observed": None, "final_sql": None,
         "graph_completed": False, "stop_reason": None, "error": None,
         "seconds": None,
@@ -163,17 +249,28 @@ def run_one(question, agent, log=print, trace_events=None):
             for msg in messages[seen:]:
                 if isinstance(msg, AIMessage):
                     report["model_calls"] += 1
-                    usage = msg.usage_metadata or {}
-                    if usage:
-                        report["usage_observed"] = True
-                        report["input_tokens"] += usage.get("input_tokens", 0)
-                        report["output_tokens"] += usage.get("output_tokens", 0)
+                    observed = _observed_model_metadata(msg)
+                    for key in ("input_tokens", "output_tokens", "total_tokens",
+                                "cached_input_tokens", "reasoning_tokens"):
+                        value = observed[key]
+                        if value is not None:
+                            report[key] = (report[key] or 0) + value
+                            report[key + "_observed_calls"] += 1
+                            report["usage_observed"] = True
+                    for key, plural in (("reasoning_effort", "reasoning_efforts"),
+                                        ("thinking_level", "thinking_levels"),
+                                        ("reasoning_mode", "reasoning_modes")):
+                        value = observed[key]
+                        if value is not None and value not in report[plural]:
+                            report[plural].append(value)
+                        report[key] = report[plural][0] if len(report[plural]) == 1 else None
                     finish = (msg.response_metadata or {}).get("finish_reason")
                     emit("model", model_call=report["model_calls"], finish=finish,
-                         input_tokens=usage.get("input_tokens"), output_tokens=usage.get("output_tokens"),
+                         **observed,
                          content=bounded(msg.content) if msg.content else None)
                     if SHOW_TOKEN_USAGE:
-                        log(f"MODEL #{report['model_calls']} usage={usage or 'unavailable'} "
+                        log(f"MODEL #{report['model_calls']} usage="
+                            f"{msg.usage_metadata or 'unavailable'} "
                             f"finish={finish or 'unavailable'}")
                     for call in msg.tool_calls or []:
                         name = call.get("name", "")

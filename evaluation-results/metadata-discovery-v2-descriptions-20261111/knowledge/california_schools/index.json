@@ -1,0 +1,1520 @@
+{
+  "n_015e82f0a29068638147a05f": {
+    "concept_id": "OpenDate",
+    "keywords": [
+      "open date",
+      "opening date",
+      "schools",
+      "directory",
+      "date"
+    ],
+    "note_id": "n_015e82f0a29068638147a05f",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "6a1057e8ad40e535997c98e36f3ce6015c9b26a6df394f38374dfb0e19401623",
+    "source_refs": [
+      "schema:schools.OpenDate"
+    ],
+    "status": "provisional",
+    "summary": "Nullable DATE field recording an opening date for a directory record; calendar-year filtering uses the date value.",
+    "table_name": "schools",
+    "title": "School opening date"
+  },
+  "n_0432fcdb53c9f503b5edd403": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "frpm",
+      "enrollment",
+      "grade span",
+      "meal eligibility",
+      "school",
+      "cdscode"
+    ],
+    "note_id": "n_0432fcdb53c9f503b5edd403",
+    "note_type": "table",
+    "revision": 10,
+    "sha256": "bb8776f5b42099b2c198af332a1d30d7e10012ba038ca3e0b8d4593997bfe077",
+    "source_refs": [
+      "schema:frpm",
+      "schema:frpm.CDSCode",
+      "schema:frpm.`Academic Year`",
+      "values:frpm CDSCode and Academic Year counts",
+      "description:frpm.csv:22"
+    ],
+    "status": "provisional",
+    "summary": "School-linked enrollment and meal eligibility extract; one row per CDSCode by declared key, observed records labeled 2014-2015.",
+    "table_name": "frpm",
+    "title": "FRPM and enrollment records"
+  },
+  "n_04721a12c5ac07e419cecaf6": {
+    "concept_id": "NSLP Provision Status",
+    "keywords": [
+      "nslp",
+      "provision status",
+      "frpm",
+      "meal program"
+    ],
+    "note_id": "n_04721a12c5ac07e419cecaf6",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "7c40fbdab89eb3ac02584348a29243752ba473014af013282c155d034b37a3b8",
+    "source_refs": [
+      "schema:frpm.`NSLP Provision Status`",
+      "values:frpm.`NSLP Provision Status` grouped distinct values"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT FRPM field recording NSLP status; observed labels include Provision 2 and distinct breakfast/lunch Provision 2 variants.",
+    "table_name": "frpm",
+    "title": "NSLP provision status"
+  },
+  "n_06ca058185495e8e0d408999": {
+    "concept_id": "City",
+    "keywords": [
+      "city",
+      "physical location",
+      "schools",
+      "directory",
+      "address"
+    ],
+    "note_id": "n_06ca058185495e8e0d408999",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "5d14fe7394047b8b6382b7d0328e3074c2b375049a1fccb5377f64d85a104d81",
+    "source_refs": [
+      "schema:schools.City",
+      "description:schools.csv:10"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT City field; schools.csv metadata identifies it as the city of the school's physical location, distinct from MailCity.",
+    "table_name": "schools",
+    "title": "Physical-location city field"
+  },
+  "n_0ba96bdf9bd1d3d3a729840b": {
+    "concept_id": "NumGE1500",
+    "keywords": [
+      "numge1500",
+      "sat",
+      "test takers",
+      "score threshold",
+      "1500"
+    ],
+    "note_id": "n_0ba96bdf9bd1d3d3a729840b",
+    "note_type": "column",
+    "revision": 4,
+    "sha256": "1a3b7c2cad4b7537ef0653d96361011dd13c68e682feb64055f41c4e20bc4410",
+    "source_refs": [
+      "schema:satscores.NumGE1500",
+      "schema:satscores",
+      "description:satscores.csv:11"
+    ],
+    "status": "provisional",
+    "summary": "Nullable INTEGER count of SAT takers with total score >=1500 per source description; positive count means at least one qualifying taker.",
+    "table_name": "satscores",
+    "title": "SAT test takers scoring at least 1500"
+  },
+  "n_0c8e7f99b08044f8cbb646d7": {
+    "concept_id": "AvgScrRead",
+    "keywords": [
+      "sat",
+      "reading",
+      "average score",
+      "component"
+    ],
+    "note_id": "n_0c8e7f99b08044f8cbb646d7",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "8eb9c088ac3551d0dc023cb8a11fb896a1e0cdbac1f996d4bfde3046c62f26f0",
+    "source_refs": [
+      "schema:satscores.AvgScrRead",
+      "description:satscores.csv:8"
+    ],
+    "status": "provisional",
+    "summary": "Nullable INTEGER reported reading average; source documents it as an average component, but not that it sums into a SAT total.",
+    "table_name": "satscores",
+    "title": "Average SAT reading score"
+  },
+  "n_0d8739e3a73a0c39ce73f994": {
+    "concept_id": "School Name",
+    "keywords": [
+      "frpm",
+      "school name",
+      "cdscode",
+      "enrollment"
+    ],
+    "note_id": "n_0d8739e3a73a0c39ce73f994",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "da9a907c3e42f6e74f28593a15f4abaef0e9eae8da1783e5bdabdc45229c4f2b",
+    "source_refs": [
+      "schema:frpm.`School Name`",
+      "values:frpm linked state-special-school name comparison"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT school-name field in the FRPM extract; matches school-directory names for observed linked state-special-school records.",
+    "table_name": "frpm",
+    "title": "FRPM school name"
+  },
+  "n_11313c341f5864f49eefc54a": {
+    "concept_id": "Enrollment (K-12)",
+    "keywords": [
+      "enrollment",
+      "k-12",
+      "frpm",
+      "grade span",
+      "school year"
+    ],
+    "note_id": "n_11313c341f5864f49eefc54a",
+    "note_type": "column",
+    "revision": 5,
+    "sha256": "3368beaaa8ae148660107be3061f9db7693abdc2d83cb7ff721cae5283b32fca",
+    "source_refs": [
+      "schema:frpm.`Enrollment (K-12)`",
+      "description:frpm.csv:19"
+    ],
+    "status": "provisional",
+    "summary": "Nullable REAL enrollment field in FRPM; source description defines K-12 as grades 1 through 12; counting conventions beyond that are undocumented.",
+    "table_name": "frpm",
+    "title": "K-12 enrollment"
+  },
+  "n_11b988972d80d03da5554b96": {
+    "concept_id": "ClosedDate",
+    "keywords": [
+      "closed date",
+      "closing date",
+      "school directory",
+      "status"
+    ],
+    "note_id": "n_11b988972d80d03da5554b96",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "4f2bc5a773eaff69f5bdaddfcff295ec543e68e4c18f9f8086e6c18d5a8fcb4e",
+    "source_refs": [
+      "schema:schools.ClosedDate"
+    ],
+    "status": "provisional",
+    "summary": "Nullable DATE field on directory records for a closing date; detailed coding and coverage are unverified.",
+    "table_name": "schools",
+    "title": "School closing date"
+  },
+  "n_16c19218c9bb762442a66f12": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "schools",
+      "directory",
+      "cdscode",
+      "mailing address",
+      "status",
+      "dates",
+      "charter",
+      "organization"
+    ],
+    "note_id": "n_16c19218c9bb762442a66f12",
+    "note_type": "table",
+    "revision": 11,
+    "sha256": "bfd6d2112f239eab8990d67bff17020b940f253ccc524d19c75b6f7673b06ce7",
+    "source_refs": [
+      "schema:schools",
+      "schema:schools.CDSCode",
+      "schema:frpm.CDSCode",
+      "schema:satscores.cds"
+    ],
+    "status": "provisional",
+    "summary": "California school directory keyed by CDSCode, with school identity, physical/mailing contact, dates, status and classification fields.",
+    "table_name": "schools",
+    "title": "School directory records"
+  },
+  "n_1f644677e4b6c7914db78e1f": {
+    "concept_id": "Free Meal Count (K-12)",
+    "keywords": [
+      "frpm",
+      "k-12",
+      "free meal count",
+      "enrollment",
+      "eligible rate"
+    ],
+    "note_id": "n_1f644677e4b6c7914db78e1f",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "a993a0947c6e841bdc4a9093b2dc67d637d75587c03b1c3f5a8972755e9b5690",
+    "source_refs": [
+      "schema:frpm.`Free Meal Count (K-12)`",
+      "description:frpm.csv:20"
+    ],
+    "status": "provisional",
+    "summary": "Nullable REAL count of free meals/eligible students for K-12 as labeled; source description states rate is count divided by K-12 enrollment.",
+    "table_name": "frpm",
+    "title": "K-12 free meal count"
+  },
+  "n_22cb0999d696052d904fe548": {
+    "concept_id": "State",
+    "keywords": [
+      "state",
+      "physical location",
+      "schools",
+      "directory",
+      "address"
+    ],
+    "note_id": "n_22cb0999d696052d904fe548",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "0f7ab2f4b0943304bd5260b65bc28165f5c28e1a92040ca454e08ca1a307ce55",
+    "source_refs": [
+      "schema:schools.State",
+      "description:schools.csv:12"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT State field; schools.csv metadata identifies it as the state of the school's physical location, separate from MailState.",
+    "table_name": "schools",
+    "title": "Physical-location state field"
+  },
+  "n_270c7dc0db0bb9f7805832f5": {
+    "concept_id": "District",
+    "keywords": [
+      "district",
+      "name",
+      "schools",
+      "directory"
+    ],
+    "note_id": "n_270c7dc0db0bb9f7805832f5",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "348f5728493acfcb93f7e18ad575f2ff480f517b27694f48e85beeafa5e68450",
+    "source_refs": [
+      "schema:schools.District"
+    ],
+    "status": "provisional",
+    "summary": "Required TEXT field containing the district name associated with a school directory record; naming conventions are unverified.",
+    "table_name": "schools",
+    "title": "Directory district name"
+  },
+  "n_286203abc56e633c8f100cf8": {
+    "concept_id": "CDSCode",
+    "keywords": [
+      "cdscode",
+      "school identifier",
+      "directory",
+      "primary key"
+    ],
+    "note_id": "n_286203abc56e633c8f100cf8",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "0f492b4b7778d68a0f806730008b23038c5110973c114cb37c14b689b55a930d",
+    "source_refs": [
+      "schema:schools.CDSCode",
+      "values:schools.CDSCode exact match 01612590136051"
+    ],
+    "status": "provisional",
+    "summary": "Required TEXT primary-key identifier for a school directory record; a leading-zero form was observed for the matching school record.",
+    "table_name": "schools",
+    "title": "School CDS identification code"
+  },
+  "n_2b24f1fb7489307523881263": {
+    "concept_id": "School",
+    "keywords": [
+      "school name",
+      "directory",
+      "schools",
+      "nullable"
+    ],
+    "note_id": "n_2b24f1fb7489307523881263",
+    "note_type": "column",
+    "revision": 8,
+    "sha256": "9fac7f01c2f03edfae5ac69742376224207b6bcafc6f16e775f03fddc2db91ee",
+    "source_refs": [
+      "schema:schools.School",
+      "description:schools.csv:8"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT directory field described in source metadata as School Name; contains the listed school name.",
+    "table_name": "schools",
+    "title": "School listed name"
+  },
+  "n_2bad806db0d84f500cd60caf": {
+    "concept_id": "cds",
+    "keywords": [
+      "cds",
+      "school identifier",
+      "sat",
+      "foreign key",
+      "join"
+    ],
+    "note_id": "n_2bad806db0d84f500cd60caf",
+    "note_type": "column",
+    "revision": 5,
+    "sha256": "3e67a5b983c4760311140e09235d5b68589f69b76eafcd5dfddd5ebfd25ef35c",
+    "source_refs": [
+      "schema:satscores.cds",
+      "schema:schools.CDSCode",
+      "schema:frpm.CDSCode",
+      "values:satscores.cds matched frpm.CDSCode"
+    ],
+    "status": "provisional",
+    "summary": "Required TEXT primary key in SAT records and declared foreign key referencing schools.CDSCode; joins the FRPM school identifier via schools.CDSCode.",
+    "table_name": "satscores",
+    "title": "CDS school identifier"
+  },
+  "n_30f3d7da09d15ee20aac6fa7": {
+    "concept_id": "FRPM Count (Ages 5-17)",
+    "keywords": [
+      "frpm",
+      "ages 5-17",
+      "count",
+      "eligible",
+      "meals"
+    ],
+    "note_id": "n_30f3d7da09d15ee20aac6fa7",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "9897a814e80ca5abe58ea832928ceaa5641ffff4cc224699036392cba9f07abe",
+    "source_refs": [
+      "schema:frpm.`FRPM Count (Ages 5-17)`",
+      "description:frpm.csv:25"
+    ],
+    "status": "provisional",
+    "summary": "Nullable REAL measure labeled FRPM Count (Ages 5-17); defined as free or reduced-price meal count by the source description.",
+    "table_name": "frpm",
+    "title": "Ages 5-17 FRPM count"
+  },
+  "n_3123f5700e411592a166d061": {
+    "concept_id": "Academic Year",
+    "keywords": [
+      "academic year",
+      "frpm",
+      "year",
+      "2014-2015"
+    ],
+    "note_id": "n_3123f5700e411592a166d061",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "7432490a2f9c44da7803c6cebee39c58c4992a72388aac911efae34abf9088f4",
+    "source_refs": [
+      "schema:frpm.`Academic Year`",
+      "values:frpm Academic Year counts"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT academic-year label; observed extract records are all labeled 2014-2015.",
+    "table_name": "frpm",
+    "title": "FRPM academic year"
+  },
+  "n_4131c3449f01eee726e5a9e2": {
+    "concept_id": "AdmFName2",
+    "keywords": [
+      "administrator",
+      "second listed",
+      "first name",
+      "schools"
+    ],
+    "note_id": "n_4131c3449f01eee726e5a9e2",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "4be1e6f19df15753dc67aec9b21731f8e451f737023d26482e1f5601a25d9a9e",
+    "source_refs": [
+      "schema:schools.AdmFName2",
+      "description:schools.csv:41"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT field holding the first name of a second listed superintendent or principal, per schools field description.",
+    "table_name": "schools",
+    "title": "Second listed administrator first name"
+  },
+  "n_473f9c83e40f2d32cd087c7f": {
+    "concept_id": "Latitude",
+    "keywords": [
+      "latitude",
+      "location",
+      "degrees",
+      "schools",
+      "coordinates"
+    ],
+    "note_id": "n_473f9c83e40f2d32cd087c7f",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "55e1761cf84714002c4e0011ab92d0d6927d5ac88922cb3beeb3595db807ddb4",
+    "source_refs": [
+      "schema:schools.Latitude",
+      "description:schools.csv:38"
+    ],
+    "status": "provisional",
+    "summary": "Nullable REAL latitude coordinate for school, district, or administrative authority location, in degrees north/south of equator.",
+    "table_name": "schools",
+    "title": "School directory latitude"
+  },
+  "n_494d7832938aefe7d6e31409": {
+    "concept_id": "AdmEmail1",
+    "keywords": [
+      "administrator email",
+      "superintendent",
+      "principal",
+      "schools"
+    ],
+    "note_id": "n_494d7832938aefe7d6e31409",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "db64e6e9bf7d86b4410c60a9fca355212e4dfcabf8e9869394c584e1083e20dd",
+    "source_refs": [
+      "schema:schools.AdmEmail1",
+      "schema:schools.AdmEmail2",
+      "schema:schools.AdmEmail3",
+      "description:schools.csv:40"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT email field for first-listed superintendent/principal per source metadata; role mapping and preferred administrator field are unverified.",
+    "table_name": "schools",
+    "title": "First listed administrator email"
+  },
+  "n_4de072ea81bc2099eb7f1079": {
+    "concept_id": "sname",
+    "keywords": [
+      "sname",
+      "school name",
+      "sat",
+      "score"
+    ],
+    "note_id": "n_4de072ea81bc2099eb7f1079",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "abc41f5bf9168f05e37e355b7ef1a7ba1cabcc157eb47949daa6b091ba02d9f1",
+    "source_refs": [
+      "schema:satscores.sname",
+      "description:satscores.csv:3"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT field described as school name in the SAT source; relationship to schools.School is not verified.",
+    "table_name": "satscores",
+    "title": "SAT record school name"
+  },
+  "n_5085e7a8844d646b265b7da0": {
+    "concept_id": "Charter School (Y/N)",
+    "keywords": [
+      "frpm",
+      "charter",
+      "indicator",
+      "school classification"
+    ],
+    "note_id": "n_5085e7a8844d646b265b7da0",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "84b52b4ca756d0f56fdae692a0069ed58d76f9640f4ac89c367d11f3ea653d94",
+    "source_refs": [
+      "schema:frpm.`Charter School (Y/N)`",
+      "description:frpm.csv:13",
+      "values:frpm.`Charter School (Y/N)`"
+    ],
+    "status": "provisional",
+    "summary": "Nullable INTEGER charter indicator in FRPM records; description maps 0 to N and 1 to Y, with null observed separately.",
+    "table_name": "frpm",
+    "title": "FRPM charter school indicator"
+  },
+  "n_51f60e51e4cf3f53464ad874": {
+    "concept_id": "AvgScrWrite",
+    "keywords": [
+      "sat",
+      "writing",
+      "average score",
+      "component"
+    ],
+    "note_id": "n_51f60e51e4cf3f53464ad874",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "ec5135dd376b42f88fbb94e689a82de819f32bd553de73a3378cecd7d03dd662",
+    "source_refs": [
+      "schema:satscores.AvgScrWrite",
+      "description:satscores.csv:10"
+    ],
+    "status": "provisional",
+    "summary": "Nullable INTEGER reported writing average; source documents it as a component average, not a source-defined part of a verified total.",
+    "table_name": "satscores",
+    "title": "Average SAT writing score"
+  },
+  "n_53ddff6e5c5e46608b654ebf": {
+    "concept_id": "NCESDist",
+    "keywords": [
+      "ncesdist",
+      "nces",
+      "district identifier",
+      "schools directory"
+    ],
+    "note_id": "n_53ddff6e5c5e46608b654ebf",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "fc9229e98d0d2f57293f6a087a424b27e49213f9c186d66398d5a98b8a866232",
+    "source_refs": [
+      "schema:schools.NCESDist",
+      "values:schools.NCESDist observed values"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT district-level NCES identifier field in school directory; 12-digit district IDs are used in observed data.",
+    "table_name": "schools",
+    "title": "NCES district identification number"
+  },
+  "n_5b9ac9553523b0e8cf727c58": {
+    "concept_id": "Phone",
+    "keywords": [
+      "schools",
+      "phone",
+      "contact",
+      "directory"
+    ],
+    "note_id": "n_5b9ac9553523b0e8cf727c58",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "4246f6ef123caba796eec2266e25f0a13fe8a6cb9ce72813882817d1a23e0205",
+    "source_refs": [
+      "schema:schools.Phone"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT contact phone field for a school directory record; formatting and extension conventions not verified.",
+    "table_name": "schools",
+    "title": "School directory phone number"
+  },
+  "n_5eb83ab5a6c8e9aedd2b4c3e": {
+    "concept_id": "Charter Funding Type",
+    "keywords": [
+      "charter funding type",
+      "funding",
+      "frpm",
+      "direct",
+      "local"
+    ],
+    "note_id": "n_5eb83ab5a6c8e9aedd2b4c3e",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "c733e914f62ee9f15a94c02704f5ceb4c494d091150ed9e3bdeb8c4eab4dbe28",
+    "source_refs": [
+      "schema:frpm.`Charter Funding Type`",
+      "values:frpm.`Charter Funding Type`"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT FRPM charter funding label; observed labels include Directly funded, Locally funded and Not in CS funding model.",
+    "table_name": "frpm",
+    "title": "Charter funding type"
+  },
+  "n_5ec80fe8ae359b735735c6b6": {
+    "concept_id": "SOCType",
+    "keywords": [
+      "soctype",
+      "school type",
+      "middle school",
+      "junior high",
+      "classification"
+    ],
+    "note_id": "n_5ec80fe8ae359b735735c6b6",
+    "note_type": "column",
+    "revision": 5,
+    "sha256": "550d04210001e34a3daa93bb7a49302fdc29a8609c9b8b788379036305773835",
+    "source_refs": [
+      "schema:schools.SOCType",
+      "description:schools.csv:29",
+      "values:schools distinct SOCType"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT field for school type; observed middle-grade categories include intermediate/middle schools and junior high schools.",
+    "table_name": "schools",
+    "title": "School operational category"
+  },
+  "n_652d6ea997e91b63db22a3dd": {
+    "concept_id": "AdmFName1",
+    "keywords": [
+      "administrator",
+      "superintendent",
+      "principal",
+      "first name",
+      "schools"
+    ],
+    "note_id": "n_652d6ea997e91b63db22a3dd",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "d8a79655da086d82bcc9fea692774c56d3dc7d1973f11e3d0a951ea550c73737",
+    "source_refs": [
+      "schema:schools.AdmFName1",
+      "description:schools.csv:40"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT first-name field for superintendent or principal; active/pending district and school records may show applicable administrator information.",
+    "table_name": "schools",
+    "title": "First listed administrator first name"
+  },
+  "n_6aba4762c49a9143769849f1": {
+    "concept_id": "AdmLName1",
+    "keywords": [
+      "administrator",
+      "last name",
+      "first listed",
+      "schools"
+    ],
+    "note_id": "n_6aba4762c49a9143769849f1",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "8ee632343effc7671c5a1eca02ad4572a33ee65248e5f0563d592107de8ce07a",
+    "source_refs": [
+      "schema:schools.AdmLName1",
+      "description:schools.csv:41"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT field for the last name of the first listed superintendent or principal, per source description.",
+    "table_name": "schools",
+    "title": "First listed administrator last name"
+  },
+  "n_6ad677d59c05513c7a2e6d91": {
+    "concept_id": "CharterNum",
+    "keywords": [
+      "charter number",
+      "charternum",
+      "schools",
+      "charter"
+    ],
+    "note_id": "n_6ad677d59c05513c7a2e6d91",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "93a1ed75400aac8ddcbb6cee3eee389fa01c97bc0abf8def771d2e635f32125a",
+    "source_refs": [
+      "schema:schools.CharterNum"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT field associated with a school directory record's charter number; detailed semantics are not independently verified.",
+    "table_name": "schools",
+    "title": "Charter number"
+  },
+  "n_6c5ac6a619a43cade853da9e": {
+    "concept_id": "table_definition",
+    "keywords": [
+      "satscores",
+      "sat",
+      "cds",
+      "school",
+      "district",
+      "rtype",
+      "test takers",
+      "score"
+    ],
+    "note_id": "n_6c5ac6a619a43cade853da9e",
+    "note_type": "table",
+    "revision": 7,
+    "sha256": "d667f8054aeb3499ab8f44e7c69a10db2dd5d1c136293cf5df9ea65eb4000c76",
+    "source_refs": [
+      "schema:satscores",
+      "schema:satscores.cds",
+      "schema:satscores.rtype",
+      "schema:satscores.NumGE1500",
+      "values:satscores rtype counts"
+    ],
+    "status": "provisional",
+    "summary": "SAT score summaries keyed by CDS; includes school and district-type entries, score counts/averages, and required rtype classification.",
+    "table_name": "satscores",
+    "title": "School SAT score records"
+  },
+  "n_831509b78a7b3b352057cf18": {
+    "concept_id": "Percent (%) Eligible Free (K-12)",
+    "keywords": [
+      "frpm",
+      "k-12",
+      "free meal",
+      "eligibility",
+      "percentage",
+      "rate"
+    ],
+    "note_id": "n_831509b78a7b3b352057cf18",
+    "note_type": "column",
+    "revision": 4,
+    "sha256": "52696a989a3f647503b40603fcead97d3652e464bec7c99a82b06d1df5552e7d",
+    "source_refs": [
+      "schema:frpm.`Percent (%) Eligible Free (K-12)`",
+      "description:frpm.csv:20",
+      "values:frpm `Percent (%) Eligible Free (K-12)` min/max/count, 2014-2015 extract"
+    ],
+    "status": "provisional",
+    "summary": "Nullable REAL rate defined as free K-12 meal count divided by K-12 enrollment; observed fractional values through 1.0 in the 2014-2015 extract.",
+    "table_name": "frpm",
+    "title": "K-12 eligible free-meal percentage"
+  },
+  "n_864efb9aad086074e45930e0": {
+    "concept_id": "FRPM Count (K-12)",
+    "keywords": [
+      "frpm",
+      "k-12",
+      "count",
+      "free",
+      "reduced price meal"
+    ],
+    "note_id": "n_864efb9aad086074e45930e0",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "99c02d99fb81daefaae362613a1d7f6aec722a18c58384dceb00264c920bcb40",
+    "source_refs": [
+      "schema:frpm.`FRPM Count (K-12)`",
+      "description:frpm.csv:22"
+    ],
+    "status": "provisional",
+    "summary": "Nullable REAL K-12 meal count; source describes FRPM count as Free or Reduced Price Meal count and uses it in the eligible-rate ratio.",
+    "table_name": "frpm",
+    "title": "K-12 FRPM count"
+  },
+  "n_873796db8b060c7f0c5aaa40": {
+    "concept_id": "NumTstTakr",
+    "keywords": [
+      "numtsttakr",
+      "sat",
+      "test takers",
+      "count"
+    ],
+    "note_id": "n_873796db8b060c7f0c5aaa40",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "4b83c8fa14d29b0b198223f54238b009352fee39df3342bf96f1471769a4cba2",
+    "source_refs": [
+      "schema:satscores.NumTstTakr",
+      "description:satscores.csv:7"
+    ],
+    "status": "provisional",
+    "summary": "Required INTEGER count of test takers in a school SAT record, per source description.",
+    "table_name": "satscores",
+    "title": "SAT test taker count"
+  },
+  "n_8870687401eba8dbba636d9f": {
+    "concept_id": "GSserved",
+    "keywords": [
+      "schools",
+      "gsserved",
+      "grades served",
+      "grade span",
+      "calpads",
+      "highest grade"
+    ],
+    "note_id": "n_8870687401eba8dbba636d9f",
+    "note_type": "column",
+    "revision": 6,
+    "sha256": "8be7cc69689cbcce294fcb5f5596caa03419fc0c2e5fd34d5fd13d6b22c2cacb",
+    "source_refs": [
+      "schema:schools.GSserved",
+      "description:schools.csv:35",
+      "values:schools.GSserved observed formats",
+      "values:schools GSserved versus frpm High Grade joined comparison"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT enrollment grade range from CALPADS Fall 1; observed hyphenated ranges include K-6, 1-8 and 7-9, with occasional missing values.",
+    "table_name": "schools",
+    "title": "Grade span served"
+  },
+  "n_8b444868e5916591e0aadc55": {
+    "concept_id": "Magnet",
+    "keywords": [
+      "magnet",
+      "school",
+      "program",
+      "indicator"
+    ],
+    "note_id": "n_8b444868e5916591e0aadc55",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "3d5ef88ed40a3ba0272cdebc7df36f5e8ec6e6dd121f9c7acff6a145bbb3a01a",
+    "source_refs": [
+      "schema:schools.Magnet",
+      "description:schools.csv:37",
+      "values:schools.Magnet grouped counts"
+    ],
+    "status": "provisional",
+    "summary": "Nullable INTEGER field; source description codes 1 for magnet school and/or program, 0 for neither; NULL is unclassified/not verified.",
+    "table_name": "schools",
+    "title": "Magnet school and/or program indicator"
+  },
+  "n_8e45f9aca1d7027881d8d982": {
+    "concept_id": "rtype",
+    "keywords": [
+      "rtype",
+      "sat",
+      "record type",
+      "school",
+      "district"
+    ],
+    "note_id": "n_8e45f9aca1d7027881d8d982",
+    "note_type": "column",
+    "revision": 7,
+    "sha256": "4be09c525748b53aa0fdeb475215738d42e37d49a2fa7e549f48e1d310c805f5",
+    "source_refs": [
+      "schema:satscores.rtype",
+      "schema:satscores.cds",
+      "schema:schools.CDSCode",
+      "schema:schools.School",
+      "values:satscores rtype grouped and matched directory School presence"
+    ],
+    "status": "provisional",
+    "summary": "Required TEXT class field; S maps to named directory schools and D to directory entries without school names; official code expansions unverified.",
+    "table_name": "satscores",
+    "title": "SAT score record type"
+  },
+  "n_8e741884f58eb798315f3c29": {
+    "concept_id": "Percent (%) Eligible FRPM (Ages 5-17)",
+    "keywords": [
+      "frpm",
+      "ages 5-17",
+      "eligible",
+      "percentage",
+      "meal rate",
+      "enrollment"
+    ],
+    "note_id": "n_8e741884f58eb798315f3c29",
+    "note_type": "column",
+    "revision": 5,
+    "sha256": "8149d24535efd29c4a52313bb6928cfda0430da94391c14e26d2c0e0e173a73c",
+    "source_refs": [
+      "schema:frpm.`Percent (%) Eligible FRPM (Ages 5-17)`",
+      "schema:frpm.`FRPM Count (Ages 5-17)`",
+      "schema:frpm.`Enrollment (Ages 5-17)`",
+      "description:frpm.csv:22",
+      "values:frpm ages 5-17 percentage min/max/count above one"
+    ],
+    "status": "provisional",
+    "summary": "Nullable REAL ages 5-17 FRPM rate; fractional values observed through 1.0 and source description supports FRPM count divided by enrollment.",
+    "table_name": "frpm",
+    "title": "Ages 5-17 eligible FRPM percentage"
+  },
+  "n_9646eb9b81e0d42312404f3d": {
+    "concept_id": "District Code",
+    "keywords": [
+      "district code",
+      "frpm",
+      "district",
+      "identifier"
+    ],
+    "note_id": "n_9646eb9b81e0d42312404f3d",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "4fb7b37710d6682cc8b9723f72184a2e9a76518d243aff1f18b49f4f58d2f62e",
+    "source_refs": [
+      "schema:frpm.`District Code`",
+      "description:frpm.csv:4"
+    ],
+    "status": "provisional",
+    "summary": "Nullable INTEGER district-code field in FRPM records; source description labels the field District Code, while coding details are unverified.",
+    "table_name": "frpm",
+    "title": "FRPM district code"
+  },
+  "n_9a744e2474ad49e8ae44dcfb": {
+    "concept_id": "Zip",
+    "keywords": [
+      "zip",
+      "postal code",
+      "physical location",
+      "schools",
+      "directory"
+    ],
+    "note_id": "n_9a744e2474ad49e8ae44dcfb",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "ad405346bdff31bfda2d40ea26d175a336d52aee9cb13c7f0347764aa707330b",
+    "source_refs": [
+      "schema:schools.Zip",
+      "description:schools.csv:11"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT ZIP field; schools.csv metadata describes it as ZIP code of the school's physical location, separate from MailZip.",
+    "table_name": "schools",
+    "title": "School directory ZIP code"
+  },
+  "n_9d15ea2e981658ff6eef6f65": {
+    "concept_id": "EILCode",
+    "keywords": [
+      "eilcode",
+      "level",
+      "school",
+      "classification",
+      "code"
+    ],
+    "note_id": "n_9d15ea2e981658ff6eef6f65",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "6debab219cfb868ac3f69d5f9e020bf382a24c2f0fad42dbb25c7114c5e441c3",
+    "source_refs": [
+      "schema:schools.EILCode",
+      "values:schools Amador/Madera records grouped by DOCType, StatusType, EILCode and EILName"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT code classifying educational institution level; Amador/Madera values include ELEM, HS, ELEMHIGH, INTMIDJR, UG and A.",
+    "table_name": "schools",
+    "title": "Educational institution level code"
+  },
+  "n_a2af8c2d0926a99280f34b87": {
+    "concept_id": "Percent (%) Eligible FRPM (K-12)",
+    "keywords": [
+      "frpm",
+      "k-12",
+      "eligible",
+      "percentage",
+      "meal",
+      "rate"
+    ],
+    "note_id": "n_a2af8c2d0926a99280f34b87",
+    "note_type": "column",
+    "revision": 4,
+    "sha256": "5d53424bf95c10fa55982e7c8ce650f358769d96fc2527546e57ff03e0f623fa",
+    "source_refs": [
+      "schema:frpm.`Percent (%) Eligible FRPM (K-12)`",
+      "values:frpm min/max/count of `Percent (%) Eligible FRPM (K-12)`",
+      "description:frpm.csv:22-23"
+    ],
+    "status": "provisional",
+    "summary": "Nullable REAL K-12 free-or-reduced-price eligibility rate; description defines FRPM count divided by enrollment, observed values are fractional.",
+    "table_name": "frpm",
+    "title": "K-12 eligible FRPM percentage"
+  },
+  "n_a3c446defdb69d3b31c953bf": {
+    "concept_id": "MailState",
+    "keywords": [
+      "mailstate",
+      "mailing state",
+      "address",
+      "schools"
+    ],
+    "note_id": "n_a3c446defdb69d3b31c953bf",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "8b4508ce3d762689479e3df505fa971ea4dc4d5e45df1d9ba5256582cfb60548",
+    "source_refs": [
+      "schema:schools.MailState"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT field for the state component of a school directory record's mailing address.",
+    "table_name": "schools",
+    "title": "Mailing state"
+  },
+  "n_aa6a500f17d6127c7e373705": {
+    "concept_id": "dname",
+    "keywords": [
+      "sat",
+      "district name",
+      "dname",
+      "geography"
+    ],
+    "note_id": "n_aa6a500f17d6127c7e373705",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "6ca0ad0a134ebed41594986527c24cbf551d1ee6f0b927ca48655206c28f3bbc",
+    "source_refs": [
+      "schema:satscores.dname"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT district-name field on SAT score records; exact naming and alignment with schools.District are not verified.",
+    "table_name": "satscores",
+    "title": "SAT record district name"
+  },
+  "n_ac043826da39a3769432852e": {
+    "concept_id": "High Grade",
+    "keywords": [
+      "frpm",
+      "high grade",
+      "grade served",
+      "enrollment",
+      "grade span"
+    ],
+    "note_id": "n_ac043826da39a3769432852e",
+    "note_type": "column",
+    "revision": 6,
+    "sha256": "f5606e47e8472cb698271eed0419a3dd6b6aef899d99ee1f146acbb03069b293",
+    "source_refs": [
+      "schema:frpm.`High Grade`",
+      "description:frpm.csv:18",
+      "values:frpm.`High Grade` observed labels and frequency counts"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT highest-grade label in FRPM enrollment records; observed grade labels include K, numeric grades, P, Adult and Post Secondary.",
+    "table_name": "frpm",
+    "title": "FRPM highest-grade label"
+  },
+  "n_b1092796332f2862e01f2173": {
+    "concept_id": "County Name",
+    "keywords": [
+      "frpm",
+      "county",
+      "geography",
+      "name"
+    ],
+    "note_id": "n_b1092796332f2862e01f2173",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "a74f29ff389dff3dd8278b35c0c4bc1e9c5c3d17e9d723e552a19a26e328161a",
+    "source_refs": [
+      "schema:frpm.`County Name`"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT county name associated with an FRPM record; county-code relationship and geography semantics beyond the label are not verified.",
+    "table_name": "frpm",
+    "title": "FRPM county name"
+  },
+  "n_b32cfbe78af82bbe5ed6616f": {
+    "concept_id": "FundingType",
+    "keywords": [
+      "fundingtype",
+      "charter",
+      "direct",
+      "local"
+    ],
+    "note_id": "n_b32cfbe78af82bbe5ed6616f",
+    "note_type": "column",
+    "revision": 4,
+    "sha256": "ed1c4d3058f76c562d103a00c31e5d4c8f8a49cc6768351f7e2660da0abae15b",
+    "source_refs": [
+      "schema:schools.FundingType",
+      "values:schools FundingType counts",
+      "values:schools active status/funding counts"
+    ],
+    "status": "provisional",
+    "summary": "Optional TEXT directory funding classification; observed categories include Directly funded and Locally funded.",
+    "table_name": "schools",
+    "title": "School funding type"
+  },
+  "n_b4ce6cca527dd7e84f8e4ae3": {
+    "concept_id": "MailStreet",
+    "keywords": [
+      "mailstreet",
+      "mailing address",
+      "street address",
+      "unabbreviated",
+      "schools"
+    ],
+    "note_id": "n_b4ce6cca527dd7e84f8e4ae3",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "6682089daf1ab94c1fcc1a61d5e2611075393d7502159bf9a119443bfed9a696",
+    "source_refs": [
+      "schema:schools.MailStreet",
+      "description:schools.csv:13"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT field described as unabbreviated mailing address for a school, district, or administrative authority.",
+    "table_name": "schools",
+    "title": "Mailing street address"
+  },
+  "n_b6fc88ea10c368dc8c6e27d8": {
+    "concept_id": "AdmFName3",
+    "keywords": [
+      "administrator",
+      "third listed",
+      "first name",
+      "schools"
+    ],
+    "note_id": "n_b6fc88ea10c368dc8c6e27d8",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "dd2614b55c989d0bd231f889ef1f78290ffb1f7861fca5a2616b3b46a2405b3f",
+    "source_refs": [
+      "schema:schools.AdmFName3",
+      "description:schools.csv:42"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT field holding the first name of a third listed superintendent or principal, per schools field description.",
+    "table_name": "schools",
+    "title": "Third listed administrator first name"
+  },
+  "n_b8611c6583b58c6d58fecfb9": {
+    "concept_id": "EILName",
+    "keywords": [
+      "eilname",
+      "high school",
+      "level",
+      "classification",
+      "school"
+    ],
+    "note_id": "n_b8611c6583b58c6d58fecfb9",
+    "note_type": "column",
+    "revision": 4,
+    "sha256": "88080cfe242a3f4a4c2b04c949d919e938258d84eca984ffa01cf1bee55af015",
+    "source_refs": [
+      "schema:schools.EILName",
+      "values:schools EILName grouped with StatusType and State"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT level label; observed values include High School, Elementary and other institution levels.",
+    "table_name": "schools",
+    "title": "Educational institution level name"
+  },
+  "n_b8e3c82efa0b3b4d0379a5d1": {
+    "concept_id": "Virtual",
+    "keywords": [
+      "virtual",
+      "instruction",
+      "schools",
+      "classification",
+      "code"
+    ],
+    "note_id": "n_b8e3c82efa0b3b4d0379a5d1",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "9b0c928b5f02a9ed6a749907c04f2efa7f775792734fcf5476fcfd6c2e08a19c",
+    "source_refs": [
+      "schema:schools.Virtual",
+      "values:schools.Virtual distinct observed values",
+      "description:question evidence supplied in prompt"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT virtual-instruction classification; observed F, N, P and null; question evidence assigns F to exclusive-virtual.",
+    "table_name": "schools",
+    "title": "Virtual instruction classification"
+  },
+  "n_be193a8f06ce08bbf0714d6f": {
+    "concept_id": "CDSCode",
+    "keywords": [
+      "frpm",
+      "cdscode",
+      "school identifier",
+      "foreign key"
+    ],
+    "note_id": "n_be193a8f06ce08bbf0714d6f",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "5a2b08657db75315826c8ec24e1cbc09ac932ba8542c5a90e6ca8d5f2ec220e7",
+    "source_refs": [
+      "schema:frpm.CDSCode"
+    ],
+    "status": "provisional",
+    "summary": "Required TEXT primary key and foreign key linking each FRPM record to schools.CDSCode.",
+    "table_name": "frpm",
+    "title": "FRPM school identifier"
+  },
+  "n_c5e5ff36f44dec2b4e4f8bd2": {
+    "concept_id": "NCESSchool",
+    "keywords": [
+      "nces",
+      "school identifier",
+      "ncesschool",
+      "education statistics"
+    ],
+    "note_id": "n_c5e5ff36f44dec2b4e4f8bd2",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "18c5368a818185e6ec79bd1be9d49293102f53bfe391d7a9270b72860e5af4f4",
+    "source_refs": [
+      "schema:schools.NCESSchool",
+      "description:schools.csv:3"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT field for the 5-digit NCES school identifier; description states it combines with NCESDist to form a 12-digit ID.",
+    "table_name": "schools",
+    "title": "NCES school identification number"
+  },
+  "n_c6152dc35a93dd283e9b68e2": {
+    "concept_id": "School Type",
+    "keywords": [
+      "frpm",
+      "school type",
+      "high school",
+      "continuation",
+      "classification"
+    ],
+    "note_id": "n_c6152dc35a93dd283e9b68e2",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "3710cf478eae15f0ed709084439f1225ddd94d01c9a9ee9888de14771062acbf",
+    "source_refs": [
+      "schema:frpm.`School Type`",
+      "values:frpm `School Type` grouped counts",
+      "description:frpm.csv:10"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT FRPM category, with distinct labels for public regular, continuation and single-school-district high schools; junior high is separate.",
+    "table_name": "frpm",
+    "title": "FRPM school type category"
+  },
+  "n_c73a861679ff7d14b8a021fd": {
+    "concept_id": "StatusType",
+    "keywords": [
+      "status type",
+      "active",
+      "open",
+      "closed",
+      "merged",
+      "directory"
+    ],
+    "note_id": "n_c73a861679ff7d14b8a021fd",
+    "note_type": "column",
+    "revision": 4,
+    "sha256": "a522e72a6d445f73106d69205a51fedd2e4792c504dbff667a0842b69542f9ea",
+    "source_refs": [
+      "schema:schools.StatusType",
+      "values:schools.StatusType distinct observed labels",
+      "values:schools exact CDSCode record status Closed"
+    ],
+    "status": "provisional",
+    "summary": "Required TEXT directory status; observed Active, Closed, Merged and Pending labels; Active identifies open records in this extract.",
+    "table_name": "schools",
+    "title": "School directory status type"
+  },
+  "n_c9938a000010379cd26acd4a": {
+    "concept_id": "DOC",
+    "keywords": [
+      "doc",
+      "organizational code",
+      "state board",
+      "charter",
+      "schools"
+    ],
+    "note_id": "n_c9938a000010379cd26acd4a",
+    "note_type": "column",
+    "revision": 4,
+    "sha256": "2fc092a7fb9ab934ac1a71543993c5f3a281889150fc4a7717b4aef68956e706",
+    "source_refs": [
+      "schema:schools.DOC",
+      "schema:schools.DOCType",
+      "values:schools DOC 02 grouped with DOCType State Board of Education"
+    ],
+    "status": "provisional",
+    "summary": "Required TEXT organizational ownership code; observed DOC 02 labels State Board of Education, but charter-authorizer role is not verified.",
+    "table_name": "schools",
+    "title": "District ownership code"
+  },
+  "n_cde582e053c162a37111afca": {
+    "concept_id": "Charter",
+    "keywords": [
+      "charter",
+      "schools",
+      "indicator",
+      "directory",
+      "code mapping"
+    ],
+    "note_id": "n_cde582e053c162a37111afca",
+    "note_type": "column",
+    "revision": 4,
+    "sha256": "902867120e2851880e5092b607eaa319873fb3e5df569a209639a8daa3a1d5f0",
+    "source_refs": [
+      "schema:schools.Charter",
+      "values:schools Charter distinct values",
+      "description:question-provided charter status mapping"
+    ],
+    "status": "provisional",
+    "summary": "Nullable INTEGER charter flag in schools; values 0 and 1 observed, and 1 is treated as charter status per question's provided code mapping.",
+    "table_name": "schools",
+    "title": "Directory charter indicator"
+  },
+  "n_d2923ea72e443bed714d1808": {
+    "concept_id": "DOCType",
+    "keywords": [
+      "doctype",
+      "doc",
+      "organizational category",
+      "directory"
+    ],
+    "note_id": "n_d2923ea72e443bed714d1808",
+    "note_type": "column",
+    "revision": 8,
+    "sha256": "2851c900d36e5cdfc84fac181ea3973baecfeaf481d40d502935bbdc03651113",
+    "source_refs": [
+      "schema:schools.DOCType",
+      "description:schools.csv:27",
+      "values:schools DOCType categories/counts"
+    ],
+    "status": "provisional",
+    "summary": "Required TEXT description of DOC category; source describes this as District Ownership Code Type; examples include COE, charter and state-board classifications.",
+    "table_name": "schools",
+    "title": "Directory organizational classification description"
+  },
+  "n_d66b6bbf14cbe1efebb37939": {
+    "concept_id": "GSoffered",
+    "keywords": [
+      "gsoffered",
+      "grades offered",
+      "schools",
+      "grade span",
+      "preschool"
+    ],
+    "note_id": "n_d66b6bbf14cbe1efebb37939",
+    "note_type": "column",
+    "revision": 4,
+    "sha256": "3c1202e4dc65865cbbc3d2f520cb6b74a923696a386c0c0f251bbbf0a1756eaf",
+    "source_refs": [
+      "schema:schools.GSoffered",
+      "values:schools.GSoffered for NCESDist 0632640"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT field recording grades offered; distinct from enrolled grades, with observed preschool-prefixed and grade-number spans.",
+    "table_name": "schools",
+    "title": "Grade span offered"
+  },
+  "n_dacbde8e629a2b2efaab2b7f": {
+    "concept_id": "Low Grade",
+    "keywords": [
+      "frpm",
+      "low grade",
+      "grade served",
+      "p",
+      "k",
+      "school"
+    ],
+    "note_id": "n_dacbde8e629a2b2efaab2b7f",
+    "note_type": "column",
+    "revision": 4,
+    "sha256": "2ba31d1da0d53164e39356d6f4a1d9a9372038c8f227bf5072b773be4f32e98d",
+    "source_refs": [
+      "schema:frpm.`Low Grade`",
+      "values:frpm.`Low Grade` observed distinct values"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT label for lowest grade served; observed P, K, grades 1–12 and Adult; grade ordering is source-described only by label and user-provided ordering.",
+    "table_name": "frpm",
+    "title": "FRPM lowest grade served"
+  },
+  "n_de142c45f103e65cfc00a0e6": {
+    "concept_id": "County",
+    "keywords": [
+      "county",
+      "schools",
+      "directory",
+      "location"
+    ],
+    "note_id": "n_de142c45f103e65cfc00a0e6",
+    "note_type": "column",
+    "revision": 5,
+    "sha256": "992210b1d2950739e2f0ca86be98c1893b2cd8fbca814b1cccc886e94eaa5099",
+    "source_refs": [
+      "schema:schools.County",
+      "values:schools.County observed in schools"
+    ],
+    "status": "provisional",
+    "summary": "Required TEXT field associating each directory record with a county; usable for county filtering, assignment rules unverified.",
+    "table_name": "schools",
+    "title": "County directory field"
+  },
+  "n_dfaf36b7cd1baef1de748684": {
+    "concept_id": "AvgScrMath",
+    "keywords": [
+      "sat",
+      "mathematics",
+      "average score",
+      "component"
+    ],
+    "note_id": "n_dfaf36b7cd1baef1de748684",
+    "note_type": "column",
+    "revision": 3,
+    "sha256": "7b8880a7c527fe71c1238d80d033694af24e692e508ee2e7b462c98e3f5f8c06",
+    "source_refs": [
+      "schema:satscores.AvgScrMath",
+      "schema:satscores.cds",
+      "description:satscores.csv:9"
+    ],
+    "status": "provisional",
+    "summary": "Nullable INTEGER SAT-record average score in Math; underlying averaging method and total-score status are unverified.",
+    "table_name": "satscores",
+    "title": "Average mathematics score"
+  },
+  "n_ebb530e258f049ecdc08be59": {
+    "concept_id": "MailCity",
+    "keywords": [
+      "mailing city",
+      "mailcity",
+      "schools",
+      "address"
+    ],
+    "note_id": "n_ebb530e258f049ecdc08be59",
+    "note_type": "column",
+    "revision": 2,
+    "sha256": "1e7703e7822e95a3aeb42e2e0d5560cfa68836c4873cf1b0c5f351b9383fb736",
+    "source_refs": [
+      "schema:schools.MailCity",
+      "description:schools.csv:15"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT field for the mailing city associated with the school's, district's, or authority's mailing address.",
+    "table_name": "schools",
+    "title": "Mailing city"
+  },
+  "n_f7219a40f2ebcab5c96b9756": {
+    "concept_id": "cname",
+    "keywords": [
+      "sat",
+      "county",
+      "county name",
+      "cname",
+      "geography"
+    ],
+    "note_id": "n_f7219a40f2ebcab5c96b9756",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "a98a16eda00cb1f7a5867484b3afeb6188bb9a5550b45ee03f5b592252d545eb",
+    "source_refs": [
+      "schema:satscores.cname"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT county-name field on SAT score records; geographic assignment and alignment with schools.County are not verified.",
+    "table_name": "satscores",
+    "title": "SAT record county name"
+  },
+  "n_f73c066827df5c1072f1cb72": {
+    "concept_id": "MailZip",
+    "keywords": [
+      "mailzip",
+      "mailing zip",
+      "postal code",
+      "schools"
+    ],
+    "note_id": "n_f73c066827df5c1072f1cb72",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "539e5e18fc7c2a8746f01600c2394ed402818766e3e4e1a4f58fddaa6f5a47d7",
+    "source_refs": [
+      "schema:schools.MailZip"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT field for ZIP code component of a directory record's mailing address.",
+    "table_name": "schools",
+    "title": "Mailing ZIP code"
+  },
+  "n_f98154fd026a1479226384c0": {
+    "concept_id": "Street",
+    "keywords": [
+      "school",
+      "street",
+      "address",
+      "directory"
+    ],
+    "note_id": "n_f98154fd026a1479226384c0",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "7160f7befa4dc213010954c32304cea61f71eba10c21e8aa709ad7ee9e061cb2",
+    "source_refs": [
+      "schema:schools.Street"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT directory field for a school's street-address line; separate from the mailing address fields.",
+    "table_name": "schools",
+    "title": "School street address"
+  },
+  "n_fa4ebc17565daf8ac730d2da": {
+    "concept_id": "Enrollment (Ages 5-17)",
+    "keywords": [
+      "enrollment",
+      "ages 5-17",
+      "frpm",
+      "school"
+    ],
+    "note_id": "n_fa4ebc17565daf8ac730d2da",
+    "note_type": "column",
+    "revision": 4,
+    "sha256": "06e92f35594fed9125568ad6bef30835b25b102cc9d2fbd72e57fffdce39b3d4",
+    "source_refs": [
+      "schema:frpm.`Enrollment (Ages 5-17)`"
+    ],
+    "status": "provisional",
+    "summary": "Nullable REAL enrollment measure for ages 5-17 in FRPM school records; detailed population/counting convention is undocumented.",
+    "table_name": "frpm",
+    "title": "Ages 5-17 enrollment"
+  },
+  "n_faa09cee24da3e18203318de": {
+    "concept_id": "Website",
+    "keywords": [
+      "schools",
+      "website",
+      "url",
+      "directory",
+      "contact"
+    ],
+    "note_id": "n_faa09cee24da3e18203318de",
+    "note_type": "column",
+    "revision": 1,
+    "sha256": "2223b82e7bbac562e2475d6c0f338fa03b3a75c3d6c3a3bdde1f62252a222f56",
+    "source_refs": [
+      "schema:schools.Website"
+    ],
+    "status": "provisional",
+    "summary": "Nullable TEXT web address associated with a school directory record; URL format and validation conventions not verified.",
+    "table_name": "schools",
+    "title": "School directory website"
+  }
+}

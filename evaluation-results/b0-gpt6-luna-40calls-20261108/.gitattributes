@@ -1,0 +1,4 @@
+# Preserve exported bytes and checksums across platforms.
+* -text
+# Raw CSV uses CRLF row terminators from Python csv.writer.
+**/per_question.csv whitespace=cr-at-eol
