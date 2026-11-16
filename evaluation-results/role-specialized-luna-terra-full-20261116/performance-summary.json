@@ -1,0 +1,59 @@
+{
+  "selection_id": "sr-full-20261113",
+  "run_id": "luna-terra-sequential-20261115T150108Z",
+  "dataset": "bird-mini-dev-2026-sqlite",
+  "initial_revision": "78f19dfd68224b0259fcc105d342a217f3b959c8",
+  "recovery_revision": "3aaa618077debceccb0d84c7c67399f0d044ce6f",
+  "generator_model": "gpt-6-luna",
+  "reviewer_model": "gpt-6.1-terra",
+  "reasoning_efforts": "provider defaults",
+  "tests": {
+    "initial": 41,
+    "recovery": 22,
+    "compileall": "passed"
+  },
+  "questions": 500,
+  "missing_sql": 2,
+  "scores": {
+    "dev": {
+      "correct": 321,
+      "total": 400,
+      "ex": 0.8025
+    },
+    "test": {
+      "correct": 80,
+      "total": 100,
+      "ex": 0.8
+    }
+  },
+  "final_review_status_counts": {
+    "PASS": 391,
+    "UNCERTAIN": 95,
+    "FAIL": 12,
+    "ERROR": 2
+  },
+  "all_review_attempt_status_counts": {
+    "PASS": 391,
+    "FAIL": 202,
+    "UNCERTAIN": 143
+  },
+  "totals_retained_predictions": {
+    "input_tokens": 21497407,
+    "output_tokens": 1941673,
+    "total_tokens": 23439080,
+    "cached_input_tokens": 8492032,
+    "reasoning_tokens": 129653,
+    "model_calls": 6497,
+    "tool_calls": 6345,
+    "sql_calls": 3194,
+    "latency_ms": 53654696.0
+  },
+  "regeneration": {
+    "questions": 221,
+    "additional_attempts": 300,
+    "additional_attempt_passes": 116,
+    "additional_attempt_pass_rate": 0.38666666666666666,
+    "questions_final_pass": 116
+  },
+  "usage_scope": "Retained records only; excludes replaced records and unsaved interrupted calls. Summed per-question latency is not end-to-end wall time. Cached tokens are included in input tokens. No monetary cost inferred."
+}

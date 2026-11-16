@@ -1,0 +1,28 @@
+{
+  "unique_questions": 500,
+  "dev": 400,
+  "test": 100,
+  "artifact_order_and_sha256_verified": true,
+  "preserved_prefix_records": 107,
+  "preserved_prefix_sha256": {
+    "predictions.jsonl": "b0786417ab7cb8e4bd40402eece0354dbbe9800b6971bb07a71c88398998d74f",
+    "traces.jsonl": "c1a348fec80f7ccc6599ca86de6a58aacee6fe3a79f72c4f166d95b9abebc9d0",
+    "reviews/review_reports.jsonl": "7f161bcac201f71bb91628151f6e42b16d5b62495a435294d8f64099b9074f0d"
+  },
+  "backup_original_records": 109,
+  "replaced_positions": [
+    108,
+    109
+  ],
+  "replaced_question_ids": [
+    131,
+    133
+  ],
+  "new_positions": [
+    110,
+    500
+  ],
+  "new_questions": 391,
+  "legacy_config_verified_from_original_launch_not_original_manifest": true,
+  "source_backup_directory": "/home/devuser/rubric-full-20261113/sr-full-20261113/RoleSpecializedSelfReflection/all/luna-terra-sequential-20261115T150108Z/shards/shard-01-of-01/resume_backups/20261116T012705690334Z"
+}

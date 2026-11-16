@@ -1,6 +1,6 @@
 # RAG Agent Study — TASK-20 to TASK-23: Ollama, Traditional & Agentic RAG
 
-Part of HKU COMP7608 [Group Project](../README.md). This is a **learning sandbox**, not the KORA Text-to-SQL implementation. KORA's submitted proposal remains authoritative.
+Part of the publicly available COMP7608 [KORA Group Project](../README.md). This is a **learning sandbox**, not the KORA Text-to-SQL implementation. KORA's submitted proposal remains authoritative.
 
 ## Current scope
 
@@ -20,7 +20,7 @@ Read the [RAG-02 parameter tutorial](tutorials/02_basic_llm.md), [RAG-03 Traditi
 
 ## Local Windows: start here
 
-Prerequisites already verified for this PC: Ollama 0.40.11, GTX 1060 6GB, driver 582.78, Python 3.14.3, uv 0.11.2. Both models were observed at **100% GPU** and the embedding model returned 768 dimensions in PowerShell tests.
+Historical Windows environment used during local checks (26 October 2026): Ollama 0.40.11, GTX 1060 6GB, driver 582.78, Python 3.14.3, uv 0.11.2. Both models were observed at **100% GPU** and the embedding model returned 768 dimensions in PowerShell tests.
 
 Open **PowerShell**, then `cd` to this `agent-study` directory:
 
@@ -44,7 +44,7 @@ uv run python scripts/03_traditional_rag.py --top-k 3 --chunk-size 450 --chunk-o
 ollama ps
 ```
 
-All four local Python scripts accept model names through CLI arguments (not environment variables). Omit the flags to keep `qwen3:1.7b` for chat and `embeddinggemma-2:270m` for embeddings. The Ollama URL stays fixed at `http://localhost:11434`; other models must be downloaded and compatible with the selected task.
+The early Ollama exercise scripts expose model names through CLI arguments (not environment variables); consult each script's `--help` for its accepted options. Omit the flags to keep `qwen3:1.7b` for chat and `embeddinggemma-2:270m` for embeddings. The Ollama URL stays fixed at `http://localhost:11434`; other models must be downloaded and compatible with the selected task.
 
 `uv sync` creates a local virtual environment and generates `uv.lock`; we do not invent a lockfile without actually resolving dependencies. See `pyproject.toml` for declared dependencies.
 
@@ -64,11 +64,11 @@ A Colab `localhost:11434` is the server **inside the hosted Colab VM**, not the 
 
 ## RAG-03 Traditional RAG baseline
 
-The new `scripts/03_traditional_rag.py` loads [`data/sample.md`](data/sample.md), creates overlapping chunks, indexes them in `InMemoryVectorStore`, prints top-k cosine retrieval with chunk metadata, and generates answers with Qwen3. It runs both a supported question and a missing-evidence question. CLI flags include `--chat-model`, `--embed-model`, `--top-k`, `--chunk-size`, `--chunk-overlap`, `--question` and `--missing-question`. The [Colab notebook](notebooks/colab/03_traditional_rag.ipynb) embeds identical sample text and installs `zstd` first. See [TASK-21](https://app.notion.com/p/404ce09ce40c81539e70e49e9aef3577). **Static validation does not establish a live successful Ollama or Colab run.**
+The new `scripts/03_traditional_rag.py` loads [`data/sample.md`](data/sample.md), creates overlapping chunks, indexes them in `InMemoryVectorStore`, prints top-k cosine retrieval with chunk metadata, and generates answers with Qwen3. It runs both a supported question and a missing-evidence question. CLI flags include `--chat-model`, `--embed-model`, `--top-k`, `--chunk-size`, `--chunk-overlap`, `--question` and `--missing-question`. The [Colab notebook](notebooks/colab/03_traditional_rag.ipynb) embeds identical sample text and installs `zstd` first. See the [Traditional RAG tutorial](tutorials/03_traditional_rag.md). **Static validation does not establish a live successful Ollama or Colab run.**
 
 ## RAG-04 LangChain tool-calling agent
 
-[`RAG-04`](https://app.notion.com/p/404ce09ce40c81b2bbc8cf3917608116) extends the fixed RAG-03 baseline with a `@tool` retrieval function and LangChain `create_agent()`. It uses the **same** `data/sample.md`, embeddings and chunking, but the small chat model can choose whether to search. The script prints **actual** tool calls, arguments, returned chunks/scores, and final answers for a document question, arithmetic, and a missing fact.
+**RAG-04** extends the fixed RAG-03 baseline with a `@tool` retrieval function and LangChain `create_agent()`. It uses the **same** `data/sample.md`, embeddings and chunking, but the small chat model can choose whether to search. The script prints **actual** tool calls, arguments, returned chunks/scores, and final answers for a document question, arithmetic, and a missing fact.
 
 From this directory run `uv sync` followed by `uv run python scripts/04_langchain_rag_agent.py`. Try `--question "Why does RAG retrieve documents before answering?"` and optionally `--chat-model qwen3:4b` after pulling that model. See [the tutorial](tutorials/04_langchain_agent.md) for CLI parameters and evaluation.
 
@@ -79,7 +79,7 @@ The [Colab notebook](notebooks/colab/04_langchain_rag_agent.ipynb) independently
 - **Verified:** Python script content reviewed for expected API usage; JSON notebooks structurally validated before GitHub commit.
 - **User-reported (26 Oct 2026):** Chat and embedding inference work with local Windows Ollama. It is not yet confirmed that all three Python scripts ran successfully.
 - **Still to verify:** Full execution of all three modified Python scripts on Windows and Colab notebooks in a real Colab runtime.
-- Notion [TASK-20](https://app.notion.com/p/404ce09ce40c812e9714d7a52553aac9) should remain In Progress until those executions pass.
+- **Pending verification:** Keep these checks explicitly open until the scripts and Colab notebooks run successfully; no private Notion task is required to follow this public guide.
 
 Next: verify RAG-04 tool-choice traces on Windows and fresh Colab; retain open acceptance checks for RAG-03 separately.
 
