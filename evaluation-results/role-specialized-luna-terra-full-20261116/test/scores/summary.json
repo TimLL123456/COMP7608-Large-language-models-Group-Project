@@ -1,0 +1,193 @@
+{
+  "variant": "RoleSpecializedSelfReflection",
+  "correct": 80,
+  "total": 100,
+  "ex": 0.8,
+  "predictions_supplied": 100,
+  "missing_predictions": 0,
+  "status_counts": {
+    "correct": 80,
+    "incorrect_result": 19,
+    "missing_sql": 1
+  },
+  "by_difficulty": {
+    "challenging": {
+      "correct": 73,
+      "total": 91,
+      "ex": 0.8021978021978022
+    },
+    "moderate": {
+      "correct": 6,
+      "total": 8,
+      "ex": 0.75
+    },
+    "simple": {
+      "correct": 1,
+      "total": 1,
+      "ex": 1.0
+    }
+  },
+  "mean_tool_calls": 12.54,
+  "observed_tool_calls": 100,
+  "mean_input_tokens": 41996.78,
+  "observed_input_tokens": 100,
+  "mean_output_tokens": 3722.66,
+  "observed_output_tokens": 100,
+  "mean_total_tokens": 45719.44,
+  "observed_total_tokens": 100,
+  "mean_cached_input_tokens": 16179.2,
+  "observed_cached_input_tokens": 100,
+  "mean_reasoning_tokens": 235.92,
+  "observed_reasoning_tokens": 100,
+  "mean_latency_ms": 115626.65,
+  "observed_latency_ms": 100,
+  "mean_cost_usd": null,
+  "observed_cost_usd": 0,
+  "performance": {
+    "tool_calls": {
+      "observed": 100,
+      "total": 1254,
+      "mean": 12.54,
+      "p50": 9.0,
+      "p95": 28
+    },
+    "model_calls": {
+      "observed": 100,
+      "total": 1250,
+      "mean": 12.5,
+      "p50": 10.0,
+      "p95": 25
+    },
+    "sql_calls": {
+      "observed": 100,
+      "total": 656,
+      "mean": 6.56,
+      "p50": 5.0,
+      "p95": 14
+    },
+    "sql_success_calls": {
+      "observed": 0,
+      "total": null,
+      "mean": null,
+      "p50": null,
+      "p95": null
+    },
+    "sql_error_calls": {
+      "observed": 0,
+      "total": null,
+      "mean": null,
+      "p50": null,
+      "p95": null
+    },
+    "sql_truncated_calls": {
+      "observed": 0,
+      "total": null,
+      "mean": null,
+      "p50": null,
+      "p95": null
+    },
+    "input_tokens": {
+      "observed": 100,
+      "total": 4199678,
+      "mean": 41996.78,
+      "p50": 33397.5,
+      "p95": 100356
+    },
+    "output_tokens": {
+      "observed": 100,
+      "total": 372266,
+      "mean": 3722.66,
+      "p50": 2444.0,
+      "p95": 7971
+    },
+    "total_tokens": {
+      "observed": 100,
+      "total": 4571944,
+      "mean": 45719.44,
+      "p50": 36037.5,
+      "p95": 106293
+    },
+    "cached_input_tokens": {
+      "observed": 100,
+      "total": 1617920,
+      "mean": 16179.2,
+      "p50": 12224.0,
+      "p95": 35072
+    },
+    "reasoning_tokens": {
+      "observed": 100,
+      "total": 23592,
+      "mean": 235.92,
+      "p50": 149.0,
+      "p95": 700
+    },
+    "input_tokens_observed_calls": {
+      "observed": 0,
+      "total": null,
+      "mean": null,
+      "p50": null,
+      "p95": null
+    },
+    "output_tokens_observed_calls": {
+      "observed": 0,
+      "total": null,
+      "mean": null,
+      "p50": null,
+      "p95": null
+    },
+    "total_tokens_observed_calls": {
+      "observed": 0,
+      "total": null,
+      "mean": null,
+      "p50": null,
+      "p95": null
+    },
+    "cached_input_tokens_observed_calls": {
+      "observed": 0,
+      "total": null,
+      "mean": null,
+      "p50": null,
+      "p95": null
+    },
+    "reasoning_tokens_observed_calls": {
+      "observed": 0,
+      "total": null,
+      "mean": null,
+      "p50": null,
+      "p95": null
+    },
+    "latency_ms": {
+      "observed": 100,
+      "total": 11562665.0,
+      "mean": 115626.65,
+      "p50": 77307.0,
+      "p95": 270863.0
+    },
+    "sql_execution_ms": {
+      "observed": 99,
+      "total": 57539.108,
+      "mean": 581.2031111111111,
+      "p50": 6.312,
+      "p95": 838.317
+    },
+    "gold_sql_execution_ms": {
+      "observed": 100,
+      "total": 44073.03,
+      "mean": 440.7303,
+      "p50": 4.8185,
+      "p95": 911.888
+    },
+    "agent_sql_execution_ms": {
+      "observed": 0,
+      "total": null,
+      "mean": null,
+      "p50": null,
+      "p95": null
+    },
+    "sql_tool_success_rate": null,
+    "final_sql_generation_rate": 0.99,
+    "final_sql_execution_rate": 1.0
+  },
+  "split": "test",
+  "is_full_split": false
+}

@@ -1,6 +1,6 @@
 # KORA — Current Progress and Next Steps
 
-**Current research snapshot: 15 November 2026.** This page tracks the latest verified state rather than previous ticket histories. For earlier ticket statuses, historical project decisions and original roadmap versions, see [Historical Planning](docs/history/progress-planning-pre-current-only-20261115.md).
+**Current research snapshot: 16 November 2026.** This page tracks the latest verified state rather than previous ticket histories. For earlier ticket statuses, historical project decisions and original roadmap versions, see [Historical Planning](docs/history/progress-planning-pre-current-only-20261115.md).
 
 ## Completed research milestones
 
@@ -11,13 +11,13 @@
 | MetadataDiscoveryV2 | [340/500 (68.00% local EX)](evaluation-results/metadata-discovery-v2-descriptions-20261111/README.md) |
 | Self Reflection | [350/500 (70.00% local EX), 498/500 SQL outputs](evaluation-results/self-reflection-full-20261113/README.md) |
 | Rubric Self Reflection | [326/500 (65.20% local EX)](evaluation-results/rubric-self-reflection-full-20261115/README.md) |
-| Role-Specialized Self Reflection | [Implemented with two-shard parallel inference and merging](docs/role-specialized-self-reflection-agent.md); full EX study **not yet verified** |
+| Role-Specialized Self Reflection | [Completed Luna/Terra evaluation: 401/500 (80.20% local EX), 498/500 SQL outputs](evaluation-results/role-specialized-luna-terra-full-20261116/README.md); optional parallel shards and guarded in-place resume are implemented, but this benchmark used one sequential shard |
 
 All results above are local Mini-Dev 2026 results, not official hidden Test results. Different budgets, retries, description availability and workflow conditions prevent attributing differences to an isolated improvement.
 
 ## Remaining work / verification
 
-- **Role-specialized experiment:** configure the available Luna/Terra model identifiers, run a new frozen selection and separately score local Dev and Test. Record accuracy, repairs/regressions, token use, latency and model budgets.
+- **Role-specialized follow-up:** The first Luna/Terra full local EX benchmark is complete. If investigating causal benefit or throughput, run a **new** matched-budget controlled study and separately test the optional two-shard parallel mode. Do not describe the completed sequential/resumed run as parallel.
 - **Matched-compute studies:** compare promising variants under aligned budget and dataset/evidence conditions, if feasible. Existing archived results should not be presented as matched causal evidence.
 - **Interactive integration:** verify a real user interface/controller, changed constraints, follow-up questions, end-to-end safety and error recovery. Individual SQL agents do not establish that these requirements are complete.
 - **Reliability and non-functional evidence:** test schema errors, timeouts, read-only enforcement, budget exhaustion and response latency/cost under a reproducible protocol.

@@ -1,6 +1,6 @@
 # Project Guideline Requirements Summary
 
-> **Project status update (2026-10-25):** Group 9 submitted its [KORA proposal](../proposal/KORA/KORA_Group9_Proposal.pdf). This document preserves the original guideline summary and its historical proposal-deadline discrepancy. Report and presentation deadlines marked **TBA** have not been re-verified.
+> **Historical proposal status (2026-10-25):** Group 9 submitted its [KORA proposal](../proposal/KORA/KORA_Group9_Proposal.pdf). This document preserves the original guideline summary and its historical proposal-deadline discrepancy. Report and presentation deadlines marked **TBA** have not been re-verified. For implementation progress and the latest verified benchmark, see the [public KORA overview](../README.md).
 
 Compiled: 2026-10-04  
 Source: [COMP7608B_LLM_Project_Guideline.pdf](COMP7608B_LLM_Project_Guideline.pdf)

@@ -1,6 +1,6 @@
 # KORA — COMP7608B Group Project
 
-**Group 9 · 2026–2027 Semester 1** · **Research status verified: 15 November 2026**
+**Group 9 · 2026–2027 Semester 1** · **Research status verified: 16 November 2026**
 
 KORA is a research project investigating evidence-driven **Text-to-SQL**: AI agents explore SQLite database metadata, generate read-only SQL, and evaluate the results with an independent execution-accuracy (EX) scorer. This is the **shared public Group Project repository**. The standalone research agents, their tests, and experiment archives live in this repository; an end-to-end interactive KORA application is not yet verified.
 
@@ -14,9 +14,11 @@ These are the most recent **completed local BIRD Mini-Dev 2026** evaluations for
 | **MetadataDiscoveryV2** (A1/B1/C1) | **340/500 (68.00%)** | [Agent guide](docs/metadata-discovery-v2.md) · [Evaluation](evaluation-results/metadata-discovery-v2-descriptions-20261111/README.md) |
 | **Self Reflection Agent** | **350/500 (70.00%)** | [Agent guide](docs/self-reflection-agent.md) · [Evaluation](evaluation-results/self-reflection-full-20261113/README.md) |
 | **Rubric Self Reflection** | **326/500 (65.20%)** | [Agent guide](docs/rubric-self-reflection-agent.md) · [Evaluation](evaluation-results/rubric-self-reflection-full-20261115/README.md) |
-| **Role-Specialized Self Reflection** | **Full benchmark pending** | [Generator/reviewer roles and parallel shards](docs/role-specialized-self-reflection-agent.md) |
+| **Role-Specialized Self Reflection** | **401/500 (80.20%)** | [Agent guide](docs/role-specialized-self-reflection-agent.md) · [Full local evaluation](evaluation-results/role-specialized-luna-terra-full-20261116/README.md) |
 
-**Interpretation:** Experimental budgets, description availability, retry policies and model execution conditions differ. Raw EX differences do **not** demonstrate isolated causal improvements. See each experiment report for reproducibility, resources, failures and limitations.
+**Latest completed run (16 November 2026):** Luna (`gpt-6-luna`) investigated and generated SQL, while Terra (`gpt-6.1-terra`) extracted requirements and reviewed candidates. A single sequential 500-question run achieved **321/400 (80.25%) local Dev EX**, **80/100 (80.00%) local Test EX**, and **498/500 non-missing final SQL**. An interrupted run was resumed in place; its preserved 107-record prefix and mixed source revisions are documented in the [evaluation report](evaluation-results/role-specialized-luna-terra-full-20261116/README.md). This benchmark was **not** a two-terminal parallel run.
+
+**Interpretation:** This is the highest **observed local EX** among the archived variants, not an official hidden BIRD Test result. Reviewer PASS is not the same as independent EX correctness. Experimental budgets, model assignments, description availability and retries differ; the raw percentages do **not** isolate a causal benefit of role specialization or prove cost savings. See the linked reports for reproducibility, resources and failure cases.
 
 ## Current agents overview
 
@@ -29,7 +31,7 @@ KORA currently has **six implemented agent variants**. They share the BIRD datas
 | **[MetadataDiscoveryV2](docs/metadata-discovery-v2.md)** | A staged metadata-first workflow with explicit evidence sufficiency evaluation. | **A1** Discover/reuse metadata → **B1** Check sufficiency → Return to A1 if needed → **C1** Generate SQL (or stop when exhausted) | Generating SQL before enough evidence is available about tables, columns, values, filters or granularity. |
 | **[Self Reflection Agent](docs/self-reflection-agent.md)** | Adds an independent reviewer and bounded retries to B0 while prioritizing safe SQL output. | B0 generates SQL → Reviewer checks evidence and execution → Retry B0 on actionable FAIL → Select eligible final SQL | Unchecked mistakes in candidate SQL and unnecessarily losing executable output when review remains uncertain. |
 | **[Rubric Self Reflection](docs/rubric-self-reflection-agent.md)** | Breaks the question into atomic requirements and checks each against SQL evidence. | B0 SQL → Extract requirements → Criterion-by-criterion review → Retry/refine when justified → Checked final SQL | Missed output fields, filters, metric logic, grain, joins and temporal requirements that broad reviews may overlook. |
-| **[Role-Specialized Self Reflection](docs/role-specialized-self-reflection-agent.md)** | Assigns SQL investigation/generation to a lightweight model and rubric review to a stronger model. | Lightweight generator → Strong reviewer → Feedback to generator within budget → Safe SQL + review report | Investigating whether specialized model roles can improve the quality–cost trade-off. **Full EX evaluation remains pending.** |
+| **[Role-Specialized Self Reflection](docs/role-specialized-self-reflection-agent.md)** | Assigns SQL investigation/generation to a lightweight model and rubric review to a stronger model. | Lightweight generator → Strong reviewer → Feedback to generator within budget → Safe SQL + review report | Tests model role specialization with a bounded evidence-based review loop. **A complete local 500-question EX evaluation is recorded; isolated benefit and cost efficiency are not established.** |
 
 **Research boundary:** These are distinct implementations, not six stages of one finished application. They aim to address the problems above, but their existence alone does not prove improvement. Compare documented local EX results and compute/retry differences in the [latest research results](#latest-research-results). The complete interactive multi-turn application has not been verified.
 
@@ -63,7 +65,7 @@ Follow the [current BIRD setup instructions](docs/bird-setup.md) and [Prepare �
 
 - [`scr/`](scr/) — agent implementations, dataset loader, CLI, read-only SQL and EX evaluator
 - [`tests/`](tests/) — offline regression tests
-- [`evaluation-results/`](evaluation-results/) — all six historical and current experiment archives
+- [`evaluation-results/`](evaluation-results/) — seven historical and current experiment archives
 - [`docs/`](docs/) — current documentation and historic snapshots
 - [`agent-study/`](agent-study/), [`research/`](research/), [`proposal/`](proposal/) — tutorials, background research and original proposals
 

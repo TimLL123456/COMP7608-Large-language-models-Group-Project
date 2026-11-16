@@ -1,9 +1,12 @@
 """Deterministic, immutable sharded inference artifacts for KORA role specialization."""
 from __future__ import annotations
 
+from contextlib import contextmanager
+from datetime import datetime, timezone
 from hashlib import sha256
 import json
 import os
+import shutil
 from pathlib import Path
 import tempfile
 
@@ -69,6 +72,208 @@ def _write_jsonl(path: Path, rows: list[dict]) -> None:
             out.write(json.dumps(row, ensure_ascii=False, allow_nan=False) + "\n")
 
 
+
+@contextmanager
+def inference_lock(run_dir: Path):
+    """Cross-platform nonblocking run lock, released even after a process crash."""
+    lock = run_dir / ".inference.lock"
+    fd = os.open(lock, os.O_RDWR | os.O_CREAT, 0o600)
+    with os.fdopen(fd, "r+b") as handle:
+        if os.name == "nt":
+            import msvcrt
+            if not handle.read(1):
+                handle.seek(0)
+                handle.write(b"0")
+                handle.flush()
+            try:
+                handle.seek(0)
+                msvcrt.locking(handle.fileno(), msvcrt.LK_NBLCK, 1)
+            except OSError as exc:
+                raise ValueError(f"Another worker is writing this run: {lock}") from exc
+        else:
+            import fcntl
+            try:
+                fcntl.flock(handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+            except OSError as exc:
+                raise ValueError(f"Another worker is writing this run: {lock}") from exc
+        try:
+            yield
+        finally:
+            if os.name == "nt":
+                handle.seek(0)
+                msvcrt.locking(handle.fileno(), msvcrt.LK_UNLCK, 1)
+            else:
+                fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+
+
+def _resume_rows(path: Path, protected: int) -> tuple[list[dict], bytes]:
+    """Accept an interrupted last JSONL write only when it will be discarded."""
+    if not path.is_file() or path.is_symlink():
+        raise ValueError(f"Missing or unsafe resume artifact: {path}")
+    lines = path.read_bytes().splitlines(keepends=True)
+    rows = []
+    for pos, raw in enumerate(lines):
+        try:
+            row = json.loads(raw)
+            if not isinstance(row, dict):
+                raise ValueError("JSONL entry is not an object")
+        except (ValueError, UnicodeError) as exc:
+            if pos == len(lines) - 1 and len(rows) >= protected:
+                break
+            raise ValueError(f"Invalid protected JSONL entry {pos + 1}: {path}") from exc
+        rows.append(row)
+    if len(rows) < protected:
+        raise ValueError(f"Not enough existing records to preserve: {path}")
+    if protected and not lines[protected - 1].endswith(b"\n"):
+        raise ValueError(f"Unterminated protected JSONL entry: {path}")
+    return rows, b"".join(lines[:protected])
+
+
+def _verify_resume_identity(rows: dict, selected: list[dict], config: dict) -> None:
+    """All readable records must belong to this exact shard and model pair."""
+    for filename, entries in rows.items():
+        if len(entries) > len(selected):
+            raise ValueError(f"Too many records in {filename}")
+        for pos, row in enumerate(entries):
+            question = selected[pos]
+            if row.get("question_id") != question["question_id"]:
+                raise ValueError(f"Question ID/order mismatch at position {pos + 1}: {filename}")
+            if filename == "predictions.jsonl":
+                expected = {
+                    "db_id": question["db_id"],
+                    "provider": config["generator_provider"],
+                    "model": config["generator_model"],
+                    "reasoning_effort": config["generator_reasoning_effort"],
+                    "reviewer_provider": config["reviewer_provider"],
+                    "reviewer_model": config["reviewer_model"],
+                    "reviewer_reasoning_effort": config["reviewer_reasoning_effort"],
+                }
+                if any(row.get(k) != v for k, v in expected.items()):
+                    raise ValueError(f"Model/database mismatch at position {pos + 1}")
+            if filename == "traces.jsonl":
+                for role in ("generator", "reviewer"):
+                    identity = row.get(role)
+                    if not isinstance(identity, dict):
+                        raise ValueError(f"Missing {role} identity at position {pos + 1}")
+                    expected = {
+                        "provider": config[f"{role}_provider"],
+                        "model": config[f"{role}_model"],
+                        "reasoning_effort": config[f"{role}_reasoning_effort"],
+                    }
+                    if any(identity.get(k) != v for k, v in expected.items()):
+                        raise ValueError(f"Trace model mismatch at position {pos + 1}")
+                if row.get("question") != question.get("question") or (
+                    row.get("evidence") != question.get("evidence")
+                ):
+                    raise ValueError(f"Question content mismatch at position {pos + 1}")
+
+
+def prepare_in_place_resume(*, run_dir: Path, selected: list[dict],
+                            start_position: int, config: dict) -> dict:
+    """Back up all existing files, then keep exactly the requested prefix.
+
+    No shard is created and no existing record before start_position is changed.
+    Only use while holding inference_lock.
+    """
+    if type(start_position) is not int or not 1 <= start_position <= len(selected):
+        raise ValueError("Invalid --start-position for this shard")
+    if not run_dir.is_dir() or run_dir.is_symlink():
+        raise ValueError(f"Existing run directory required: {run_dir}")
+    if (run_dir / "scores").exists() or (run_dir.parent.parent / "inference_manifest.json").exists():
+        raise ValueError("Cannot replace a scored or already merged shard")
+    protected = start_position - 1
+    current = {}
+    for name in ("inference_config.json", "inference_manifest.json"):
+        path = run_dir / name
+        if path.exists():
+            if not path.is_file() or path.is_symlink():
+                raise ValueError(f"Unsafe metadata file: {path}")
+            current[name] = json.loads(path.read_text(encoding="utf-8"))
+            if not isinstance(current[name], dict):
+                raise ValueError(f"Invalid metadata file: {path}")
+    for old in current.values():
+        for key in CONSISTENCY_KEYS:
+            if key != "source_revision" and key in old and old[key] != config.get(key):
+                raise ValueError(f"Resume configuration mismatch: {key}")
+        for key in ("question_ids", "expected_questions", "shard_index",
+                    "position_start", "position_end"):
+            if key in old and old[key] != config.get(key):
+                raise ValueError(f"Resume selection mismatch: {key}")
+        if old.get("merge_complete"):
+            raise ValueError("Cannot resume an already merged run")
+    rows, prefixes = {}, {}
+    for name in ARTIFACTS:
+        rows[name], prefixes[name] = _resume_rows(run_dir / name, protected)
+    _verify_resume_identity(rows, selected, config)
+    counts = {name: len(rows[name]) for name in ARTIFACTS}
+    # A prior crash during suffix truncation may leave unequal file lengths.
+    # All preserved rows have been validated; the suffix will be discarded.
+    completed = current.get("inference_manifest.json")
+    if completed:
+        if not completed.get("completed"):
+            raise ValueError("Malformed completed-run manifest")
+        checksums = ("prediction_sha256", "trace_sha256", "review_reports_sha256")
+        if any(completed.get(k) != sha(run_dir / name)
+               for name, k in zip(ARTIFACTS, checksums)):
+            raise ValueError("Existing completed-run checksum mismatch")
+        if any(count != len(selected) for count in counts.values()):
+            raise ValueError("Completed manifest has incomplete records")
+
+    backups = run_dir / "resume_backups"
+    backups.mkdir(exist_ok=True)
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
+    backup = backups / stamp
+    backup.mkdir()
+    for name in (*ARTIFACTS, *current.keys()):
+        dest = backup / name
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(run_dir / name, dest)
+        if sha(dest) != sha(run_dir / name):
+            raise ValueError(f"Backup verification failed: {name}")
+
+    # Old manifest must not claim completion while replacement is in progress.
+    (run_dir / "inference_manifest.json").unlink(missing_ok=True)
+    for name in ARTIFACTS:
+        path = run_dir / name
+        temp = path.with_name(f".{path.name}.resume-tmp")
+        with temp.open("wb") as stream:
+            stream.write(prefixes[name])
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temp, path)
+    created = (current.get("inference_config.json", {}).get("created_utc")
+               or (completed or {}).get("created_utc")
+               or datetime.now(timezone.utc).isoformat())
+    config_path = run_dir / "inference_config.json"
+    if not config_path.exists():
+        _write_json(config_path, {**config, "created_utc": created})
+    history_path = run_dir / "resume_history.jsonl"
+    entry = {
+        "resumed_utc": datetime.now(timezone.utc).isoformat(),
+        "start_position": start_position, "replaced_from_position": start_position,
+        "previous_record_counts": counts,
+        "backup_directory": str(backup),
+        "previous_source_revision": (completed or {}).get("source_revision"),
+        "source_revision": config.get("source_revision"),
+        "legacy_configuration_unverified": not bool(current),
+    }
+    with history_path.open("a", encoding="utf-8") as stream:
+        stream.write(json.dumps(entry, ensure_ascii=False, allow_nan=False) + "\n")
+        stream.flush()
+        os.fsync(stream.fileno())
+    return {
+        "created_utc": created,
+        "missing": sum(row.get("predicted_sql") is None
+                       for row in rows["predictions.jsonl"][:protected]),
+        "backup_directory": str(backup),
+    }
+
+
+def load_resume_history(run_dir: Path) -> list[dict]:
+    path = run_dir / "resume_history.jsonl"
+    return _read_jsonl(path) if path.exists() else []
+
+
 def merge_shards(*, folder: Path, run_root: Path, split_dirs: dict[str, Path],
                  selections: dict[str, list[dict]], dataset_manifest: dict,
                  shard_count: int, variant: str, run_id: str) -> dict:
@@ -112,9 +317,15 @@ def merge_shards(*, folder: Path, run_root: Path, split_dirs: dict[str, Path],
         }
         if any(manifest.get(k) != value for k, value in required.items()):
             raise ValueError(f"Shard {index} metadata or question range mismatch")
-        if manifests and any(manifest.get(k) != manifests[0].get(k)
-                             for k in CONSISTENCY_KEYS):
-            raise ValueError(f"Shard {index} model/prompt/budget/revision mismatch")
+        if manifests:
+            differences = [k for k in CONSISTENCY_KEYS
+                           if manifest.get(k) != manifests[0].get(k)]
+            if differences and not (
+                differences == ["source_revision"] and
+                (manifest.get("resume_history") or manifests[0].get("resume_history"))
+            ):
+                raise ValueError(f"Shard {index} model/prompt/budget/revision mismatch: "
+                                 + ", ".join(differences))
         for filename, digest_name in zip(
             ARTIFACTS, ("prediction_sha256", "trace_sha256", "review_reports_sha256")
         ):
@@ -171,6 +382,8 @@ def merge_shards(*, folder: Path, run_root: Path, split_dirs: dict[str, Path],
                 "merged_from_shards": [str(shard_dir(run_root, i, shard_count))
                                        for i in range(1, shard_count + 1)],
                 "merge_complete": True,
+                "source_revisions": sorted({str(m.get("source_revision"))
+                                             for m in manifests}),
             })
             _write_json(directory / "inference_manifest.json", new_manifest)
         # All validation/staging happens before any publication. Never replace

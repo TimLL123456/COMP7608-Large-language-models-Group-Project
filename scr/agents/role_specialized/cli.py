@@ -20,7 +20,8 @@ from scr.agents.rubric_self_reflection.reviewer import (
     RubricReviewer, REVIEW_PROMPT, PROMPT_VERSION,
 )
 from .coordinator import RoleSpecializedSelfReflectionAgent
-from .sharding import merge_shards, shard_dir, shard_slice
+from .sharding import (inference_lock, load_resume_history, merge_shards,
+                       prepare_in_place_resume, shard_dir, shard_slice)
 
 VARIANT = "RoleSpecializedSelfReflection"
 
@@ -103,6 +104,32 @@ def _role_model(provider, model_name, effort):
     return name, build_model(name, **options)
 
 
+
+def _transient_provider_failure(result: dict) -> bool:
+    """Do not checkpoint quota/provider failures as completed questions."""
+    def limited(value):
+        message = str(value or "").lower()
+        return any(token in message for token in (
+            "usage limit", "usage_limit", "quota", "rate limit", "rate_limit",
+            "too many requests", "429",
+        ))
+    if limited((result.get("report") or {}).get("error")):
+        return True
+    if limited((result.get("extraction") or {}).get("error")):
+        return True
+    if any(report.get("stop_reason") == "review_provider_error"
+           for report in result.get("review_reports", [])):
+        return True
+    for attempt in result.get("attempts", []):
+        report = attempt.get("b0_report") or {}
+        review = attempt.get("review") or {}
+        if limited(report.get("error")) or limited(review.get("error")) or (
+            review.get("stop_reason") == "review_provider_error"
+        ):
+            return True
+    return False
+
+
 def infer(args):
     folder, dataset, selection = _selected(args)
     selected, shard_info = (
@@ -122,101 +149,22 @@ def infer(args):
     reviewer_name, reviewer_model = _role_model(
         args.reviewer_provider, reviewer_id, args.reviewer_reasoning_effort)
     run_dir = _run_dir(args)
-    if run_dir.exists() or run_dir.is_symlink():
-        raise ValueError(f"Refusing to overwrite experiment: {run_dir}")
-    reviewer = RubricReviewer(
-        reviewer_model, max_model_calls=args.max_review_model_calls,
-        max_inspections=args.max_inspections)
-    coordinator = RoleSpecializedSelfReflectionAgent(
-        reviewer, generator_model=generator, prompt_variant=args.prompt_variant,
-        max_attempts=args.max_attempts,
-        max_total_model_calls=args.max_total_model_calls,
-        max_total_tool_calls=args.max_total_tool_calls,
-        max_total_sql_calls=args.max_total_sql_calls,
-    )
-    run_dir.mkdir(parents=True)
-    (run_dir / "reviews").mkdir()
-    created = datetime.now(timezone.utc).isoformat()
-    missing = 0
-    with (run_dir / "predictions.jsonl").open("x", encoding="utf-8") as predictions, \
-         (run_dir / "traces.jsonl").open("x", encoding="utf-8") as traces, \
-         (run_dir / "reviews" / "review_reports.jsonl").open("x", encoding="utf-8") as reports:
-        for question in selected:
-            try:
-                store = ReadOnlySqlite(dataset.get_database_path(question["db_id"]),
-                                       max_rows=args.preview_rows)
-                result = coordinator.run(question, store)
-                report, sql = result["report"], result["final_sql"]
-            except Exception as exc:
-                sql = None
-                report = {
-                    "question_id": question["question_id"], "db_id": question["db_id"],
-                    "graph_completed": False, "output_status": "missing",
-                    "review_status": "ERROR", "stop_reason": "coordinator_error",
-                    "error": redact_credentials(f"{type(exc).__name__}: {exc}")[:500],
-                }
-                result = {"report": report, "extraction": {}, "attempts": [],
-                          "structured_events": [], "review_reports": [],
-                          "generator_usage": {}, "reviewer_usage": {}}
-            missing += int(sql is None)
-            report["model"] = generator_name
-            report["reviewer_model"] = reviewer_name
-            # B0's reused run_one() can contain a historical constant model label.
-            # Normalize each nested attempt to its actual configured generator.
-            for attempt in result["attempts"]:
-                attempt_report = attempt.get("b0_report")
-                if isinstance(attempt_report, dict):
-                    attempt_report["model"] = generator_name
-                    attempt_report["provider"] = args.generator_provider
-                    attempt_report["reasoning_effort"] = args.generator_reasoning_effort
-            prediction = {
-                "question_id": question["question_id"], "db_id": question["db_id"],
-                "predicted_sql": sql, "provider": args.generator_provider,
-                "model": generator_name,
-                "reasoning_effort": args.generator_reasoning_effort,
-                "reviewer_provider": args.reviewer_provider, "reviewer_model": reviewer_name,
-                "reviewer_reasoning_effort": args.reviewer_reasoning_effort,
-                "cost_usd": None,
-                "output_status": report.get("output_status"),
-                "review_status": report.get("review_status"),
-                "latency_ms": (round(report["seconds"] * 1000, 3)
-                               if report.get("seconds") is not None else None),
-            }
-            for key in ("model_calls", "tool_calls", "sql_calls", "input_tokens",
-                        "output_tokens", "total_tokens", "cached_input_tokens",
-                        "reasoning_tokens"):
-                prediction[key] = report.get(key)
-            _append(predictions, prediction)
-            _append(traces, {
-                "question_id": question["question_id"],
-                "question": question["question"], "evidence": question.get("evidence"),
-                "generator": {"provider": args.generator_provider, "model": generator_name,
-                              "reasoning_effort": args.generator_reasoning_effort},
-                "reviewer": {"provider": args.reviewer_provider, "model": reviewer_name,
-                             "reasoning_effort": args.reviewer_reasoning_effort},
-                **result,
-            })
-            _append(reports, {
-                "question_id": question["question_id"],
-                "extraction": result["extraction"],
-                "review_reports": result["review_reports"],
-                "final_sql": sql, "output_status": report.get("output_status"),
-                "generator_usage": result["generator_usage"],
-                "reviewer_usage": result["reviewer_usage"],
-            })
-            print(f"Q{question['question_id']}: {report.get('output_status')} "
-                  f"({report.get('stop_reason')})", flush=True)
-    _write_json(run_dir / "inference_manifest.json", {
-        "agent_variant": VARIANT, "completed": True,
-        "selection_id": args.selection_id, "split": args.split, "run_id": args.run_id,
-        "created_utc": created, "dataset_manifest": dataset.manifest,
+    resume = args.start_position is not None
+    if resume:
+        if not args.replace_existing or not run_dir.is_dir() or run_dir.is_symlink():
+            raise ValueError("Resume requires --replace-existing and an existing run")
+    else:
+        if run_dir.exists() or run_dir.is_symlink():
+            raise ValueError(f"Refusing to overwrite experiment: {run_dir}")
+        run_dir.mkdir(parents=True)
+        (run_dir / "reviews").mkdir()
+    config = {
+        "agent_variant": VARIANT, "selection_id": args.selection_id,
+        "split": args.split, "run_id": args.run_id,
+        "dataset_manifest": dataset.manifest,
         "selection_sha256": _sha(folder / "selection_manifest.json"),
         "question_ids": [q["question_id"] for q in selected],
-        "expected_questions": len(selected), "missing_final_sql": missing,
-        **shard_info,
-        "prediction_sha256": _sha(run_dir / "predictions.jsonl"),
-        "trace_sha256": _sha(run_dir / "traces.jsonl"),
-        "review_reports_sha256": _sha(run_dir / "reviews" / "review_reports.jsonl"),
+        "expected_questions": len(selected), **shard_info,
         "generator_provider": args.generator_provider, "generator_model": generator_name,
         "generator_reasoning_effort": args.generator_reasoning_effort,
         "reviewer_provider": args.reviewer_provider, "reviewer_model": reviewer_name,
@@ -236,9 +184,120 @@ def infer(args):
         "output_format_version": b0.OUTPUT_FORMAT_VERSION,
         "note": "No gold data is available to the generator or reviewer. "
                 "Strong model never generates or refines SQL.",
-    })
-    print(f"{VARIANT}: {len(selected)} questions; {missing} missing SQL: {run_dir}")
-    return 0
+    }
+    with inference_lock(run_dir):
+        reviewer = RubricReviewer(
+            reviewer_model, max_model_calls=args.max_review_model_calls,
+            max_inspections=args.max_inspections)
+        coordinator = RoleSpecializedSelfReflectionAgent(
+            reviewer, generator_model=generator, prompt_variant=args.prompt_variant,
+            max_attempts=args.max_attempts,
+            max_total_model_calls=args.max_total_model_calls,
+            max_total_tool_calls=args.max_total_tool_calls,
+            max_total_sql_calls=args.max_total_sql_calls,
+        )
+        if resume:
+            resume_info = prepare_in_place_resume(
+                run_dir=run_dir, selected=selected,
+                start_position=args.start_position, config=config,
+            )
+            created = resume_info["created_utc"]
+            missing = resume_info["missing"]
+            print(f"Resuming {run_dir} from position {args.start_position}; "
+                  f"backup: {resume_info['backup_directory']}", flush=True)
+        else:
+            created = datetime.now(timezone.utc).isoformat()
+            missing = 0
+            _write_json(run_dir / "inference_config.json", {**config, "created_utc": created})
+        start_position = args.start_position or 1
+        mode = "a" if resume else "x"
+        with (run_dir / "predictions.jsonl").open(mode, encoding="utf-8") as predictions, \
+             (run_dir / "traces.jsonl").open(mode, encoding="utf-8") as traces, \
+             (run_dir / "reviews" / "review_reports.jsonl").open(mode, encoding="utf-8") as reports:
+            for position, question in enumerate(selected[start_position - 1:], start_position):
+                try:
+                    store = ReadOnlySqlite(dataset.get_database_path(question["db_id"]),
+                                           max_rows=args.preview_rows)
+                    result = coordinator.run(question, store)
+                    report, sql = result["report"], result["final_sql"]
+                except Exception as exc:
+                    sql = None
+                    report = {
+                        "question_id": question["question_id"], "db_id": question["db_id"],
+                        "graph_completed": False, "output_status": "missing",
+                        "review_status": "ERROR", "stop_reason": "coordinator_error",
+                        "error": redact_credentials(f"{type(exc).__name__}: {exc}")[:500],
+                    }
+                    result = {"report": report, "extraction": {}, "attempts": [],
+                              "structured_events": [], "review_reports": [],
+                              "generator_usage": {}, "reviewer_usage": {}}
+                if _transient_provider_failure(result):
+                    raise RuntimeError(
+                        f"Provider usage limit/error at shard position {position}; "
+                        "result not saved. Retry this position with --replace-existing."
+                    )
+                missing += int(sql is None)
+                report["model"] = generator_name
+                report["reviewer_model"] = reviewer_name
+                # B0's reused run_one() can contain a historical constant model label.
+                # Normalize each nested attempt to its actual configured generator.
+                for attempt in result["attempts"]:
+                    attempt_report = attempt.get("b0_report")
+                    if isinstance(attempt_report, dict):
+                        attempt_report["model"] = generator_name
+                        attempt_report["provider"] = args.generator_provider
+                        attempt_report["reasoning_effort"] = args.generator_reasoning_effort
+                prediction = {
+                    "question_id": question["question_id"], "db_id": question["db_id"],
+                    "predicted_sql": sql, "provider": args.generator_provider,
+                    "model": generator_name,
+                    "reasoning_effort": args.generator_reasoning_effort,
+                    "reviewer_provider": args.reviewer_provider, "reviewer_model": reviewer_name,
+                    "reviewer_reasoning_effort": args.reviewer_reasoning_effort,
+                    "cost_usd": None,
+                    "output_status": report.get("output_status"),
+                    "review_status": report.get("review_status"),
+                    "latency_ms": (round(report["seconds"] * 1000, 3)
+                                   if report.get("seconds") is not None else None),
+                }
+                for key in ("model_calls", "tool_calls", "sql_calls", "input_tokens",
+                            "output_tokens", "total_tokens", "cached_input_tokens",
+                            "reasoning_tokens"):
+                    prediction[key] = report.get(key)
+                _append(predictions, prediction)
+                _append(traces, {
+                    "question_id": question["question_id"],
+                    "question": question["question"], "evidence": question.get("evidence"),
+                    "generator": {"provider": args.generator_provider, "model": generator_name,
+                                  "reasoning_effort": args.generator_reasoning_effort},
+                    "reviewer": {"provider": args.reviewer_provider, "model": reviewer_name,
+                                 "reasoning_effort": args.reviewer_reasoning_effort},
+                    **result,
+                })
+                _append(reports, {
+                    "question_id": question["question_id"],
+                    "extraction": result["extraction"],
+                    "review_reports": result["review_reports"],
+                    "final_sql": sql, "output_status": report.get("output_status"),
+                    "generator_usage": result["generator_usage"],
+                    "reviewer_usage": result["reviewer_usage"],
+                })
+                print(f"Q{question['question_id']}: {report.get('output_status')} "
+                      f"({report.get('stop_reason')})", flush=True)
+        manifest = {
+            **config, "completed": True, "created_utc": created,
+            "missing_final_sql": missing,
+            "prediction_sha256": _sha(run_dir / "predictions.jsonl"),
+            "trace_sha256": _sha(run_dir / "traces.jsonl"),
+            "review_reports_sha256": _sha(run_dir / "reviews" / "review_reports.jsonl"),
+            "resume_history": load_resume_history(run_dir),
+        }
+        # Publish the completed manifest only after all three streams are finished.
+        staging_manifest = run_dir / ".inference_manifest.json.tmp"
+        _write_json(staging_manifest, manifest)
+        staging_manifest.replace(run_dir / "inference_manifest.json")
+        print(f"{VARIANT}: {len(selected)} questions; {missing} missing SQL: {run_dir}")
+        return 0
 
 
 def merge(args):
@@ -405,6 +464,10 @@ def parser():
                              help="1-based worker index, e.g. 1 or 2")
             cmd.add_argument("--shard-count", type=int, default=1,
                              help="Number of disjoint terminal workers")
+            cmd.add_argument("--start-position", type=int,
+                             help="1-based question position within this shard to rerun")
+            cmd.add_argument("--replace-existing", action="store_true",
+                             help="Back up and replace records at/after --start-position")
             cmd.add_argument("--reviewer-reasoning-effort",
                              choices=("none", "low", "medium", "high", "xhigh", "max"))
             cmd.add_argument("--prompt-variant", choices=b0.PROMPT_VARIANTS,
@@ -438,6 +501,10 @@ def main(argv=None):
         if value is not None and not base_cli.SAFE_ID.fullmatch(value):
             raise ValueError(f"Unsafe {key}: {value!r}")
     if args.action == "infer":
+        if args.replace_existing != (args.start_position is not None):
+            raise ValueError("--start-position and --replace-existing must be used together")
+        if args.start_position is not None and args.start_position < 1:
+            raise ValueError("--start-position must be at least 1")
         if args.split != "all" and (args.shard_index != 1 or args.shard_count != 1):
             raise ValueError("Sharded inference currently requires --split all")
         if not 1 <= args.shard_count <= 999 or not 1 <= args.shard_index <= args.shard_count:

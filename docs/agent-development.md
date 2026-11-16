@@ -1,6 +1,6 @@
 # KORA Developer Guide — Current Agent Framework
 
-**Updated: 15 November 2026.** This guide describes available implementations, their interfaces and how to develop reproducible experiments. The older B1–B4 design proposal is archived in the [historical developer guide](history/agent-development-pre-current-only-20261115.md).
+**Updated: 16 November 2026.** This guide describes available implementations, their interfaces and how to develop reproducible experiments. The older B1–B4 design proposal is archived in the [historical developer guide](history/agent-development-pre-current-only-20261115.md).
 
 ## Shared foundations
 
@@ -17,7 +17,7 @@ All current agents reuse the project's BIRD dataset/selection logic, read-only S
 | MetadataDiscoveryV2 | [metadata_discovery_v2.py](../scr/agents/metadata_discovery_v2.py) | A1 discovery → B1 sufficiency → C1 SQL |
 | Self Reflection | [self_reflection_agent.py](../scr/agents/self_reflection_agent.py) | Independent SQL reviewer and bounded B0 retry |
 | Rubric Self Reflection | [rubric_self_reflection/](../scr/agents/rubric_self_reflection/) | Atomic requirements, evidence checks and final SQL refinement |
-| Role-Specialized Self Reflection | [role_specialized/](../scr/agents/role_specialized/) | Separate generator/reviewer models; parallel shards and merge |
+| Role-Specialized Self Reflection | [role_specialized/](../scr/agents/role_specialized/) | Separate generator/reviewer models; bounded review, optional parallel shards, guarded in-place resume and merge |
 
 ## Run and test
 
@@ -35,6 +35,8 @@ uv run python -m scr.agents.role_specialized.cli --help
 
 First install [Mini-Dev 2026](bird-setup.md), then follow the [B0 example](bird-b0.md#mini-dev-2026-current-workflow). Run a small uniquely named Dev selection before a complete 500-question experiment. Individual agent usage is documented in [MetadataDiscoveryV2](metadata-discovery-v2.md), [Self Reflection](self-reflection-agent.md), [Rubric Self Reflection](rubric-self-reflection-agent.md) and [Role-Specialized Self Reflection](role-specialized-self-reflection-agent.md).
 
+The role-specialized CLI additionally supports explicit `--start-position` with `--replace-existing` for a single **unscored, unmerged** shard. Preserve backups and recovery history; see the [resume workflow](role-specialized-self-reflection-agent.md#resume-or-replace-records-in-the-same-run-id). Never use it to rewrite a published score.
+
 ## Evaluation contract
 
 - Freeze dataset revision, selected question IDs, model/provider, prompt, budgets, inference settings, retry policy and experiment IDs. Prefer distinct immutable run IDs.
@@ -46,6 +48,6 @@ First install [Mini-Dev 2026](bird-setup.md), then follow the [B0 example](bird-
 
 ## Current boundaries
 
-Available agent modules and local benchmarks do **not** establish a completed interactive app, unseen-database generalization or official hidden-Test performance. Role-specialized full EX performance remains pending. The B1–B4 legacy roadmap describes older hypothetical architecture tracks, not implemented claims: see [historical design](history/agent-development-pre-current-only-20261115.md), [earlier planning](history/progress-planning-pre-current-only-20261115.md), and [original proposal](../proposal/).
+Available agent modules and local benchmarks do **not** establish a completed interactive app, unseen-database generalization or official hidden-Test performance. The [Luna/Terra role-specialized local full evaluation](../evaluation-results/role-specialized-luna-terra-full-20261116/README.md) is **complete** at **401/500 (80.20% local EX)**, with 498/500 non-missing final SQL. It used one sequential shard, interrupted/resumed under two source revisions; the optional parallel-run mode was not benchmarked. Model and budget differences prevent attributing the result solely to role specialization. The B1–B4 legacy roadmap describes older hypothetical architecture tracks, not implemented claims: see [historical design](history/agent-development-pre-current-only-20261115.md), [earlier planning](history/progress-planning-pre-current-only-20261115.md), and [original proposal](../proposal/).
 
 No developer should commit API keys, credential caches or downloaded dataset binaries to the public repository.
