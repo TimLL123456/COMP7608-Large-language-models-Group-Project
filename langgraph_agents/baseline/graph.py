@@ -12,7 +12,7 @@ GRAPH_VERSION = "baseline-v1"
 
 
 def build_graph(*, database_path, model: Any, model_name: str,
-                prompt_variant: str = "baseline", preview_rows: int = 20,
+                prompt_variant: str = "generalized-v1", preview_rows: int = 20,
                 checkpointer=None):
     if prompt_variant not in ("baseline", "generalized-v1"):
         raise ValueError("Unsupported prompt variant")

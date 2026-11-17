@@ -131,7 +131,7 @@ def build_parser():
         command.add_argument("--split", required=True, choices=("dev", "test"))
         command.add_argument("--run-id", required=True, nargs="+" if action == "visualize" else None)
         if action == "infer":
-            command.add_argument("--prompt-variant", choices=b0.PROMPT_VARIANTS, default="baseline")
+            command.add_argument("--prompt-variant", choices=b0.PROMPT_VARIANTS, default="generalized-v1")
             command.add_argument("--reasoning-effort",
                                  choices=("none", "low", "medium", "high", "xhigh", "max"),
                                  default=None)

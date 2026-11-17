@@ -24,8 +24,8 @@ def test_langgraph_nodes_and_b0_contract(monkeypatch, db):
     from scr.baselines import bird_b0 as b0
     calls = []
 
-    def fake_agent(store, *, model):
-        calls.append(("factory", store.max_rows, model))
+    def fake_agent(store, *, model, prompt_variant):
+        calls.append(("factory", store.max_rows, model, prompt_variant))
         return object()
 
     def fake_run(question, agent, log, trace_events):
@@ -47,7 +47,7 @@ def test_langgraph_nodes_and_b0_contract(monkeypatch, db):
     assert output["events"] == ["tool test output"]
     assert output["structured_events"] == [{"seq": 1, "kind": "model"}]
     assert [e["node"] for e in transitions] == ["prepare_input", "run_b0", "collect_output"]
-    assert calls == [("factory", 20, "dummy"), ("run", 10)]
+    assert calls == [("factory", 20, "dummy", "generalized-v1"), ("run", 10)]
 
 
 def test_generalized_prompt_is_explicit(monkeypatch, db):
@@ -102,7 +102,7 @@ def test_new_cli_defaults_and_old_b0_unchanged(monkeypatch):
     assert called[0].provider == "chatgpt-siwc"
     assert called[0].model == "gpt-6-luna"
     assert called[0].reasoning_effort == "none"
-    assert called[0].prompt_variant == "baseline"
+    assert called[0].prompt_variant == "generalized-v1"
     assert b0.MAX_MODEL_CALLS == b0.MAX_TOTAL_TOOL_CALLS == b0.MAX_SQL_EXECUTIONS == 40
 
 
@@ -145,3 +145,32 @@ def test_path_traversal_rejected_before_b0(monkeypatch, db):
         )
         assert output["final_sql"] is None
         assert output["report"]["stop_reason"] == "ValueError"
+
+
+def test_original_baseline_prompt_remains_opt_in(monkeypatch, db):
+    from scr.baselines import bird_b0 as b0
+    observed = []
+    monkeypatch.setattr(b0, "make_agent", lambda store, *, model:
+                        observed.append("original_baseline") or object())
+    monkeypatch.setattr(b0, "run_one", lambda *args, **kwargs: {
+        "graph_completed": True, "final_sql": "SELECT 1;", "stop_reason": "final_sql_ready",
+        "model_calls": 1, "tool_calls": 0, "sql_calls": 0,
+    })
+    compiled = graph.build_graph(database_path=lambda _: db, model="dummy",
+                                 model_name="gpt-6-luna", prompt_variant="baseline")
+    output, _ = runner.run_question(compiled, question(), run_id="base", config_snapshot={})
+    assert observed == ["original_baseline"]
+    assert output["final_sql"] == "SELECT 1;"
+
+
+def test_default_prompt_hash_matches_original_generalized_v1(monkeypatch):
+    from hashlib import sha256
+    from scr.baselines import bird_b0 as b0
+    expected = "6a8a3662204ecdad26bf917691ec14662332bcf6ae7f4cd49e492b3409136f98"
+    called = []
+    monkeypatch.setattr(cli, "infer", lambda args: called.append(args) or 0)
+    assert cli.main(["infer", "--selection-id", "s", "--split", "dev", "--run-id", "r"]) == 0
+    variant = called[0].prompt_variant
+    assert variant == "generalized-v1"
+    assert sha256(b0.system_prompt_for_variant(variant).encode()).hexdigest() == expected
+    assert sha256(b0.system_prompt_for_variant("baseline").encode()).hexdigest() != expected

@@ -9,7 +9,7 @@ An **explicit outer LangGraph `StateGraph`** that wraps the original KORA Deep A
 | Provider | `chatgpt-siwc` |
 | Model | `gpt-6-luna` |
 | Reasoning effort | `none` |
-| Prompt | `baseline` (historical generalized-v1 available via flag) |
+| Prompt | `generalized-v1` (same prompt as historical Luna benchmark; original `baseline` available via flag) |
 | Model/tool/SQL limit | 40/40/40, as existing B0 |
 | Request/SQL timeout | 300 seconds each, as existing B0 |
 | Preview rows | 20 |
@@ -52,7 +52,7 @@ uv run python -m langgraph_agents.baseline.cli visualize \\
   --selection-id langgraph-b0-smoke --split dev --run-id lg-b0-001
 ```
 
-Use a **new** selection/run ID for each experiment. `--result-root` and `--dataset-root` accept overrides; the original selection logic preserves its Dev/Test frozen split. To reproduce the historical Luna generalized-v1 *settings* (not guaranteed stochastic results), add `--prompt-variant generalized-v1` to infer. To run the old NVIDIA default explicitly, use `--provider nvidia`, with original NVIDIA credentials and model behavior.
+Use a **new** selection/run ID for each experiment. `--result-root` and `--dataset-root` accept overrides; the original selection logic preserves its Dev/Test frozen split. The CLI defaults to the historical Luna **generalized-v1** prompt (not guaranteed identical stochastic SQL outputs); use `--prompt-variant baseline` to opt into the original B0 system prompt. To run the old NVIDIA default explicitly, use `--provider nvidia`, with original NVIDIA credentials and model behavior.
 
 ## Output path
 

@@ -37,7 +37,7 @@ KORA currently has **six implemented agent variants**. They share the BIRD datas
 
 ### LangGraph B0 orchestration (experimental)
 
-A separate [LangGraph B0 implementation](langgraph_agents/README.md) wraps the existing Deep Agents B0 in an explicit `StateGraph` and supports `prepare → infer → score` with independent `LangGraphB0` result directories. Its new CLI defaults to ChatGPT SIWC / `gpt-6-luna` / reasoning effort `none`; the original B0 CLI and agent remain unchanged. This is a framework migration, **not** a seventh SQL algorithm or evidence of higher EX accuracy.
+A separate [LangGraph B0 implementation](langgraph_agents/README.md) wraps the existing Deep Agents B0 in an explicit `StateGraph` and supports `prepare → infer → score` with independent `LangGraphB0` result directories. Its new CLI defaults to ChatGPT SIWC / `gpt-6-luna` / reasoning effort `none` / `generalized-v1` prompt; the original B0 CLI and agent remain unchanged. This is a framework migration, **not** a seventh SQL algorithm or evidence of higher EX accuracy.
 
 ## Current quick start
 
