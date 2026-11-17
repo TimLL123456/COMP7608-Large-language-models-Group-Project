@@ -18,7 +18,7 @@ from typing import Any
 from scr.baselines.sqlite_readonly import DEFAULT_SQL_TIMEOUT_SECONDS
 from scr.datasets.bird import BirdDataset, BirdEvaluationReferences, read_only_connection
 
-VARIANTS = {"B0", "B1", "B2", "B3", "B4", "Metadata", "MetadataDiscoveryV2", "SelfReflection", "RubricSelfReflection", "RoleSpecializedSelfReflection"}
+VARIANTS = {"B0", "B1", "B2", "B3", "B4", "Metadata", "MetadataDiscoveryV2", "SelfReflection", "RubricSelfReflection", "RoleSpecializedSelfReflection", "LangGraphB0"}
 USAGE_FIELDS = (
     "provider", "model", "reasoning_effort", "thinking_level", "reasoning_mode",
     "tool_calls", "model_calls", "sql_calls", "sql_success_calls",

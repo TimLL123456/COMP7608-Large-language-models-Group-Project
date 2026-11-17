@@ -35,6 +35,10 @@ KORA currently has **six implemented agent variants**. They share the BIRD datas
 
 **Research boundary:** These are distinct implementations, not six stages of one finished application. They aim to address the problems above, but their existence alone does not prove improvement. Compare documented local EX results and compute/retry differences in the [latest research results](#latest-research-results). The complete interactive multi-turn application has not been verified.
 
+### LangGraph B0 orchestration (experimental)
+
+A separate [LangGraph B0 implementation](langgraph_agents/README.md) wraps the existing Deep Agents B0 in an explicit `StateGraph` and supports `prepare → infer → score` with independent `LangGraphB0` result directories. Its new CLI defaults to ChatGPT SIWC / `gpt-6-luna` / reasoning effort `none` / `generalized-v1` prompt; the original B0 CLI and agent remain unchanged. This is a framework migration, **not** a seventh SQL algorithm or evidence of higher EX accuracy.
+
 ## Current quick start
 
 Use **BIRD Mini-Dev 2026** for new evaluations. Clone the public repository and run these commands from its root (the directory containing `pyproject.toml`). Requires Python and [uv](https://docs.astral.sh/uv/).
