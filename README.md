@@ -80,3 +80,7 @@ For **earlier B0 evaluations, original-dataset reproduction instructions, previo
 ### LangGraph role-specialized agent
 
 The second [LangGraph Role-Specialized Self-Reflection implementation](langgraph_agents/README.md#role-specialized-self-reflection--second-langgraph-variant) adds explicit generator/reviewer/decision graph nodes with bounded retries. The original Luna/Terra agent and archived evaluation remain unchanged. See [setup, commands, output and limitations](docs/langgraph-role-specialized.md).
+
+### Remaining LangGraph agent variants
+
+The [LangGraph migration guide](docs/langgraph-remaining-agents.md) covers independent graph versions of **Self Reflection**, **Rubric Self Reflection**, **Metadata V1**, and **MetadataDiscoveryV2**. The last reuses the existing A1/B1/C1 StateGraph rather than rewriting it. The six original agents and their historical results are preserved; the new LangGraph variants need independent EX scoring before accuracy comparisons.

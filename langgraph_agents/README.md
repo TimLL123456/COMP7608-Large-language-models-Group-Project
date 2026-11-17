@@ -98,3 +98,18 @@ The generator remains Luna (gpt-6-luna), the rubric reviewer Terra (gpt-6.1-terr
       --selection-id final-roles-v1 --split dev --run-id lg-roles-dev
 
 New variant: LangGraphRoleSpecializedSelfReflection, with independent output directories. See [full architecture, validation and recovery guidance](../docs/langgraph-role-specialized.md). The archived legacy 500-question benchmark does **not** establish new LangGraph EX accuracy.
+
+## Remaining LangGraph migrations
+
+Four additional independent variants are now included:
+
+| Variant | Package | Graph architecture |
+| --- | --- | --- |
+| LangGraphSelfReflection | self_reflection/ | B0 → reviewer → router → retry/final |
+| LangGraphRubricSelfReflection | rubric_self_reflection/ | requirements → B0 → rubric review → retry/refinement/final |
+| LangGraphMetadata | metadata_v1/ | prepare → original metadata Deep Agent → result |
+| LangGraphMetadataDiscoveryV2 | metadata_discovery_v2/ | Existing compiled A1/B1/C1 StateGraph, without duplicated node logic |
+
+The new CLIs preserve the historical provider and prompt defaults for each variant; these are not automatically changed to Luna. To run with SIWC, explicitly pass --provider chatgpt-siwc --model gpt-6-luna, as well as the desired prompt and reasoning effort. Each LangGraph variant has independent result directories. Original metadata note reuse, audited resume and Dev/Test lifecycle are unchanged.
+
+For complete commands, node details, outputs, verification and limitations, read [the migration guide](../docs/langgraph-remaining-agents.md). A framework migration is not evidence of EX improvement or model parity without a new scored run.

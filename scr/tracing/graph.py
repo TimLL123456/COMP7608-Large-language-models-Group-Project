@@ -61,8 +61,8 @@ def _role_stage_graph(record: dict) -> dict:
     edges, previous, attempt_index = [], "input", -1
     for index, event in enumerate(transitions, 1):
         name = event.get("node")
-        if name not in {"prepare_input", "generate_sql", "review_sql",
-                        "route_decision", "finalize_sql"}:
+        if name not in {"prepare_input", "extract_requirements", "generate_sql",
+                        "review_sql", "route_decision", "refine_sql", "finalize_sql"}:
             continue
         if name == "generate_sql":
             attempt_index += 1
@@ -84,6 +84,10 @@ def _role_stage_graph(record: dict) -> dict:
             detail.update(next_node=following, retry=following == "generate_sql",
                           feedback=(attempt.get("review") or {}).get("feedback"))
             detail["status"] = "retry" if following == "generate_sql" else "finalize"
+        elif name == "extract_requirements":
+            detail.update(extraction=record.get("extraction"))
+        elif name == "refine_sql":
+            detail.update(refinement=record.get("refinement"))
         elif name == "finalize_sql":
             title = "Final SQL"
             detail = {"status": report.get("output_status") or "missing",
@@ -101,8 +105,53 @@ def _role_stage_graph(record: dict) -> dict:
                 report=report, nodes=nodes, edges=edges)
 
 
+def _metadata_stage_graph(record: dict) -> dict:
+    """Visualize observed metadata A1/B1/C1 or V1 transitions, not guessed turns."""
+    report = record.get("report") or {}
+    events = record.get("structured_events") or []
+    steps = []
+    for event in events:
+        if not isinstance(event, dict):
+            continue
+        if event.get("kind") == "graph_node_complete":
+            steps.append({"node": event.get("node"), "observed": event})
+        elif report.get("workflow") == "metadata-discovery-v2":
+            name = event.get("node")
+            if name in {"a1", "b1", "c1", "exhausted"}:
+                if not steps or steps[-1]["node"] != name:
+                    steps.append({"node": name, "observed": event})
+    qid = record.get("question_id", report.get("question_id"))
+    nodes = [dict(id="input", kind="input", title=f"Question {qid}", detail={
+        "question_id": qid, "db_id": report.get("db_id"),
+        "question": record.get("question"), "evidence": record.get("evidence")})]
+    edges, previous = [], "input"
+    for index, step in enumerate(steps, 1):
+        name = step["node"]
+        node_id = f"stage-{index}"
+        nodes.append(dict(
+            id=node_id, kind="stage",
+            title=name.replace("_", " ").upper() if len(name) < 10 else name.replace("_", " ").title(),
+            detail={"node": name, "observed": step["observed"]},
+        ))
+        edges.append(dict(source=previous, target=node_id, kind="sequence"))
+        previous = node_id
+    nodes.append(dict(id="final", kind="final", title="Final SQL", detail={
+        "status": report.get("stop_reason") or "unknown",
+        "final_sql": report.get("final_sql"),
+        "graph_completed": report.get("graph_completed")}))
+    edges.append(dict(source=previous, target="final", kind="sequence"))
+    return dict(question_id=qid, db_id=report.get("db_id"),
+                legacy=False, report=report, nodes=nodes, edges=edges)
+
+
 def build_graph(record):
     """Build ordered model nodes, child tool nodes and related edges."""
+    if (
+        (record.get("report") or {}).get("workflow") == "metadata-discovery-v2"
+        or any(isinstance(e, dict) and e.get("kind") == "graph_node_complete"
+               for e in record.get("structured_events", []))
+    ):
+        return _metadata_stage_graph(record)
     if any(isinstance(e, dict) and e.get("node") == "generate_sql"
            for e in (record.get("graph_events") or [])):
         return _role_stage_graph(record)
