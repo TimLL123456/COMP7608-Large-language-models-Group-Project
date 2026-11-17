@@ -10,7 +10,8 @@ TEMPLATE = Path(__file__).with_name("templates") / "trace_viewer.html"
 MAX_TRACE_BYTES = 50 * 1024 * 1024
 MAX_SOURCES_PER_RUN = 40
 SAFE_RUN = re.compile(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,79}\Z")
-SKIP_FILES = {"inference_manifest.json", "selection_manifest.json", "predictions.jsonl",
+SKIP_FILES = {"inference_manifest.json", "inference_config.json", "resume_history.jsonl",
+              "selection_manifest.json", "predictions.jsonl",
               "dev.jsonl", "test.jsonl", "summary.json", "run_manifest.json"}
 
 

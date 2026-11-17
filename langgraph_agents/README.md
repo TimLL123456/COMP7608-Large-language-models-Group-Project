@@ -82,3 +82,19 @@ Run `uv run --with pytest python -m pytest -q langgraph_agents/tests tests/`; th
 
 Public source: https://github.com/TimLL123456/COMP7608-Large-language-models-Group-Project
 Design and progress: https://app.notion.com/p/41bce09ce40c810093b4cbc2ca55fc0b
+
+## Role-Specialized Self-Reflection — second LangGraph variant
+
+A second independent variant lives in langgraph_agents/role_specialized/ and implements five actual LangGraph nodes: prepare_input, generate_sql, review_sql, route_decision and finalize_sql. The reviewer decision has a real conditional feedback edge to the generator, subject to the original budgets and safe SQL rules.
+
+The generator remains Luna (gpt-6-luna), the rubric reviewer Terra (gpt-6.1-terra), both using chatgpt-siwc with **provider-default reasoning effort**, and generalized-v1 prompt. This differs from the separate LangGraph B0-only CLI's explicit default reasoning effort none. Legacy role code, prompts, shard/merge/resume behavior, independent EX scoring and its 500-question archive are unchanged.
+
+    uv run python -m langgraph_agents.role_specialized.cli models
+    uv run python -m langgraph_agents.role_specialized.cli infer \
+      --selection-id final-roles-v1 --split dev --run-id lg-roles-dev
+    uv run python -m langgraph_agents.role_specialized.cli score \
+      --selection-id final-roles-v1 --split dev --run-id lg-roles-dev
+    uv run python -m langgraph_agents.role_specialized.cli visualize \
+      --selection-id final-roles-v1 --split dev --run-id lg-roles-dev
+
+New variant: LangGraphRoleSpecializedSelfReflection, with independent output directories. See [full architecture, validation and recovery guidance](../docs/langgraph-role-specialized.md). The archived legacy 500-question benchmark does **not** establish new LangGraph EX accuracy.

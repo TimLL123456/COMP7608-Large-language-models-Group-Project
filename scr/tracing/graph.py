@@ -49,8 +49,63 @@ def legacy_events(lines):
     return events
 
 
+def _role_stage_graph(record: dict) -> dict:
+    """Show real role graph node completion events, never inferred model turns."""
+    report = record.get("report") or {}
+    transitions = record["graph_events"]
+    attempts = record.get("attempts") or []
+    qid = record.get("question_id", report.get("question_id"))
+    nodes = [dict(id="input", kind="input", title=f"Question {qid}", detail=dict(
+        question_id=qid, db_id=report.get("db_id"),
+        question=record.get("question"), evidence=record.get("evidence")))]
+    edges, previous, attempt_index = [], "input", -1
+    for index, event in enumerate(transitions, 1):
+        name = event.get("node")
+        if name not in {"prepare_input", "generate_sql", "review_sql",
+                        "route_decision", "finalize_sql"}:
+            continue
+        if name == "generate_sql":
+            attempt_index += 1
+        attempt = attempts[attempt_index] if 0 <= attempt_index < len(attempts) else {}
+        detail = {"node": name, "observed_at_ms": event.get("observed_at_ms")}
+        title = name.replace("_", " ").title()
+        if name == "generate_sql":
+            title += f" · Attempt {attempt_index + 1}"
+            detail.update(candidate_sql=attempt.get("candidate_sql"),
+                          b0_report=attempt.get("b0_report"),
+                          b0_events=attempt.get("b0_events"))
+        elif name == "review_sql":
+            title += f" · Attempt {attempt_index + 1}"
+            detail.update(review_report=attempt.get("review_report"),
+                          review=attempt.get("review"))
+            detail["status"] = (attempt.get("review") or {}).get("status") or "not reviewed"
+        elif name == "route_decision":
+            following = transitions[index].get("node") if index < len(transitions) else "END"
+            detail.update(next_node=following, retry=following == "generate_sql",
+                          feedback=(attempt.get("review") or {}).get("feedback"))
+            detail["status"] = "retry" if following == "generate_sql" else "finalize"
+        elif name == "finalize_sql":
+            title = "Final SQL"
+            detail = {"status": report.get("output_status") or "missing",
+                      "final_sql": report.get("final_sql"),
+                      "error": report.get("error"),
+                      "graph_completed": report.get("graph_completed"),
+                      "reason": report.get("stop_reason")}
+        node_id = f"stage-{index}"
+        nodes.append(dict(id=node_id,
+                          kind="final" if name == "finalize_sql" else "stage",
+                          title=title, detail=detail))
+        edges.append(dict(source=previous, target=node_id, kind="sequence"))
+        previous = node_id
+    return dict(question_id=qid, db_id=report.get("db_id"), legacy=False,
+                report=report, nodes=nodes, edges=edges)
+
+
 def build_graph(record):
     """Build ordered model nodes, child tool nodes and related edges."""
+    if any(isinstance(e, dict) and e.get("node") == "generate_sql"
+           for e in (record.get("graph_events") or [])):
+        return _role_stage_graph(record)
     report = record.get("report") or {}
     events = record.get("structured_events")
     legacy = not isinstance(events, list)

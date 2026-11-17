@@ -172,7 +172,7 @@ function nodeCard(node,children){
  make(t,'strong',null,node.title);
  const summary=node.kind==='model'?[d.finish||'finish unknown',d.input_tokens??'tokens n/a',d.output_tokens??'tokens n/a'].join(' · '):
  isTool?[d.status||'no result',d.execution_ms===null||d.execution_ms===undefined?'timing n/a':String(d.execution_ms)+' ms'].join(' · '):
- node.kind==='final'?d.status||'unknown':d.db_id||'';
+ node.kind==='final'?d.status||'unknown':node.kind==='stage'?d.status||d.node||'':d.db_id||'';
  make(t,'div','subtitle',summary);
  const reset=make(head,'button','reset-width','↔ Reset width');reset.type='button';
  reset.onclick=e=>{e.stopPropagation();store.widths.delete(nodeKey(node));render();};
@@ -186,6 +186,8 @@ function nodeCard(node,children){
   detailField(detail,node,'Tool input / arguments',d.args,d.args&&typeof d.args==='object'&&'sql' in d.args?'sql':'auto');
   detailField(detail,node,'Tool execution output',d.output,'auto');
   detailField(detail,node,'Tool status and timing',{status:d.status,execution_ms:d.execution_ms,tool_call_id:d.tool_call_id},'model');
+ }else if(node.kind==='stage'){
+  detailField(detail,node,'LangGraph transition',d,'model');
  }else if(node.kind==='final'){
   detailField(detail,node,'Final answer', {status:d.status,final_sql:d.final_sql,reason:d.reason,error:d.error},'model');
   detailField(detail,node,'Raw model response',d.raw_answer,'auto');

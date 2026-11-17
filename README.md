@@ -76,3 +76,7 @@ Follow the [current BIRD setup instructions](docs/bird-setup.md) and [Prepare â†
 ## Historical research
 
 For **earlier B0 evaluations, original-dataset reproduction instructions, previous plans and superseded agent designs**, see the [Historical Research Index](docs/history/README.md). Full historical documents and experimental evidence remain available through those links rather than being repeated here. Keep provider keys and local database downloads outside the repository; [`.env.example`](.env.example) contains safe configuration placeholders.
+
+### LangGraph role-specialized agent
+
+The second [LangGraph Role-Specialized Self-Reflection implementation](langgraph_agents/README.md#role-specialized-self-reflection--second-langgraph-variant) adds explicit generator/reviewer/decision graph nodes with bounded retries. The original Luna/Terra agent and archived evaluation remain unchanged. See [setup, commands, output and limitations](docs/langgraph-role-specialized.md).
